@@ -1,16 +1,40 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:device_preview/device_preview.dart';
 
 void main() {
-  runApp(const Sammly());
+  runApp(
+    DevicePreview(
+      enabled: !kReleaseMode,
+      builder: (context) => const SammlyApp(),
+    ),
+  );
 }
 
-class Sammly extends StatelessWidget {
-  const Sammly({super.key});
+class SammlyApp extends StatelessWidget {
+  const SammlyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'SAMMLY AI INTERIOR DESIGN',
+    return ScreenUtilInit(
+      designSize: const Size(430, 932),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          useInheritedMediaQuery: true, // ضروري لـ DevicePreview
+          locale: DevicePreview.locale(context),
+          builder: DevicePreview.appBuilder,
+          title: 'Sammly',
+          
+          // ==========================================
+          // حط أول شاشة هتكودها هنا (مثلاً LoginScreen)
+          // ==========================================
+          home: const SizedBox(), // استبدل السطر ده بشاشتك
+        );
+      },
     );
   }
 }
