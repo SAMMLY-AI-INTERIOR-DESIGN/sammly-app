@@ -3,5 +3,6 @@ class AppImages {
   static const String facebookicon = "assets/images/facebook.svg";
   static const String googleicon = "assets/images/google.svg";
   static const String appleicon = "assets/images/apple.svg";
+  static const String outlinedButtonBg = "assets/images/outlinedButtonBg.svg";
   static const String nullImape = "";
 }

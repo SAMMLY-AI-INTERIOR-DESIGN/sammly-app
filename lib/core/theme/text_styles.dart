@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class AppTextStyles {
@@ -7,7 +6,7 @@ class AppTextStyles {
   // ==========================================
   // Headings & Titles (العناوين الكبيرة والأساسية)
   // ==========================================
-  
+
   // متكرر في: Share & earn tokens, Create new password
   static const TextStyle heading28ExtraBold = TextStyle(
     fontFamily: primaryFont,
@@ -118,7 +117,7 @@ class AppTextStyles {
   static const TextStyle hint12Light = TextStyle(
     fontFamily: primaryFont, // يفضل توحيدها لـ Manrope بدل Poppins
     fontSize: 12,
-    fontWeight: FontWeight.w300,
+    fontWeight: FontWeight.w400,
     color: Color(0xFFA2A0A0),
   );
 }

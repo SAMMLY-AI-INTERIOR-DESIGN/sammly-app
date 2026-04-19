@@ -12,6 +12,8 @@ class CustomTextField extends StatefulWidget {
     this.ispassword = false,
     this.preffixicon,
     this.suffixicon,
+    this.isSuccess = false, // 💡 ضفنا حالة النجاح
+    this.hasError = false,  // 💡 ضفنا حالة الخطأ
   });
 
   final TextEditingController controller;
@@ -20,6 +22,8 @@ class CustomTextField extends StatefulWidget {
   final bool ispassword;
   final IconData? preffixicon;
   final IconData? suffixicon;
+  final bool isSuccess;
+  final bool hasError;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -30,54 +34,83 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   Widget build(BuildContext context) {
+    // تحديد لون الخلفية بناءً على الحالة (فاطمة ديزاين)
+    Color getFillColor() {
+      if (widget.hasError) return Colors.red.withValues(alpha: 0.08);
+      if (widget.isSuccess) return AppColors.secondaryColor.withValues(alpha: 0.08);
+      return Colors.transparent;
+    }
+
+    // تحديد لون الإطار بناءً على الحالة
+    Color getBorderColor() {
+      if (widget.hasError) return Colors.red;
+      if (widget.isSuccess) return AppColors.secondaryColor;
+      return Colors.grey.withValues(alpha: 0.3);
+    }
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.h),
       child: TextFormField(
         obscureText: widget.ispassword ? _obscureText : false,
         controller: widget.controller,
         validator: widget.validator,
-        style: AppTextStyles.body14Regular.copyWith(color: AppColors.blackColor), // استخدام الخطوط
+        style: AppTextStyles.body14Regular.copyWith(color: AppColors.blackColor),
         decoration: InputDecoration(
           contentPadding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
           filled: true,
-          fillColor: Colors.transparent,
+          fillColor: getFillColor(), // تطبيق لون الخلفية
+
+          // أيقونة البداية
           prefixIcon: widget.preffixicon != null
-              ? Icon(widget.preffixicon, color: Colors.grey[600], size: 22.sp)
-              : null,
-          suffixIcon: widget.ispassword
-              ? IconButton(
-                  icon: Icon(
-                    _obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                    color: Colors.grey[600],
-                    size: 22.sp,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _obscureText = !_obscureText;
-                    });
-                  },
+              ? Icon(
+                  widget.preffixicon,
+                  color: widget.hasError ? Colors.red : (widget.isSuccess ? AppColors.secondaryColor : Colors.grey[600]),
+                  size: 22.sp,
                 )
-              : widget.suffixicon != null
-                  ? Icon(widget.suffixicon, color: Colors.grey[600], size: 22.sp)
-                  : null,
+              : null,
+
+          // أيقونة النهاية (العين أو علامة الصح/الخطأ)
+          suffixIcon: widget.hasError
+              ? Icon(Icons.cancel_outlined, color: Colors.red, size: 22.sp) // علامة الخطأ
+              : widget.isSuccess
+                  ? Icon(Icons.check_circle_outline, color: AppColors.secondaryColor, size: 22.sp) // علامة الصح
+                  : widget.ispassword
+                      ? IconButton(
+                          icon: Icon(
+                            _obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                            color: Colors.grey[600],
+                            size: 22.sp,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscureText = !_obscureText;
+                            });
+                          },
+                        )
+                      : widget.suffixicon != null
+                          ? Icon(widget.suffixicon, color: Colors.grey[600], size: 22.sp)
+                          : null,
+
+          // الإطارات
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20.r),
-            borderSide: BorderSide(width: 1.w, color: Colors.grey.withValues(alpha: 0.3)),
+            borderRadius: BorderRadius.circular(15.r),
+            borderSide: BorderSide(width: 1.w, color: getBorderColor()),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20.r),
-            borderSide: BorderSide(width: 1.5.w, color: AppColors.primaryColor), // استخدام الأزرق
+            borderRadius: BorderRadius.circular(15.r),
+            borderSide: BorderSide(width: 1.5.w, color: AppColors.primaryColor), // الأزرق في الفوكس
           ),
           errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20.r),
+            borderRadius: BorderRadius.circular(15.r),
             borderSide: BorderSide(width: 1.w, color: Colors.red),
           ),
           focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20.r),
+            borderRadius: BorderRadius.circular(15.r),
             borderSide: BorderSide(width: 1.5.w, color: Colors.red),
           ),
+
           hintText: widget.thing,
-          hintStyle: AppTextStyles.hint12Light.copyWith(fontSize: 14.sp), // استخدام خط الـ Hint
+          hintStyle: AppTextStyles.hint12Light.copyWith(fontSize: 14.sp),
         ),
       ),
     );
