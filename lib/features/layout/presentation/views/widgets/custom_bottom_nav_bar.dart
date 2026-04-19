@@ -72,7 +72,7 @@ class CustomBottomNavBar extends StatelessWidget {
                 },
                 child: Text(
                   label,
-                  style: AppTextStyles.body16Regular.copyWith(
+                  style: AppTextStyles.hint12Light.copyWith(
                     color: AppColors.whiteColor
                   ),
                 ),

@@ -14,8 +14,8 @@ class AppColors {
     colors: [
       primaryColor,
       primaryColor,
-      secondaryColor,
-      secondaryColor,
+      Color.fromARGB(255, 27, 176, 127),
+      Color.fromARGB(255, 27, 176, 127),
     ],
      stops: [
       0.0,
