@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/theme/text_styles.dart';
-import 'package:sammly/features/Auth/presentation/views/signup_screen.dart';
+import 'package:sammly/features/Auth/presentation/views/signup_view.dart';
 import 'package:sammly/features/Auth/presentation/widgets/custom_line.dart';
 import 'package:sammly/features/Auth/presentation/widgets/custom_text_field.dart';
 import 'package:sammly/features/Auth/presentation/widgets/custombutton.dart';
