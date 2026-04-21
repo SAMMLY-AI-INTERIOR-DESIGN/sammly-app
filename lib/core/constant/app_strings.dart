@@ -16,4 +16,15 @@ abstract class AppStrings {
   static const String onboarding2Subtitle = 'Select any item in the generated image and discover where it\'s available.';
   static const String onboarding3Title = 'Share & earn tokens';
   static const String onboarding3Subtitle = 'Explore community designs, share your creations, and earn free tokens as rewards.';
+
+  static const String greetingPrefix = "Welcome,";
+  static const String defaultUser = "Fatma Salah";
+  static const String subtitle = "Let's design your dream space.";
+  static const String searchHint = "Search for......";
+  static const String aiTag = "AI POWERED";
+  static const String aiBannerTitle = "Visualize your room with AI";
+  static const String aiBannerSubtitle = "Type what you imagine and AI will generate your room.";
+  static const String startGenerateBtn = "Start Generate";
+  static const String exploreStyles = "Explore Styles";
+  static const String viewAll = "view all";
 }
