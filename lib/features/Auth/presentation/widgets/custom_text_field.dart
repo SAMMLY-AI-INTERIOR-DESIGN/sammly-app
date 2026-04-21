@@ -13,7 +13,7 @@ class CustomTextField extends StatefulWidget {
     this.preffixicon,
     this.suffixicon,
     this.isSuccess = false, // 💡 ضفنا حالة النجاح
-    this.hasError = false,  // 💡 ضفنا حالة الخطأ
+    this.hasError = false, // 💡 ضفنا حالة الخطأ
   });
 
   final TextEditingController controller;
@@ -37,7 +37,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
     // تحديد لون الخلفية بناءً على الحالة (فاطمة ديزاين)
     Color getFillColor() {
       if (widget.hasError) return Colors.red.withValues(alpha: 0.08);
-      if (widget.isSuccess) return AppColors.secondaryColor.withValues(alpha: 0.08);
+      if (widget.isSuccess)
+        return AppColors.secondaryColor.withValues(alpha: 0.08);
       return Colors.transparent;
     }
 
@@ -54,42 +55,60 @@ class _CustomTextFieldState extends State<CustomTextField> {
         obscureText: widget.ispassword ? _obscureText : false,
         controller: widget.controller,
         validator: widget.validator,
-        style: AppTextStyles.body14Regular.copyWith(color: AppColors.blackColor),
+        style: AppTextStyles.body14Regular.copyWith(
+          color: AppColors.blackColor,
+        ),
         decoration: InputDecoration(
-          contentPadding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
+          contentPadding: EdgeInsets.symmetric(
+            vertical: 18.h,
+            horizontal: 16.w,
+          ),
           filled: true,
           fillColor: getFillColor(), // تطبيق لون الخلفية
-
           // أيقونة البداية
           prefixIcon: widget.preffixicon != null
               ? Icon(
                   widget.preffixicon,
-                  color: widget.hasError ? Colors.red : (widget.isSuccess ? AppColors.secondaryColor : Colors.grey[600]),
+                  color: widget.hasError
+                      ? Colors.red
+                      : (widget.isSuccess
+                            ? AppColors.secondaryColor
+                            : Colors.grey[600]),
                   size: 22.sp,
                 )
               : null,
 
           // أيقونة النهاية (العين أو علامة الصح/الخطأ)
           suffixIcon: widget.hasError
-              ? Icon(Icons.cancel_outlined, color: Colors.red, size: 22.sp) // علامة الخطأ
+              ? Icon(
+                  Icons.cancel_outlined,
+                  color: Colors.red,
+                  size: 22.sp,
+                ) // علامة الخطأ
               : widget.isSuccess
-                  ? Icon(Icons.check_circle_outline, color: AppColors.secondaryColor, size: 22.sp) // علامة الصح
-                  : widget.ispassword
-                      ? IconButton(
-                          icon: Icon(
-                            _obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                            color: Colors.grey[600],
-                            size: 22.sp,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _obscureText = !_obscureText;
-                            });
-                          },
-                        )
-                      : widget.suffixicon != null
-                          ? Icon(widget.suffixicon, color: Colors.grey[600], size: 22.sp)
-                          : null,
+              ? Icon(
+                  Icons.check_circle_outline,
+                  color: AppColors.secondaryColor,
+                  size: 22.sp,
+                ) // علامة الصح
+              : widget.ispassword
+              ? IconButton(
+                  icon: Icon(
+                    _obscureText
+                        ? Icons.visibility_off_outlined
+                        : Icons.visibility_outlined,
+                    color: Colors.grey[600],
+                    size: 22.sp,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _obscureText = !_obscureText;
+                    });
+                  },
+                )
+              : widget.suffixicon != null
+              ? Icon(widget.suffixicon, color: Colors.grey[600], size: 22.sp)
+              : null,
 
           // الإطارات
           enabledBorder: OutlineInputBorder(
@@ -98,7 +117,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.r),
-            borderSide: BorderSide(width: 1.5.w, color: AppColors.primaryColor), // الأزرق في الفوكس
+            borderSide: BorderSide(
+              width: 1.5.w,
+              color: AppColors.primaryColor,
+            ), // الأزرق في الفوكس
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.r),

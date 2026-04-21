@@ -23,12 +23,12 @@ class CustomButton extends StatelessWidget {
           begin: Alignment.centerLeft, // زي الديزاين بيبدأ من الشمال
           end: Alignment.centerRight,
         ),
-        borderRadius: BorderRadius.circular(30.r),
+        borderRadius: BorderRadius.circular(24.r),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primaryColor.withValues(alpha: 0.3),
+            color: AppColors.primaryColor.withValues(alpha: 0.22),
             blurRadius: 10,
-            offset: const Offset(0, 5),
+            offset: const Offset(0, 6),
           ),
         ],
       ),
@@ -39,7 +39,7 @@ class CustomButton extends StatelessWidget {
           shadowColor: Colors.transparent,
           elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.r),
+            borderRadius: BorderRadius.circular(24.r),
           ),
         ),
         child: Text(
