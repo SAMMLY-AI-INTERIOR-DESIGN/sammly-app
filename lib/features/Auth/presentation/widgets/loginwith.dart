@@ -20,11 +20,10 @@ class Loginwith extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // استخدام مسارات الصور من الكلاس بتاعك
         _socialIcon(AppImages.googleicon, onGoogleTap),
-        SizedBox(width: 25.w),
+        SizedBox(width: 40.w), // 💡 زودنا المسافة هنا لـ 40 عشان البراح
         _socialIcon(AppImages.facebookicon, onFacebookTap),
-        SizedBox(width: 25.w),
+        SizedBox(width: 40.w), // 💡 وزودنا المسافة هنا كمان
         _socialIcon(AppImages.appleicon, onAppleTap),
       ],
     );
@@ -33,29 +32,13 @@ class Loginwith extends StatelessWidget {
   Widget _socialIcon(String path, VoidCallback? onTap) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        height: 50.h,
-        width: 50.w,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-          border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 5,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Center(
-          child: SvgPicture.asset(
-            path,
-            height: 24.h,
-            width: 24.w,
-            fit: BoxFit.contain,
-          ),
-        ),
+      // 💡 شيلنا الـ Container بالـ BoxDecoration تماماً
+      // واعتمدنا على الأيقونة بشكل مباشر
+      child: SvgPicture.asset(
+        path,
+        height: 38.h, // كبرنا الحجم شوية لتعويض غياب الإطار
+        width: 38.w,
+        fit: BoxFit.contain,
       ),
     );
   }

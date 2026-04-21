@@ -4,10 +4,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/theme/text_styles.dart';
+import 'package:sammly/core/widgets/custombutton.dart';
+import 'package:sammly/features/Auth/presentation/views/forgot_password_view.dart';
 import 'package:sammly/features/Auth/presentation/views/signup_view.dart';
 import 'package:sammly/features/Auth/presentation/widgets/custom_line.dart';
 import 'package:sammly/features/Auth/presentation/widgets/custom_text_field.dart';
-import 'package:sammly/features/Auth/presentation/widgets/custombutton.dart';
 import 'package:sammly/features/Auth/presentation/widgets/loginwith.dart';
 import 'package:sammly/features/Auth/presentation/widgets/signlogin.dart';
 
@@ -155,7 +156,15 @@ class _LoginScreenState extends State<LoginScreen> {
                             Align(
                               alignment: Alignment.centerRight,
                               child: TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ForgotPasswordScreen(),
+                                    ),
+                                  );
+                                },
                                 style: TextButton.styleFrom(
                                   padding: EdgeInsets.zero,
                                   minimumSize: Size.zero,
