@@ -17,11 +17,11 @@ class CustomButton extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [
+            AppColors.secondaryColor,
             AppColors.primaryColor,
-            Color.fromARGB(255, 37, 153, 114),
           ], // من الأخضر للأزرق
-          begin: Alignment.centerLeft, // زي الديزاين بيبدأ من الشمال
-          end: Alignment.centerRight,
+          begin: Alignment.topCenter, // زي الديزاين بيبدأ من الشمال
+          end: Alignment.bottomCenter,
         ),
         borderRadius: BorderRadius.circular(24.r),
         boxShadow: [
@@ -45,7 +45,7 @@ class CustomButton extends StatelessWidget {
         child: Text(
           text,
           style: TextStyle(
-            fontSize: 20.sp,
+            fontSize: 22.sp,
             color: Colors.white,
             fontFamily: 'Manrope',
             fontWeight: FontWeight.w600,

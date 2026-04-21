@@ -58,7 +58,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 // 1. اللوجو
                 // 💡 ملحوظة: لو اللوجو بتاعك لونه أبيض، هتحتاج تجيب اللوجو الملون من فيجما
                 // وتحفظه باسم جديد مثلاً AppImages.logoColored عشان يظهر على الخلفية البيضاء
-                SvgPicture.asset(AppImages.splash, width: 220.w),
+                SvgPicture.asset(AppImages.splash, width: 160.w, height: 147.h),
                 SizedBox(height: 32.h),
 
                 // 2. مؤشر الخطوات (Progress Indicator)
