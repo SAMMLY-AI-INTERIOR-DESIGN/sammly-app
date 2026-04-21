@@ -19,13 +19,11 @@ class LayoutView extends StatelessWidget {
           return Scaffold(
             extendBody: true,
             body: cubit.views[cubit.currentIndex],
-            bottomNavigationBar: SafeArea(
-              child: CustomBottomNavBar(
-                currentIndex: cubit.currentIndex,
-                onTap: (index) {
-                  cubit.changeIndex(index);
-                },
-              ),
+            bottomNavigationBar: CustomBottomNavBar(
+              currentIndex: cubit.currentIndex,
+              onTap: (index) {
+                cubit.changeIndex(index);
+              },
             ),
           );
         },
