@@ -74,7 +74,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   right: 0,
                   child: SvgPicture.asset(
                     AppImages.splash,
-                    width: 256.w,
+                    width: 345.04.w, // 💡 العرض من فيجما
+
+                    fit: BoxFit
+                        .contain, // 💡 السر اللي بيمنع اللوجو يتمط أو يبوظ
                     colorFilter: const ColorFilter.mode(
                       Colors.white,
                       BlendMode.srcIn,
@@ -86,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    height: 700.h,
+                    height: 641.h,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       // هنا ضفنا الجريدينت الخفيف بتاع الكارت
@@ -152,6 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 return null;
                               },
                             ),
+                            SizedBox(height: 2.h),
 
                             Align(
                               alignment: Alignment.centerRight,

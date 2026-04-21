@@ -41,7 +41,7 @@ class _VerificationViewState extends State<VerificationView> {
               SizedBox(height: 20.h),
 
               // 1. اللوجو الملون
-              SvgPicture.asset(AppImages.splash, width: 220.w),
+              SvgPicture.asset(AppImages.splash, width: 160.w, height: 147.h),
               SizedBox(height: 32.h),
 
               // 2. مؤشر الخطوات (الخطوة الثانية هي اللي منورة)
