@@ -8,8 +8,11 @@ class AppImages {
   static const String historyIcon = "assets/images/history.svg";
   static const String profileIcon = "assets/images/profile.svg";
   static const String successBackground = 'assets/images/success_background.svg';
-  static const String onboarding1 = 'assets/images/onboarding1.svg';
-  static const String onboarding2 = 'assets/images/onboarding2.svg';
-  static const String onboarding3 = 'assets/images/onboarding3.svg';
-  
+  static const String onboarding1 = 'assets/images/onboarding1.png';
+  static const String onboarding2 = 'assets/images/onboarding2.png';
+  static const String onboarding3 = 'assets/images/onboarding3.png';
+  static const String onboardingBack = 'assets/images/onboarding_back.svg';
+  static const String onboardingForward = 'assets/images/onboarding_forward.svg';
+  static const String onboardingContainer = 'assets/images/onboarding_container.svg';
+  static const String arrowBack = 'assets/images/arrow_back.svg';
 }

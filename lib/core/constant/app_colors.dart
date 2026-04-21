@@ -35,5 +35,14 @@ class AppColors {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
+
+  static const LinearGradient scafoldBgGradient = LinearGradient(
+    colors: [
+      bg1Color,
+      bg2Color,
+    ],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
   
 }
