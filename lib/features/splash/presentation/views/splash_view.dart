@@ -19,130 +19,86 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen>
-    with TickerProviderStateMixin {
-  late final AnimationController _roofCtrl;
-  late final AnimationController _sammlyCtrl;
-  late final AnimationController _wordCtrl;
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
 
-  late final Animation<double> _roofSlide;
-  late final Animation<double> _roofFade;
-  late final Animation<double> _sammlyScale;
+  // ── SAMMLY: 0.0s – 0.5s  (fade + scale settle) ────────────────────────────
   late final Animation<double> _sammlyFade;
-  late final Animation<double> _wordSlide;
-  late final Animation<double> _wordFade;
+  late final Animation<double> _sammlyScale;
 
-  // ── Timing ──────────────────────────────────────────────────────────────────
-  static const _roofDur = Duration(milliseconds: 1000); // snappy bounce
-  static const _textDur = Duration(milliseconds: 350); // quick text reveal
+  // ── Roof: 0.4s – 0.8s  (fade + scale up) ──────────────────────────────────
+  late final Animation<double> _roofFade;
+  late final Animation<double> _roofScale;
+
+  // ── Word: 0.6s – 1.0s  (fade + slide up) ──────────────────────────────────
+  late final Animation<double> _wordFade;
+  late final Animation<double> _wordSlide;
 
   @override
   void initState() {
     super.initState();
     FlutterNativeSplash.remove();
 
-    // ── Controllers ──────────────────────────────────────────────────────────
-    _roofCtrl = AnimationController(vsync: this, duration: _roofDur);
-    _sammlyCtrl = AnimationController(vsync: this, duration: _textDur);
-    _wordCtrl = AnimationController(vsync: this, duration: _textDur);
+    // Single controller for the entire 1.0s sequence
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    );
 
-    // ── Roof bounce: fast drop → slam → bounce → settle ──────────────────────
-    // Final rest = +18  → close to SAMMLY with breathing room
-    _roofSlide = TweenSequence<double>([
-      // 1) Free-fall: -180 → +36  (slam past the target)
-      TweenSequenceItem<double>(
-        tween: Tween<double>(
-          begin: -180,
-          end: 36,
-        ).chain(CurveTween(curve: Curves.easeInQuad)),
-        weight: 30,
-      ),
-      // 2) 1st recoil: +36 → +4  (spring back up)
-      TweenSequenceItem<double>(
-        tween: Tween<double>(
-          begin: 36,
-          end: 4,
-        ).chain(CurveTween(curve: Curves.easeOutCubic)),
-        weight: 16,
-      ),
-      // 3) 2nd drop: +4 → +26
-      TweenSequenceItem<double>(
-        tween: Tween<double>(
-          begin: 4,
-          end: 26,
-        ).chain(CurveTween(curve: Curves.easeInQuad)),
-        weight: 14,
-      ),
-      // 4) 2nd recoil: +26 → +13
-      TweenSequenceItem<double>(
-        tween: Tween<double>(
-          begin: 26,
-          end: 13,
-        ).chain(CurveTween(curve: Curves.easeOutCubic)),
-        weight: 12,
-      ),
-      // 5) 3rd tap: +13 → +22
-      TweenSequenceItem<double>(
-        tween: Tween<double>(
-          begin: 13,
-          end: 22,
-        ).chain(CurveTween(curve: Curves.easeInQuad)),
-        weight: 10,
-      ),
-      // 6) Settle: +22 → +18  (final rest)
-      TweenSequenceItem<double>(
-        tween: Tween<double>(
-          begin: 22,
-          end: 18,
-        ).chain(CurveTween(curve: Curves.easeOutCubic)),
-        weight: 18,
-      ),
-    ]).animate(_roofCtrl);
-
-    // Fade in fast during the initial fall so it's visible for the impact
-    _roofFade = Tween<double>(begin: 0, end: 1).animate(
+    // ── 1 · SAMMLY  (0.0 → 0.5) ─────────────────────────────────────────────
+    _sammlyFade = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
-        parent: _roofCtrl,
-        curve: const Interval(0.0, 0.20, curve: Curves.easeIn),
+        parent: _ctrl,
+        curve: const Interval(0.0, 0.5, curve: Curves.easeOut),
+      ),
+    );
+    _sammlyScale = Tween<double>(begin: 1.06, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _ctrl,
+        curve: const Interval(0.0, 0.5, curve: Curves.easeOutCubic),
       ),
     );
 
-    // ── SAMMLY & word: quick fade-in (they appear BEFORE the roof drops) ─────
-    _sammlyScale = Tween<double>(
-      begin: 0.85,
-      end: 1,
-    ).animate(CurvedAnimation(parent: _sammlyCtrl, curve: Curves.easeOutBack));
-    _sammlyFade = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(CurvedAnimation(parent: _sammlyCtrl, curve: Curves.easeIn));
-    _wordSlide = Tween<double>(
-      begin: 10,
-      end: 0,
-    ).animate(CurvedAnimation(parent: _wordCtrl, curve: Curves.easeOutCubic));
-    _wordFade = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(CurvedAnimation(parent: _wordCtrl, curve: Curves.easeIn));
+    // ── 2 · Roof  (0.4 → 0.8) ───────────────────────────────────────────────
+    _roofFade = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _ctrl,
+        curve: const Interval(0.4, 0.8, curve: Curves.easeOut),
+      ),
+    );
+    _roofScale = Tween<double>(begin: 0.85, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _ctrl,
+        curve: const Interval(0.4, 0.8, curve: Curves.easeOutCubic),
+      ),
+    );
+
+    // ── 3 · Word  (0.6 → 1.0) ───────────────────────────────────────────────
+    _wordFade = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _ctrl,
+        curve: const Interval(0.6, 1.0, curve: Curves.easeOut),
+      ),
+    );
+    _wordSlide = Tween<double>(begin: 8, end: 0).animate(
+      CurvedAnimation(
+        parent: _ctrl,
+        curve: const Interval(0.6, 1.0, curve: Curves.easeOutCubic),
+      ),
+    );
 
     _runSequence();
   }
 
   Future<void> _runSequence() async {
+    // Small initial pause
     await Future.delayed(const Duration(milliseconds: 200));
 
-    // 1) Show SAMMLY text first so the roof has something to land on
-    _sammlyCtrl.forward();
-    await Future.delayed(const Duration(milliseconds: 100));
+    // Play the 1.0s entrance sequence
+    await _ctrl.forward();
 
-    // 2) Show tagline right after
-    _wordCtrl.forward();
-    await Future.delayed(const Duration(milliseconds: 200));
-
-    // 3) NOW drop the roof onto the visible text – bounce & settle
-    await _roofCtrl.forward();
-
-    // Hold the finished logo on-screen
-    await Future.delayed(const Duration(milliseconds: 600));
+    // Hold phase: all elements static
+    await Future.delayed(const Duration(milliseconds: 1500));
     if (!mounted) return;
     Navigator.of(
       context,
@@ -151,9 +107,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void dispose() {
-    _roofCtrl.dispose();
-    _sammlyCtrl.dispose();
-    _wordCtrl.dispose();
+    _ctrl.dispose();
     super.dispose();
   }
 
@@ -194,35 +148,36 @@ class _SplashScreenState extends State<SplashScreen>
           ),
         ),
         child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // ── 1 · Roof (drops onto the text below) ──────────────────────
-              AnimatedBuilder(
-                animation: _roofCtrl,
-                builder: (_, __) => Transform.translate(
-                  offset: Offset(0, _roofSlide.value),
+          child: AnimatedBuilder(
+            animation: _ctrl,
+            builder: (_, __) => Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // ── 1 · Roof (fades in + scales up, 0.4–0.8s) ──────────────
+                Transform.translate(
+                  offset: const Offset(0, 18),
                   child: Opacity(
                     opacity: _roofFade.value,
-                    child: _cropped(
-                      svgWidth: 220.w,
-                      contentRatio: 0.3625,
-                      child: SvgPicture.asset(
-                        'assets/images/logo_roof.svg',
-                        width: 220.w,
+                    child: Transform.scale(
+                      scale: _roofScale.value,
+                      alignment: Alignment.bottomCenter,
+                      child: _cropped(
+                        svgWidth: 220.w,
+                        contentRatio: 0.3625,
+                        child: SvgPicture.asset(
+                          'assets/images/logo_roof.svg',
+                          width: 220.w,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
 
-              // ── 2 · SAMMLY (appears first, roof lands on this) ────────────
-              AnimatedBuilder(
-                animation: _sammlyCtrl,
-                builder: (_, __) => Transform.scale(
-                  scale: _sammlyScale.value,
-                  child: Opacity(
-                    opacity: _sammlyFade.value,
+                // ── 2 · SAMMLY (fades in + settles, 0.0–0.5s) ──────────────
+                Opacity(
+                  opacity: _sammlyFade.value,
+                  child: Transform.scale(
+                    scale: _sammlyScale.value,
                     child: _cropped(
                       svgWidth: 220.w,
                       contentRatio: 0.2870,
@@ -233,17 +188,14 @@ class _SplashScreenState extends State<SplashScreen>
                     ),
                   ),
                 ),
-              ),
 
-              SizedBox(height: 6.h),
+                SizedBox(height: 6.h),
 
-              // ── 3 · Word / tagline ────────────────────────────────────────
-              AnimatedBuilder(
-                animation: _wordCtrl,
-                builder: (_, __) => Transform.translate(
-                  offset: Offset(0, _wordSlide.value),
-                  child: Opacity(
-                    opacity: _wordFade.value,
+                // ── 3 · Word / tagline (fades in + slides up, 0.6–1.0s) ────
+                Opacity(
+                  opacity: _wordFade.value,
+                  child: Transform.translate(
+                    offset: Offset(0, _wordSlide.value),
                     child: _cropped(
                       svgWidth: 220.w,
                       contentRatio: 0.0610,
@@ -254,8 +206,8 @@ class _SplashScreenState extends State<SplashScreen>
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
