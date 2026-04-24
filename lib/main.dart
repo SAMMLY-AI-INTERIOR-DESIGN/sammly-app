@@ -2,9 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:device_preview/device_preview.dart';
-import 'package:sammly/features/Auth/presentation/views/login_view.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:sammly/features/splash/presentation/views/splash_view.dart';
 
 void main() {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(
     DevicePreview(enabled: false, builder: (context) => const SammlyApp()),
   );
@@ -30,7 +33,7 @@ class SammlyApp extends StatelessWidget {
           // ==========================================
           // حط أول شاشة هتكودها هنا (مثلاً LoginScreen)
           // ==========================================
-          home: const LoginScreen(), // استبدل السطر ده بشاشتك
+          home: const SplashScreen(), // استبدل السطر ده بشاشتك
         );
       },
     );
