@@ -8,4 +8,5 @@ class AppImages {
   static const String historyIcon = "assets/images/history.svg";
   static const String profileIcon = "assets/images/profile.svg";
   static const String successBackground = 'assets/images/success_background.svg';
+  
 }
