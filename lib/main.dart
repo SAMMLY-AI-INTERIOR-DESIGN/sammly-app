@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:sammly/features/Auth/presentation/views/login_view.dart';
+import 'package:sammly/features/Explore/presentation/views/exploreview.dart';
 
 void main() {
   runApp(
@@ -30,7 +31,7 @@ class SammlyApp extends StatelessWidget {
           // ==========================================
           // حط أول شاشة هتكودها هنا (مثلاً LoginScreen)
           // ==========================================
-          home: const LoginScreen(), // استبدل السطر ده بشاشتك
+          home: const ExploreView(), // استبدل السطر ده بشاشتك
         );
       },
     );

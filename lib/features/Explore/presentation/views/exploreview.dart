@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sammly/core/constant/app_images.dart';
 
 class ExploreView extends StatelessWidget {
   const ExploreView({super.key});
@@ -33,32 +34,34 @@ class ExploreView extends StatelessWidget {
         ),
       ),
       // Extend body عشان الـ Bottom Nav العائم يظهر بشكل شيك فوق الخلفية
-      extendBody: true, 
+      extendBody: true,
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
         child: Column(
           children: [
             _buildExploreCard(
-              imageUrl: 'assets/images/explore_categories.png', // مسار صورة الكارد الأول
+              imageUrl: AppImages.explore1,
               title: 'Browse design categories',
               subtitle:
                   'Explore ready-made styles and rooms organized\nby category.',
             ),
             SizedBox(height: 20.h),
             _buildExploreCard(
-              imageUrl: 'assets/images/explore_shared.png', // مسار صورة الكارد الثاني
+              imageUrl: AppImages.explore2,
               title: 'Explore shared designs',
               subtitle:
                   'Browse rooms created by other users and get\ninspired.',
             ),
-            SizedBox(height: 100.h), // مساحة عشان الكروت متستخباش تحت الـ Bottom Nav
+            SizedBox(
+              height: 100.h,
+            ), // مساحة عشان الكروت متستخباش تحت الـ Bottom Nav
           ],
         ),
       ),
-      bottomNavigationBar: const _CustomBottomNavBar(),
     );
   }
 
+  // Widget مخصص للكروت عشان مكررش الكود
   // Widget مخصص للكروت عشان مكررش الكود
   Widget _buildExploreCard({
     required String imageUrl,
@@ -66,8 +69,9 @@ class ExploreView extends StatelessWidget {
     required String subtitle,
   }) {
     return Container(
+      width: 366.w, // العرض اللي إنت جبته من Figma بالظبط
       decoration: BoxDecoration(
-        color: const Color(0xFFF4F7F9), // لون خلفية النص في الكارد (رمادي/أزرق فاتح جداً)
+        color: const Color(0xFFF4F7F9), // لون خلفية النص في الكارد
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
@@ -83,12 +87,11 @@ class ExploreView extends StatelessWidget {
           // جزء الصورة العلوية
           ClipRRect(
             borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
-            child: Container(
-              height: 160.h,
-              width: double.infinity,
-              color: Colors.grey[300], // لون مؤقت لو الصورة مش موجودة
-              // TODO: استخدم الصورة بتاعتك هنا بدل الـ Container الفاضي
-              // child: Image.asset(imageUrl, fit: BoxFit.cover), 
+            child: Image.asset(
+              imageUrl,
+              height: 179.h, // الطول اللي إنت جبته من Figma
+              width: double.infinity, // عشان تملأ عرض الكارت كله
+              fit: BoxFit.cover, // عشان الصورة متتمطش وتحافظ على جودتها
             ),
           ),
           // جزء النصوص والزرار
@@ -128,7 +131,7 @@ class ExploreView extends StatelessWidget {
                 // أيقونة السهم الدائرية
                 Icon(
                   Icons.arrow_circle_right_outlined,
-                  color: const Color(0xFF196868), // لون الأيقونة (نفس لون الأساسي بتاعك)
+                  color: const Color(0xFF196868),
                   size: 28.sp,
                 ),
               ],
@@ -136,76 +139,6 @@ class ExploreView extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-// الكلاس الخاص بالـ Bottom Navigation Bar العائم
-class _CustomBottomNavBar extends StatelessWidget {
-  const _CustomBottomNavBar();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 30.h),
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-      decoration: BoxDecoration(
-        color: const Color(0xFFEFF9F7), // لون خلفية الناف بار
-        borderRadius: BorderRadius.circular(30.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _buildNavItem(icon: Icons.home_outlined, isActive: false),
-          _buildNavItem(icon: Icons.explore_outlined, label: 'Explore', isActive: true),
-          _buildNavItem(icon: Icons.history, isActive: false),
-          _buildNavItem(icon: Icons.person_outline, isActive: false),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNavItem({required IconData icon, String? label, required bool isActive}) {
-    final activeColor = const Color(0xFF196868); // لون الأيقونة المفعلة
-    final inactiveColor = const Color(0xFF196868); // لون الأيقونة غير المفعلة
-
-    if (isActive && label != null) {
-      return Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
-        decoration: BoxDecoration(
-          color: const Color(0xFFC9D4E8), // خلفية الزرار المفعل (أزرق/بنفسجي فاتح)
-          borderRadius: BorderRadius.circular(20.r),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: activeColor, size: 24.sp),
-            SizedBox(width: 8.w),
-            Text(
-              label,
-              style: TextStyle(
-                color: activeColor,
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w600,
-                fontFamily: 'Manrope',
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    return IconButton(
-      icon: Icon(icon, color: inactiveColor, size: 26.sp),
-      onPressed: () {
-        // يمكنك إضافة Navigation هنا للتبديل بين الشاشات
-      },
     );
   }
 }
