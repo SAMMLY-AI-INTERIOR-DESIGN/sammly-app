@@ -20,5 +20,10 @@ class AppImages {
   static const String aiPoweredIcon = "assets/images/ai_powered.svg";
   static const String startGenerateIcon = "assets/images/start_generate.svg";
   static const String placeholderRoomAI = "assets/images/home_placeholder.png";
+  static const String explore1 = "assets/images/explore1.png";
+  static const String explore2 = "assets/images/explore2.png";
 
+
+
+  
 }
