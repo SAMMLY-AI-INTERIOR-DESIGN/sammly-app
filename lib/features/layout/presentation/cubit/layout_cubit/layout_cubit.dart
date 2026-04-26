@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sammly/features/home/presentation/views/home_view.dart';
 import 'package:sammly/features/layout/presentation/cubit/layout_cubit/layout_state.dart';
 
 class LayoutCubit extends Cubit<LayoutState> {
@@ -8,7 +9,7 @@ class LayoutCubit extends Cubit<LayoutState> {
   int currentIndex = 0;
 
   List<Widget> views = [
-    const Scaffold(body: Center(child: Text('home'))),
+    const HomeView(),
     const Scaffold(body: Center(child: Text('explore'))),
     const Scaffold(body: Center(child: Text('History'))),
     const Scaffold(body: Center(child: Text('Profile'))),
