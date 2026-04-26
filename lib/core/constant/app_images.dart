@@ -20,5 +20,18 @@ class AppImages {
   static const String aiPoweredIcon = "assets/images/ai_powered.svg";
   static const String startGenerateIcon = "assets/images/start_generate.svg";
   static const String placeholderRoomAI = "assets/images/home_placeholder.png";
+  static const String explore1 = "assets/images/explore1.png";
+  static const String explore2 = "assets/images/explore2.png";
+  static const String noNetwork = "assets/images/NoNetwork.png";
+  static const String noResult = "assets/images/NoResult.png";
+  static const String noImage = "assets/images/NoImage.png";
+  static const String noFavorite = "assets/images/NoFavorite.png";
+  static const String noNotification = "assets/images/NoNotifications.png";
+
+
+
+
+
+  
 
 }
