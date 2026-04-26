@@ -43,14 +43,13 @@ class ExploreView extends StatelessWidget {
               imageUrl: AppImages.explore1,
               title: 'Browse design categories',
               subtitle:
-                  'Explore ready-made styles and rooms organized\nby category.',
+                  'Explore ready-made styles and rooms organized by category.',
             ),
             SizedBox(height: 20.h),
             _buildExploreCard(
               imageUrl: AppImages.explore2,
               title: 'Explore shared designs',
-              subtitle:
-                  'Browse rooms created by other users and get\ninspired.',
+              subtitle: 'Browse rooms created by other users and get inspired.',
             ),
             SizedBox(
               height: 100.h,
@@ -69,7 +68,7 @@ class ExploreView extends StatelessWidget {
     required String subtitle,
   }) {
     return Container(
-      width: 366.w, // العرض اللي إنت جبته من Figma بالظبط
+      width: double.infinity,
       decoration: BoxDecoration(
         color: const Color(0xFFF4F7F9), // لون خلفية النص في الكارد
         borderRadius: BorderRadius.circular(16.r),
@@ -116,6 +115,8 @@ class ExploreView extends StatelessWidget {
                       SizedBox(height: 4.h),
                       Text(
                         subtitle,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w500,
