@@ -9,31 +9,15 @@ class AppColors {
   static const Color whiteColor = Color(0xFFF8FAFC);
   static const Color activeNavBarBg = Color(0xFFBCCBE3);
 
-
   static const LinearGradient primaryGradient = LinearGradient(
-    colors: [
-      primaryColor,
-      primaryColor,
-      Color.fromARGB(255, 27, 176, 127),
-      Color.fromARGB(255, 27, 176, 127),
-    ],
-     stops: [
-      0.0,
-      0.45,
-      0.55,
-      1.0
-    ],
+    colors: [primaryColor, primaryColor, secondaryColor, secondaryColor],
+    stops: [0.0, 0.45, 0.55, 1.0],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
-   
   );
   static const LinearGradient navBgGradient = LinearGradient(
-    colors: [
-      bg2Color,
-      bg1Color,
-    ],
+    colors: [bg2Color, bg1Color],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-  
 }
