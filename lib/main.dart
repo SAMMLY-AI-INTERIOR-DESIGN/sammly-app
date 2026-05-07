@@ -1,3 +1,4 @@
+// import 'package:flutter/foundation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,6 +6,8 @@ import 'package:device_preview/device_preview.dart';
 import 'package:sammly/features/favorite/presentation/views/favorite_view.dart';
 
 void main() {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(
     DevicePreview(enabled: !kReleaseMode, builder: (context) => const SammlyApp()),
   );
@@ -21,6 +24,8 @@ class SammlyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
+          initialRoute: AppRoutes.onboardingView,
+          onGenerateRoute: AppRouter.generateRoute,
           debugShowCheckedModeBanner: false,
           useInheritedMediaQuery: true, // ضروري لـ DevicePreview
           locale: DevicePreview.locale(context),
