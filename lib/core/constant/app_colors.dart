@@ -12,6 +12,7 @@ class AppColors {
   static const Color tokensColor = Color(0xFF1E4179);
   static const Color searchTextFieldColor = Color(0xFFEAEEF6);
   static const Color greyColor = Color(0xFF516067);
+  static const Color blackColor2 = Color(0xFF2E2E2E);
 
 
   static const LinearGradient primaryGradient = LinearGradient(
@@ -35,6 +36,15 @@ class AppColors {
     colors: [
       secondaryColor,
       primaryColor,
+    ],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    );
+
+  static const LinearGradient primaryGradient3 = LinearGradient(
+    colors: [
+      primaryColor,
+      secondaryColor,
     ],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
