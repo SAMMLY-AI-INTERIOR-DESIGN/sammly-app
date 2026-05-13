@@ -14,7 +14,6 @@ class AppColors {
   static const Color greyColor = Color(0xFF516067);
   static const Color blackColor2 = Color(0xFF2E2E2E);
 
-
   static const LinearGradient primaryGradient = LinearGradient(
     colors: [primaryColor, primaryColor, secondaryColor, secondaryColor],
     stops: [0.0, 0.45, 0.55, 1.0],
@@ -28,7 +27,7 @@ class AppColors {
       primaryColor,
     ],
     begin: Alignment.topCenter,
-    end: Alignment.bottomCenter, 
+    end: Alignment.bottomCenter,
   );
 
   static const LinearGradient primaryGradient2 = LinearGradient(
@@ -72,5 +71,4 @@ class AppColors {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-  
 }
