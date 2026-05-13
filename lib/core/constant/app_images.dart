@@ -33,4 +33,10 @@ class AppImages {
   static const String noNotification = "assets/images/NoNotifications.png";
   static const String heartFilled = "assets/images/heartFilled.svg";
   static const String heartOutline = "assets/images/heartOutline.svg";
+
+
+
+
+
+
 }
