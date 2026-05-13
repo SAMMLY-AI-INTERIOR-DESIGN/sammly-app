@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/features/Explore/presentation/views/browse_designs.dart';
+import 'package:sammly/features/Explore/presentation/views/shared_designs.dart';
 
 // import 'package:sammly/features/Explore/presentation/views/shared_designs_view.dart';
 
@@ -67,11 +68,13 @@ class ExploreView extends StatelessWidget {
               subtitle: 'Browse rooms created by other users and get inspired.',
               onTap: () {
                 // النقل للشاشة التانية (التصميمات المشتركة اللي فيها الـ Grid)
-                /* Navigator.push(
+                Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const SharedDesignsView()),
+                  MaterialPageRoute(
+                    builder: (context) => const SharedDesignsView(),
+                  ),
                 );
-                */
+
                 print(
                   "تم الضغط على الكارت التاني",
                 ); // مجرد تست لحد ما تعمل الشاشة
