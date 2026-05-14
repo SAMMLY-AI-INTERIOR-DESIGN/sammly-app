@@ -29,7 +29,7 @@ class AppImages {
   static const String noNetwork = "assets/images/NoNetwork.png";
   static const String noResult = "assets/images/NoResult.png";
   static const String noImage = "assets/images/NoImage.png";
-  static const String noFavorite = "assets/images/NoFavorite.png";
+  static const String noFavorite = "assets/images/NoFavourite.png";
   static const String noNotification = "assets/images/NoNotifications.png";
   static const String heartFilled = "assets/images/heartFilled.svg";
   static const String heartOutline = "assets/images/heartOutline.svg";
