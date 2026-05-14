@@ -21,14 +21,11 @@ class AppColors {
   );
 
   static const LinearGradient primaryGradient2 = LinearGradient(
-    colors: [
-      secondaryColor,
-      primaryColor,
-    ],
+    colors: [secondaryColor, primaryColor],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
-    );
-  
+  );
+
   static const LinearGradient navBgGradient = LinearGradient(
     colors: [bg2Color, bg1Color],
     begin: Alignment.topLeft,
@@ -36,11 +33,26 @@ class AppColors {
   );
 
   static const LinearGradient scafoldBgGradient = LinearGradient(
-    colors: [
-      bg1Color,
-      bg2Color,
-    ],
+    colors: [bg1Color, bg2Color],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
+
+  static const LinearGradient iconGradient = LinearGradient(
+    colors: [primaryColor, secondaryColor],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
+}
+
+extension GradientWidgetExtension on Widget {
+  Widget withAppGradient() {
+    return ShaderMask(
+      shaderCallback: (Rect bounds) {
+        return AppColors.iconGradient.createShader(bounds);
+      },
+      blendMode: BlendMode.srcIn,
+      child: this,
+    );
+  }
 }
