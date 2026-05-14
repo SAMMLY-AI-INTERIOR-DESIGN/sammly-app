@@ -45,7 +45,14 @@ class _FilterBarState extends State<FilterBar> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.r),
                   gradient: isSelected
-                      ? AppColors.primaryGradient3
+                      ? const LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            AppColors.primaryColor,
+                            AppColors.secondaryColor,
+                          ],
+                        )
                       : null,
                   color: isSelected ? null : AppColors.bg1Color,
                 ),
