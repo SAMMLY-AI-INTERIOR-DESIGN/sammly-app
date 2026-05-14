@@ -2,7 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:device_preview/device_preview.dart';
-import 'package:sammly/features/Auth/presentation/views/login_view.dart';
+import 'package:sammly/core/constant/app_strings.dart';
+import 'package:sammly/features/profile/presentation/views/profile_view.dart';
 
 void main() {
   runApp(
@@ -25,12 +26,12 @@ class SammlyApp extends StatelessWidget {
           useInheritedMediaQuery: true, // ضروري لـ DevicePreview
           locale: DevicePreview.locale(context),
           builder: DevicePreview.appBuilder,
-          title: 'Sammly',
+          title: AppStrings.appname,
 
           // ==========================================
           // حط أول شاشة هتكودها هنا (مثلاً LoginScreen)
           // ==========================================
-          home: const LoginScreen(), // استبدل السطر ده بشاشتك
+          home: const ProfileView(), // استبدل السطر ده بشاشتك
         );
       },
     );
