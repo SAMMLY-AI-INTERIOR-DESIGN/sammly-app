@@ -5,6 +5,7 @@ import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/custombutton.dart';
+import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/features/Auth/presentation/views/forgot_password_view.dart';
 import 'package:sammly/features/Auth/presentation/views/signup_view.dart';
 import 'package:sammly/features/Auth/presentation/widgets/custom_line.dart';
@@ -186,7 +187,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             CustomButton(
                               text: 'Log In',
                               onPressed: () {
-                                if (_formKey.currentState!.validate()) {}
+                                if (_formKey.currentState!.validate()) {
+                                  Navigator.pushReplacementNamed(context, AppRoutes.onboardingView);
+                                }
                               },
                             ),
                             SizedBox(height: 24.h),
