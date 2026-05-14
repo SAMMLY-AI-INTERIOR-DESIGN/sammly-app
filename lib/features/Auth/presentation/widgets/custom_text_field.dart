@@ -37,8 +37,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
     // تحديد لون الخلفية بناءً على الحالة (فاطمة ديزاين)
     Color getFillColor() {
       if (widget.hasError) return Colors.red.withValues(alpha: 0.08);
-      if (widget.isSuccess)
+      if (widget.isSuccess) {
         return AppColors.secondaryColor.withValues(alpha: 0.08);
+      }
       return Colors.transparent;
     }
 
