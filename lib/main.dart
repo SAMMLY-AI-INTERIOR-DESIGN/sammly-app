@@ -1,11 +1,9 @@
-// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:sammly/core/routing/app_router.dart';
 import 'package:sammly/core/routing/routes.dart';
-import 'package:sammly/features/Explore/presentation/views/exploreview.dart';
-import 'package:sammly/features/favorite/presentation/views/favorite_view.dart';
 
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +25,7 @@ class SammlyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
-          initialRoute: AppRoutes.onboardingView,
+          initialRoute: AppRoutes.splashView,
           onGenerateRoute: AppRouter.generateRoute,
           debugShowCheckedModeBanner: false,
           useInheritedMediaQuery: true, // ضروري لـ DevicePreview
@@ -35,10 +33,6 @@ class SammlyApp extends StatelessWidget {
           builder: DevicePreview.appBuilder,
           title: 'Sammly',
 
-          // ==========================================
-          // حط أول شاشة هتكودها هنا (مثلاً LoginScreen)
-          // ==========================================
-          home: const FavoriteView(), // استبدل السطر ده بشاشتك
         );
       },
     );

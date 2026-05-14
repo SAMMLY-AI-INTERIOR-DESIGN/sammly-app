@@ -4,6 +4,7 @@ import 'package:sammly/core/constant/app_colors.dart';
 
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/custombutton.dart';
+import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/features/Auth/presentation/widgets/custom_line.dart';
 import 'package:sammly/features/Auth/presentation/widgets/custom_text_field.dart';
 import 'package:sammly/features/Auth/presentation/widgets/loginwith.dart';
@@ -207,7 +208,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                             SizedBox(height: 16.h),
 
-                            // الزرار الأساسي المليان (Solid)
                             CustomButton(
                               text: 'Sign up',
                               onPressed: () {
@@ -224,6 +224,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     return;
                                   }
                                   // Logic التسجيل هنا
+                                  Navigator.pushReplacementNamed(context, AppRoutes.onboardingView);
                                 }
                               },
                             ),

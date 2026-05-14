@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -41,7 +40,7 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
     {
       'image':
           'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=600&auto=format&fit=crop',
-      'user': 'Lina Mahmoud',
+      'user': 'Fatma Salah',
       'likes': '67',
     },
     {
@@ -53,7 +52,7 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
     {
       'image':
           'https://images.unsplash.com/photo-1634712282287-14ed57b9cc89?q=80&w=600&auto=format&fit=crop',
-      'user': 'Sara Emad',
+      'user': 'Sara ahmed',
       'likes': '41',
     },
     {
@@ -96,9 +95,7 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
     return Scaffold(
       // خلفية متدرجة بدلاً من لون ثابت
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: AppColors.scafoldBgGradient,
-        ),
+        decoration: const BoxDecoration(gradient: AppColors.scafoldBgGradient),
         child: SafeArea(
           child: Column(
             children: [
@@ -151,7 +148,7 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
           const Spacer(),
           // العنوان
           Text(
-            'Community Designs',
+            'Shared Designs',
             style: TextStyle(
               color: AppColors.blackColor,
               fontSize: 20.sp,
@@ -201,11 +198,7 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
               padding: EdgeInsets.all(13.w),
               child: SvgPicture.asset(
                 AppImages.searchIcon,
-                colorFilter: ColorFilter.mode(
-                  AppColors.secondaryColor.withOpacity(0.7),
-                  BlendMode.srcIn,
-                ),
-              ),
+              ).withAppGradient(),
             ),
             suffixIcon: Padding(
               padding: EdgeInsets.all(13.w),
@@ -224,87 +217,89 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
   }
 
   Widget _buildSortBar() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
-      child: Row(
-        children: _sortOptions.map((option) {
-          final isSelected = option == _selectedSort;
-          return Padding(
-            padding: EdgeInsets.only(right: 10.w),
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  _selectedSort = option;
-                });
-              },
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeOutCubic,
-                padding:
-                    EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25.r),
-                  gradient: isSelected
-                      ? const LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            AppColors.primaryColor,
-                            AppColors.secondaryColor,
-                          ],
-                        )
-                      : null,
-                  color: isSelected
-                      ? null
-                      : Colors.white.withOpacity(0.7),
-                  border: isSelected
-                      ? null
-                      : Border.all(
-                          color: AppColors.greyColor.withOpacity(0.15),
-                          width: 1,
-                        ),
-                  boxShadow: isSelected
-                      ? [
-                          BoxShadow(
-                            color: AppColors.primaryColor.withOpacity(0.3),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.symmetric(horizontal: 20.w),
+        child: Row(
+          children: _sortOptions.map((option) {
+            final isSelected = option == _selectedSort;
+            return Padding(
+              padding: EdgeInsets.only(right: 10.w),
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _selectedSort = option;
+                  });
+                },
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOutCubic,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 10.h,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25.r),
+                    gradient: isSelected
+                        ? const LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              AppColors.primaryColor,
+                              AppColors.secondaryColor,
+                            ],
+                          )
+                        : null,
+                    color: isSelected ? null : Colors.white.withOpacity(0.7),
+                    border: isSelected
+                        ? null
+                        : Border.all(
+                            color: AppColors.greyColor.withOpacity(0.15),
+                            width: 1,
                           ),
-                        ]
-                      : [],
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      option == 'Most liked'
-                          ? Icons.favorite_rounded
-                          : Icons.access_time_rounded,
-                      color: isSelected
-                          ? Colors.white
-                          : AppColors.greyColor,
-                      size: 14.sp,
-                    ),
-                    SizedBox(width: 6.w),
-                    Text(
-                      option,
-                      style: TextStyle(
-                        color: isSelected
-                            ? Colors.white
-                            : AppColors.blackColor,
-                        fontSize: 13.sp,
-                        fontWeight:
-                            isSelected ? FontWeight.w600 : FontWeight.w500,
-                        fontFamily: 'Manrope',
+                    boxShadow: isSelected
+                        ? [
+                            BoxShadow(
+                              color: AppColors.primaryColor.withOpacity(0.3),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ]
+                        : [],
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        option == 'Most liked'
+                            ? Icons.favorite_rounded
+                            : Icons.access_time_rounded,
+                        color: isSelected ? Colors.white : AppColors.greyColor,
+                        size: 14.sp,
                       ),
-                    ),
-                  ],
+                      SizedBox(width: 6.w),
+                      Text(
+                        option,
+                        style: TextStyle(
+                          color: isSelected
+                              ? Colors.white
+                              : AppColors.blackColor,
+                          fontSize: 13.sp,
+                          fontWeight: isSelected
+                              ? FontWeight.w600
+                              : FontWeight.w500,
+                          fontFamily: 'Manrope',
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        }).toList(),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
@@ -388,13 +383,13 @@ class _SharedDesignCardState extends State<SharedDesignCard>
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-    _likeScaleAnim = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.4), weight: 50),
-      TweenSequenceItem(tween: Tween(begin: 1.4, end: 1.0), weight: 50),
-    ]).animate(CurvedAnimation(
-      parent: _likeAnimController,
-      curve: Curves.easeInOut,
-    ));
+    _likeScaleAnim =
+        TweenSequence<double>([
+          TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.4), weight: 50),
+          TweenSequenceItem(tween: Tween(begin: 1.4, end: 1.0), weight: 50),
+        ]).animate(
+          CurvedAnimation(parent: _likeAnimController, curve: Curves.easeInOut),
+        );
   }
 
   @override
@@ -569,15 +564,9 @@ class _SharedDesignCardState extends State<SharedDesignCard>
                         scale: _likeScaleAnim,
                         child: SvgPicture.asset(
                           _isLiked
-                              ? AppImages.heartFilled
-                              : AppImages.heartOutline,
+                              ? 'assets/images/heartFilled.svg'
+                              : 'assets/images/heartOutline.svg',
                           width: 16.w,
-                          colorFilter: _isLiked
-                              ? null
-                              : const ColorFilter.mode(
-                                  AppColors.secondaryColor,
-                                  BlendMode.srcIn,
-                                ),
                         ),
                       ),
                       SizedBox(width: 5.w),
@@ -600,8 +589,10 @@ class _SharedDesignCardState extends State<SharedDesignCard>
 
                 // زرار المشاهدة
                 Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 4.h,
+                  ),
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
                       colors: [
@@ -614,16 +605,6 @@ class _SharedDesignCardState extends State<SharedDesignCard>
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        'View',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Manrope',
-                        ),
-                      ),
-                      SizedBox(width: 3.w),
                       Icon(
                         Icons.arrow_forward_rounded,
                         color: Colors.white,

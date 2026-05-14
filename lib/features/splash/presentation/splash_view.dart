@@ -3,7 +3,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sammly/core/constant/app_colors.dart';
-import 'package:sammly/features/Auth/presentation/views/login_view.dart';
+import 'package:sammly/core/routing/routes.dart';
 
 // ─── Crop ratios from actual SVG clipPath bounds (all on 1500×1500 canvas) ────
 //  logo_roof.svg   : y 477.98→1021.73  contentRatio = 543.75/1500 = 0.3625
@@ -100,9 +100,7 @@ class _SplashScreenState extends State<SplashScreen>
     // Hold phase: all elements static
     await Future.delayed(const Duration(milliseconds: 1500));
     if (!mounted) return;
-    Navigator.of(
-      context,
-    ).pushReplacement(MaterialPageRoute(builder: (_) => const LoginScreen()));
+    Navigator.pushReplacementNamed(context, AppRoutes.loginView);
   }
 
   @override
