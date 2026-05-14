@@ -36,4 +36,8 @@ class AppImages {
   static const String maleProfilePlaceholder = "assets/images/male_profile_placeholder.svg";
   static const String goArrow = "assets/images/go_arrow.svg";
   static const String sharedImagesPlaceholder = "assets/images/shared_images_placeholder.svg";
+  static const String uploadImage = "assets/images/upload_image.svg";
+  static const String caledar = "assets/images/caleder.svg";
+  
+
 }

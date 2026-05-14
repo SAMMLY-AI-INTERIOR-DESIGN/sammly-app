@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sammly/core/routing/routes.dart';
+import 'package:sammly/features/profile/presentation/views/edit_profile_view.dart';
 import 'package:sammly/features/profile/presentation/views/profile_view.dart';
 
 abstract class AppRouter {
@@ -44,6 +45,13 @@ abstract class AppRouter {
         return MaterialPageRoute(
           builder: (context) {
             return const ProfileView();
+          },
+        );
+
+      case AppRoutes.editProfileView:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const EditProfileView();
           },
         );
 
