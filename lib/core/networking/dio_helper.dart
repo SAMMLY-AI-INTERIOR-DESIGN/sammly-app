@@ -48,4 +48,19 @@ abstract class DioHelper {
       queryParameters: queryParameters,
     );
   }
+
+  static Future<Response> patchData({
+    required String endPoint,
+    required dynamic data,
+    Map<String, dynamic>? queryParameters,
+    String? token,
+  }) async {
+    dio.options.headers['Authorization'] = token != null ? 'Bearer $token' : '';
+
+    return await dio.patch(
+      endPoint,
+      data: data,
+      queryParameters: queryParameters,
+    );
+  }
 }
