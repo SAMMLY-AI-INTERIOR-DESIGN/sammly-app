@@ -50,6 +50,7 @@ class AppImages {
   static const String logOut = "assets/images/logout.svg";
   static const String edit = "assets/images/edit.svg";
   static const String profileBgPlaceholder = "assets/images/profile_bg_placeholder.png";
+  static const String noNotifications = "assets/images/no_notifications.png";
 
 
   

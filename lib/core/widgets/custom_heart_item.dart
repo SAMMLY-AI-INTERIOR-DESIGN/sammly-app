@@ -15,7 +15,7 @@ class CustomHeartItem extends StatelessWidget {
         color: AppColors.bg2Color,
         borderRadius: BorderRadius.circular(20.r),
       ),
-      child: SvgPicture.asset(AppImages.heartFilled, width: 16.w, height: 16.h),
+      child: SvgPicture.asset(AppImages.heartFilled, width: 12.w, height: 12.h),
     );
   }
 }

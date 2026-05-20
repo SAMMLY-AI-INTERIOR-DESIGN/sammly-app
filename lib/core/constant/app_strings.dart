@@ -35,4 +35,9 @@ abstract class AppStrings {
   static const String gender = "Gender";
   static const String selectYourGender = "select your gender";
   static const String update = "Update";
+
+  // notifications
+  static const String likeYourSharedDesign = "Like your shared design";
+  static const String noNotifications = "No Notifications";
+  static const String noNotificationsDesc = "Notification Inbox Empty";
 }

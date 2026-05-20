@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/theme/text_styles.dart';
-import 'package:sammly/features/profile/data/model/shared_images_model.dart';
+import 'package:sammly/features/profile/data/models/shared_images_model.dart';
 import 'package:sammly/core/widgets/custom_heart_item.dart';
 class SharedImageCard extends StatelessWidget {
   final SharedImageModel item;
