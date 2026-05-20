@@ -43,4 +43,6 @@ abstract class AppStrings {
 
   // following
   static const String unfollow = "Unfollow";
+
+ 
 }
