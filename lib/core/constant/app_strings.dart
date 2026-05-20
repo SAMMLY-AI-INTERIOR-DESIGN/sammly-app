@@ -44,5 +44,13 @@ abstract class AppStrings {
   // following
   static const String unfollow = "Unfollow";
 
+  // invite friends dialog
+  static const String inviteFriends = "Invite Friends";
+  static const String inviteFriendsDesc = "Tell your friend its free and easy to generate your own design";
+  static const String copyLink = "COPY LINK";
+  static const String linkCopied = "Link Copied!";
+  static const String orShareOn = "Or share on....";
+  static const String dummyInviteLink = "https://invite.Sammly.com/\nASDGFJKHHUHSULWDIH";
+
  
 }

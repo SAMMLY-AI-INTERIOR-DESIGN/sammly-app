@@ -51,6 +51,8 @@ class AppImages {
   static const String edit = "assets/images/edit.svg";
   static const String profileBgPlaceholder = "assets/images/profile_bg_placeholder.png";
   static const String noNotifications = "assets/images/no_notifications.png";
+  static const String whatsapp = "assets/images/whatsapp.svg";
+  static const String xTwitter = "assets/images/x_twitter.svg";
 
 
   

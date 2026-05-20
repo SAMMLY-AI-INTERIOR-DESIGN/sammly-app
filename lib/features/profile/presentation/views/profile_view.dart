@@ -5,6 +5,7 @@ import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
+import 'package:sammly/features/profile/presentation/views/widgets/invite_friends_widget.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/profile_menu_group.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/profile_menu_item.dart';
 
@@ -269,7 +270,15 @@ class ProfileView extends StatelessWidget {
                       ProfileMenuItem(
                         title: AppStrings.share,
                         svgIcon: AppImages.share,
-                        onTap: () {},
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (BuildContext context) {
+                              return InviteFriendsDialog();
+                            },
+                          );
+                        },
                       ),
                     ],
                   ),

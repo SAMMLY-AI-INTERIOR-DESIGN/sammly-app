@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:sammly/core/constant/app_strings.dart';
-import 'package:sammly/features/profile/presentation/views/privacy_policy_view.dart';
+import 'package:sammly/features/profile/presentation/views/profile_view.dart';
 
 void main() {
   runApp(
@@ -28,7 +28,7 @@ class SammlyApp extends StatelessWidget {
           builder: DevicePreview.appBuilder,
           title: AppStrings.appname,
 
-          home: const PrivacyPolicyView(),
+          home: const ProfileView(),
         );
       },
     );
