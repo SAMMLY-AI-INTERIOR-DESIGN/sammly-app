@@ -47,10 +47,5 @@ class AppColors {
     end: Alignment.bottomRight,
   );
 
-  static const LinearGradient profileGradient = LinearGradient(
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-    colors: [Colors.black, Colors.white, Colors.transparent],
-    stops: [0.0, 0.1, 1.0],
-  );
+  
 }

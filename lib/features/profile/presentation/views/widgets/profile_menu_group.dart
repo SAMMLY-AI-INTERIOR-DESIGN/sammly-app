@@ -22,10 +22,10 @@ class ProfileMenuGroup extends StatelessWidget {
               children[index],
               if (index < children.length - 1)
                 Divider(
-                  height: 1,
+                  height: 0,
                   thickness: 1,
-                  color: AppColors.greyColor,
-                  indent: 45.w,
+                  color: AppColors.greyColor.withValues(alpha: 0.3),
+                  indent: 16.w,
                   endIndent: 16.w,
                 ),
             ],

@@ -24,15 +24,9 @@ class ProfileView extends StatelessWidget {
             left: 0,
             right: 0,
             height: 350.h,
-            child: ShaderMask(
-              shaderCallback: (rect) {
-                return AppColors.profileGradient.createShader(rect);
-              },
-              blendMode: BlendMode.dstIn,
-              child: Image.asset(
-                AppImages.profileBgPlaceholder,
-                fit: BoxFit.cover,
-              ),
+            child: Image.asset(
+              AppImages.profileBgPlaceholder,
+              fit: BoxFit.cover,
             ),
           ),
 
@@ -49,14 +43,14 @@ class ProfileView extends StatelessWidget {
                         icon: Icon(
                           Icons.arrow_back_ios_new,
                           size: 25.sp,
-                          color: AppColors.whiteColor,
+                          color: AppColors.blackColor2,
                         ),
                         onPressed: () => Navigator.pop(context),
                       ),
                       Text(
                         AppStrings.profile,
                         style: AppTextStyles.title20Bold.copyWith(
-                          color: AppColors.whiteColor,
+                          color: AppColors.blackColor2,
                         ),
                       ),
                       Container(
@@ -144,7 +138,7 @@ class ProfileView extends StatelessWidget {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20.r),
                                 color: AppColors.whiteColor.withValues(
-                                  alpha: 0.8,
+                                  alpha: 0.9,
                                 ),
                               ),
                               child: Row(
@@ -179,7 +173,6 @@ class ProfileView extends StatelessWidget {
 
                   SizedBox(height: 24.h),
 
-                  // المجموعة الأولى
                   ProfileMenuGroup(
                     children: [
                       ProfileMenuItem(
@@ -200,16 +193,18 @@ class ProfileView extends StatelessWidget {
                     ],
                   ),
 
-                  // المجموعة التانية
                   ProfileMenuGroup(
                     children: [
                       ProfileMenuItem(
                         title: AppStrings.freeGenerations,
                         svgIcon: AppImages.aiPoweredIcon,
-                        trailing: Text(
-                          "5",
-                          style: AppTextStyles.badge14SemiBold,
-                        ), // رقم بدل السهم
+                        trailing: Padding(
+                          padding: EdgeInsets.only(right: 8.w),
+                          child: Text(
+                            "5",
+                            style: AppTextStyles.badge14SemiBold,
+                          ),
+                        ), 
                         onTap: () {},
                       ),
                       ProfileMenuItem(
@@ -220,7 +215,6 @@ class ProfileView extends StatelessWidget {
                     ],
                   ),
 
-                  // المجموعة التالتة
                   ProfileMenuGroup(
                     children: [
                       ProfileMenuItem(
@@ -231,21 +225,24 @@ class ProfileView extends StatelessWidget {
                       ProfileMenuItem(
                         title: AppStrings.notification,
                         svgIcon: AppImages.notifications,
-                        trailing: Switch(
-                          value: false,
-                          activeThumbColor: AppColors.whiteColor,
-                          activeTrackColor: AppColors.secondaryColor,
-                          inactiveThumbColor: AppColors.whiteColor,
-                          inactiveTrackColor: AppColors.greyColor.withValues(
-                            alpha: 0.2,
+                        trailing: SizedBox(
+                          height: 20.h,
+                          child: Switch(
+                            value: false,
+                            activeThumbColor: AppColors.whiteColor,
+                            activeTrackColor: AppColors.secondaryColor,
+                            inactiveThumbColor: AppColors.whiteColor,
+                            inactiveTrackColor: AppColors.greyColor.withValues(
+                              alpha: 0.2,
+                            ),
+                            trackOutlineColor: WidgetStateProperty.all(
+                              Colors.transparent,
+                            ),
+                          
+                            thumbIcon: WidgetStateProperty.all(const Icon(null)),
+                          
+                            onChanged: (val) {},
                           ),
-                          trackOutlineColor: WidgetStateProperty.all(
-                            Colors.transparent,
-                          ),
-
-                          thumbIcon: WidgetStateProperty.all(const Icon(null)),
-
-                          onChanged: (val) {},
                         ),
                       ),
                     ],
