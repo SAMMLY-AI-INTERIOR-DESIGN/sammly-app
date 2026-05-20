@@ -15,32 +15,25 @@ class AppColors {
   static const Color blackColor2 = Color(0xFF2E2E2E);
   static const Color textFieldBodyColor = Color(0xFFE4F0F2);
 
-
   static const LinearGradient primaryGradient = LinearGradient(
     colors: [primaryColor, primaryColor, secondaryColor, secondaryColor],
     stops: [0.0, 0.45, 0.55, 1.0],
     begin: Alignment.topCenter,
-    end: Alignment.bottomCenter, 
+    end: Alignment.bottomCenter,
   );
 
   static const LinearGradient primaryGradient2 = LinearGradient(
-    colors: [
-      secondaryColor,
-      primaryColor,
-    ],
+    colors: [secondaryColor, primaryColor],
     begin: Alignment.topCenter,
-    end: Alignment.bottomCenter, 
+    end: Alignment.bottomCenter,
   );
 
   static const LinearGradient primaryGradient3 = LinearGradient(
-    colors: [
-      primaryColor,
-      secondaryColor,
-    ],
+    colors: [primaryColor, secondaryColor],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
-    );
-  
+  );
+
   static const LinearGradient navBgGradient = LinearGradient(
     colors: [bg2Color, bg1Color],
     begin: Alignment.topLeft,
@@ -48,12 +41,15 @@ class AppColors {
   );
 
   static const LinearGradient scafoldBgGradient = LinearGradient(
-    colors: [
-      bg1Color,
-      bg2Color,
-    ],
+    colors: [bg1Color, bg2Color],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-  
+
+  static const LinearGradient profileGradient = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [Colors.black, Colors.white, Colors.transparent],
+    stops: [0.0, 0.1, 1.0],
+  );
 }

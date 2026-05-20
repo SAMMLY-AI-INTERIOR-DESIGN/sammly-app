@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/features/profile/presentation/views/edit_profile_view.dart';
-import 'package:sammly/features/profile/presentation/views/profile_view.dart';
+import 'package:sammly/features/profile/presentation/views/my_profile_view.dart';
 
 abstract class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -44,7 +44,7 @@ abstract class AppRouter {
       case AppRoutes.profileView:
         return MaterialPageRoute(
           builder: (context) {
-            return const ProfileView();
+            return const MyProfileView();
           },
         );
 

@@ -10,6 +10,18 @@ abstract class AppStrings {
   // profile
   static const String myProfile = "My Profile";
   static const String sharedImages = "Shared Images";
+  static const String viewMyPosts = "View My Posts";
+  static const String favorites = "Favorites";
+  static const String following = "Following";
+  static const String freeGenerations = "Free Generations";
+  static const String manageSubscription = "Manage Subscription";
+  static const String support = "Support";
+  static const String notification = "Notification";
+  static const String termsConditions = "Terms & Conditions";
+  static const String privacyPolicy = "Privacy Policy";
+  static const String share = "Share";
+  static const String logOut = "Log Out";
+  static const String upgradePro = "Upgrade PRO";
 
   // edit profile
   static const String editProfile = "Edit profile";

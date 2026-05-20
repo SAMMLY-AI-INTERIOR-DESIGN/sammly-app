@@ -38,6 +38,20 @@ class AppImages {
   static const String sharedImagesPlaceholder = "assets/images/shared_images_placeholder.svg";
   static const String uploadImage = "assets/images/upload_image.svg";
   static const String caledar = "assets/images/caleder.svg";
+  static const String following = "assets/images/following.svg";
+  static const String manageSubscriptions = "assets/images/manage_substractions.svg";
+  static const String notifications = "assets/images/notifications.svg";
+  static const String privacy = "assets/images/privacy.svg";
+  static const String share = "assets/images/share.svg";
+  static const String support = "assets/images/support.svg";
+  static const String terms = "assets/images/terms.svg";
+  static const String upgrade = "assets/images/upgrade.svg";
+  static const String favorites = "assets/images/favorites.svg";
+  static const String logOut = "assets/images/logout.svg";
+  static const String edit = "assets/images/edit.svg";
+  static const String profileBgPlaceholder = "assets/images/profile_bg_placeholder.png";
+
+
   
 
 }
