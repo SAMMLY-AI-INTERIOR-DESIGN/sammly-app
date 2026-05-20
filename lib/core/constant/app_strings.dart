@@ -52,5 +52,9 @@ abstract class AppStrings {
   static const String orShareOn = "Or share on....";
   static const String dummyInviteLink = "https://invite.Sammly.com/\nASDGFJKHHUHSULWDIH";
 
+  // log out bottom sheet
+  static const String logoutConfirmMsg = "Are you sure you want to log out?";
+  static const String cancel = "Cancel";
+
  
 }
