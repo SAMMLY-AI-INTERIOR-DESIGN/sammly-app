@@ -8,7 +8,6 @@ import 'package:sammly/features/profile/presentation/views/widgets/notificatios_
 class NotificationsListView extends StatelessWidget {
   NotificationsListView({super.key});
 
-  // داتا وهمية لحد ما تربط بالـ Cubit
   final List<NotificationModel> _notifications = [
     NotificationModel(name: "Alicia Rochefort", action: AppStrings.likeYourSharedDesign, time: "09.10", imageUrl: "https://i.pravatar.cc/150?img=1"),
     NotificationModel(name: "Jessica Tan", action: AppStrings.likeYourSharedDesign, time: "09.10", imageUrl: "https://i.pravatar.cc/150?img=5"),

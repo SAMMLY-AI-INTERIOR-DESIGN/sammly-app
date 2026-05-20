@@ -40,4 +40,7 @@ abstract class AppStrings {
   static const String likeYourSharedDesign = "Like your shared design";
   static const String noNotifications = "No Notifications";
   static const String noNotificationsDesc = "Notification Inbox Empty";
+
+  // following
+  static const String unfollow = "Unfollow";
 }

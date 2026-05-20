@@ -14,6 +14,7 @@ class AppColors {
   static const Color greyColor = Color(0xFF516067);
   static const Color blackColor2 = Color(0xFF2E2E2E);
   static const Color textFieldBodyColor = Color(0xFFE4F0F2);
+  static const Color redColor = Color(0xFFFF3C3C);
 
   static const LinearGradient primaryGradient = LinearGradient(
     colors: [primaryColor, primaryColor, secondaryColor, secondaryColor],
