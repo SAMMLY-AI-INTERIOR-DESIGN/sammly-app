@@ -6,22 +6,22 @@ import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/custombutton.dart';
+import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/features/Auth/cubit/auth_cubit.dart';
 import 'package:sammly/features/Auth/cubit/auth_states.dart';
-import 'package:sammly/features/Auth/presentation/views/new_password_view.dart';
 import 'package:sammly/features/Auth/presentation/widgets/signlogin.dart';
 import 'package:pinput/pinput.dart';
 
-class VerificationView extends StatefulWidget {
+class SignUpVerificationView extends StatefulWidget {
   final String email;
 
-  const VerificationView({super.key, required this.email});
+  const SignUpVerificationView({super.key, required this.email});
 
   @override
-  State<VerificationView> createState() => _VerificationViewState();
+  State<SignUpVerificationView> createState() => _SignUpVerificationViewState();
 }
 
-class _VerificationViewState extends State<VerificationView> {
+class _SignUpVerificationViewState extends State<SignUpVerificationView> {
   final TextEditingController _pinController = TextEditingController();
 
   @override
@@ -65,21 +65,14 @@ class _VerificationViewState extends State<VerificationView> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
-          if (state is VerifyResetCodeSuccessState) {
-            // Navigate to Create New Password screen
-            final authCubit = context.read<AuthCubit>();
-            Navigator.push(
+          if (state is VerifyRegisterCodeSuccessState) {
+            // JWT is saved, navigate to onboarding/home
+            Navigator.pushNamedAndRemoveUntil(
               context,
-              MaterialPageRoute(
-                builder: (_) => BlocProvider.value(
-                  value: authCubit,
-                  child: CreateNewPasswordView(
-                    email: widget.email,
-                  ),
-                ),
-              ),
+              AppRoutes.onboardingView,
+              (route) => false,
             );
-          } else if (state is VerifyResetCodeFailedState) {
+          } else if (state is VerifyRegisterCodeFailedState) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.errorMsg),
@@ -161,7 +154,7 @@ class _VerificationViewState extends State<VerificationView> {
                 // 5. زرار المتابعة
                 BlocBuilder<AuthCubit, AuthState>(
                   builder: (context, state) {
-                    if (state is VerifyResetCodeLoadingState) {
+                    if (state is VerifyRegisterCodeLoadingState) {
                       return const Center(child: CircularProgressIndicator());
                     }
                     return CustomButton(
@@ -169,7 +162,7 @@ class _VerificationViewState extends State<VerificationView> {
                       onPressed: () {
                         final code = _pinController.text.trim();
                         if (code.length == 6) {
-                          context.read<AuthCubit>().verifyPasswordResetCode(
+                          context.read<AuthCubit>().verifyRegisterCode(
                                 email: widget.email,
                                 code: code,
                               );
@@ -192,9 +185,7 @@ class _VerificationViewState extends State<VerificationView> {
                   text1: "Didn't receive the Code?",
                   text2: "Resend",
                   ontap: () {
-                    context.read<AuthCubit>().sendPasswordResetCode(
-                          email: widget.email,
-                        );
+                    // Re-trigger registration to resend the code
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Verification code resent to your email'),

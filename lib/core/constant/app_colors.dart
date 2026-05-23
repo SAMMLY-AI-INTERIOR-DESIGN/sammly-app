@@ -47,5 +47,11 @@ class AppColors {
     end: Alignment.bottomRight,
   );
 
+  static const LinearGradient iconGradient = LinearGradient(
+    colors: [primaryColor, secondaryColor],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
+
   
 }
