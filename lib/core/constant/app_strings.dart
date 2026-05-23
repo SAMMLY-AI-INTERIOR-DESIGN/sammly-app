@@ -13,6 +13,7 @@ abstract class AppStrings {
   static const String viewMyPosts = "View My Posts";
   static const String favorites = "Favorites";
   static const String following = "Following";
+  static const String follow = "Follow";
   static const String freeGenerations = "Free Generations";
   static const String manageSubscription = "Manage Subscription";
   static const String support = "Support";

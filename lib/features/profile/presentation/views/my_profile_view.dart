@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_colors.dart';
-import 'package:sammly/core/constant/app_strings.dart';
-import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/profile_appbar.dart';
-import 'package:sammly/features/profile/presentation/views/widgets/profile_data_section.dart';
-import 'package:sammly/features/profile/presentation/views/widgets/profile_image_widget.dart';
+import 'package:sammly/features/profile/presentation/views/widgets/posts_data_section.dart';
+import 'package:sammly/features/profile/presentation/views/widgets/profile_image_name_widget.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/shared_images_list_view.dart';
 
 class MyProfileView extends StatelessWidget {
@@ -52,13 +50,9 @@ class MyProfileView extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                ProfileDataSection(),
-                                SizedBox(height: 30.h),
-
-                                Text(
-                                  AppStrings.sharedImages,
-                                  style: AppTextStyles.title18SemiBold,
-                                ),
+                                
+                                SizedBox(height: 110.h),
+                                PostsDataSection(),
                                 SizedBox(height: 16.h),
 
                                 SharedImagesListView(),
@@ -66,7 +60,7 @@ class MyProfileView extends StatelessWidget {
                             ),
                           ),
 
-                          const ProfileImageWidget(),
+                          const ProfileImageNameWidget(),
                         ],
                       ),
                     ],
