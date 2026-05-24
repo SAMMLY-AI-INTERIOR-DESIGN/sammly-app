@@ -14,6 +14,8 @@ class CustomTextField extends StatefulWidget {
     this.suffixicon,
     this.isSuccess = false, // 💡 ضفنا حالة النجاح
     this.hasError = false, // 💡 ضفنا حالة الخطأ
+    this.maxLines = 1,
+    this.hasBorder = true,
   });
 
   final TextEditingController controller;
@@ -24,6 +26,8 @@ class CustomTextField extends StatefulWidget {
   final IconData? suffixicon;
   final bool isSuccess;
   final bool hasError;
+  final int maxLines;
+  final bool hasBorder;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -56,6 +60,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         obscureText: widget.ispassword ? _obscureText : false,
         controller: widget.controller,
         validator: widget.validator,
+        maxLines: widget.maxLines,
         style: AppTextStyles.body14Regular.copyWith(
           color: AppColors.blackColor,
         ),
@@ -112,25 +117,26 @@ class _CustomTextFieldState extends State<CustomTextField> {
               : null,
 
           // الإطارات
-          enabledBorder: OutlineInputBorder(
+          border: widget.hasBorder ? null : InputBorder.none,
+          enabledBorder: widget.hasBorder ? OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.r),
             borderSide: BorderSide(width: 1.w, color: getBorderColor()),
-          ),
-          focusedBorder: OutlineInputBorder(
+          ) : InputBorder.none,
+          focusedBorder: widget.hasBorder ? OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.r),
             borderSide: BorderSide(
               width: 1.5.w,
               color: AppColors.primaryColor,
             ), // الأزرق في الفوكس
-          ),
-          errorBorder: OutlineInputBorder(
+          ) : InputBorder.none,
+          errorBorder: widget.hasBorder ? OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.r),
             borderSide: BorderSide(width: 1.w, color: Colors.red),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
+          ) : InputBorder.none,
+          focusedErrorBorder: widget.hasBorder ? OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.r),
             borderSide: BorderSide(width: 1.5.w, color: Colors.red),
-          ),
+          ) : InputBorder.none,
 
           hintText: widget.thing,
           hintStyle: AppTextStyles.hint12Light.copyWith(fontSize: 14.sp),
