@@ -40,6 +40,7 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
         backgroundColor: AppColors.bg1Color,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
+        scrolledUnderElevation: 0,
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new, color: kTextDark, size: 20.sp),
