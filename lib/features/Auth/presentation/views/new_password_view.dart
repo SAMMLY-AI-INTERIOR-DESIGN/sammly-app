@@ -62,6 +62,7 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
           appBar: AppBar(
             backgroundColor: AppColors.whiteColor,
             elevation: 0,
+            scrolledUnderElevation: 0,
             leading: IconButton(
               icon: const Icon(
                 Icons.arrow_back_ios_new,
@@ -126,8 +127,8 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a new password';
-                      } else if (value.length < 6) {
-                        return 'Password must be at least 6 characters';
+                      } else if (value.length < 8) {
+                        return 'Password must be at least 8 characters';
                       }
                       return null;
                     },

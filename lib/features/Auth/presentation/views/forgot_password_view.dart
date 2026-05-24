@@ -64,6 +64,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           appBar: AppBar(
             backgroundColor: AppColors.whiteColor,
             elevation: 0,
+            scrolledUnderElevation: 0,
             leading: IconButton(
               icon: const Icon(
                 Icons.arrow_back_ios_new,
@@ -134,6 +135,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your email';
+                      }
+                      if (!value.contains('@') || !value.contains('.')) {
+                        return 'Please enter a valid email address';
                       }
                       return null;
                     },

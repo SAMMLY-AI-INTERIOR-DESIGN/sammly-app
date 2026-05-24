@@ -86,6 +86,7 @@ class _SignUpVerificationViewState extends State<SignUpVerificationView> {
           appBar: AppBar(
             backgroundColor: AppColors.whiteColor,
             elevation: 0,
+            scrolledUnderElevation: 0,
             leading: IconButton(
               icon: const Icon(
                 Icons.arrow_back_ios_new,

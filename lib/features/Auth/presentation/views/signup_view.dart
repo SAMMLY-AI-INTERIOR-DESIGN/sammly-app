@@ -181,6 +181,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   if (value == null || value.isEmpty) {
                                     return 'Please enter your email';
                                   }
+                                  if (!value.contains('@') || !value.contains('.')) {
+                                    return 'Please enter a valid email address';
+                                  }
                                   return null;
                                 },
                               ),
@@ -194,6 +197,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return 'Please enter your password';
+                                  }
+                                  if (value.length < 8) {
+                                    return 'Password must be at least 8 characters';
                                   }
                                   return null;
                                 },
