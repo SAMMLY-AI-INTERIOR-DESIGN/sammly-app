@@ -2,12 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:sammly/core/constant/app_colors.dart';
+import 'package:sammly/core/networking/dio_helper.dart';
 import 'package:sammly/core/routing/app_router.dart';
 import 'package:sammly/core/routing/routes.dart';
+import 'package:sammly/core/shared_pref/shared_pref.dart';
 
-void main() {
+void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+  // Initialize networking and local storage
+  DioHelper.init();
+  await SharedPref.init();
+
   runApp(
     DevicePreview(enabled:false //!kReleaseMode
     , builder: (context) => const SammlyApp()),
@@ -32,7 +40,15 @@ class SammlyApp extends StatelessWidget {
           locale: DevicePreview.locale(context),
           builder: DevicePreview.appBuilder,
           title: 'Sammly',
-
+          theme: ThemeData(
+            useMaterial3: true,
+            scaffoldBackgroundColor: AppColors.whiteColor,
+            appBarTheme: const AppBarTheme(
+              elevation: 0,
+              scrolledUnderElevation: 0,
+              backgroundColor: AppColors.whiteColor,
+            ),
+          ),
         );
       },
     );

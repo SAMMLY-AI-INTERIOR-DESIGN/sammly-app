@@ -5,7 +5,7 @@ import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/custombutton.dart';
-import 'package:sammly/features/Auth/presentation/views/login_view.dart';
+import 'package:sammly/core/routing/routes.dart';
 
 class PasswordChangedScreen extends StatelessWidget {
   const PasswordChangedScreen({super.key});
@@ -84,9 +84,9 @@ class PasswordChangedScreen extends StatelessWidget {
               CustomButton(
                 text: 'Log In',
                 onPressed: () {
-                  Navigator.pushAndRemoveUntil(
+                  Navigator.pushNamedAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => const LoginScreen()),
+                    AppRoutes.loginView,
                     (route) => false,
                   );
                 },
