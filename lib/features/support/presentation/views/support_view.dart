@@ -6,7 +6,6 @@ import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/custombutton.dart';
 import 'package:sammly/features/support/cubit/support_cubit.dart';
 import 'package:sammly/features/support/cubit/support_states.dart';
-import 'package:sammly/features/Auth/presentation/widgets/custom_text_field.dart';
 
 class SupportScreen extends StatefulWidget {
   const SupportScreen({super.key});
@@ -22,16 +21,16 @@ class _SupportScreenState extends State<SupportScreen> {
 
   String? _selectedSubject;
   final List<String> _subjects = [
-    'account problem',
-    'bug report',
-    'feature request',
-    'login issue',
-    'report user',
-    'registration problem',
-    'verification code',
-    'password reset',
-    'technical support',
-    'other',
+    'Account Problem',
+    'Bug Report',
+    'Feature Request',
+    'Login Issue',
+    'Report User',
+    'Registration Problem',
+    'Verification Code',
+    'Password Reset',
+    'Technical Support',
+    'Other',
   ];
 
   @override
@@ -71,6 +70,7 @@ class _SupportScreenState extends State<SupportScreen> {
           appBar: AppBar(
             backgroundColor: AppColors.whiteColor,
             elevation: 0,
+            scrolledUnderElevation: 0,
             leading: IconButton(
               icon: const Icon(
                 Icons.arrow_back_ios_new,
@@ -140,14 +140,34 @@ class _SupportScreenState extends State<SupportScreen> {
                         color: AppColors.whiteColor,
                         borderRadius: BorderRadius.circular(14.r),
                       ),
-                      child: CustomTextField(
+                      child: TextFormField(
                         controller: _emailController,
-                        thing: 'Enter your email',
-                        hasBorder: false,
                         maxLines: 1,
+                        style: AppTextStyles.body14Regular.copyWith(
+                          color: AppColors.blackColor,
+                        ),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 18.h,
+                            horizontal: 16.w,
+                          ),
+                          filled: true,
+                          fillColor: Colors.transparent,
+                          border: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          hintText: 'Enter your email',
+                          hintStyle: AppTextStyles.hint12Light.copyWith(
+                            fontSize: 14.sp,
+                          ),
+                        ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your email';
+                          }
+                          if (!value.contains('@') || !value.contains('.')) {
+                            return 'Please enter a valid email address';
                           }
                           return null;
                         },
@@ -167,7 +187,14 @@ class _SupportScreenState extends State<SupportScreen> {
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15.r),
-                      gradient: AppColors.iconGradient,
+                      gradient: const LinearGradient(
+                        colors: [
+                          AppColors.primaryColor,
+                          AppColors.secondaryColor,
+                        ],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ),
                     ),
                     padding: EdgeInsets.all(1.w),
                     child: Container(
@@ -176,7 +203,7 @@ class _SupportScreenState extends State<SupportScreen> {
                         borderRadius: BorderRadius.circular(14.r),
                       ),
                       child: DropdownButtonFormField<String>(
-                        value: _selectedSubject,
+                        initialValue: _selectedSubject,
                         dropdownColor: AppColors.whiteColor,
                         hint: Text(
                           'Select Subject',
@@ -200,14 +227,54 @@ class _SupportScreenState extends State<SupportScreen> {
                           focusedBorder: InputBorder.none,
                           errorBorder: InputBorder.none,
                         ),
+                        isExpanded: true,
+                        selectedItemBuilder: (BuildContext context) {
+                          return _subjects.map((String subject) {
+                            return Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                subject,
+                                style: AppTextStyles.body14Regular.copyWith(
+                                  color: AppColors.blackColor,
+                                ),
+                              ),
+                            );
+                          }).toList();
+                        },
                         items: _subjects.map((String subject) {
+                          final isLast = subject == _subjects.last;
                           return DropdownMenuItem<String>(
                             value: subject,
-                            child: Text(
-                              subject,
-                              style: AppTextStyles.body14Regular.copyWith(
-                                color: AppColors.blackColor,
-                              ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 10.h),
+                                  child: Text(
+                                    subject,
+                                    style: AppTextStyles.body14Regular.copyWith(
+                                      color: AppColors.blackColor,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                if (!isLast)
+                                  Container(
+                                    height: 1,
+                                    decoration: const BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Colors.transparent,
+                                          AppColors.primaryColor,
+                                          AppColors.secondaryColor,
+                                          Colors.transparent,
+                                        ],
+                                        stops: [0.0, 0.3, 0.7, 1.0],
+                                      ),
+                                    ),
+                                  ),
+                              ],
                             ),
                           );
                         }).toList(),
@@ -238,7 +305,14 @@ class _SupportScreenState extends State<SupportScreen> {
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15.r),
-                      gradient: AppColors.iconGradient,
+                      gradient: const LinearGradient(
+                        colors: [
+                          AppColors.primaryColor,
+                          AppColors.secondaryColor,
+                        ],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ),
                     ),
                     padding: EdgeInsets.all(1.w),
                     child: Container(
@@ -246,11 +320,28 @@ class _SupportScreenState extends State<SupportScreen> {
                         color: AppColors.whiteColor,
                         borderRadius: BorderRadius.circular(14.r),
                       ),
-                      child: CustomTextField(
+                      child: TextFormField(
                         controller: _messageController,
-                        thing: 'Enter your message',
                         maxLines: 5,
-                        hasBorder: false,
+                        style: AppTextStyles.body14Regular.copyWith(
+                          color: AppColors.blackColor,
+                        ),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 18.h,
+                            horizontal: 16.w,
+                          ),
+                          filled: true,
+                          fillColor: Colors.transparent,
+                          border: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          hintText: 'Enter your message',
+                          hintStyle: AppTextStyles.hint12Light.copyWith(
+                            fontSize: 14.sp,
+                          ),
+                        ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your message';

@@ -3,7 +3,11 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+<<<<<<< HEAD
   file_selector_linux
+=======
+  smart_auth
+>>>>>>> 200e7effe2c59301bc393e3aa81dff30ffe1ab0d
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

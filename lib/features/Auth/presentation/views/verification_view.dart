@@ -68,7 +68,7 @@ class _VerificationViewState extends State<VerificationView> {
           if (state is VerifyResetCodeSuccessState) {
             // Navigate to Create New Password screen
             final authCubit = context.read<AuthCubit>();
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (_) => BlocProvider.value(
@@ -93,6 +93,7 @@ class _VerificationViewState extends State<VerificationView> {
           appBar: AppBar(
             backgroundColor: AppColors.whiteColor,
             elevation: 0,
+            scrolledUnderElevation: 0,
             leading: IconButton(
               icon: const Icon(
                 Icons.arrow_back_ios_new,

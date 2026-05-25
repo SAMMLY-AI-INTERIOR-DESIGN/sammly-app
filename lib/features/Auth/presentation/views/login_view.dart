@@ -60,7 +60,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 backgroundColor: Colors.orange,
               ),
             );
-            Navigator.push(
+
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (_) => BlocProvider.value(
@@ -177,6 +178,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return 'Please enter your email';
+                                  }
+
+                                  if (!value.contains('@') || !value.contains('.')) {
+                                    return 'Please enter a valid email address';
                                   }
                                   return null;
                                 },
