@@ -60,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 backgroundColor: Colors.orange,
               ),
             );
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (_) => BlocProvider.value(

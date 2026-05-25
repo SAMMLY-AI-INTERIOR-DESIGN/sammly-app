@@ -11,6 +11,7 @@ import 'package:sammly/features/layout/presentation/views/layout_view.dart';
 import 'package:sammly/features/onboarding/presentation/views/onboarding_view.dart';
 import 'package:sammly/features/splash/presentation/splash_view.dart';
 import 'package:sammly/features/Auth/presentation/views/change_password_view.dart';
+import 'package:sammly/features/Explore/presentation/views/design_details_view.dart';
 
 abstract class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -85,6 +86,14 @@ abstract class AppRouter {
         return MaterialPageRoute(
           builder: (context) {
             return const ChangePasswordView();
+          },
+        );
+
+      case AppRoutes.designDetailsView:
+        final imageUrl = settings.arguments as String? ?? '';
+        return MaterialPageRoute(
+          builder: (context) {
+            return DesignDetailsView(imageUrl: imageUrl);
           },
         );
 
