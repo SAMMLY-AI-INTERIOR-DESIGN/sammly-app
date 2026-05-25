@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_colors.dart';
+import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/features/explore/presentation/widgets/design_grid_item.dart';
+import 'package:sammly/core/routing/routes.dart';
+
 const Color kTextDark = Color(0xFF2E2E2E);
 
 class BrowseDesigns extends StatefulWidget {
@@ -36,28 +39,7 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bg1Color,
-      appBar: AppBar(
-        backgroundColor: AppColors.bg1Color,
-        surfaceTintColor: Colors.transparent,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new, color: kTextDark, size: 20.sp),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: Text(
-          'Explore',
-          style: TextStyle(
-            color: kTextDark,
-            fontSize: 20.sp,
-            fontWeight: FontWeight.w700,
-            fontFamily: 'Manrope',
-          ),
-        ),
-      ),
+      appBar: const CustomAppbar(title: 'Explore'),
       body: SafeArea(
         child: Column(
           children: [
@@ -130,8 +112,16 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
       ),
       itemCount: _designImageUrls.length,
       itemBuilder: (context, index) {
-        // استخدمنا الكلاس الجديد بكل بساطة
-        return DesignGridItem(imageUrl: _designImageUrls[index]);
+        return GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(
+              context,
+              AppRoutes.designDetailsView,
+              arguments: _designImageUrls[index],
+            );
+          },
+          child: DesignGridItem(imageUrl: _designImageUrls[index]),
+        );
       },
     );
   }
