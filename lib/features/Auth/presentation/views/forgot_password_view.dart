@@ -39,7 +39,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           if (state is SendResetCodeSuccessState) {
             // Navigate to verification screen with the email
             final authCubit = context.read<AuthCubit>();
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (_) => BlocProvider.value(

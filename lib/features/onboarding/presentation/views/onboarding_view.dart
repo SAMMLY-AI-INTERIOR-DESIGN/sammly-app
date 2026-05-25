@@ -158,19 +158,18 @@ class _OnboardingViewState extends State<OnboardingView> {
                       Positioned(
                         bottom: 55,
                         right: 30,
-                        child: Visibility(
-                          visible: _currentPageIndex < _onboardingItems.length - 1,
-                          child: GestureDetector(
-                            onTap: () {
-                              
-                                _pageController.nextPage(
-                                  duration: const Duration(milliseconds: 400),
-                                  curve: Curves.easeInOut,
-                                );
-                              
-                            },
-                            child: SvgPicture.asset(AppImages.arrowBack),
-                          ),
+                        child: GestureDetector(
+                          onTap: () {
+                            if (_currentPageIndex < _onboardingItems.length - 1) {
+                              _pageController.nextPage(
+                                duration: const Duration(milliseconds: 400),
+                                curve: Curves.easeInOut,
+                              );
+                            } else {
+                              Navigator.pushReplacementNamed(context, AppRoutes.layoutView);
+                            }
+                          },
+                          child: SvgPicture.asset(AppImages.arrowBack),
                         ),
                       ),
                     ],

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:sammly/features/favorite/presentation/views/widgets/favorite_heart_item.dart';
+import 'package:sammly/core/routing/routes.dart';
 
 class FavoriteGridView extends StatelessWidget {
   FavoriteGridView({super.key});
@@ -16,20 +18,50 @@ class FavoriteGridView extends StatelessWidget {
     'https://images.unsplash.com/photos/a-bedroom-with-a-bed-and-a-plant-in-the-corner-WxqrvWtbg2o?q=80&w=600&auto=format&fit=crop',
   ];
 
+  // Heights to simulate staggered look (will come from DB in future)
+  final List<double> _itemHeights = [
+    1.2,  // tall
+    0.85, // short
+    1.4,  // taller
+    0.9,  // short
+    1.0,  // medium
+    1.3,  // tall
+    0.8,  // short
+    1.1,  // medium
+  ];
+
   @override
   Widget build(BuildContext context) {
+    final baseWidth = (MediaQuery.of(context).size.width - 44.w) / 2;
+
     return Expanded(
-      child: GridView.builder(
+      child: MasonryGridView.builder(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          crossAxisSpacing: 12.w,
-          mainAxisSpacing: 12.h,
-          childAspectRatio: 1.0,
         ),
+        mainAxisSpacing: 12.h,
+        crossAxisSpacing: 12.w,
         itemCount: _designImageUrls.length,
         itemBuilder: (context, index) {
-          return FavoriteHeartItem(imageUrl: _designImageUrls[index]);
+          final itemHeight = baseWidth * _itemHeights[index % _itemHeights.length];
+
+          return GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                AppRoutes.designDetailsView,
+                arguments: _designImageUrls[index],
+              );
+            },
+            child: SizedBox(
+              height: itemHeight,
+              child: FavoriteHeartItem(
+                imageUrl: _designImageUrls[index],
+                initialIsLiked: true,
+              ),
+            ),
+          );
         },
       ),
     );

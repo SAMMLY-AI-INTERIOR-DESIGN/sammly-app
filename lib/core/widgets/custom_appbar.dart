@@ -3,35 +3,44 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 
-class CustomAppbar extends StatelessWidget implements PreferredSizeWidget{
-  const CustomAppbar({super.key, required this.title});
+class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
+  const CustomAppbar({
+    super.key,
+    required this.title,
+    this.actions,
+    this.backgroundColor = Colors.transparent,
+    this.onBack,
+    this.showLeading = true,
+  });
 
   final String title;
+  final List<Widget>? actions;
+  final Color backgroundColor;
+  final VoidCallback? onBack;
+  final bool showLeading;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-          backgroundColor: AppColors.whiteColor,
-          elevation: 0,
-          scrolledUnderElevation: 0,
-          centerTitle: true,
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios_new,
-              color: AppColors.blackColor2,
-              size: 20.sp,
-            ),
-            onPressed: () {
-              if (Navigator.canPop(context)) {
-                Navigator.pop(context);
-              }
-            },
-          ),
-          title: Text(
-            title,
-            style: AppTextStyles.title20Bold,
-          ),
-        );
+      backgroundColor: backgroundColor,
+      surfaceTintColor: Colors.transparent,
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      centerTitle: true,
+      automaticallyImplyLeading: false,
+      leading: showLeading
+          ? IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios_new,
+                color: AppColors.blackColor2,
+                size: 20.sp,
+              ),
+              onPressed: onBack ?? () => Navigator.pop(context),
+            )
+          : null,
+      title: Text(title, style: AppTextStyles.title20Bold),
+      actions: actions,
+    );
   }
 
   @override
