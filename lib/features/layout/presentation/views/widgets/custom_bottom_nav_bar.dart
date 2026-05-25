@@ -5,7 +5,6 @@ import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 
-
 class CustomBottomNavBar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
@@ -61,23 +60,16 @@ class CustomBottomNavBar extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SvgPicture.asset(
-              imageIcon,
-            ),
+            SvgPicture.asset(imageIcon),
             if (isSelected && label.isNotEmpty) ...[
               const SizedBox(width: 8),
-              ShaderMask(
-                shaderCallback: (bounds) {
-                  return AppColors.primaryGradient.createShader(bounds);
-                },
-                child: Text(
-                  label,
-                  style: AppTextStyles.hint12Light.copyWith(
-                    color: AppColors.whiteColor
-                  ),
+              Text(
+                label,
+                style: AppTextStyles.hint12Light.copyWith(
+                  color: AppColors.primaryColor,
                 ),
               ),
-            ]
+            ],
           ],
         ),
       ),

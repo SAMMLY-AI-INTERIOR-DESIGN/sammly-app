@@ -9,4 +9,5 @@ abstract class AppRoutes {
   static const String onboardingView = '/onboardingview';
   static const String verificationView = '/verificationview';
   static const String changePasswordView = '/changepasswordview';
+  static const String designDetailsView = '/designdetailsview';
 }

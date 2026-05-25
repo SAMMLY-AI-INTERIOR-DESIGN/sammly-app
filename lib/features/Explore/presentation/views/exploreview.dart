@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_images.dart';
+import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/features/Explore/presentation/views/browse_designs.dart';
 import 'package:sammly/features/Explore/presentation/views/shared_designs.dart';
+import 'package:sammly/features/layout/presentation/cubit/layout_cubit/layout_cubit.dart';
 
 // import 'package:sammly/features/Explore/presentation/views/shared_designs_view.dart';
 
@@ -13,31 +16,12 @@ class ExploreView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios_new,
-            color: Colors.black,
-            size: 20.sp,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
+        appBar: CustomAppbar(
+          title: 'Explore',
+          onBack: () {
+            context.read<LayoutCubit>().changeIndex(0);
           },
         ),
-        title: Text(
-          'Explore',
-          style: TextStyle(
-            fontSize: 20.sp,
-            fontWeight: FontWeight.w700,
-            color: Colors.black,
-            fontFamily: 'Manrope',
-          ),
-        ),
-      ),
       extendBody: true,
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
