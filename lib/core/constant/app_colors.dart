@@ -16,6 +16,7 @@ class AppColors {
   static const Color textFieldBodyColor = Color(0xFFE4F0F2);
   static const Color redColor = Color(0xFFFF3C3C);
 
+
   static const LinearGradient primaryGradient = LinearGradient(
     colors: [primaryColor, primaryColor, secondaryColor, secondaryColor],
     stops: [0.0, 0.45, 0.55, 1.0],
@@ -53,5 +54,16 @@ class AppColors {
     end: Alignment.bottomCenter,
   );
 
-  
+}
+
+extension GradientWidgetExtension on Widget {
+  Widget withAppGradient() {
+    return ShaderMask(
+      shaderCallback: (Rect bounds) {
+        return AppColors.iconGradient.createShader(bounds);
+      },
+      blendMode: BlendMode.srcIn,
+      child: this,
+    );
+  }
 }
