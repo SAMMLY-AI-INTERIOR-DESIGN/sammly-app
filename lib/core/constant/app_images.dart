@@ -7,7 +7,8 @@ class AppImages {
   static const String exploreIcon = "assets/images/explore.svg";
   static const String historyIcon = "assets/images/history.svg";
   static const String profileIcon = "assets/images/profile.svg";
-  static const String successBackground = 'assets/images/success_background.svg';
+  static const String successBackground =
+      'assets/images/success_background.svg';
   static const String onboarding1 = 'assets/images/onboarding1.png';
   static const String onboarding2 = 'assets/images/onboarding2.png';
   static const String onboarding3 = 'assets/images/onboarding3.png';
@@ -33,4 +34,9 @@ class AppImages {
   static const String heartFilled = "assets/images/heartFilled.svg";
   static const String heartOutline = "assets/images/heartOutline.svg";
   static const String defaultprofile = "assets/images/default_profile.png";
+  static const String maximizeimage = "assets/images/fullscreen.svg";
+  static const String minimizeimage = "assets/images/minmizeimage.svg";
+  static const String customizeIcon = "assets/images/customize.svg";
+  static const String downloadIcon = "assets/images/download.svg";
+  static const String shareIcon = "assets/images/share.svg";
 }

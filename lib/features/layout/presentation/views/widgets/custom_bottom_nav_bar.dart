@@ -63,10 +63,22 @@ class CustomBottomNavBar extends StatelessWidget {
             SvgPicture.asset(imageIcon),
             if (isSelected && label.isNotEmpty) ...[
               const SizedBox(width: 8),
-              Text(
-                label,
-                style: AppTextStyles.hint12Light.copyWith(
-                  color: AppColors.primaryColor,
+              ShaderMask(
+                shaderCallback: (Rect bounds) {
+                  return const LinearGradient(
+                    colors: [AppColors.primaryColor, AppColors.secondaryColor],
+                    stops: [0.35, 1.0], // ← was [0.5658, 1.0]
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ).createShader(bounds);
+                },
+                blendMode: BlendMode.srcIn,
+                child: Text(
+                  label,
+                  style: AppTextStyles.hint12Light.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ],
