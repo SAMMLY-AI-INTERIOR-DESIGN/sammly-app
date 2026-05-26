@@ -89,5 +89,14 @@ abstract class AppStrings {
   static const String logoutConfirmMsg = "Are you sure you want to log out?";
   static const String cancel = "Cancel";
 
+  // home
+  static const String aiRoomGeneration = "AI Room Generation";
+  static const String aiRoomGenerationDesc = "Describe your dream room with a simple prompt and generate realistic interior designs instantly.";
+  static const String fullHomeDesign = "Full Home Design";
+  static const String fullHomeDesignDesc = "Upload one room photo and generate matching designs for the rest of your home.";
+  static const String fullHomeTag = "Full Home";
+  static const String roomRedesign = "Room Redesign";
+  static const String roomRedesignDesc = "Transform your existing room into a completely new style while keeping the same layout.";
+  static const String restyleRoomTag = "Restyle Room";
  
 }

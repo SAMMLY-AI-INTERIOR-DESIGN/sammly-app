@@ -53,7 +53,11 @@ class AppImages {
   static const String noNotifications = "assets/images/no_notifications.png";
   static const String whatsapp = "assets/images/whatsapp.svg";
   static const String xTwitter = "assets/images/x_twitter.svg";
-
+  static const String homeGenerationPlaceholder = "assets/images/home_generation_placeholder.png";
+  static const String fullHomePlaceholder = "assets/images/full_home_placeholder.png";
+  static const String redesignPlaceholder = "assets/images/redesign_placeholder.png";
+  static const String restyleIcon = "assets/images/restyle_icon.svg";
+  static const String fullHomeIcon = "assets/images/full_home_icon.svg";
 
   
 
