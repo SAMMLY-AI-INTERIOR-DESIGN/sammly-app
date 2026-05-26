@@ -1,29 +1,60 @@
 import 'package:flutter/material.dart';
-import 'package:sammly/features/home/presentation/views/widgets/ai_banner_widget.dart';
-import 'package:sammly/features/home/presentation/views/widgets/explore_styles_section.dart';
-import 'package:sammly/features/home/presentation/views/widgets/home_header.dart';
-import 'package:sammly/features/home/presentation/views/widgets/search_bar_widget.dart';
-
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sammly/core/constant/app_images.dart';
+import 'package:sammly/core/constant/app_strings.dart';
+import 'package:sammly/features/home/presentation/views/widgets/home_header.dart'; // مسار الهيدر بتاعك
+import 'package:sammly/features/home/presentation/views/widgets/home_card_widget.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
+      backgroundColor: const Color(0xFFF8F9FA), 
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
-              HomeHeader(),
-              SizedBox(height: 16),
-              SearchBarWidget(),
-              SizedBox(height: 24),
-              AIBannerWidget(),
-              SizedBox(height: 24),
-              ExploreStylesSection(),
-              SizedBox(height: 100), 
+              const HomeHeader(),
+              
+              SizedBox(height: 8.h),
+              
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                child: Column(
+                  children: [
+                    HomeCardWidget(
+                      title: AppStrings.aiRoomGeneration,
+                      description: AppStrings.aiRoomGenerationDesc,
+                      imagePath: AppImages.homeGenerationPlaceholder,
+                      tagText: AppStrings.aiTag,
+                      tagIcon: AppImages.aiPoweredIcon,
+                      onTap: () {},
+                    ),
+                    
+                    HomeCardWidget(
+                      title: AppStrings.fullHomeDesign,
+                      description: AppStrings.fullHomeDesignDesc,
+                      imagePath: AppImages.fullHomePlaceholder,
+                      tagText: AppStrings.fullHomeTag,
+                      tagIcon: AppImages.fullHomeIcon, 
+                      onTap: () {},
+                    ),
+                    
+                    HomeCardWidget(
+                      title: AppStrings.roomRedesign,
+                      description: AppStrings.roomRedesignDesc,
+                      imagePath: AppImages.redesignPlaceholder,
+                      tagText: AppStrings.restyleRoomTag,
+                      tagIcon: AppImages.restyleIcon, 
+                      onTap: () {},
+                    ),
+                    
+                    SizedBox(height: 24.h), 
+                  ],
+                ),
+              ),
             ],
           ),
         ),
