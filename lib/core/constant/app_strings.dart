@@ -29,7 +29,6 @@ abstract class AppStrings {
   static const String onboarding3Subtitle = 'Explore community designs, share your creations, and earn free tokens as rewards.';
 
   static const String greetingPrefix = "Welcome,";
-  static const String defaultUser = "Fatma Salah";
   static const String subtitle = "Let's design your dream space.";
   static const String searchHint = "Search for......";
   static const String aiTag = "AI POWERED";
