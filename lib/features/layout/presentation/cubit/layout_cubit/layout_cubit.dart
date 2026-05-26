@@ -4,6 +4,7 @@ import 'package:sammly/features/Explore/presentation/views/exploreview.dart';
 import 'package:sammly/features/History/presentation/views/historyview.dart';
 import 'package:sammly/features/home/presentation/views/home_view.dart';
 import 'package:sammly/features/layout/presentation/cubit/layout_cubit/layout_state.dart';
+import 'package:sammly/features/profile/presentation/views/profile_view.dart';
 
 class LayoutCubit extends Cubit<LayoutState> {
   LayoutCubit() : super(InitialLayoutNavBarState());
@@ -14,7 +15,7 @@ class LayoutCubit extends Cubit<LayoutState> {
     const HomeView(),
     const ExploreView(),
     const HistoryView(),
-    const Scaffold(body: Center(child: Text('Profile'))),
+    const ProfileView(),
   ];
 
   changeIndex(int index) {

@@ -9,6 +9,14 @@ abstract class AppRoutes {
   static const String onboardingView = '/onboardingview';
   static const String verificationView = '/verificationview';
   static const String changePasswordView = '/changepasswordview';
+  static const String designDetailsView = '/designdetailsview';
+  static const String myProfileView = '/myprofileview';
+  static const String editProfileView = '/editprofileview';
+  static const String followingView = '/followingview';
+  static const String supportView = '/supportview';
+  static const String notificationsView = '/notificationsview';
+  static const String termsView = '/termsview';
+  static const String privacyView = '/privacyview';
   static const String browseDesignDetailsView = '/browsedesigndetailsview';
   static const String sharedDesignDetailsView = '/shareddesigndetailsview';
 }
