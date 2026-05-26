@@ -7,6 +7,13 @@ class SupportCubit extends Cubit<SupportState> {
 
   SupportCubit(this.supportRepo) : super(SupportInitialState());
 
+  @override
+  void emit(SupportState state) {
+    if (!isClosed) {
+      super.emit(state);
+    }
+  }
+
   // ── Send Support Request ──
   Future<void> sendSupportRequest({
     required String email,

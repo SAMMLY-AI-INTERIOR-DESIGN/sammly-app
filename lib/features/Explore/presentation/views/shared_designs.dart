@@ -29,7 +29,7 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
     'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=600&auto=format&fit=crop',
     'https://images.unsplash.com/photo-1617104678098-de229db51175?q=80&w=600&auto=format&fit=crop',
     'https://images.unsplash.com/photo-1634712282287-14ed57b9cc89?q=80&w=600&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1593006440268-b7654b9d5c80?q=80&w=600&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=600&auto=format&fit=crop',
     'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=600&auto=format&fit=crop',
   ];
 
@@ -260,7 +260,7 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
               onTap: () {
                 Navigator.pushNamed(
                   context,
-                  AppRoutes.designDetailsView,
+                  AppRoutes.sharedDesignDetailsView,
                   arguments: _designImageUrls[index],
                 );
               },
