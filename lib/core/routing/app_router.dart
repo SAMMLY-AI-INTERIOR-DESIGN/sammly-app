@@ -9,9 +9,16 @@ import 'package:sammly/features/Auth/presentation/views/verfictionofsign.dart';
 import 'package:sammly/features/favorite/presentation/views/favorite_view.dart';
 import 'package:sammly/features/layout/presentation/views/layout_view.dart';
 import 'package:sammly/features/onboarding/presentation/views/onboarding_view.dart';
+import 'package:sammly/features/profile/presentation/views/edit_profile_view.dart';
+import 'package:sammly/features/profile/presentation/views/following_view.dart';
+import 'package:sammly/features/profile/presentation/views/my_profile_view.dart';
+import 'package:sammly/features/profile/presentation/views/notifications_view.dart';
+import 'package:sammly/features/profile/presentation/views/privacy_policy_view.dart';
+import 'package:sammly/features/profile/presentation/views/profile_view.dart';
+import 'package:sammly/features/profile/presentation/views/terms_conditions_view.dart';
 import 'package:sammly/features/splash/presentation/splash_view.dart';
-import 'package:sammly/features/Auth/presentation/views/change_password_view.dart';
 import 'package:sammly/features/Explore/presentation/views/design_details_view.dart';
+import 'package:sammly/features/support/presentation/views/support_view.dart';
 
 abstract class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -82,13 +89,6 @@ abstract class AppRouter {
           },
         );
 
-      case AppRoutes.changePasswordView:
-        return MaterialPageRoute(
-          builder: (context) {
-            return const ChangePasswordView();
-          },
-        );
-
       case AppRoutes.designDetailsView:
         final imageUrl = settings.arguments as String? ?? '';
         return MaterialPageRoute(
@@ -97,12 +97,61 @@ abstract class AppRouter {
           },
         );
 
-      // case AppRoutes.profileView:
-      //   return MaterialPageRoute(
-      //     builder: (context) {
-      //       return const ProfileView();
-      //     },
-      //   );
+      case AppRoutes.profileView:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const ProfileView();
+          },
+        );
+
+      case AppRoutes.myProfileView:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const MyProfileView();
+          },
+        );
+
+      case AppRoutes.editProfileView:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const EditProfileView();
+          },
+        );
+
+      case AppRoutes.followingView:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const FollowingView();
+          },
+        );
+
+      case AppRoutes.notificationsView:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const NotificationsView();
+          },
+        );
+
+      case AppRoutes.termsView:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const TermsConditionsView();
+          },
+        );
+
+      case AppRoutes.privacyView:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const PrivacyPolicyView();
+          },
+        );
+
+      case AppRoutes.supportView:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const SupportScreen();
+          },
+        );
 
       default:
         return MaterialPageRoute(
