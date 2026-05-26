@@ -7,6 +7,13 @@ class AuthCubit extends Cubit<AuthState> {
 
   AuthCubit(this.authRepo) : super(AuthInitialState());
 
+  @override
+  void emit(AuthState state) {
+    if (!isClosed) {
+      super.emit(state);
+    }
+  }
+
   // ── Login ──
   Future<void> login({
     required String email,
