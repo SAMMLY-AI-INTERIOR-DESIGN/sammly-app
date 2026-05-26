@@ -50,7 +50,7 @@ class FavoriteGridView extends StatelessWidget {
             onTap: () {
               Navigator.pushNamed(
                 context,
-                AppRoutes.designDetailsView,
+                AppRoutes.sharedDesignDetailsView,
                 arguments: _designImageUrls[index],
               );
             },

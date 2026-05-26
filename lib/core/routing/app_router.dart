@@ -17,8 +17,10 @@ import 'package:sammly/features/profile/presentation/views/privacy_policy_view.d
 import 'package:sammly/features/profile/presentation/views/profile_view.dart';
 import 'package:sammly/features/profile/presentation/views/terms_conditions_view.dart';
 import 'package:sammly/features/splash/presentation/splash_view.dart';
-import 'package:sammly/features/Explore/presentation/views/design_details_view.dart';
 import 'package:sammly/features/support/presentation/views/support_view.dart';
+import 'package:sammly/features/Auth/presentation/views/change_password_view.dart';
+import 'package:sammly/features/Explore/presentation/views/browse_design_details_view.dart';
+import 'package:sammly/features/Explore/presentation/views/shared_design_details_view.dart';
 
 abstract class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -90,10 +92,26 @@ abstract class AppRouter {
         );
 
       case AppRoutes.designDetailsView:
+      case AppRoutes.changePasswordView:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const ChangePasswordView();
+          },
+        );
+
+      case AppRoutes.browseDesignDetailsView:
         final imageUrl = settings.arguments as String? ?? '';
         return MaterialPageRoute(
           builder: (context) {
-            return DesignDetailsView(imageUrl: imageUrl);
+            return BrowseDesignDetailsView(imageUrl: imageUrl);
+          },
+        );
+
+      case AppRoutes.sharedDesignDetailsView:
+        final imageUrl = settings.arguments as String? ?? '';
+        return MaterialPageRoute(
+          builder: (context) {
+            return SharedDesignDetailsView(imageUrl: imageUrl);
           },
         );
 
