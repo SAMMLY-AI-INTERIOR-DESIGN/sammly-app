@@ -6,11 +6,15 @@ import 'package:sammly/core/theme/text_styles.dart';
 class CustomDropdown extends StatelessWidget {
   final String label;
   final String value;
+  final List<String> items; // 1. ضفنا ليستة القيم
+  final ValueChanged<String?> onChanged; // 2. ضفنا دالة التغيير
 
   const CustomDropdown({
     super.key,
     required this.label,
     required this.value,
+    required this.items,
+    required this.onChanged,
   });
 
   @override
@@ -51,16 +55,17 @@ class CustomDropdown extends StatelessWidget {
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
               ),
-              items: [
-                DropdownMenuItem<String>(
-                  value: value,
+              // 3. عرض القيم من الليستة المبعوتة
+              items: items.map((String item) {
+                return DropdownMenuItem<String>(
+                  value: item,
                   child: Text(
-                    value,
+                    item,
                     style: AppTextStyles.body14Regular,
                   ),
-                ),
-              ],
-              onChanged: (val) {},
+                );
+              }).toList(),
+              onChanged: onChanged, // 4. ربط دالة التغيير
             ),
           ],
         ),

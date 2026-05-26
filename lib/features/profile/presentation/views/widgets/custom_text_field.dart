@@ -5,16 +5,20 @@ import 'package:sammly/core/theme/text_styles.dart';
 
 class CustomTextField extends StatelessWidget {
   final String label;
-  final String initialValue;
+  final String? initialValue;
   final Widget? suffixIcon;
   final Widget? prefix;
+  final TextEditingController? controller;
+  final void Function(String)? onChanged;
 
   const CustomTextField({
     super.key,
     required this.label,
-    required this.initialValue,
+    this.initialValue,
     this.suffixIcon,
     this.prefix,
+    this.controller,
+    this.onChanged,
   });
 
   @override
@@ -51,7 +55,9 @@ class CustomTextField extends StatelessWidget {
                   ),
                   
                   TextFormField(
-                    initialValue: initialValue,
+                    controller: controller,
+                    initialValue: controller == null ? initialValue : null,
+                    onChanged: onChanged,
                     style: AppTextStyles.body14Regular,
                     decoration: const InputDecoration(
                       isDense: true,
