@@ -132,14 +132,7 @@ class _SupportScreenState extends State<SupportScreen> {
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15.r),
-                      gradient: const LinearGradient(
-                        colors: [
-                          AppColors.primaryColor,
-                          AppColors.secondaryColor,
-                        ],
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                      ),
+                      gradient: AppColors.iconGradient,
                     ),
                     padding: EdgeInsets.all(1.w),
                     child: Container(

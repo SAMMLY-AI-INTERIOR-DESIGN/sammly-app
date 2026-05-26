@@ -62,6 +62,7 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
           appBar: AppBar(
             backgroundColor: AppColors.whiteColor,
             elevation: 0,
+
             scrolledUnderElevation: 0,
             leading: IconButton(
               icon: const Icon(

@@ -13,6 +13,10 @@ class AppColors {
   static const Color searchTextFieldColor = Color(0xFFEAEEF6);
   static const Color greyColor = Color(0xFF516067);
   static const Color blackColor2 = Color(0xFF2E2E2E);
+  static const Color textFieldBodyColor = Color(0xFFE4F0F2);
+  static const Color redColor = Color(0xFFFF3C3C);
+
+
   static const LinearGradient primaryGradient = LinearGradient(
     colors: [primaryColor, primaryColor, secondaryColor, secondaryColor],
     stops: [0.0, 0.45, 0.55, 1.0],
@@ -22,6 +26,12 @@ class AppColors {
 
   static const LinearGradient primaryGradient2 = LinearGradient(
     colors: [secondaryColor, primaryColor],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
+
+  static const LinearGradient primaryGradient3 = LinearGradient(
+    colors: [primaryColor, secondaryColor],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
   );
@@ -43,6 +53,7 @@ class AppColors {
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
   );
+
 }
 
 extension GradientWidgetExtension on Widget {

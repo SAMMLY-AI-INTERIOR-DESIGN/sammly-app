@@ -13,5 +13,7 @@ abstract class ApiConstants {
   static const String resendResetCode = '/api/auth/password/resend-reset-code';
   
   // Profile / Support endpoints
+  static const String getProfile = '/api/profile';
+  static const String editProfile = '/api/profile/edit';
   static const String support = '/api/support';
 }
