@@ -12,9 +12,6 @@ import 'package:sammly/features/profile/data/repo/profile_repo.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:sammly/features/support/cubit/support_cubit.dart';
 import 'package:sammly/features/support/data/repo/support_repo.dart';
-import 'package:sammly/core/networking/network_cubit/network_cubit.dart';
-import 'package:sammly/core/networking/network_cubit/network_state.dart';
-import 'package:sammly/core/widgets/no_internet_view.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();

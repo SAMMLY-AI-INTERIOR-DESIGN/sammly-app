@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_state.dart';

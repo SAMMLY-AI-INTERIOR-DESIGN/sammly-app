@@ -52,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is LoginSuccessState) {
-            Navigator.pushReplacementNamed(context, AppRoutes.onboardingView);
+            Navigator.pushReplacementNamed(context, AppRoutes.layoutView);
           } else if (state is AuthNeedsVerificationState) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -61,13 +61,14 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             );
 
-            Navigator.pushReplacement(
+            Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (_) => BlocProvider.value(
                   value: context.read<AuthCubit>(),
                   child: SignUpVerificationView(
                     email: state.email,
+                    isFromLogin: true,
                   ),
                 ),
               ),
