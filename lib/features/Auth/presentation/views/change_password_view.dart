@@ -3,6 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/core/widgets/custombutton.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sammly/features/Auth/cubit/auth_cubit.dart';
+import 'package:sammly/features/Auth/cubit/auth_states.dart';
 import 'package:sammly/features/Auth/presentation/widgets/custom_text_field.dart';
 
 class ChangePasswordView extends StatefulWidget {
@@ -82,16 +85,40 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                 },
               ),
               SizedBox(height: 48.h),
-              CustomButton(
-                text: 'Submit',
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    // TODO: Implement change password logic here
+              BlocConsumer<AuthCubit, AuthState>(
+                listener: (context, state) {
+                  if (state is ChangePasswordSuccessState) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Password updated successfully')),
+                      const SnackBar(
+                        content: Text('Password changed successfully'),
+                        backgroundColor: Colors.green,
+                      ),
                     );
                     Navigator.pop(context);
+                  } else if (state is ChangePasswordFailedState) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(state.errorMsg),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
                   }
+                },
+                builder: (context, state) {
+                  if (state is ChangePasswordLoadingState) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  return CustomButton(
+                    text: 'Submit',
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        context.read<AuthCubit>().changePassword(
+                          oldPassword: _oldPasswordController.text,
+                          newPassword: _newPasswordController.text,
+                        );
+                      }
+                    },
+                  );
                 },
               ),
             ],
