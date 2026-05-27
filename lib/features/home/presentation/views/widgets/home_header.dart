@@ -8,6 +8,7 @@ import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_state.dart';
+import 'package:sammly/features/layout/presentation/cubit/layout_cubit/layout_cubit.dart';
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
@@ -22,35 +23,36 @@ class HomeHeader extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CircleAvatar(
-                radius: 30,
-                backgroundColor: AppColors.activeNavBarBg,
-                child: ClipOval(
-                  child: profile?.avatar != null
-                                      ? Image.network(
-                                          profile!.avatar!,
-                                          width: 65.w,
-                                          height: 65.h,
-                                          fit: BoxFit.cover,
-                                          errorBuilder:
-                                              (
-                                                context,
-                                                error,
-                                                stackTrace,
-                                              ) => SvgPicture.asset(
-                                                AppImages
-                                                    .maleProfilePlaceholder,
-                                                width: 65.w,
-                                                height: 65.h,
-                                                fit: BoxFit.cover,
-                                              ),
-                                        )
-                                      : SvgPicture.asset(
-                                          AppImages.maleProfilePlaceholder,
-                                          width: 65.w,
-                                          height: 65.h,
-                                          fit: BoxFit.cover,
-                                        ),
+              InkWell(
+                onTap: () {
+                  context.read<LayoutCubit>().changeIndex(3);
+                },
+                borderRadius: BorderRadius.circular(30),
+                child: CircleAvatar(
+                  radius: 30,
+                  backgroundColor: AppColors.activeNavBarBg,
+                  child: ClipOval(
+                    child: profile?.avatar != null
+                        ? Image.network(
+                            profile!.avatar!,
+                            width: 65.w,
+                            height: 65.h,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                SvgPicture.asset(
+                                  AppImages.maleProfilePlaceholder,
+                                  width: 65.w,
+                                  height: 65.h,
+                                  fit: BoxFit.cover,
+                                ),
+                          )
+                        : SvgPicture.asset(
+                            AppImages.maleProfilePlaceholder,
+                            width: 65.w,
+                            height: 65.h,
+                            fit: BoxFit.cover,
+                          ),
+                  ),
                 ),
               ),
               const SizedBox(width: 16),
