@@ -123,7 +123,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(
-                      height: 828.h,
+                      constraints: BoxConstraints(maxHeight: screenHeight * 0.88),
                       width: double.infinity,
                       decoration: BoxDecoration(
                         // الجريدينت الخفيف بتاع الكارت
@@ -141,7 +141,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         physics: const BouncingScrollPhysics(),
                         padding: EdgeInsets.symmetric(
                           horizontal: 24.w,
-                          vertical: 32.h,
+                          vertical: 24.h,
                         ),
                         child: Form(
                           key: _formKey,
