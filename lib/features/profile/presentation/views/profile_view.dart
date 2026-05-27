@@ -112,7 +112,15 @@ class ProfileView extends StatelessWidget {
     
                         return Column(
                           children: [
-                            Row(
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.myProfileView,
+                                );
+                              },
+                              child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 ClipRRect(
@@ -150,13 +158,13 @@ class ProfileView extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        profile?.name ?? "Loading...",
+                                        profile?.name ?? (state is ProfileLoading ? "Loading..." : "User"),
                                         style: AppTextStyles.title18SemiBold,
                                       ),
                                       Text(
                                         profile?.username != null
                                             ? "@${profile!.username}"
-                                            : "@loading",
+                                            : "@user",
                                         style: AppTextStyles.body14Regular
                                             .copyWith(
                                               color: AppColors.greyColor,
@@ -182,6 +190,7 @@ class ProfileView extends StatelessWidget {
                                   child: SvgPicture.asset(AppImages.edit),
                                 ),
                               ],
+                            ),
                             ),
                             SizedBox(height: 12.h),
                             Align(
@@ -308,24 +317,6 @@ class ProfileView extends StatelessWidget {
                         },
                         title: AppStrings.notification,
                         svgIcon: AppImages.notifications,
-                        trailing: SizedBox(
-                          height: 20.h,
-                          child: Switch(
-                            value: false,
-                            activeThumbColor: AppColors.whiteColor,
-                            activeTrackColor: AppColors.secondaryColor,
-                            inactiveThumbColor: AppColors.whiteColor,
-                            inactiveTrackColor: AppColors.greyColor
-                                .withValues(alpha: 0.2),
-                            trackOutlineColor: WidgetStateProperty.all(
-                              Colors.transparent,
-                            ),
-                            thumbIcon: WidgetStateProperty.all(
-                              const Icon(null),
-                            ),
-                            onChanged: (val) {},
-                          ),
-                        ),
                       ),
                     ],
                   ),

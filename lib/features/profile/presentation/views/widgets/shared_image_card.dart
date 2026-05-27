@@ -6,65 +6,144 @@ import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/features/profile/data/models/shared_images_model.dart';
 import 'package:sammly/core/widgets/custom_heart_item.dart';
-class SharedImageCard extends StatelessWidget {
+
+class SharedImageCard extends StatefulWidget {
   final SharedImageModel item;
   const SharedImageCard({super.key, required this.item});
 
   @override
+  State<SharedImageCard> createState() => _SharedImageCardState();
+}
+
+class _SharedImageCardState extends State<SharedImageCard> {
+  bool _isLiked = false;
+  late int _likesCount;
+
+  @override
+  void initState() {
+    super.initState();
+    _likesCount = widget.item.likes;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
+      width: 366.w,
+      height: 135.h,
       margin: EdgeInsets.only(bottom: 12.h),
-      padding: EdgeInsets.all(1),
       decoration: BoxDecoration(
-        gradient: AppColors.primaryGradient3,
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(8.r),
+        gradient: const LinearGradient(
+          colors: [AppColors.primaryColor, AppColors.secondaryColor],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.secondaryColor.withValues(alpha: 0.06),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      child: Container( 
-        padding: EdgeInsets.all(8.w),
+      padding: EdgeInsets.all(1.2.w), // Acts as border width
+      child: Container(
+        padding: EdgeInsets.all(10.w),
         decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius: BorderRadius.circular(12.r),
+          gradient: const LinearGradient(
+            colors: [AppColors.bg2Color, AppColors.bg1Color],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+          borderRadius: BorderRadius.circular(6.r),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(8.r),
-              child: SvgPicture.asset(
-                item.imageUrl, 
-                width: 80.w, 
-                height: 80.h, 
-                fit: BoxFit.cover
+              borderRadius: BorderRadius.circular(5.r),
+              child: Image.network(
+                widget.item.imageUrl,
+                width: 113.w,
+                height: 112.h,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  width: 113.w,
+                  height: 112.h,
+                  decoration: BoxDecoration(
+                    color: AppColors.bg2Color,
+                    borderRadius: BorderRadius.circular(5.r),
+                  ),
+                  child: Icon(
+                    Icons.image_outlined,
+                    color: AppColors.secondaryColor,
+                    size: 30.sp,
+                  ),
+                ),
               ),
             ),
-            SizedBox(width: 12.w),
-            
+            SizedBox(width: 14.w),
+
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    item.title,
-                    style: AppTextStyles.title18SemiBold,
+                    widget.item.title,
+                    style: TextStyle(
+                      fontFamily: AppTextStyles.primaryFont,
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.blackColor2,
+                    ),
                     maxLines: 1,
-                    overflow: TextOverflow.ellipsis, 
+                    overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    item.description,
-                    style: AppTextStyles.body14Regular,
+                    widget.item.description.length > 40
+                        ? '${widget.item.description.substring(0, 40)}........'
+                        : widget.item.description,
+                    style: TextStyle(
+                      fontFamily: AppTextStyles.primaryFont,
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.blackColor.withValues(alpha: 0.7),
+                    ),
                     maxLines: 2,
-                    overflow: TextOverflow.ellipsis, 
+                    overflow: TextOverflow.visible,
                   ),
-                  SizedBox(height: 8.h),
+                  const Spacer(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
-                          CustomHeartItem(),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _isLiked = !_isLiked;
+                                _isLiked ? _likesCount++ : _likesCount--;
+                              });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(6.w),
+                              decoration: BoxDecoration(
+                                color: AppColors.bg2Color,
+                                borderRadius: BorderRadius.circular(20.r),
+                              ),
+                              child: SvgPicture.asset(
+                                _isLiked
+                                    ? AppImages.heartFilled
+                                    : AppImages.heartOutline,
+                                width: 12.w,
+                                height: 12.h,
+                              ),
+                            ),
+                          ),
                           Text(
-                            " ${item.likes}",
+                            " $_likesCount",
                             style: AppTextStyles.body16Medium,
                           ),
                         ],

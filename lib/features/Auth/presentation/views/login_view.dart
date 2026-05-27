@@ -84,7 +84,8 @@ class _LoginScreenState extends State<LoginScreen> {
         child: PopScope(
           canPop: false,
           child: Scaffold(
-          backgroundColor: AppColors.whiteColor,
+            resizeToAvoidBottomInset: false,
+            backgroundColor: AppColors.whiteColor,
           body: SingleChildScrollView(
             // 💡 مسحنا سطر الـ keyboardDismissBehavior من هنا
             // عشان السكرول ملوش دعوة بالكيبورد دلوقتي

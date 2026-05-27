@@ -12,6 +12,9 @@ import 'package:sammly/features/profile/data/repo/profile_repo.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:sammly/features/support/cubit/support_cubit.dart';
 import 'package:sammly/features/support/data/repo/support_repo.dart';
+import 'package:sammly/core/networking/network_cubit/network_cubit.dart';
+import 'package:sammly/core/networking/network_cubit/network_state.dart';
+import 'package:sammly/core/widgets/no_internet_view.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +27,8 @@ void main() async {
   runApp(const SammlyApp());
 }
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 class SammlyApp extends StatelessWidget {
   const SammlyApp({super.key});
 
@@ -35,6 +40,7 @@ class SammlyApp extends StatelessWidget {
           create: (context) => ProfileCubit(ProfileRepo())..fetchProfile(),
         ),
         BlocProvider(create: (context) => SupportCubit(SupportRepo())),
+        // NetworkCubit removed for auto-check
       ],
       child: ScreenUtilInit(
         designSize: const Size(430, 932),
@@ -42,11 +48,11 @@ class SammlyApp extends StatelessWidget {
         splitScreenMode: true,
         builder: (context, child) {
           return MaterialApp(
+            navigatorKey: navigatorKey,
             initialRoute: AppRoutes.splashView,
             onGenerateRoute: AppRouter.generateRoute,
             debugShowCheckedModeBanner: false,
             title: AppStrings.appname,
-
             theme: ThemeData(
               useMaterial3: true,
               scaffoldBackgroundColor: AppColors.whiteColor,
@@ -59,7 +65,7 @@ class SammlyApp extends StatelessWidget {
               ),
               textSelectionTheme: const TextSelectionThemeData(
                 cursorColor: AppColors.primaryColor,
-                selectionColor: AppColors.primaryColor,
+                selectionColor: AppColors.activeNavBarBg,
                 selectionHandleColor: AppColors.primaryColor,
               ),
               appBarTheme: const AppBarTheme(

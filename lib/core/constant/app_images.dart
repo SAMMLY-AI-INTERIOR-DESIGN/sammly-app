@@ -7,6 +7,7 @@ class AppImages {
   static const String exploreIcon = "assets/images/explore.svg";
   static const String historyIcon = "assets/images/history.svg";
   static const String profileIcon = "assets/images/profile.svg";
+  static const String profileNavBarIcon = "assets/images/profilenavbar.svg";
   static const String successBackground =
       'assets/images/success_background.svg';
   static const String onboarding1 = 'assets/images/onboarding1.png';
