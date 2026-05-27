@@ -63,6 +63,16 @@ class ResetPasswordFailedState extends AuthState {
   ResetPasswordFailedState({required this.errorMsg});
 }
 
+// ── Change Password ──
+class ChangePasswordLoadingState extends AuthState {}
+
+class ChangePasswordSuccessState extends AuthState {}
+
+class ChangePasswordFailedState extends AuthState {
+  final String errorMsg;
+  ChangePasswordFailedState({required this.errorMsg});
+}
+
 // ── Shared Error / Navigation States ──
 class AuthNeedsVerificationState extends AuthState {
   final String email;

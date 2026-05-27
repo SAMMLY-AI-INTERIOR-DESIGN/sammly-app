@@ -14,6 +14,7 @@ import 'package:sammly/features/profile/presentation/views/widgets/profile_menu_
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_state.dart';
+import 'package:sammly/features/layout/presentation/cubit/layout_cubit/layout_cubit.dart';
 import 'package:intl/intl.dart';
 
 class ProfileView extends StatelessWidget {
@@ -50,7 +51,9 @@ class ProfileView extends StatelessWidget {
                           size: 25.sp,
                           color: AppColors.blackColor2,
                         ),
-                        onPressed: () => Navigator.pop(context),
+                        onPressed: () {
+                          context.read<LayoutCubit>().changeIndex(0);
+                        },
                       ),
                       Text(
                         AppStrings.profile,
@@ -58,16 +61,24 @@ class ProfileView extends StatelessWidget {
                           color: AppColors.blackColor2,
                         ),
                       ),
-                      Container(
-                        padding: EdgeInsets.all(8.w),
-                        decoration: const BoxDecoration(
-                          gradient: AppColors.primaryGradient3,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.notifications,
-                          color: Colors.white,
-                          size: 20.sp,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            AppRoutes.notificationsView,
+                          );
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(8.w),
+                          decoration: const BoxDecoration(
+                            gradient: AppColors.primaryGradient3,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.notifications,
+                            color: Colors.white,
+                            size: 20.sp,
+                          ),
                         ),
                       ),
                     ],
@@ -332,6 +343,13 @@ class ProfileView extends StatelessWidget {
                         svgIcon: AppImages.privacy,
                         onTap: () {
                           Navigator.pushNamed(context, AppRoutes.privacyView);
+                        },
+                      ),
+                      ProfileMenuItem(
+                        title: AppStrings.security,
+                        svgIcon: AppImages.security,
+                        onTap: () {
+                          Navigator.pushNamed(context, AppRoutes.securityView);
                         },
                       ),
                     ],

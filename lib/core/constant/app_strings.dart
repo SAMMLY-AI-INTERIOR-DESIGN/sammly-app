@@ -17,6 +17,8 @@ abstract class AppStrings {
   static const String livingRoom = "Living Room";
   static const String noFavorites = "No Favorites";
   static const String noFavoritesDesc = "Your favorite list is empty";
+  static const String noHistory = "No History";
+  static const String noHistoryDesc = "Your history list is empty";
 
   // Onboarding
   static const String skip = 'Skip';
@@ -54,6 +56,9 @@ abstract class AppStrings {
   static const String share = "Share";
   static const String logOut = "Log Out";
   static const String upgradePro = "Upgrade PRO";
+  static const String security = "Security";
+  static const String email = "Email";
+  static const String changePassword = "Change Password";
 
   // edit profile
   static const String editProfile = "Edit profile";

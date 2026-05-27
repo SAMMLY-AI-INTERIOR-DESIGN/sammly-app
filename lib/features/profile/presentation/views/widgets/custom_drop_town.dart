@@ -45,7 +45,7 @@ class CustomDropdown extends StatelessWidget {
             ),
             
             DropdownButtonFormField<String>(
-              value: value,
+              initialValue: value,
               icon: Icon(Icons.arrow_drop_down, color: Colors.teal.shade400),
               isExpanded: true, 
               decoration: const InputDecoration(
