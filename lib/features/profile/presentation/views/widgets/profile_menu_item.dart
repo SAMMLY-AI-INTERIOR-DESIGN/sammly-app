@@ -31,7 +31,7 @@ class ProfileMenuItem extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 16.w),
         child: Row(
           children: [
-            SvgPicture.asset(svgIcon, width: 20.w),
+            SvgPicture.asset(svgIcon, width: 22.w),
 
             SizedBox(width: 12.w),
 
