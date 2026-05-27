@@ -131,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(
-                      height: 641.h,
+                      constraints: BoxConstraints(maxHeight: screenHeight * 0.8),
                       width: double.infinity,
                       decoration: BoxDecoration(
                         // هنا ضفنا الجريدينت الخفيف بتاع الكارت
@@ -155,7 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         physics: const BouncingScrollPhysics(),
                         padding: EdgeInsets.symmetric(
                           horizontal: 24.w,
-                          vertical: 32.h,
+                          vertical: 24.h,
                         ),
                         child: Form(
                           key: _formKey,
