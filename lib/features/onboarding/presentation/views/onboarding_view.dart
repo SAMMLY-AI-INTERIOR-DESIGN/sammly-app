@@ -151,28 +151,28 @@ class _OnboardingViewState extends State<OnboardingView> {
                       paintStyle: PaintingStyle.stroke,
                     ),
                   ),
-                  Stack(
-                    children: [
-                      SvgPicture.asset(AppImages.onboardingContainer),
+                  GestureDetector(
+                    onTap: () {
+                      if (_currentPageIndex < _onboardingItems.length - 1) {
+                        _pageController.nextPage(
+                          duration: const Duration(milliseconds: 400),
+                          curve: Curves.easeInOut,
+                        );
+                      } else {
+                        Navigator.pushReplacementNamed(context, AppRoutes.layoutView);
+                      }
+                    },
+                    child: Stack(
+                      children: [
+                        SvgPicture.asset(AppImages.onboardingContainer),
 
-                      Positioned(
-                        bottom: 55,
-                        right: 30,
-                        child: GestureDetector(
-                          onTap: () {
-                            if (_currentPageIndex < _onboardingItems.length - 1) {
-                              _pageController.nextPage(
-                                duration: const Duration(milliseconds: 400),
-                                curve: Curves.easeInOut,
-                              );
-                            } else {
-                              Navigator.pushReplacementNamed(context, AppRoutes.layoutView);
-                            }
-                          },
+                        Positioned(
+                          bottom: 55,
+                          right: 30,
                           child: SvgPicture.asset(AppImages.arrowBack),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),

@@ -81,7 +81,9 @@ class _LoginScreenState extends State<LoginScreen> {
             );
           }
         },
-        child: Scaffold(
+        child: PopScope(
+          canPop: false,
+          child: Scaffold(
           backgroundColor: AppColors.whiteColor,
           body: SingleChildScrollView(
             // 💡 مسحنا سطر الـ keyboardDismissBehavior من هنا
@@ -308,6 +310,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
             ),
+          ),
           ),
         ),
       ),
