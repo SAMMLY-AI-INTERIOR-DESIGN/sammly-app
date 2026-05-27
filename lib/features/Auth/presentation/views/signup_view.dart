@@ -97,6 +97,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           }
         },
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: AppColors.whiteColor,
           body: SingleChildScrollView(
             child: SizedBox(

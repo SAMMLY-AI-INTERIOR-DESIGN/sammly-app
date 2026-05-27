@@ -97,9 +97,8 @@ class ProfileRepo {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        return 'Connection timed out';
       case DioExceptionType.connectionError:
-        return 'No internet connection';
+        return 'Server Failed Connection , Try again';
       default:
         return 'Network error occurred';
     }

@@ -6,7 +6,9 @@ import 'package:sammly/core/theme/text_styles.dart';
 
 class CustomActionButton extends StatelessWidget {
   final String title;
-  final String iconPath;
+  final String? iconPath;
+  final IconData? iconData;
+  final Color? iconColor;
   final VoidCallback onTap;
   final double iconSize;
   final double? width;
@@ -15,7 +17,9 @@ class CustomActionButton extends StatelessWidget {
   const CustomActionButton({
     super.key,
     required this.title,
-    required this.iconPath,
+    this.iconPath,
+    this.iconData,
+    this.iconColor,
     required this.onTap,
     this.iconSize = 26.0,
     this.width,
@@ -53,11 +57,18 @@ class CustomActionButton extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SvgPicture.asset(
-                iconPath,
-                width: iconSize.sp,
-                height: iconSize.sp,
-              ).withAppGradient(),
+              if (iconData != null)
+                Icon(
+                  iconData,
+                  size: iconSize.sp,
+                  color: iconColor ?? AppColors.primaryColor,
+                )
+              else if (iconPath != null)
+                SvgPicture.asset(
+                  iconPath!,
+                  width: iconSize.sp,
+                  height: iconSize.sp,
+                ).withAppGradient(),
               SizedBox(height: 8.h),
               Text(
                 title,

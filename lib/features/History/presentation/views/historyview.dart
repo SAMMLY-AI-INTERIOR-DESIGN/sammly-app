@@ -16,7 +16,24 @@ class HistoryView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // قائمة من الصور المختلفة (أفقي وعمودي) عشان نجرب عليها
-    final List<Map<String, String>> historyData = [];
+    final List<Map<String, String>> historyData = [
+      {
+        'imageUrl': 'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?q=80&w=600&auto=format&fit=crop',
+        'title': 'Modern Living Room',
+      },
+      {
+        'imageUrl': 'https://images.unsplash.com/photo-1616046229478-9901c5536a45?q=80&w=600&auto=format&fit=crop',
+        'title': 'Minimalist Bedroom',
+      },
+      {
+        'imageUrl': 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=600&auto=format&fit=crop',
+        'title': 'Cozy Apartment',
+      },
+      {
+        'imageUrl': 'https://images.unsplash.com/photo-1617104678098-de229db51175?q=80&w=600&auto=format&fit=crop',
+        'title': 'Elegant Kitchen',
+      },
+    ];
 
     return Scaffold(
       backgroundColor: AppColors.whiteColor,

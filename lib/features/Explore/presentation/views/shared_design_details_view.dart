@@ -5,6 +5,7 @@ import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/core/widgets/action_buttons_row.dart';
+import 'package:sammly/core/routing/routes.dart';
 
 class SharedDesignDetailsView extends StatefulWidget {
   final String imageUrl;
@@ -18,6 +19,7 @@ class SharedDesignDetailsView extends StatefulWidget {
 
 class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
   bool _isLiked = true;
+  int _likesCount = 34;
   bool _isMaximized = false;
 
   void _toggleMaximize() {
@@ -76,8 +78,19 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 1. User Info Header
-          Row(
-            children: [
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                AppRoutes.userProfileView,
+                arguments: {
+                  'userName': 'Fatma Salah',
+                },
+              );
+            },
+            child: Row(
+              children: [
               Container(
                 width: 48.w,
                 height: 48.w,
@@ -116,6 +129,7 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                 ],
               ),
             ],
+          ),
           ),
           SizedBox(height: 16.h),
 
@@ -252,6 +266,7 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                 onTap: () {
                   setState(() {
                     _isLiked = !_isLiked;
+                    _isLiked ? _likesCount++ : _likesCount--;
                   });
                 },
                 child: Row(
@@ -296,7 +311,7 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                   ),
                   SizedBox(width: 8.w),
                   Text(
-                    '34',
+                    '$_likesCount',
                     style: TextStyle(
                       color: AppColors.greyColor,
                       fontSize: 15.sp,

@@ -22,6 +22,7 @@ import 'package:sammly/features/profile/presentation/views/security_view.dart';
 import 'package:sammly/features/Auth/presentation/views/change_password_view.dart';
 import 'package:sammly/features/Explore/presentation/views/browse_design_details_view.dart';
 import 'package:sammly/features/Explore/presentation/views/shared_design_details_view.dart';
+import 'package:sammly/features/Explore/presentation/views/user_profile_view.dart';
 
 abstract class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -178,6 +179,17 @@ abstract class AppRouter {
         return MaterialPageRoute(
           builder: (context) {
             return const SecurityView();
+          },
+        );
+
+      case AppRoutes.userProfileView:
+        final args = settings.arguments as Map<String, dynamic>? ?? {};
+        return MaterialPageRoute(
+          builder: (context) {
+            return UserProfileView(
+              userName: args['userName'] ?? 'User',
+              userAvatar: args['userAvatar'],
+            );
           },
         );
 
