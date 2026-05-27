@@ -58,7 +58,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           if (state is RegisterSuccessState) {
             // Navigate to sign-up verification screen with the email
             final authCubit = context.read<AuthCubit>();
-            Navigator.pushReplacement(
+            Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (_) => BlocProvider.value(
@@ -76,7 +76,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 backgroundColor: Colors.orange,
               ),
             );
-            Navigator.pushReplacement(
+            Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (_) => BlocProvider.value(
