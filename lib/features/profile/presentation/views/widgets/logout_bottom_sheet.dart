@@ -5,6 +5,8 @@ import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
+import 'package:sammly/core/routing/routes.dart';
+import 'package:sammly/core/shared_pref/shared_pref.dart';
 
 class LogoutBottomSheet extends StatelessWidget {
   const LogoutBottomSheet({super.key});
@@ -62,8 +64,15 @@ class LogoutBottomSheet extends StatelessWidget {
               
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () {
-                    
+                  onPressed: () async {
+                    // Clear stored data
+                    await SharedPref.removeData(key: 'token');
+                    if (context.mounted) {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        AppRoutes.loginView,
+                        (route) => false,
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.redColor,

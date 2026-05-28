@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:device_preview/device_preview.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/networking/dio_helper.dart';
@@ -22,11 +21,10 @@ void main() async {
   DioHelper.init();
   await SharedPref.init();
 
-  runApp(
-    DevicePreview(enabled:false //!kReleaseMode
-    , builder: (context) => const SammlyApp()),
-  );
+  runApp(const SammlyApp());
 }
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class SammlyApp extends StatelessWidget {
   const SammlyApp({super.key});
@@ -38,9 +36,8 @@ class SammlyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => ProfileCubit(ProfileRepo())..fetchProfile(),
         ),
-        BlocProvider(
-          create: (context) => SupportCubit(SupportRepo()),
-        ),
+        BlocProvider(create: (context) => SupportCubit(SupportRepo())),
+        // NetworkCubit removed for auto-check
       ],
       child: ScreenUtilInit(
         designSize: const Size(430, 932),
@@ -48,17 +45,26 @@ class SammlyApp extends StatelessWidget {
         splitScreenMode: true,
         builder: (context, child) {
           return MaterialApp(
+            navigatorKey: navigatorKey,
             initialRoute: AppRoutes.splashView,
             onGenerateRoute: AppRouter.generateRoute,
             debugShowCheckedModeBanner: false,
-            useInheritedMediaQuery: true, 
-            locale: DevicePreview.locale(context),
-            builder: DevicePreview.appBuilder,
             title: AppStrings.appname,
-      
             theme: ThemeData(
               useMaterial3: true,
               scaffoldBackgroundColor: AppColors.whiteColor,
+              primaryColor: AppColors.primaryColor,
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: AppColors.primaryColor,
+              ),
+              progressIndicatorTheme: const ProgressIndicatorThemeData(
+                color: AppColors.primaryColor,
+              ),
+              textSelectionTheme: const TextSelectionThemeData(
+                cursorColor: AppColors.primaryColor,
+                selectionColor: AppColors.activeNavBarBg,
+                selectionHandleColor: AppColors.primaryColor,
+              ),
               appBarTheme: const AppBarTheme(
                 elevation: 0,
                 scrolledUnderElevation: 0,

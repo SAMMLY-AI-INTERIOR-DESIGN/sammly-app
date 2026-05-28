@@ -266,7 +266,10 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
               },
               child: SizedBox(
                 height: itemHeight,
-                child: DesignGridItem(imageUrl: _designImageUrls[index]),
+                child: DesignGridItem(
+                  imageUrl: _designImageUrls[index],
+                  showLikeButton: false,
+                ),
               ),
             ),
           );
