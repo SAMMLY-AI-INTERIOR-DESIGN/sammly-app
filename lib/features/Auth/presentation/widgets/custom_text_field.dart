@@ -55,7 +55,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     }
 
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.h),
+      padding: EdgeInsets.symmetric(vertical: 6.h),
       child: TextFormField(
         obscureText: widget.ispassword ? _obscureText : false,
         controller: widget.controller,
@@ -66,7 +66,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         ),
         decoration: InputDecoration(
           contentPadding: EdgeInsets.symmetric(
-            vertical: 18.h,
+            vertical: 14.h,
             horizontal: 16.w,
           ),
           filled: true,

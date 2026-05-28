@@ -52,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is LoginSuccessState) {
-            Navigator.pushReplacementNamed(context, AppRoutes.onboardingView);
+            Navigator.pushReplacementNamed(context, AppRoutes.layoutView);
           } else if (state is AuthNeedsVerificationState) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -61,13 +61,14 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             );
 
-            Navigator.pushReplacement(
+            Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (_) => BlocProvider.value(
                   value: context.read<AuthCubit>(),
                   child: SignUpVerificationView(
                     email: state.email,
+                    isFromLogin: true,
                   ),
                 ),
               ),
@@ -84,7 +85,8 @@ class _LoginScreenState extends State<LoginScreen> {
         child: PopScope(
           canPop: false,
           child: Scaffold(
-          backgroundColor: AppColors.whiteColor,
+            resizeToAvoidBottomInset: false,
+            backgroundColor: AppColors.whiteColor,
           body: SingleChildScrollView(
             // 💡 مسحنا سطر الـ keyboardDismissBehavior من هنا
             // عشان السكرول ملوش دعوة بالكيبورد دلوقتي
@@ -131,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(
-                      height: 641.h,
+                      constraints: BoxConstraints(maxHeight: screenHeight * 0.8),
                       width: double.infinity,
                       decoration: BoxDecoration(
                         // هنا ضفنا الجريدينت الخفيف بتاع الكارت
@@ -155,7 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         physics: const BouncingScrollPhysics(),
                         padding: EdgeInsets.symmetric(
                           horizontal: 24.w,
-                          vertical: 32.h,
+                          vertical: 24.h,
                         ),
                         child: Form(
                           key: _formKey,

@@ -38,7 +38,7 @@ class CustomBottomNavBar extends StatelessWidget {
           _buildNavItem(0, AppImages.homeIcon, AppStrings.home),
           _buildNavItem(1, AppImages.exploreIcon, AppStrings.explore),
           _buildNavItem(2, AppImages.historyIcon, AppStrings.history),
-          _buildNavItem(3, AppImages.profileIcon, AppStrings.profile),
+          _buildNavItem(3, AppImages.profileNavBarIcon, AppStrings.profile),
         ],
       ),
     );
