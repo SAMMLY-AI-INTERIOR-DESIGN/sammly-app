@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sammly/core/constant/app_images.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/features/Auth/cubit/auth_cubit.dart';
 import 'package:sammly/features/Auth/data/repo/auth_repo.dart';
@@ -199,10 +197,7 @@ abstract class AppRouter {
       case AppRoutes.generateLoadingView:
         return MaterialPageRoute(
           builder: (context) {
-            return const GenerateLoadingView(
-              imagePath: AppImages.generateLoading1,
-              title: AppStrings.yourRoomIsComingSoon,
-            );
+            return const GenerationLoadingWrapper();
           },
         );
 
