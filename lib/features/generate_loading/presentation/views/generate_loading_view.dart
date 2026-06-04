@@ -1,59 +1,99 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_strings.dart';
+import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/theme/text_styles.dart';
+import 'package:sammly/features/generate_loading/presentation/cubits/loading_cubit.dart';
+import 'package:sammly/features/generate_loading/presentation/cubits/loading_states.dart';
+// import مسارات الـ Cubit والـ States هنا
 
-class GenerateLoadingView extends StatelessWidget {
-  final String imagePath;
-  final String title;
+class GenerationLoadingWrapper extends StatelessWidget {
+  const GenerationLoadingWrapper({super.key});
 
-  const GenerateLoadingView({
-    super.key,
-    required this.imagePath,
-    required this.title,
-  });
+  // جهزنا الداتا بالترتيب اللي هتظهر بيه
+  final List<String> images = const [
+    AppImages.generateLoading1,
+    AppImages.generateLoading2,
+    AppImages.generateLoading3,
+    AppImages.generateLoading4,
+  ];
+
+  final List<String> titles = const [
+    AppStrings.yourRoomIsComingSoon,
+    AppStrings.yourRoomIsComingSoon, // لو التانية نفس النص زي ما في الديزاين
+    AppStrings.addingDetails,
+    AppStrings.addingDetails,
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.whiteColor,
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.w),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Spacer(),
-              
-              SvgPicture.asset(
-                imagePath,
-                height: 80.h, 
-                fit: BoxFit.contain,
-              ),
-              
-              SizedBox(height: 4.h),
-              
-              Text(
-                title,
-                textAlign: TextAlign.center,
-                style: AppTextStyles.title18SemiBold.copyWith(color: AppColors.blackColor),
-              ),
-              
-              const Spacer(),
-              
-              Text(
-                AppStrings.loadingDisclaimer,
-                textAlign: TextAlign.center,
-                style: AppTextStyles.body14Regular.copyWith(
-                  color: Colors.grey.shade500,
-                  height: 1.5,
-                ),
-              ),
-              
-              SizedBox(height: 40.h), 
-            ],
+    // استخدمنا BlocProvider عشان نكريت الكيوبت ونشغل الدالة أول ما الشاشة تفتح
+    return BlocProvider(
+      create: (context) => GenerationCubit()..startLoadingCycle(),
+      child: Scaffold(
+        backgroundColor: AppColors.whiteColor,
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.w),
+            child: BlocBuilder<GenerationCubit, GenerationState>(
+              builder: (context, state) {
+                // بنجيب رقم الخطوة، ولو لسه بيبدأ نعتبرها 0
+                int currentStep = 0;
+                if (state is GenerationLoadingStep) {
+                  currentStep = state.stepIndex;
+                }
+
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Spacer(),
+                    
+                    // 1. الصورة بتتغير حسب الـ currentStep
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 500), // أنيميشن خفيف لما الصورة تتغير
+                      child: SvgPicture.asset(
+                        images[currentStep],
+                        key: ValueKey<int>(currentStep), // مهم عشان الأنيميشن يشتغل
+                        height: 80.h,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    
+                    SizedBox(height: 12.h),
+                    
+                    // 2. النص بيتغير حسب الـ currentStep
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 500),
+                      child: Text(
+                        titles[currentStep],
+                        key: ValueKey<int>(currentStep),
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.title18SemiBold.copyWith(
+                          color: AppColors.blackColor,
+                        ),
+                      ),
+                    ),
+                    
+                    const Spacer(),
+                    
+                    // 3. النص الثابت
+                    Text(
+                      AppStrings.loadingDisclaimer,
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.body14Regular.copyWith(
+                        color: Colors.grey.shade500,
+                        height: 1.5,
+                      ),
+                    ),
+                    
+                    SizedBox(height: 40.h),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),
