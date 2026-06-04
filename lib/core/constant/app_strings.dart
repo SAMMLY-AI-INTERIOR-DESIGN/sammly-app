@@ -107,4 +107,8 @@ abstract class AppStrings {
   static const String yourRoomIsComingSoon = "Your room is coming soon...";
   static const String addingDetails = "Adding details and finishing touches.";
   static const String loadingDisclaimer = "keep the app open and don't lock your device as the\nprocess may take approximately 10 seconds";
+  static const String maskInpainting = "Mask Inpainting";
+  static const String maskInpaintingDesc = "Upload a photo, draw a mask on the area you want to change, and describe your vision.";
+  static const String maskInpaintingTag = "Inpainting";
+ 
 }
