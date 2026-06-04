@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sammly/core/constant/app_images.dart';
+import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/features/Auth/cubit/auth_cubit.dart';
 import 'package:sammly/features/Auth/data/repo/auth_repo.dart';
@@ -7,6 +9,7 @@ import 'package:sammly/features/Auth/presentation/views/login_view.dart';
 import 'package:sammly/features/Auth/presentation/views/signup_view.dart';
 import 'package:sammly/features/Auth/presentation/views/verfictionofsign.dart';
 import 'package:sammly/features/favorite/presentation/views/favorite_view.dart';
+import 'package:sammly/features/generate_loading/presentation/views/generate_loading_view.dart';
 import 'package:sammly/features/layout/presentation/views/layout_view.dart';
 import 'package:sammly/features/onboarding/presentation/views/onboarding_view.dart';
 import 'package:sammly/features/profile/presentation/views/edit_profile_view.dart';
@@ -189,6 +192,16 @@ abstract class AppRouter {
             return UserProfileView(
               userName: args['userName'] ?? 'User',
               userAvatar: args['userAvatar'],
+            );
+          },
+        );
+
+      case AppRoutes.generateLoadingView:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const GenerateLoadingView(
+              imagePath: AppImages.generateLoading1,
+              title: AppStrings.yourRoomIsComingSoon,
             );
           },
         );

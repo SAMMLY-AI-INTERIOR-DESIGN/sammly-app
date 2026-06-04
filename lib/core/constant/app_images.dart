@@ -75,4 +75,9 @@ class AppImages {
   static const String customizeIcon = "assets/images/customize.svg";
   static const String downloadIcon = "assets/images/download.svg";
   static const String shareIcon = "assets/images/share.svg";
+
+  static const String generateLoading1 = "assets/images/generate_loading1.svg";
+  static const String generateLoading2 = "assets/images/generate_loading2.svg";
+  static const String generateLoading3 = "assets/images/generate_loading3.svg";
+  static const String generateLoading4 = "assets/images/generate_loading4.svg";
 }

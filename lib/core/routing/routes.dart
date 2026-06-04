@@ -21,4 +21,5 @@ abstract class AppRoutes {
   static const String sharedDesignDetailsView = '/shareddesigndetailsview';
   static const String securityView = '/securityview';
   static const String userProfileView = '/userprofileview';
+  static const String generateLoadingView = '/generateloadingview';
 }
