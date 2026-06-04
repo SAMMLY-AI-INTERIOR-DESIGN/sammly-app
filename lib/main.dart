@@ -14,9 +14,9 @@ import 'package:sammly/features/support/cubit/support_cubit.dart';
 import 'package:sammly/features/support/data/repo/support_repo.dart';
 
 void main() async {
-  // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  // WidgetsFlutterBinding.ensureInitialized();
   // Initialize networking and local storage
   DioHelper.init();
   await SharedPref.init();
@@ -46,7 +46,7 @@ class SammlyApp extends StatelessWidget {
         builder: (context, child) {
           return MaterialApp(
             navigatorKey: navigatorKey,
-            initialRoute: AppRoutes.generateLoadingView,
+            initialRoute: AppRoutes.splashView,
             onGenerateRoute: AppRouter.generateRoute,
             debugShowCheckedModeBanner: false,
             title: AppStrings.appname,

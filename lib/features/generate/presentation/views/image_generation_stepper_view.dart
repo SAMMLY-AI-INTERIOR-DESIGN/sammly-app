@@ -6,6 +6,7 @@ import 'package:sammly/features/generate/presentation/views/widgets/custom_stepp
 import 'package:sammly/features/generate/presentation/views/widgets/step_1_upload.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/step_2_mask.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/step_3_describe.dart';
+import 'package:sammly/core/routing/routes.dart';
 
 class ImageGenerationStepperView extends StatefulWidget {
   const ImageGenerationStepperView({super.key});
@@ -89,12 +90,7 @@ class _ImageGenerationStepperViewState
     debugPrint("Mask: ${_maskImage?.path}");
     debugPrint("Prompt: $prompt");
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Generating design..."),
-        backgroundColor: AppColors.secondaryColor,
-      ),
-    );
+    Navigator.pushNamed(context, AppRoutes.generateLoadingView);
   }
 
   @override
