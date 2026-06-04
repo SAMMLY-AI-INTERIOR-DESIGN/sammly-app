@@ -102,5 +102,8 @@ abstract class AppStrings {
   static const String roomRedesign = "Room Redesign";
   static const String roomRedesignDesc = "Transform your existing room into a completely new style while keeping the same layout.";
   static const String restyleRoomTag = "Restyle Room";
+  static const String maskInpainting = "Mask Inpainting";
+  static const String maskInpaintingDesc = "Upload a photo, draw a mask on the area you want to change, and describe your vision.";
+  static const String maskInpaintingTag = "Inpainting";
  
 }
