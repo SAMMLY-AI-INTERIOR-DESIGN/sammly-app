@@ -102,5 +102,9 @@ abstract class AppStrings {
   static const String roomRedesign = "Room Redesign";
   static const String roomRedesignDesc = "Transform your existing room into a completely new style while keeping the same layout.";
   static const String restyleRoomTag = "Restyle Room";
- 
+
+  // generate loading
+  static const String yourRoomIsComingSoon = "Your room is coming soon...";
+  static const String addingDetails = "Adding details and finishing touches.";
+  static const String loadingDisclaimer = "keep the app open and don't lock your device as the\nprocess may take approximately 10 seconds";
 }
