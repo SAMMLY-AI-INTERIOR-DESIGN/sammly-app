@@ -110,5 +110,30 @@ abstract class AppStrings {
   static const String maskInpainting = "Mask Inpainting";
   static const String maskInpaintingDesc = "Upload a photo, draw a mask on the area you want to change, and describe your vision.";
   static const String maskInpaintingTag = "Inpainting";
- 
+
+  // mask views
+  static const String describeYourChanges = "Describe Your Changes";
+
+  // text to image views
+  static const String selectRoom = "Select Room";
+  static const String selectStyle = "Select Style";
+  static const String visualizeYourSpace = "Visualize your Space";
+  static const String describeDreamRoomHint = "Describe your dream room.......";
+  static const String addReferenceImage = "Add Reference Image(Optional)";
+  static const String generateDesign = "Generate Design";
+  
+  static const String traditional = "Traditional";
+  static const String coastal = "Coastal";
+  static const String rustic = "Rustic";
+  static const String midCenturyModern = "Mid-century modern";
+  static const String boho = "Boho";
+
+  static const String type = "Type";
+  static const String style = "Style";
+  static const String describe = "Describe";
+
+  static const String next = "Next";
+  static const String pleaseSelectARoom = "Please select a Room";
+  static const String pleaseSelectAStyle = "Please select a Style";
+  static const String pleaseDescribeYourDreamRoom = "Please describe your dream room.";
 }

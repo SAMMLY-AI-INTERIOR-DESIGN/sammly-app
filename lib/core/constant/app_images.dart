@@ -80,4 +80,14 @@ class AppImages {
   static const String generateLoading2 = "assets/images/generate_loading2.svg";
   static const String generateLoading3 = "assets/images/generate_loading3.svg";
   static const String generateLoading4 = "assets/images/generate_loading4.svg";
+  static const String roomBathroom = "assets/images/bath_room.png";
+  static const String roomBedroom = "assets/images/bed_room.png";
+  static const String roomDining = "assets/images/dining_room.png";
+  static const String roomKitchen = "assets/images/kitchen.png";
+  static const String roomLivingBohoTraditional = "assets/images/living_room_boho_traditional.png";
+
+  static const String styleCoastal = "assets/images/coastal.png";
+  static const String styleRustic = "assets/images/rustic.png";
+  static const String styleMidCentury = "assets/images/mid_century_modern.png";
+  static const String arrowRight = "assets/images/arrow_right.svg";
 }

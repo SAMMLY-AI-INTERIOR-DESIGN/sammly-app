@@ -22,4 +22,5 @@ abstract class AppRoutes {
   static const String securityView = '/securityview';
   static const String userProfileView = '/userprofileview';
   static const String generateLoadingView = '/generateloadingview';
+  static const String textToImageGenerateView = '/texttoimagegenerateview';
 }

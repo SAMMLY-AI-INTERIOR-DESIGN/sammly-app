@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sammly/core/constant/app_colors.dart';
+import 'package:sammly/core/constant/app_strings.dart';
+import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/custom_stepper.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/step_1_upload.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/step_2_mask.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/step_3_describe.dart';
-import 'package:sammly/core/routing/routes.dart';
 
 class ImageGenerationStepperView extends StatefulWidget {
   const ImageGenerationStepperView({super.key});
@@ -109,7 +110,7 @@ class _ImageGenerationStepperViewState
           onPressed: _previousStep,
         ),
         title: Text(
-          'Upload Image',
+          AppStrings.describeYourChanges,
           style: TextStyle(
             color: AppColors.blackColor,
             fontSize: 20.sp,
@@ -119,7 +120,10 @@ class _ImageGenerationStepperViewState
       ),
       body: Column(
         children: [
-          CustomStepper(currentStep: _currentStep),
+          CustomStepper(
+            currentStep: _currentStep,
+            stepTitles: const ['Upload', 'Mask', 'Describe'],
+          ),
           Expanded(
             child: PageView(
               controller: _pageController,
