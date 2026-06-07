@@ -15,6 +15,7 @@ class AppColors {
   static const Color blackColor2 = Color(0xFF2E2E2E);
   static const Color textFieldBodyColor = Color(0xFFE4F0F2);
   static const Color redColor = Color(0xFFFF3C3C);
+  static const Color roomItemBgColor = Color(0xFFEAF3F9);
 
 
   static const LinearGradient primaryGradient = LinearGradient(
@@ -46,6 +47,12 @@ class AppColors {
     colors: [bg1Color, bg2Color],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
+  );
+
+  static const LinearGradient scafoldBg1Gradient = LinearGradient(
+    colors: [bg2Color, bg1Color],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
   );
 
   static const LinearGradient iconGradient = LinearGradient(

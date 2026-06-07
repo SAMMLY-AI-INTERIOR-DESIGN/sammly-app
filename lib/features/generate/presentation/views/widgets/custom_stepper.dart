@@ -5,8 +5,13 @@ import 'package:sammly/core/theme/text_styles.dart';
 
 class CustomStepper extends StatelessWidget {
   final int currentStep;
+  final List<String> stepTitles;
 
-  const CustomStepper({super.key, required this.currentStep});
+  const CustomStepper({
+    super.key, 
+    required this.currentStep,
+    required this.stepTitles,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,13 +19,16 @@ class CustomStepper extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _buildStep(0, "Upload"),
-          _buildLine(0),
-          _buildStep(1, "Mask"),
-          _buildLine(1),
-          _buildStep(2, "Describe"),
-        ],
+        children: List.generate(
+          stepTitles.length * 2 - 1,
+          (index) {
+            if (index.isEven) {
+              return _buildStep(index ~/ 2, stepTitles[index ~/ 2]);
+            } else {
+              return _buildLine(index ~/ 2);
+            }
+          },
+        ),
       ),
     );
   }
@@ -53,7 +61,7 @@ class CustomStepper extends StatelessWidget {
                   height: double.infinity,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppColors.whiteColor, // The inner color for inactive
+                    color: AppColors.bg2Color, // The inner color for inactive
                   ),
                   alignment: Alignment.center,
                   child: Text(
