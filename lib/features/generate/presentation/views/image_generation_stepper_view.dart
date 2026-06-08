@@ -130,6 +130,8 @@ class _ImageGenerationStepperViewState
               physics: const NeverScrollableScrollPhysics(),
               children: [
                 Step1Upload(
+                  title: AppStrings.uploadYourImage,
+                  subtitle: AppStrings.addYourImage,
                   initialImage: _uploadedImage,
                   onImageSelected: _handleImageSelected,
                   onImageRemoved: () {

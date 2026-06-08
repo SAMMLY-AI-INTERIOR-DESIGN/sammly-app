@@ -11,12 +11,18 @@ class TextToImageStep2Style extends StatelessWidget {
   final String? selectedStyle;
   final Function(String) onStyleSelected;
   final VoidCallback onNext;
+  final String? buttonText;
+  final String? buttonPrefixIcon;
+  final String? buttonSuffixIcon;
 
   const TextToImageStep2Style({
     super.key,
     required this.selectedStyle,
     required this.onStyleSelected,
     required this.onNext,
+    this.buttonText,
+    this.buttonPrefixIcon,
+    this.buttonSuffixIcon,
   });
 
   @override
@@ -115,8 +121,9 @@ class TextToImageStep2Style extends StatelessWidget {
             ),
           ),
           CustomButton(
-            text: AppStrings.next,
-            suffixIcon: AppImages.arrowRight,
+            text: buttonText ?? AppStrings.next,
+            prefixIcon: buttonPrefixIcon,
+            suffixIcon: buttonPrefixIcon != null ? buttonSuffixIcon : (buttonSuffixIcon ?? AppImages.arrowRight),
             onPressed: selectedStyle != null
                 ? onNext
                 : () {

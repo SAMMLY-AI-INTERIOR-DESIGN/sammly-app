@@ -66,7 +66,9 @@ class HomeView extends StatelessWidget {
                       imagePath: AppImages.redesignPlaceholder,
                       tagText: AppStrings.restyleRoomTag,
                       tagIcon: AppImages.restyleIcon, 
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.pushNamed(context, AppRoutes.restyleView);
+                      },
                     ),
                     
                     HomeCardWidget(

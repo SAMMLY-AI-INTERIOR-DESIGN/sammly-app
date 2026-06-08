@@ -1,9 +1,14 @@
 import 'dart:io';
+
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sammly/core/constant/app_colors.dart';
+import 'package:sammly/core/constant/app_images.dart';
+import 'package:sammly/core/constant/app_strings.dart';
+import 'package:sammly/core/functions.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/custombutton.dart';
 
@@ -12,6 +17,8 @@ class Step1Upload extends StatefulWidget {
   final Function(XFile) onImageSelected;
   final Function() onImageRemoved;
   final VoidCallback onNext;
+  final String title;
+  final String subtitle;
 
   const Step1Upload({
     super.key,
@@ -19,6 +26,8 @@ class Step1Upload extends StatefulWidget {
     required this.onImageSelected,
     required this.onImageRemoved,
     required this.onNext,
+    required this.title,
+    required this.subtitle,
   });
 
   @override
@@ -64,7 +73,7 @@ class _Step1UploadState extends State<Step1Upload> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            "Upload Your image",
+            widget.title,
             style: AppTextStyles.title20SemiBold.copyWith(
               color: AppColors.blackColor,
             ),
@@ -117,41 +126,44 @@ class _Step1UploadState extends State<Step1Upload> {
               : GestureDetector(
                   onTap: _pickImage,
                   child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 20.w),
                     decoration: BoxDecoration(
-                      color: AppColors.bg1Color.withValues(alpha: 0.5),
-                      borderRadius: BorderRadius.circular(16.r),
+                      gradient: AppColors.scafoldBg1Gradient,
+                      borderRadius: BorderRadius.circular(20.r),
                     ),
-                    padding: EdgeInsets.all(16.w),
-                    child: DottedBorder(
-                      color: Colors.grey.shade400,
-                      strokeWidth: 1.5,
-                      dashPattern: const [6, 4],
-                      borderType: BorderType.RRect,
-                      radius: Radius.circular(12.r),
-                      child: Container(
-                        height: 250.h,
-                        width: double.infinity,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.add_photo_alternate_outlined,
-                              size: 40.sp,
-                              color: Colors.grey.shade600,
-                            ),
-                            SizedBox(height: 8.h),
-                            Text(
-                              "Add Your Image",
-                              style: AppTextStyles.body14Regular.copyWith(
-                                color: Colors.grey.shade600,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.whiteColor,
+                        borderRadius: BorderRadius.circular(16.r),
+                      ),
+                      // padding: EdgeInsets.all(16.w),
+                      child: DottedBorder(
+                        color: Colors.grey.shade400,
+                        strokeWidth: 1.5,
+                        dashPattern: const [6, 4],
+                        borderType: BorderType.RRect,
+                        radius: Radius.circular(12.r),
+                        child: Container(
+                          height: 250.h,
+                          width: double.infinity,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(AppImages.uploadImage, width: 24.w, height: 24.h),
+                              SizedBox(height: 8.h),
+                              Text(
+                                widget.subtitle,
+                                style: AppTextStyles.body14Regular.copyWith(
+                                  color: Colors.grey.shade600,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -162,15 +174,15 @@ class _Step1UploadState extends State<Step1Upload> {
 
           // Next Button
           CustomButton(
-            text: "Next",
+            text: AppStrings.next,
+            suffixIcon: AppImages.arrowRight,
             onPressed: _selectedImage != null
                 ? widget.onNext
                 : () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Please select an image first"),
-                        backgroundColor: AppColors.primaryColor,
-                      ),
+                    showCustomSnackBar(
+                      context: context,
+                      message: AppStrings.pleaseUploadImage,
+                      isError: true,
                     );
                   },
           ),

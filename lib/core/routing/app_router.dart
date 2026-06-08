@@ -7,6 +7,7 @@ import 'package:sammly/features/Auth/presentation/views/login_view.dart';
 import 'package:sammly/features/Auth/presentation/views/signup_view.dart';
 import 'package:sammly/features/Auth/presentation/views/verfictionofsign.dart';
 import 'package:sammly/features/favorite/presentation/views/favorite_view.dart';
+import 'package:sammly/features/generate/presentation/views/restyle_view.dart';
 import 'package:sammly/features/generate_loading/presentation/views/generate_loading_view.dart';
 import 'package:sammly/features/generate/presentation/views/text_to_image_generate_view.dart';
 import 'package:sammly/features/layout/presentation/views/layout_view.dart';
@@ -206,6 +207,13 @@ abstract class AppRouter {
         return MaterialPageRoute(
           builder: (context) {
             return const TextToImageGenerateView();
+          },
+        );
+
+      case AppRoutes.restyleView:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const RestyleView();
           },
         );
 
