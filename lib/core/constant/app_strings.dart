@@ -111,10 +111,8 @@ abstract class AppStrings {
   static const String maskInpaintingDesc = "Upload a photo, draw a mask on the area you want to change, and describe your vision.";
   static const String maskInpaintingTag = "Inpainting";
 
-  // mask views
+  // generate views
   static const String describeYourChanges = "Describe Your Changes";
-
-  // text to image views
   static const String selectRoom = "Select Room";
   static const String selectStyle = "Select Style";
   static const String visualizeYourSpace = "Visualize your Space";
@@ -131,6 +129,7 @@ abstract class AppStrings {
   static const String type = "Type";
   static const String style = "Style";
   static const String describe = "Describe";
+  static const String select = "Select";
 
   static const String uploadRoom = "Upload Room";
   static const String uploadReferenceImage = "Upload reference image";
@@ -145,4 +144,7 @@ abstract class AppStrings {
   static const String pleaseSelectAStyle = "Please select a Style";
   static const String pleaseDescribeYourDreamRoom = "Please describe your dream room.";
   static const String pleaseUploadImage = "Please upload an image first";
+  static const String pleaseSelectAtLeastOneRoom = "Please select at least one room";
+
+  static const String buildYourRoom = "Build your rooms based on one room";
 }

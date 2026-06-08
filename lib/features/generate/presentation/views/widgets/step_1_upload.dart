@@ -19,6 +19,8 @@ class Step1Upload extends StatefulWidget {
   final VoidCallback onNext;
   final String title;
   final String subtitle;
+  final String? titleIcon; 
+  final bool isButtonInsideCard; 
 
   const Step1Upload({
     super.key,
@@ -28,6 +30,8 @@ class Step1Upload extends StatefulWidget {
     required this.onNext,
     required this.title,
     required this.subtitle,
+    this.titleIcon,
+    this.isButtonInsideCard = false,
   });
 
   @override
@@ -67,125 +71,149 @@ class _Step1UploadState extends State<Step1Upload> {
 
   @override
   Widget build(BuildContext context) {
+    
+    Widget imageUploadArea = _selectedImage != null
+        ? Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(color: AppColors.bg1Color, width: 2),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(14.r),
+                  child: Image.file(
+                    File(_selectedImage!.path),
+                    height: 250.h,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 10.h,
+                right: 10.w,
+                child: GestureDetector(
+                  onTap: _removeImage,
+                  child: Container(
+                    width: 32.w,
+                    height: 32.h,
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.5),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: 18.sp,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          )
+        : GestureDetector(
+            onTap: _pickImage,
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.whiteColor,
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+              child: DottedBorder(
+                color: Colors.grey.shade400,
+                strokeWidth: 1.5,
+                dashPattern: const [6, 4],
+                borderType: BorderType.RRect,
+                radius: Radius.circular(12.r),
+                child: Container(
+                  height: 250.h,
+                  width: double.infinity,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(AppImages.uploadImage, width: 24.w, height: 24.h),
+                      SizedBox(height: 8.h),
+                      Text(
+                        widget.subtitle,
+                        style: AppTextStyles.body14Regular.copyWith(
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+
+   Widget nextButton = CustomButton(
+      text: AppStrings.next,
+      suffixIcon: AppImages.arrowRight,
+      onPressed: _selectedImage != null
+          ? widget.onNext
+          : () {
+              showCustomSnackBar(
+                context: context,
+                message: AppStrings.pleaseUploadImage,
+                isError: true,
+              );
+            },
+    );
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            widget.title,
-            style: AppTextStyles.title20SemiBold.copyWith(
-              color: AppColors.blackColor,
-            ),
+          Row(
+            children: [
+              if (widget.titleIcon != null) ...[
+                SvgPicture.asset(widget.titleIcon!, width: 24.w, height: 24.h),
+                SizedBox(width: 8.w),
+              ],
+              Text(
+                widget.title,
+                style: AppTextStyles.title20SemiBold.copyWith(
+                  color: AppColors.blackColor,
+                ),
+              ),
+            ],
           ),
           SizedBox(height: 16.h),
 
-          // Dotted Container / Image Preview
-          _selectedImage != null
-              ? Stack(
-                  children: [
-                    // Selected image preview
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16.r),
-                        border: Border.all(color: AppColors.bg1Color, width: 2),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(14.r),
-                        child: Image.file(
-                          File(_selectedImage!.path),
-                          height: 280.h,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    // X remove button
-                    Positioned(
-                      top: 10.h,
-                      right: 10.w,
-                      child: GestureDetector(
-                        onTap: _removeImage,
-                        child: Container(
-                          width: 32.w,
-                          height: 32.h,
-                          decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.5),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.close,
-                            color: Colors.white,
-                            size: 18.sp,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              : GestureDetector(
-                  onTap: _pickImage,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 20.w),
-                    decoration: BoxDecoration(
-                      gradient: AppColors.scafoldBg1Gradient,
-                      borderRadius: BorderRadius.circular(20.r),
-                    ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.whiteColor,
-                        borderRadius: BorderRadius.circular(16.r),
-                      ),
-                      // padding: EdgeInsets.all(16.w),
-                      child: DottedBorder(
-                        color: Colors.grey.shade400,
-                        strokeWidth: 1.5,
-                        dashPattern: const [6, 4],
-                        borderType: BorderType.RRect,
-                        radius: Radius.circular(12.r),
-                        child: Container(
-                          height: 250.h,
-                          width: double.infinity,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(AppImages.uploadImage, width: 24.w, height: 24.h),
-                              SizedBox(height: 8.h),
-                              Text(
-                                widget.subtitle,
-                                style: AppTextStyles.body14Regular.copyWith(
-                                  color: Colors.grey.shade600,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-
-          const Spacer(),
-
-          // Next Button
-          CustomButton(
-            text: AppStrings.next,
-            suffixIcon: AppImages.arrowRight,
-            onPressed: _selectedImage != null
-                ? widget.onNext
-                : () {
-                    showCustomSnackBar(
-                      context: context,
-                      message: AppStrings.pleaseUploadImage,
-                      isError: true,
-                    );
-                  },
-          ),
+          if (widget.isButtonInsideCard)
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 20.w),
+              decoration: BoxDecoration(
+                gradient: AppColors.scafoldBg1Gradient,
+                borderRadius: BorderRadius.circular(20.r),
+              ),
+              child: Column(
+                children: [
+                  imageUploadArea,
+                  SizedBox(height: 24.h),
+                  nextButton,
+                ],
+              ),
+            )
+          else ...[
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 20.w),
+              decoration: BoxDecoration(
+                gradient: AppColors.scafoldBg1Gradient,
+                borderRadius: BorderRadius.circular(20.r),
+              ),
+              child: imageUploadArea,
+            ),
+            const Spacer(),
+            nextButton,
+          ],
+          
           SizedBox(height: 24.h),
         ],
       ),
