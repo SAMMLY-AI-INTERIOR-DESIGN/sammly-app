@@ -132,8 +132,17 @@ abstract class AppStrings {
   static const String style = "Style";
   static const String describe = "Describe";
 
+  static const String uploadRoom = "Upload Room";
+  static const String uploadReferenceImage = "Upload reference image";
+  static const String restyleYourSpace = "Restyle your Space";
+  static const String upload = "Upload";
+  static const String addReferenceImageOnly = "Add Reference Image";
+  static const String uploadYourImage = "Upload Your image";
+  static const String addYourImage = "Add Your image";
+
   static const String next = "Next";
   static const String pleaseSelectARoom = "Please select a Room";
   static const String pleaseSelectAStyle = "Please select a Style";
   static const String pleaseDescribeYourDreamRoom = "Please describe your dream room.";
+  static const String pleaseUploadImage = "Please upload an image first";
 }
