@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sammly/core/constant/app_colors.dart';
-import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/functions.dart';
 import 'package:sammly/core/routing/routes.dart';
-import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/custom_stepper.dart';
+import 'package:sammly/features/generate/presentation/views/widgets/logo_widget.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/text_to_image_step_1_room.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/text_to_image_step_2_style.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/text_to_image_step_3_describe.dart';
@@ -109,19 +107,7 @@ class _TextToImageGenerateViewState extends State<TextToImageGenerateView> {
         body: Column(
           children: [
             if (_currentStep == 2) ...[
-              Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  SvgPicture.asset(AppImages.splash, height: 140.h, width: 180.w),
-                  Positioned(
-                    bottom: -5.h,
-                    child: Text(
-                      AppStrings.appdesc,
-                      style: AppTextStyles.title15extraBold,
-                    ),
-                  ),
-                ],
-              ),
+              LogoWidget(),
               SizedBox(height: 10.h),
             ],
             CustomStepper(
