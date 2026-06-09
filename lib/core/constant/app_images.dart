@@ -90,4 +90,5 @@ class AppImages {
   static const String styleRustic = "assets/images/rustic.png";
   static const String styleMidCentury = "assets/images/mid_century_modern.png";
   static const String arrowRight = "assets/images/arrow_right.svg";
+  static const String smartLensIcon = "assets/images/smart_lens_icon.svg";
 }

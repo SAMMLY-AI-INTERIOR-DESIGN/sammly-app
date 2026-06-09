@@ -23,6 +23,7 @@ class GenerationCubit extends Cubit<GenerationState> {
       } else {
         // لو وصلنا لآخر شاشة (رقم 3)، وقف الـ Timer عشان ميفضلش يعد عالفاضي
         _timer?.cancel(); 
+        emit(GenerationFinished());
         
         // ملاحظة: لو عايزهم يلفوا من الأول تاني للأبد، بدل سطر الـ cancel خليها:
         // _currentStep = 0; 

@@ -6,12 +6,13 @@ import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/theme/text_styles.dart';
+import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/features/generate_loading/presentation/cubits/loading_cubit.dart';
 import 'package:sammly/features/generate_loading/presentation/cubits/loading_states.dart';
-// import مسارات الـ Cubit والـ States هنا
 
 class GenerationLoadingWrapper extends StatelessWidget {
-  const GenerationLoadingWrapper({super.key});
+  final Map<String, dynamic>? arguments;
+  const GenerationLoadingWrapper({super.key, this.arguments});
 
   // جهزنا الداتا بالترتيب اللي هتظهر بيه
   final List<String> images = const [
@@ -38,7 +39,18 @@ class GenerationLoadingWrapper extends StatelessWidget {
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 24.w),
-            child: BlocBuilder<GenerationCubit, GenerationState>(
+            child: BlocConsumer<GenerationCubit, GenerationState>(
+              listener: (context, state) {
+                if (state is GenerationFinished) {
+                  // final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+                  // final showListView = args?['showListView'] as bool? ?? false;
+                  Navigator.pushReplacementNamed(
+                    context, 
+                    AppRoutes.generateResultView, 
+                    arguments: arguments,
+                  );
+                }
+              },
               builder: (context, state) {
                 // بنجيب رقم الخطوة، ولو لسه بيبدأ نعتبرها 0
                 int currentStep = 0;
