@@ -8,6 +8,7 @@ import 'package:sammly/features/Auth/presentation/views/signup_view.dart';
 import 'package:sammly/features/Auth/presentation/views/verfictionofsign.dart';
 import 'package:sammly/features/favorite/presentation/views/favorite_view.dart';
 import 'package:sammly/features/generate/presentation/views/full_home_view.dart';
+import 'package:sammly/features/generate/presentation/views/generate_result_view.dart';
 import 'package:sammly/features/generate/presentation/views/restyle_view.dart';
 import 'package:sammly/features/generate_loading/presentation/views/generate_loading_view.dart';
 import 'package:sammly/features/generate/presentation/views/text_to_image_generate_view.dart';
@@ -198,9 +199,10 @@ abstract class AppRouter {
         );
 
       case AppRoutes.generateLoadingView:
+      final args = settings.arguments as Map<String, dynamic>?;
         return MaterialPageRoute(
           builder: (context) {
-            return const GenerationLoadingWrapper();
+            return GenerationLoadingWrapper(arguments: args,);
           },
         );
 
@@ -222,6 +224,15 @@ abstract class AppRouter {
         return MaterialPageRoute(
           builder: (context) {
             return const FullHomeView();
+          },
+        );
+
+      case AppRoutes.generateResultView:
+        final args = settings.arguments as Map<String, dynamic>?;
+        final showListView = args?['showListView'] as bool? ?? false;
+        return MaterialPageRoute(
+          builder: (context) {
+            return GenerateResultView(showListView: showListView);
           },
         );
 

@@ -87,6 +87,7 @@ class _RestyleViewState extends State<RestyleView> {
                       Navigator.pushNamed(
                         context,
                         AppRoutes.generateLoadingView,
+                        arguments: {'showListView': false},
                       );
                     },
                     buttonText: AppStrings.restyleYourSpace,

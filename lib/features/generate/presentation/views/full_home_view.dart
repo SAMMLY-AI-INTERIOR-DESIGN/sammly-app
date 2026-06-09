@@ -160,7 +160,11 @@ class _FullHomeViewState extends State<FullHomeView> {
                   isError: true,
                 );
               } else {
-                Navigator.pushNamed(context, AppRoutes.generateLoadingView);
+                Navigator.pushNamed(
+                  context, 
+                  AppRoutes.generateLoadingView,
+                  arguments: {'showListView': true},
+                );
               }
             },
           ),

@@ -91,7 +91,11 @@ class _ImageGenerationStepperViewState
     debugPrint("Mask: ${_maskImage?.path}");
     debugPrint("Prompt: $prompt");
 
-    Navigator.pushNamed(context, AppRoutes.generateLoadingView);
+    Navigator.pushNamed(
+      context, 
+      AppRoutes.generateLoadingView,
+      arguments: {'showListView': false},
+    );
   }
 
   @override
