@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sammly/features/profile/data/models/profile_model.dart';
 import 'package:sammly/features/profile/data/repo/profile_repo.dart';
@@ -25,17 +27,17 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
   }
 
-  Future<void> editProfile(Map<String, dynamic> data) async {
+  Future<void> editProfile(Map<String, dynamic> data, {File? imageFile}) async {
     emit(EditProfileLoading());
 
-    final result = await _repository.editProfile(data);
+    final result = await _repository.editProfile(data, imageFile: imageFile);
 
     result.fold(
       (error) => emit(EditProfileError(error)),
       (profile) {
         currentProfile = profile;
         emit(EditProfileSuccess(profile));
-        emit(ProfileLoaded(profile)); // Also update listeners of the main profile state
+        emit(ProfileLoaded(profile));
       },
     );
   }

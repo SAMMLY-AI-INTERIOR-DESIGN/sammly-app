@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:sammly/core/constant/app_colors.dart';
-import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
+import 'package:sammly/core/widgets/avatar_widget.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_state.dart';
 
@@ -25,32 +24,11 @@ class HomeHeader extends StatelessWidget {
               CircleAvatar(
                 radius: 30,
                 backgroundColor: AppColors.activeNavBarBg,
-                child: ClipOval(
-                  child: profile?.avatar != null
-                                      ? Image.network(
-                                          profile!.avatar!,
-                                          width: 65.w,
-                                          height: 65.h,
-                                          fit: BoxFit.cover,
-                                          errorBuilder:
-                                              (
-                                                context,
-                                                error,
-                                                stackTrace,
-                                              ) => SvgPicture.asset(
-                                                AppImages
-                                                    .maleProfilePlaceholder,
-                                                width: 65.w,
-                                                height: 65.h,
-                                                fit: BoxFit.cover,
-                                              ),
-                                        )
-                                      : SvgPicture.asset(
-                                          AppImages.maleProfilePlaceholder,
-                                          width: 65.w,
-                                          height: 65.h,
-                                          fit: BoxFit.cover,
-                                        ),
+                child: AvatarWidget(
+                  avatarPath: profile?.avatar,
+                  width: 60.w,
+                  height: 60.h,
+                  borderRadius: BorderRadius.circular(30),
                 ),
               ),
               const SizedBox(width: 16),
