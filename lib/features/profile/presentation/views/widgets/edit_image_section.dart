@@ -11,8 +11,9 @@ import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 
 class EditImageSection extends StatefulWidget {
+  final ValueChanged<File?> onImagePicked;
 
-  const EditImageSection({super.key});
+  const EditImageSection({super.key, required this.onImagePicked});
 
   @override
   State<EditImageSection> createState() => _EditImageSectionState();
@@ -24,12 +25,13 @@ class _EditImageSectionState extends State<EditImageSection> {
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage() async {
-    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery, imageQuality: 50, maxHeight: 800, maxWidth: 800);
     
     if (pickedFile != null) {
       setState(() {
         _selectedImage = File(pickedFile.path);
       });
+      widget.onImagePicked(_selectedImage);
     }
   }
   
