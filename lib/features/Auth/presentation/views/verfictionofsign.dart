@@ -14,8 +14,13 @@ import 'package:pinput/pinput.dart';
 
 class SignUpVerificationView extends StatefulWidget {
   final String email;
+  final bool isFromLogin;
 
-  const SignUpVerificationView({super.key, required this.email});
+  const SignUpVerificationView({
+    super.key, 
+    required this.email,
+    this.isFromLogin = false,
+  });
 
   @override
   State<SignUpVerificationView> createState() => _SignUpVerificationViewState();
@@ -69,7 +74,7 @@ class _SignUpVerificationViewState extends State<SignUpVerificationView> {
             // JWT is saved, navigate to onboarding/home
             Navigator.pushNamedAndRemoveUntil(
               context,
-              AppRoutes.onboardingView,
+              widget.isFromLogin ? AppRoutes.layoutView : AppRoutes.onboardingView,
               (route) => false,
             );
           } else if (state is VerifyRegisterCodeFailedState) {

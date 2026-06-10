@@ -49,9 +49,8 @@ class SupportRepo {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        return 'Connection timed out: ${e.message ?? e.error}';
       case DioExceptionType.connectionError:
-        return 'No internet connection: ${e.message ?? e.error}';
+        return 'Server Failed Connection , Try again';
       case DioExceptionType.badResponse:
         return 'Bad response: ${e.response?.statusCode} - ${e.message}';
       default:

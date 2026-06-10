@@ -120,4 +120,11 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     color: Color(0xFFA2A0A0),
   );
+
+  static const TextStyle title15extraBold = TextStyle(
+    fontFamily: primaryFont,
+    fontSize: 15,
+    fontWeight: FontWeight.w800,
+    color: Color(0xFF46565D),
+  );
 }

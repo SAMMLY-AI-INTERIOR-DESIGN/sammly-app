@@ -7,6 +7,7 @@ import 'package:sammly/core/constant/app_images.dart';
 class DesignGridItem extends StatefulWidget {
   final String imageUrl;
   final bool initialIsLiked;
+  final bool showLikeButton;
   // Callback مفيد جداً لشاشة المفضلات عشان تعرف لو اليوزر شال اللايك
   final Function(bool isLiked)? onFavoriteToggled;
 
@@ -14,6 +15,7 @@ class DesignGridItem extends StatefulWidget {
     super.key,
     required this.imageUrl,
     this.initialIsLiked = false,
+    this.showLikeButton = true,
     this.onFavoriteToggled,
   });
 
@@ -66,7 +68,8 @@ class _DesignGridItemState extends State<DesignGridItem> {
           ),
 
           // أيقونة القلب
-          Positioned(
+          if (widget.showLikeButton)
+            Positioned(
             top: 8.h,
             right: 8.w,
             child: GestureDetector(

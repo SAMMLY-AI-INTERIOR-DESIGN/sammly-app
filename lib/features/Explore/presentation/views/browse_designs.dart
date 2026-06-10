@@ -17,10 +17,11 @@ class BrowseDesigns extends StatefulWidget {
 class _BrowseDesignsState extends State<BrowseDesigns> {
   final List<String> _filters = [
     'All',
-    'Art deco',
+    'Mid-century modern',
     'Bohemian',
+    'Rustic',
     'Coastal',
-    'Contemporary',
+    'Traditional',
   ];
   String _selectedFilter = 'All';
 
@@ -39,7 +40,7 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bg1Color,
-      appBar: const CustomAppbar(title: 'Explore'),
+      appBar: const CustomAppbar(title: 'Browse Categories'),
       body: SafeArea(
         child: Column(
           children: [
