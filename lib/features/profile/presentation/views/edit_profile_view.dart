@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -13,7 +15,6 @@ import 'package:sammly/features/profile/presentation/views/widgets/custom_text_f
 import 'package:sammly/features/profile/presentation/views/widgets/edit_image_section.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_state.dart';
-// ... (كل الـ imports اللي عندك زي ما هي)
 
 class EditProfileView extends StatefulWidget {
   const EditProfileView({super.key});
@@ -27,12 +28,15 @@ class _EditProfileViewState extends State<EditProfileView> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController dobController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
+  File? _selectedImageFile;
   
-  String selectedCountry = "United States";
+  String selectedCountry = "usa";
   String selectedGender = "male";
 
-  // ضفنا الليستات اللي اليوزر هيختار منها
-  final List<String> countriesList = ["United States", "Egypt", "Saudi Arabia", "United Arab Emirates", "United Kingdom"];
+  final List<String> countriesList = [
+  "usa",
+  "egypt",
+];
   final List<String> gendersList = ["male", "female"];
 
   @override
@@ -44,7 +48,6 @@ class _EditProfileViewState extends State<EditProfileView> {
       usernameController.text = profile.username ?? '';
       dobController.text = profile.dateOfBirth ?? '';
       
-      // تأمين عشان لو الـ API رجع قيمة مش موجودة في الليستة الأبلكيشن ميعملش كراش
       if (profile.country != null && countriesList.contains(profile.country)) {
         selectedCountry = profile.country!;
       }
@@ -72,7 +75,11 @@ class _EditProfileViewState extends State<EditProfileView> {
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
         child: Column(
           children: [
-            EditImageSection(),
+            EditImageSection(
+              onImagePicked: (file) {
+                _selectedImageFile = file;
+              },
+            ),
             
             SizedBox(height: 20.h),
 
@@ -120,11 +127,11 @@ class _EditProfileViewState extends State<EditProfileView> {
                   child: CustomDropdown(
                     label: AppStrings.country, 
                     value: selectedCountry,
-                    items: countriesList, // بصينا الليستة
+                    items: countriesList,
                     onChanged: (val) {
                       if (val != null) {
                         setState(() {
-                          selectedCountry = val; // تحديث القيمة
+                          selectedCountry = val;
                         });
                       }
                     },
@@ -135,11 +142,11 @@ class _EditProfileViewState extends State<EditProfileView> {
                   child: CustomDropdown(
                     label: AppStrings.gender, 
                     value: selectedGender,
-                    items: gendersList, // بصينا الليستة
+                    items: gendersList,
                     onChanged: (val) {
                       if (val != null) {
                         setState(() {
-                          selectedGender = val; // تحديث القيمة
+                          selectedGender = val;
                         });
                       }
                     },
@@ -153,6 +160,8 @@ class _EditProfileViewState extends State<EditProfileView> {
             BlocConsumer<ProfileCubit, ProfileState>(
               listener: (context, state) {
                 if (state is EditProfileSuccess) {
+                  // نعمل refresh من الـ API عشان نجيب الـ avatar URL الجديد من السيرفر
+                  context.read<ProfileCubit>().fetchProfile(forceRefresh: true);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Profile updated successfully!')),
                   );
@@ -170,13 +179,16 @@ class _EditProfileViewState extends State<EditProfileView> {
                 return CustomButton(
                   text: AppStrings.update,
                   onPressed: () {
-                    context.read<ProfileCubit>().editProfile({
-                      "name": nameController.text,
-                      "username": usernameController.text,
-                      "dateOfBirth": dobController.text,
-                      "country": selectedCountry,
-                      "gender": selectedGender,
-                    });
+                    context.read<ProfileCubit>().editProfile(
+                      {
+                        "name": nameController.text,
+                        "username": usernameController.text,
+                        "country": selectedCountry,
+                        "gender": selectedGender,
+                        "dateOfBirth": dobController.text.isNotEmpty ? dobController.text : null,
+                      },
+                      imageFile: _selectedImageFile,
+                    );
                   },
                 );
               },

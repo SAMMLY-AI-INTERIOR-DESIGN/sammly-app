@@ -18,7 +18,10 @@ class ProfileImageNameWidget extends StatelessWidget {
           alignment: Alignment.topCenter,
           child: Column(
             children: [
-              ClipRRect(
+              AvatarWidget(
+                avatarPath: profile?.avatar,
+                width: 100.w,
+                height: 100.h,
                 borderRadius: BorderRadius.circular(16.r),
                 child: profile?.avatar != null
                     ? Image.network(
