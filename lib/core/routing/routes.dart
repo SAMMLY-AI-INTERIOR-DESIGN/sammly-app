@@ -21,4 +21,9 @@ abstract class AppRoutes {
   static const String sharedDesignDetailsView = '/shareddesigndetailsview';
   static const String securityView = '/securityview';
   static const String userProfileView = '/userprofileview';
+  static const String generateLoadingView = '/generateloadingview';
+  static const String textToImageGenerateView = '/texttoimagegenerateview';
+  static const String restyleView = '/restyleview';
+  static const String fullHomeView = '/fullhomeview';
+  static const String generateResultView = '/generateresultview';
 }
