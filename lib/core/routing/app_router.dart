@@ -7,6 +7,7 @@ import 'package:sammly/features/Auth/presentation/views/login_view.dart';
 import 'package:sammly/features/Auth/presentation/views/signup_view.dart';
 import 'package:sammly/features/Auth/presentation/views/verfictionofsign.dart';
 import 'package:sammly/features/favorite/presentation/views/favorite_view.dart';
+import 'package:sammly/features/home/presentation/views/home_view.dart';
 import 'package:sammly/features/generate/presentation/views/full_home_view.dart';
 import 'package:sammly/features/generate/presentation/views/generate_result_view.dart';
 import 'package:sammly/features/generate/presentation/views/restyle_view.dart';
@@ -32,12 +33,12 @@ import 'package:sammly/features/Explore/presentation/views/user_profile_view.dar
 abstract class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      // case AppRoutes.homeView:
-      //   return MaterialPageRoute(
-      //     builder: (context) {
-      //       return const HomeView();
-      //     },
-      //   );
+      case AppRoutes.homeView:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const HomeView();
+          },
+        );
 
       case AppRoutes.splashView:
         return MaterialPageRoute(

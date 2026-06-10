@@ -7,6 +7,7 @@ import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/theme/text_styles.dart';
+import 'package:sammly/core/widgets/avatar_widget.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/invite_friends_widget.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/logout_bottom_sheet.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/profile_menu_group.dart';
@@ -123,33 +124,11 @@ class ProfileView extends StatelessWidget {
                               child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                ClipRRect(
+                                AvatarWidget(
+                                  avatarPath: profile?.avatar,
+                                  width: 65.w,
+                                  height: 65.h,
                                   borderRadius: BorderRadius.circular(16.r),
-                                  child: profile?.avatar != null
-                                      ? Image.network(
-                                          profile!.avatar!,
-                                          width: 65.w,
-                                          height: 65.h,
-                                          fit: BoxFit.cover,
-                                          errorBuilder:
-                                              (
-                                                context,
-                                                error,
-                                                stackTrace,
-                                              ) => SvgPicture.asset(
-                                                AppImages
-                                                    .maleProfilePlaceholder,
-                                                width: 65.w,
-                                                height: 65.h,
-                                                fit: BoxFit.cover,
-                                              ),
-                                        )
-                                      : SvgPicture.asset(
-                                          AppImages.maleProfilePlaceholder,
-                                          width: 65.w,
-                                          height: 65.h,
-                                          fit: BoxFit.cover,
-                                        ),
                                 ),
                                 SizedBox(width: 12.w),
                                 Expanded(
