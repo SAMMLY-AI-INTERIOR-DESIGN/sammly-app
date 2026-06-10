@@ -22,7 +22,9 @@ class ExploreStylesSection extends StatelessWidget {
               ),
               Text(
                 AppStrings.viewAll,
-                style: AppTextStyles.body16Medium.copyWith(color: AppColors.secondaryColor),
+                style: AppTextStyles.body16Medium.copyWith(
+                  color: AppColors.secondaryColor,
+                ),
               ),
             ],
           ),
@@ -35,16 +37,29 @@ class ExploreStylesSection extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             children: const [
               StyleCard(
-                title: "Art deco",
-                imageUrl: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80",
+                title: "Mid-century modern",
+                imageUrl:
+                    "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80",
               ),
               StyleCard(
                 title: "Bohemian",
-                imageUrl: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80",
+                imageUrl:
+                    "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80",
               ),
               StyleCard(
-                title: "Contemporary",
-                imageUrl: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80",
+                title: "Rustic",
+                imageUrl:
+                    "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80",
+              ),
+              StyleCard(
+                title: "Coastal",
+                imageUrl:
+                    "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80",
+              ),
+              StyleCard(
+                title: "Traditional",
+                imageUrl:
+                    "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80",
               ),
             ],
           ),

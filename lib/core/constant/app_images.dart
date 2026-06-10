@@ -7,6 +7,7 @@ class AppImages {
   static const String exploreIcon = "assets/images/explore.svg";
   static const String historyIcon = "assets/images/history.svg";
   static const String profileIcon = "assets/images/profile.svg";
+  static const String profileNavBarIcon = "assets/images/profilenavbar.svg";
   static const String successBackground =
       'assets/images/success_background.svg';
   static const String onboarding1 = 'assets/images/onboarding1.png';
@@ -34,13 +35,16 @@ class AppImages {
   static const String heartFilled = "assets/images/heartFilled.svg";
   static const String heartOutline = "assets/images/heartOutline.svg";
   static const String defaultprofile = "assets/images/default_profile.png";
-  static const String maleProfilePlaceholder = "assets/images/male_profile_placeholder.svg";
+  static const String maleProfilePlaceholder =
+      "assets/images/male_profile_placeholder.svg";
   static const String goArrow = "assets/images/go_arrow.svg";
-  static const String sharedImagesPlaceholder = "assets/images/shared_images_placeholder.svg";
+  static const String sharedImagesPlaceholder =
+      "assets/images/shared_images_placeholder.svg";
   static const String uploadImage = "assets/images/upload_image.svg";
   static const String caledar = "assets/images/caleder.svg";
   static const String following = "assets/images/following.svg";
-  static const String manageSubscriptions = "assets/images/manage_substractions.svg";
+  static const String manageSubscriptions =
+      "assets/images/manage_substractions.svg";
   static const String notifications = "assets/images/notifications.svg";
   static const String privacy = "assets/images/privacy.svg";
   static const String share = "assets/images/share.svg";
@@ -50,21 +54,41 @@ class AppImages {
   static const String favorites = "assets/images/favorites.svg";
   static const String logOut = "assets/images/logout.svg";
   static const String edit = "assets/images/edit.svg";
-  static const String profileBgPlaceholder = "assets/images/profile_bg_placeholder.png";
+  static const String profileBgPlaceholder =
+      "assets/images/profile_bg_placeholder.png";
   static const String noNotifications = "assets/images/no_notifications.png";
   static const String whatsapp = "assets/images/whatsapp.svg";
   static const String xTwitter = "assets/images/x_twitter.svg";
-  static const String homeGenerationPlaceholder = "assets/images/home_generation_placeholder.png";
-  static const String fullHomePlaceholder = "assets/images/full_home_placeholder.png";
-  static const String redesignPlaceholder = "assets/images/redesign_placeholder.png";
+  static const String homeGenerationPlaceholder =
+      "assets/images/home_generation_placeholder.png";
+  static const String fullHomePlaceholder =
+      "assets/images/full_home_placeholder.png";
+  static const String redesignPlaceholder =
+      "assets/images/redesign_placeholder.png";
   static const String restyleIcon = "assets/images/restyle_icon.svg";
   static const String fullHomeIcon = "assets/images/full_home_icon.svg";
 
-  
-
   static const String maximizeimage = "assets/images/fullscreen.svg";
+  static const String security = "assets/images/security.svg";
+
   static const String minimizeimage = "assets/images/minmizeimage.svg";
   static const String customizeIcon = "assets/images/customize.svg";
   static const String downloadIcon = "assets/images/download.svg";
   static const String shareIcon = "assets/images/share.svg";
+
+  static const String generateLoading1 = "assets/images/generate_loading1.svg";
+  static const String generateLoading2 = "assets/images/generate_loading2.svg";
+  static const String generateLoading3 = "assets/images/generate_loading3.svg";
+  static const String generateLoading4 = "assets/images/generate_loading4.svg";
+  static const String roomBathroom = "assets/images/bath_room.png";
+  static const String roomBedroom = "assets/images/bed_room.png";
+  static const String roomDining = "assets/images/dining_room.png";
+  static const String roomKitchen = "assets/images/kitchen.png";
+  static const String roomLivingBohoTraditional = "assets/images/living_room_boho_traditional.png";
+
+  static const String styleCoastal = "assets/images/coastal.png";
+  static const String styleRustic = "assets/images/rustic.png";
+  static const String styleMidCentury = "assets/images/mid_century_modern.png";
+  static const String arrowRight = "assets/images/arrow_right.svg";
+  static const String smartLensIcon = "assets/images/smart_lens_icon.svg";
 }

@@ -8,6 +8,11 @@ import 'package:sammly/features/Auth/presentation/views/signup_view.dart';
 import 'package:sammly/features/Auth/presentation/views/verfictionofsign.dart';
 import 'package:sammly/features/favorite/presentation/views/favorite_view.dart';
 import 'package:sammly/features/home/presentation/views/home_view.dart';
+import 'package:sammly/features/generate/presentation/views/full_home_view.dart';
+import 'package:sammly/features/generate/presentation/views/generate_result_view.dart';
+import 'package:sammly/features/generate/presentation/views/restyle_view.dart';
+import 'package:sammly/features/generate_loading/presentation/views/generate_loading_view.dart';
+import 'package:sammly/features/generate/presentation/views/text_to_image_generate_view.dart';
 import 'package:sammly/features/layout/presentation/views/layout_view.dart';
 import 'package:sammly/features/onboarding/presentation/views/onboarding_view.dart';
 import 'package:sammly/features/profile/presentation/views/edit_profile_view.dart';
@@ -19,9 +24,11 @@ import 'package:sammly/features/profile/presentation/views/profile_view.dart';
 import 'package:sammly/features/profile/presentation/views/terms_conditions_view.dart';
 import 'package:sammly/features/splash/presentation/splash_view.dart';
 import 'package:sammly/features/support/presentation/views/support_view.dart';
+import 'package:sammly/features/profile/presentation/views/security_view.dart';
 import 'package:sammly/features/Auth/presentation/views/change_password_view.dart';
 import 'package:sammly/features/Explore/presentation/views/browse_design_details_view.dart';
 import 'package:sammly/features/Explore/presentation/views/shared_design_details_view.dart';
+import 'package:sammly/features/Explore/presentation/views/user_profile_view.dart';
 
 abstract class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -92,11 +99,13 @@ abstract class AppRouter {
           },
         );
 
-      case AppRoutes.designDetailsView:
       case AppRoutes.changePasswordView:
         return MaterialPageRoute(
           builder: (context) {
-            return const ChangePasswordView();
+            return BlocProvider(
+              create: (context) => AuthCubit(AuthRepo()),
+              child: const ChangePasswordView(),
+            );
           },
         );
 
@@ -169,6 +178,62 @@ abstract class AppRouter {
         return MaterialPageRoute(
           builder: (context) {
             return const SupportScreen();
+          },
+        );
+
+      case AppRoutes.securityView:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const SecurityView();
+          },
+        );
+
+      case AppRoutes.userProfileView:
+        final args = settings.arguments as Map<String, dynamic>? ?? {};
+        return MaterialPageRoute(
+          builder: (context) {
+            return UserProfileView(
+              userName: args['userName'] ?? 'User',
+              userAvatar: args['userAvatar'],
+            );
+          },
+        );
+
+      case AppRoutes.generateLoadingView:
+      final args = settings.arguments as Map<String, dynamic>?;
+        return MaterialPageRoute(
+          builder: (context) {
+            return GenerationLoadingWrapper(arguments: args,);
+          },
+        );
+
+      case AppRoutes.textToImageGenerateView:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const TextToImageGenerateView();
+          },
+        );
+
+      case AppRoutes.restyleView:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const RestyleView();
+          },
+        );
+
+      case AppRoutes.fullHomeView:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const FullHomeView();
+          },
+        );
+
+      case AppRoutes.generateResultView:
+        final args = settings.arguments as Map<String, dynamic>?;
+        final showListView = args?['showListView'] as bool? ?? false;
+        return MaterialPageRoute(
+          builder: (context) {
+            return GenerateResultView(showListView: showListView);
           },
         );
 

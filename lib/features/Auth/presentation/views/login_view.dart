@@ -41,8 +41,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.sizeOf(context).height;
-
     // 💡 التريكة الجديدة: غلفنا الشاشة بـ GestureDetector
     return GestureDetector(
       onTap: () {
@@ -52,22 +50,25 @@ class _LoginScreenState extends State<LoginScreen> {
       child: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is LoginSuccessState) {
-            Navigator.pushReplacementNamed(context, AppRoutes.onboardingView);
+            Navigator.pushReplacementNamed(context, AppRoutes.layoutView);
           } else if (state is AuthNeedsVerificationState) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.message ?? 'Please verify your email to continue.'),
+                content: Text(
+                  state.message ?? 'Please verify your email to continue.',
+                ),
                 backgroundColor: Colors.orange,
               ),
             );
 
-            Navigator.pushReplacement(
+            Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (_) => BlocProvider.value(
                   value: context.read<AuthCubit>(),
                   child: SignUpVerificationView(
                     email: state.email,
+                    isFromLogin: true,
                   ),
                 ),
               ),
@@ -81,232 +82,232 @@ class _LoginScreenState extends State<LoginScreen> {
             );
           }
         },
-        child: Scaffold(
-          backgroundColor: AppColors.whiteColor,
-          body: SingleChildScrollView(
-            // 💡 مسحنا سطر الـ keyboardDismissBehavior من هنا
-            // عشان السكرول ملوش دعوة بالكيبورد دلوقتي
-            child: SizedBox(
-              height:
-                  screenHeight, // بنجبر الـ Stack ياخد طول الشاشة الأصلي وميتضغطش
-              child: Stack(
-                children: [
-                  // 1. الخلفية المتدرجة
-                  Container(
-                    height: double.infinity,
-                    width: double.infinity,
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
+        child: PopScope(
+          canPop: false,
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            backgroundColor: AppColors.whiteColor,
+            body: Stack(
+              children: [
+                // 1. Background gradient (full screen)
+                Container(
+                  height: double.infinity,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.center,
+                      colors: [
+                        AppColors.primaryColor,
+                        AppColors.secondaryColor,
+                      ],
+                    ),
+                  ),
+                ),
+
+                // 2. Logo
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: 309.h,
+                  child: SafeArea(
+                    bottom: false,
+                    child: Center(
+                      child: SvgPicture.asset(
+                        AppImages.splash,
+                        width: 345.04.w,
+                        fit: BoxFit.contain,
+                        colorFilter: const ColorFilter.mode(
+                          Colors.white,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                // 3. Form card
+                Positioned(
+                  top: 280.h,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
                         begin: Alignment.topCenter,
-                        end: Alignment.center,
-                        colors: [
-                          AppColors.primaryColor,
-                          AppColors.secondaryColor,
-                        ],
+                        end: Alignment.bottomCenter,
+                        colors: [AppColors.bg1Color, AppColors.bg2Color],
+                      ),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(35.r),
+                        topRight: Radius.circular(35.r),
                       ),
                     ),
-                  ),
-
-                  // 2. اللوجو
-                  Positioned(
-                    top: 100.h,
-                    left: 0,
-                    right: 0,
-                    child: SvgPicture.asset(
-                      AppImages.splash,
-                      width: 345.04.w, // 💡 العرض من فيجما
-
-                      fit: BoxFit
-                          .contain, // 💡 السر اللي بيمنع اللوجو يتمط أو يبوظ
-                      colorFilter: const ColorFilter.mode(
-                        Colors.white,
-                        BlendMode.srcIn,
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      padding: EdgeInsets.only(
+                        left: 24.w,
+                        right: 24.w,
+                        top: 32.h,
+                        bottom: 24.h + MediaQuery.of(context).viewInsets.bottom,
                       ),
-                    ),
-                  ),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Welcome Back',
+                              style: AppTextStyles.heading28ExtraBold,
+                            ),
+                            SizedBox(height: 8.h),
+                            Text(
+                              'Login in to your account',
+                              style: AppTextStyles.body16Regular,
+                            ),
+                            SizedBox(height: 32.h),
 
-                  // 3. الكارت الأبيض والفورم
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      height: 641.h,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        // هنا ضفنا الجريدينت الخفيف بتاع الكارت
-                        gradient: const LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            AppColors.bg1Color, // بيبدأ أبيض أو فاتح جداً من فوق
-                            AppColors.bg2Color, // وبيندمج مع الأزرق الفاتح تحت
-                            // 💡 تقدر تخليها [AppColors.bg1Color, AppColors.bg2Color]
-                            // لو حابب التدرج يكون بين الأزرق الفاتح والأخضر الفاتح زي الخلفية الأصلية
-                          ],
-                        ),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(35.r),
-                          topRight: Radius.circular(35.r),
-                        ),
-                      ),
-                      child: SingleChildScrollView(
-                        // الـ Scroll الداخلي شغال زي ما هو
-                        physics: const BouncingScrollPhysics(),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 24.w,
-                          vertical: 32.h,
-                        ),
-                        child: Form(
-                          key: _formKey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Welcome Back',
-                                style: AppTextStyles.heading28ExtraBold,
-                              ),
-                              SizedBox(height: 8.h),
-                              Text(
-                                'Login in to your account',
-                                style: AppTextStyles.body16Regular,
-                              ),
-                              SizedBox(height: 32.h),
+                            CustomTextField(
+                              controller: _emailController,
+                              thing: 'Enter your email',
+                              preffixicon: Icons.email_outlined,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your email';
+                                }
 
-                              CustomTextField(
-                                controller: _emailController,
-                                thing: 'Enter your email',
-                                preffixicon: Icons.email_outlined,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter your email';
-                                  }
+                                if (!value.contains('@') ||
+                                    !value.contains('.')) {
+                                  return 'Please enter a valid email address';
+                                }
+                                return null;
+                              },
+                            ),
 
-                                  if (!value.contains('@') || !value.contains('.')) {
-                                    return 'Please enter a valid email address';
-                                  }
-                                  return null;
-                                },
-                              ),
+                            CustomTextField(
+                              controller: _passwordController,
+                              thing: 'Enter your password',
+                              preffixicon: Icons.lock_outline,
+                              ispassword: true,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your password';
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(height: 2.h),
 
-                              CustomTextField(
-                                controller: _passwordController,
-                                thing: 'Enter your password',
-                                preffixicon: Icons.lock_outline,
-                                ispassword: true,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter your password';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              SizedBox(height: 2.h),
-
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: TextButton(
-                                  onPressed: () {
-                                    final authCubit = context.read<AuthCubit>();
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => BlocProvider.value(
-                                          value: authCubit,
-                                          child: const ForgotPasswordScreen(),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  style: TextButton.styleFrom(
-                                    padding: EdgeInsets.zero,
-                                    minimumSize: Size.zero,
-                                    tapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
-                                  ),
-                                  child: Text(
-                                    'Forgot Password?',
-                                    style: AppTextStyles.body14Regular,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 24.h),
-
-                              BlocBuilder<AuthCubit, AuthState>(
-                                builder: (context, state) {
-                                  if (state is LoginLoadingState) {
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }
-                                  return CustomButton(
-                                    text: 'Log In',
-                                    onPressed: () {
-                                      if (_formKey.currentState!.validate()) {
-                                        context.read<AuthCubit>().login(
-                                              email: _emailController.text.trim(),
-                                              password: _passwordController.text,
-                                            );
-                                      }
-                                    },
-                                  );
-                                },
-                              ),
-                              SizedBox(height: 24.h),
-
-                              const Customline(text: 'Or login with'),
-                              SizedBox(height: 24.h),
-
-                              Loginwith(
-                                onGoogleTap: () {},
-                                onFacebookTap: () {},
-                                onAppleTap: () {},
-                              ),
-                              SizedBox(height: 32.h),
-
-                              SignLogin(
-                                text1: "Don't have an account?",
-                                text2: "Sign up",
-                                ontap: () {
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: TextButton(
+                                onPressed: () {
                                   final authCubit = context.read<AuthCubit>();
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (_) => BlocProvider.value(
                                         value: authCubit,
-                                        child: const SignUpScreen(),
+                                        child: const ForgotPasswordScreen(),
                                       ),
                                     ),
                                   );
                                 },
-                              ),SizedBox(height: 20.h,),
-                              TextButton( onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => BlocProvider(
-                                          create: (context) => SupportCubit(SupportRepo()),
-                                          child: const SupportScreen(),
-                                        ),
-                                      ),
-                                    );
-                                  },                               style: TextButton.styleFrom(
-                                    padding: EdgeInsets.zero,
-                                    minimumSize: Size.zero,
-                                    tapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
+                                style: TextButton.styleFrom(
+                                  padding: EdgeInsets.zero,
+                                  minimumSize: Size.zero,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                ),
+                                child: Text(
+                                  'Forgot Password?',
+                                  style: AppTextStyles.body14Regular,
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 24.h),
+
+                            BlocBuilder<AuthCubit, AuthState>(
+                              builder: (context, state) {
+                                if (state is LoginLoadingState) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }
+                                return CustomButton(
+                                  text: 'Log In',
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      context.read<AuthCubit>().login(
+                                        email: _emailController.text.trim(),
+                                        password: _passwordController.text,
+                                      );
+                                    }
+                                  },
+                                );
+                              },
+                            ),
+                            SizedBox(height: 24.h),
+
+                            const Customline(text: 'Or login with'),
+                            SizedBox(height: 24.h),
+
+                            Loginwith(
+                              onGoogleTap: () {},
+                              onFacebookTap: () {},
+                              onAppleTap: () {},
+                            ),
+                            SizedBox(height: 32.h),
+
+                            SignLogin(
+                              text1: "Don't have an account?",
+                              text2: "Sign up",
+                              ontap: () {
+                                final authCubit = context.read<AuthCubit>();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => BlocProvider.value(
+                                      value: authCubit,
+                                      child: const SignUpScreen(),
+                                    ),
                                   ),
-                                  child: Text(
-                                    'Have an issue?',
-                                    style: AppTextStyles.body14Regular,
+                                );
+                              },
+                            ),
+                            SizedBox(height: 20.h),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => BlocProvider(
+                                      create: (context) =>
+                                          SupportCubit(SupportRepo()),
+                                      child: const SupportScreen(),
+                                    ),
                                   ),
-                                ), 
-                            ],
-                          ),
+                                );
+                              },
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.zero,
+                                minimumSize: Size.zero,
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                              child: Text(
+                                'Have an issue?',
+                                style: AppTextStyles.body14Regular,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

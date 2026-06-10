@@ -25,7 +25,7 @@ class CustomHistoryContainer extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: 366.w,
-        height: 116.86.h,
+        height: 135.h,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.r),
           gradient: const LinearGradient(
@@ -60,11 +60,11 @@ class CustomHistoryContainer extends StatelessWidget {
                 child: Image.network(
                   imageUrl,
                   width: 113.w,
-                  height: 96.86.h,
+                  height: 112.h,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) => Container(
                     width: 113.w,
-                    height: 96.86.h,
+                    height: 112.h,
                     decoration: BoxDecoration(
                       color: AppColors.bg2Color,
                       borderRadius: BorderRadius.circular(5.r),

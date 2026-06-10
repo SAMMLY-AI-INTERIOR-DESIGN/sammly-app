@@ -46,8 +46,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.sizeOf(context).height;
-
     // غلفنا الشاشة بـ GestureDetector لقفل الكيبورد
     return GestureDetector(
       onTap: () {
@@ -58,7 +56,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           if (state is RegisterSuccessState) {
             // Navigate to sign-up verification screen with the email
             final authCubit = context.read<AuthCubit>();
-            Navigator.pushReplacement(
+            Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (_) => BlocProvider.value(
@@ -72,18 +70,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
           } else if (state is AuthNeedsVerificationState) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.message ?? 'Please verify your email to continue.'),
+                content: Text(
+                  state.message ?? 'Please verify your email to continue.',
+                ),
                 backgroundColor: Colors.orange,
               ),
             );
-            Navigator.pushReplacement(
+            Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (_) => BlocProvider.value(
                   value: context.read<AuthCubit>(),
-                  child: SignUpVerificationView(
-                    email: state.email,
-                  ),
+                  child: SignUpVerificationView(email: state.email),
                 ),
               ),
             );
@@ -97,255 +95,254 @@ class _SignUpScreenState extends State<SignUpScreen> {
           }
         },
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: AppColors.whiteColor,
-          body: SingleChildScrollView(
-            child: SizedBox(
-              height: screenHeight,
-              child: Stack(
-                children: [
-                  // 1. الجزء العلوي (الخلفية المتدرجة)
-                  Container(
-                    height: double.infinity,
-                    width: double.infinity,
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.center,
-                        colors: [
-                          AppColors.primaryColor,
-                          AppColors.secondaryColor,
+          body: Stack(
+            children: [
+              // 1. Background gradient (full screen)
+              Container(
+                height: double.infinity,
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.center,
+                    colors: [AppColors.primaryColor, AppColors.secondaryColor],
+                  ),
+                ),
+              ),
+
+              // 2. Form card
+              Positioned(
+                top: 134.h,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [AppColors.bg1Color, AppColors.bg2Color],
+                    ),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(35.r),
+                      topRight: Radius.circular(35.r),
+                    ),
+                  ),
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    padding: EdgeInsets.only(
+                      left: 24.w,
+                      right: 24.w,
+                      top: 32.h,
+                      bottom: 24.h + MediaQuery.of(context).viewInsets.bottom,
+                    ),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Sign UP',
+                            style: AppTextStyles.heading28ExtraBold,
+                          ),
+                          SizedBox(height: 8.h),
+                          Text(
+                            'Create your new account',
+                            style: AppTextStyles.body16Regular,
+                          ),
+                          SizedBox(height: 32.h),
+
+                          // حقل الاسم
+                          CustomTextField(
+                            controller: _nameController,
+                            thing: 'Enter your name',
+                            preffixicon: Icons.person_outline,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your name';
+                              }
+                              return null;
+                            },
+                          ),
+
+                          // حقل الإيميل
+                          CustomTextField(
+                            controller: _emailController,
+                            thing: 'Enter your email',
+                            preffixicon: Icons.email_outlined,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your email';
+                              }
+                              if (!value.contains('@') ||
+                                  !value.contains('.')) {
+                                return 'Please enter a valid email address';
+                              }
+                              return null;
+                            },
+                          ),
+
+                          // حقل الباسورد
+                          CustomTextField(
+                            controller: _passwordController,
+                            thing: 'Enter your password',
+                            preffixicon: Icons.lock_outline,
+                            ispassword: true,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your password';
+                              }
+                              if (value.length < 8) {
+                                return 'Password must be at least 8 characters';
+                              }
+                              return null;
+                            },
+                          ),
+
+                          // حقل تأكيد الباسورد
+                          CustomTextField(
+                            controller: _confirmPasswordController,
+                            thing: 'Confirm Password',
+                            preffixicon: Icons.lock_outline,
+                            ispassword: true,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please confirm your password';
+                              }
+                              if (value != _passwordController.text) {
+                                return 'Passwords do not match';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 16.h),
+
+                          // الشروط والأحكام
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Checkbox(
+                                value: _isTermsAccepted,
+                                activeColor: AppColors.secondaryColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4.r),
+                                ),
+                                onChanged: (value) {
+                                  setState(() {
+                                    _isTermsAccepted = value ?? false;
+                                  });
+                                },
+                              ),
+                              Text.rich(
+                                TextSpan(
+                                  style: AppTextStyles.body14Regular.copyWith(
+                                    fontSize: 12.sp,
+                                  ),
+                                  children: [
+                                    const TextSpan(text: 'I agree to all the '),
+                                    TextSpan(
+                                      text: 'Terms & Conditions',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.blackColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 16.h),
+
+                          BlocBuilder<AuthCubit, AuthState>(
+                            builder: (context, state) {
+                              if (state is RegisterLoadingState) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                              return CustomButton(
+                                text: 'Sign up',
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    if (!_isTermsAccepted) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            'Please accept the Terms & Conditions',
+                                          ),
+                                          backgroundColor: Colors.red,
+                                        ),
+                                      );
+                                      return;
+                                    }
+                                    context.read<AuthCubit>().register(
+                                      name: _nameController.text.trim(),
+                                      email: _emailController.text.trim(),
+                                      password: _passwordController.text,
+                                      termsAccepted: _isTermsAccepted,
+                                      privacyAccepted: _isTermsAccepted,
+                                    );
+                                  }
+                                },
+                              );
+                            },
+                          ),
+                          SizedBox(height: 24.h),
+
+                          const Customline(text: 'Or Signup with'),
+                          SizedBox(height: 24.h),
+
+                          Loginwith(
+                            onGoogleTap: () {},
+                            onFacebookTap: () {},
+                            onAppleTap: () {},
+                          ),
+                          SizedBox(height: 32.h),
+
+                          SignLogin(
+                            text1: "Already have an account?",
+                            text2: "Log in",
+                            ontap: () {
+                              // الرجوع لشاشة اللوجين
+                              Navigator.pop(context);
+                            },
+                          ),
+                          SizedBox(height: 20.h),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => BlocProvider(
+                                    create: (context) =>
+                                        SupportCubit(SupportRepo()),
+                                    child: const SupportScreen(),
+                                  ),
+                                ),
+                              );
+                            },
+                            style: TextButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              minimumSize: Size.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            child: Text(
+                              'Have an issue?',
+                              style: AppTextStyles.body14Regular,
+                            ),
+                          ),
                         ],
                       ),
                     ),
                   ),
-
-                  // 2. الكارت الأبيض والفورم
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      height: 828.h,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        // الجريدينت الخفيف بتاع الكارت
-                        gradient: const LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [AppColors.bg1Color, AppColors.bg2Color],
-                        ),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(35.r),
-                          topRight: Radius.circular(35.r),
-                        ),
-                      ),
-                      child: SingleChildScrollView(
-                        physics: const BouncingScrollPhysics(),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 24.w,
-                          vertical: 32.h,
-                        ),
-                        child: Form(
-                          key: _formKey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Sign UP',
-                                style: AppTextStyles.heading28ExtraBold,
-                              ),
-                              SizedBox(height: 8.h),
-                              Text(
-                                'Create your new account',
-                                style: AppTextStyles.body16Regular,
-                              ),
-                              SizedBox(height: 32.h),
-
-                              // حقل الاسم
-                              CustomTextField(
-                                controller: _nameController,
-                                thing: 'Enter your name',
-                                preffixicon: Icons.person_outline,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter your name';
-                                  }
-                                  return null;
-                                },
-                              ),
-
-                              // حقل الإيميل
-                              CustomTextField(
-                                controller: _emailController,
-                                thing: 'Enter your email',
-                                preffixicon: Icons.email_outlined,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter your email';
-                                  }
-                                  if (!value.contains('@') || !value.contains('.')) {
-                                    return 'Please enter a valid email address';
-                                  }
-                                  return null;
-                                },
-                              ),
-
-                              // حقل الباسورد
-                              CustomTextField(
-                                controller: _passwordController,
-                                thing: 'Enter your password',
-                                preffixicon: Icons.lock_outline,
-                                ispassword: true,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter your password';
-                                  }
-                                  if (value.length < 8) {
-                                    return 'Password must be at least 8 characters';
-                                  }
-                                  return null;
-                                },
-                              ),
-
-                              // حقل تأكيد الباسورد
-                              CustomTextField(
-                                controller: _confirmPasswordController,
-                                thing: 'Confirm Password',
-                                preffixicon: Icons.lock_outline,
-                                ispassword: true,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please confirm your password';
-                                  }
-                                  if (value != _passwordController.text) {
-                                    return 'Passwords do not match';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              SizedBox(height: 16.h),
-
-                              // الشروط والأحكام
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Checkbox(
-                                    value: _isTermsAccepted,
-                                    activeColor: AppColors.secondaryColor,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(4.r),
-                                    ),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _isTermsAccepted = value ?? false;
-                                      });
-                                    },
-                                  ),
-                                  Text.rich(
-                                    TextSpan(
-                                      style: AppTextStyles.body14Regular.copyWith(
-                                        fontSize: 12.sp,
-                                      ),
-                                      children: [
-                                        const TextSpan(
-                                          text: 'I agree to all the ',
-                                        ),
-                                        TextSpan(
-                                          text: 'Terms & Conditions',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: AppColors.blackColor,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 16.h),
-
-                              BlocBuilder<AuthCubit, AuthState>(
-                                builder: (context, state) {
-                                  if (state is RegisterLoadingState) {
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }
-                                  return CustomButton(
-                                    text: 'Sign up',
-                                    onPressed: () {
-                                      if (_formKey.currentState!.validate()) {
-                                        if (!_isTermsAccepted) {
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            const SnackBar(
-                                              content: Text(
-                                                'Please accept the Terms & Conditions',
-                                              ),
-                                              backgroundColor: Colors.red,
-                                            ),
-                                          );
-                                          return;
-                                        }
-                                        context.read<AuthCubit>().register(
-                                              name: _nameController.text.trim(),
-                                              email: _emailController.text.trim(),
-                                              password: _passwordController.text,
-                                              termsAccepted: _isTermsAccepted,
-                                              privacyAccepted: _isTermsAccepted,
-                                            );
-                                      }
-                                    },
-                                  );
-                                },
-                              ),
-                              SizedBox(height: 24.h),
-
-                              const Customline(text: 'Or Signup with'),
-                              SizedBox(height: 24.h),
-
-                              Loginwith(
-                                onGoogleTap: () {},
-                                onFacebookTap: () {},
-                                onAppleTap: () {},
-                              ),
-                              SizedBox(height: 32.h),
-
-                              SignLogin(
-                                text1: "Already have an account?",
-                                text2: "Log in",
-                                ontap: () {
-                                  // الرجوع لشاشة اللوجين
-                                  Navigator.pop(context);
-                                },
-                              ),SizedBox(height: 20.h,),
-                              TextButton( onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => BlocProvider(
-                                          create: (context) => SupportCubit(SupportRepo()),
-                                          child: const SupportScreen(),
-                                        ),
-                                      ),
-                                    );
-                                  },                                style: TextButton.styleFrom(
-                                    padding: EdgeInsets.zero,
-                                    minimumSize: Size.zero,
-                                    tapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
-                                  ),
-                                  child: Text(
-                                    'Have an issue?',
-                                    style: AppTextStyles.body14Regular,
-                                  ),
-                                ), 
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
         ),
       ),
