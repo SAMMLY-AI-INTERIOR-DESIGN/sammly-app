@@ -16,7 +16,7 @@ import 'package:sammly/features/support/data/repo/support_repo.dart';
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-
+  // WidgetsFlutterBinding.ensureInitialized();
   // Initialize networking and local storage
   DioHelper.init();
   await SharedPref.init();
