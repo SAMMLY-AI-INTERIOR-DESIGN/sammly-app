@@ -16,4 +16,7 @@ abstract class ApiConstants {
   static const String getProfile = '/api/profile';
   static const String editProfile = '/api/profile/edit';
   static const String support = '/api/support';
+
+  // Design generation endpoints
+  static const String generateDesign = '/api/designs/generate';
 }
