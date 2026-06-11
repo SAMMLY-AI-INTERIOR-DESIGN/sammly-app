@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
+import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/features/Explore/presentation/views/browse_designs.dart';
 import 'package:sammly/features/Explore/presentation/views/shared_designs.dart';
 import 'package:sammly/features/layout/presentation/cubit/layout_cubit/layout_cubit.dart';
@@ -34,12 +35,7 @@ class ExploreView extends StatelessWidget {
                   'Explore ready-made styles and rooms organized by category.',
               onTap: () {
                 // النقل للشاشة الأولى (التصنيفات)
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const BrowseDesigns(),
-                  ),
-                );
+                Navigator.pushNamed(context, AppRoutes.chooseRoom);
 
                 print(
                   "تم الضغط على الكارت الأول",

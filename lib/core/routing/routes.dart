@@ -26,4 +26,6 @@ abstract class AppRoutes {
   static const String restyleView = '/restyleview';
   static const String fullHomeView = '/fullhomeview';
   static const String generateResultView = '/generateresultview';
+  static const String subscriptionView = '/subscriptionview';
+  static const String chooseRoom = '/chooseroom';
 }
