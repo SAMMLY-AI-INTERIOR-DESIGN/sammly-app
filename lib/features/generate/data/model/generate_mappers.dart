@@ -11,7 +11,7 @@ abstract class GenerateMappers {
     AppStrings.traditional: 'traditional',
     AppStrings.coastal: 'coastal',
     AppStrings.rustic: 'rustic',
-    AppStrings.midCenturyModern: 'midcentury modern',
+    AppStrings.midCenturyModern: 'mid century modern',
     AppStrings.boho: 'bohemian',
   };
 
@@ -19,7 +19,7 @@ abstract class GenerateMappers {
     'traditional': AppStrings.traditional,
     'coastal': AppStrings.coastal,
     'rustic': AppStrings.rustic,
-    'midcentury modern': AppStrings.midCenturyModern,
+    'mid century modern': AppStrings.midCenturyModern,
     'bohemian': AppStrings.boho,
     'modern': AppStrings.midCenturyModern,
   };
