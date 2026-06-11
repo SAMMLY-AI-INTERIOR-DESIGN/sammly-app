@@ -19,4 +19,7 @@ abstract class ApiConstants {
 
   // Design generation endpoints
   static const String generateDesign = '/api/designs/generate';
+
+  // Favorite endpoints
+  static const String getFavorites = '/api/designs/favorites';
 }
