@@ -26,6 +26,7 @@ class HistoryDetailsView extends StatefulWidget {
 
 class _HistoryDetailsViewState extends State<HistoryDetailsView> {
   bool _isMaximized = false;
+  bool _isSaved = false;
 
   final List<SimilarItemModel> products = [
     SimilarItemModel(title: "Sofa", subtitle: "Modern gray", imageUrl: "https://placehold.co/175x94"),
@@ -102,6 +103,12 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
               isMaximized: false,
               onToggleMaximize: _toggleMaximize,
               onSmartLensTap: () => _openSmartLens(context),
+              isSaved: _isSaved,
+              onSaveTap: () {
+                setState(() {
+                  _isSaved = !_isSaved;
+                });
+              },
             ),
           ),
           SizedBox(height: 24.h),

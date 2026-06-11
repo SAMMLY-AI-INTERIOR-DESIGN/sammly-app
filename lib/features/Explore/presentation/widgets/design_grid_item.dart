@@ -89,7 +89,7 @@ class _DesignGridItemState extends State<DesignGridItem> {
                   shape: BoxShape.circle,
                 ),
                 child: SvgPicture.asset(
-                  _isLiked ? AppImages.heartFilled : AppImages.heartOutline,
+                  _isLiked ? AppImages.withsaving : AppImages.withoutsaving,
                   width: 19.w,
                 ),
               ),
