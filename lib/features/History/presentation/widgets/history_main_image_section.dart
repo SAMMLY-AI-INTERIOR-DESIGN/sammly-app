@@ -12,6 +12,8 @@ class HistoryMainImageSection extends StatelessWidget {
   final bool isMaximized;
   final VoidCallback onToggleMaximize;
   final VoidCallback? onSmartLensTap;
+  final bool isSaved;
+  final VoidCallback? onSaveTap;
 
   const HistoryMainImageSection({
     super.key,
@@ -19,6 +21,8 @@ class HistoryMainImageSection extends StatelessWidget {
     required this.isMaximized,
     required this.onToggleMaximize,
     this.onSmartLensTap,
+    this.isSaved = false,
+    this.onSaveTap,
   });
 
   @override
@@ -86,6 +90,29 @@ class HistoryMainImageSection extends StatelessWidget {
               },
             ),
           ),
+
+          // Bookmark Save Icon (Top Right)
+          if (!isMaximized)
+            Positioned(
+              top: 12.h,
+              right: 12.w,
+              child: GestureDetector(
+                onTap: onSaveTap,
+                child: Container(
+                  padding: EdgeInsets.all(8.w),
+                  decoration: const BoxDecoration(
+                    color: AppColors.bg2Color,
+                    shape: BoxShape.circle,
+                  ),
+                  child: SvgPicture.asset(
+                    isSaved
+                        ? AppImages.withsaving
+                        : AppImages.withoutsaving,
+                    width: 24.w,
+                  ),
+                ),
+              ),
+            ),
 
           // زرار التحكم (تعديل الـ Padding عشان وقت اللاندسكيب ميزنوقش في الحافة)
           Positioned(
