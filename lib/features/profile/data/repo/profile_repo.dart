@@ -27,13 +27,13 @@ class ProfileRepo {
       final String dynamicProfileCacheKey = 'cached_profile_data_$currentUserId';
 
       // 4. نقرأ من الكاش المربوط باليوزر ده بس
-      if (!forceRefresh) {
-        final cachedData = SharedPref.getData(key: dynamicProfileCacheKey);
-        if (cachedData != null && cachedData.isNotEmpty) {
-          final Map<String, dynamic> jsonMap = jsonDecode(cachedData);
-          return right(ProfileModel.fromJson(jsonMap));
-        }
-      }
+      // if (!forceRefresh) {
+      //   final cachedData = SharedPref.getData(key: dynamicProfileCacheKey);
+      //   if (cachedData != null && cachedData.isNotEmpty) {
+      //     final Map<String, dynamic> jsonMap = jsonDecode(cachedData);
+      //     return right(ProfileModel.fromJson(jsonMap));
+      //   }
+      // }
 
       // 5. لو مفيش كاش أو عاملين forceRefresh، نكلم الـ API
       final response = await DioHelper.getData(

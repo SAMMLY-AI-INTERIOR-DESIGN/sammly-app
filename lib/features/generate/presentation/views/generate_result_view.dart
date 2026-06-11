@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/constant/app_strings.dart';
@@ -11,15 +12,20 @@ import 'package:sammly/features/search/presentation/views/search_view.dart';
 
 class GenerateResultView extends StatefulWidget {
   final bool showListView;
+  final String? networkImageUrl;
 
-  const GenerateResultView({super.key, this.showListView = false});
+  const GenerateResultView({
+    super.key,
+    this.showListView = false,
+    this.networkImageUrl,
+  });
 
   @override
   State<GenerateResultView> createState() => _GenerateResultViewState();
 }
 
 class _GenerateResultViewState extends State<GenerateResultView> {
-  final List<String> _images = [
+  final List<String> _fallbackImages = [
     AppImages.roomLivingBohoTraditional,
     AppImages.styleRustic,
     AppImages.styleCoastal,
@@ -46,11 +52,18 @@ class _GenerateResultViewState extends State<GenerateResultView> {
   }
 
   late String _selectedImage;
+  late bool _isNetworkImage;
 
   @override
   void initState() {
     super.initState();
-    _selectedImage = _images[0];
+    if (widget.networkImageUrl != null && widget.networkImageUrl!.isNotEmpty) {
+      _selectedImage = widget.networkImageUrl!;
+      _isNetworkImage = true;
+    } else {
+      _selectedImage = _fallbackImages[0];
+      _isNetworkImage = false;
+    }
   }
 
   @override
@@ -70,23 +83,24 @@ class _GenerateResultViewState extends State<GenerateResultView> {
             children: [
               ResultImageWidget(
                 imagePath: _selectedImage,
-                onSmartLensTap: () => _openSmartLens(context),
+                isNetworkImage: _isNetworkImage,
               ),
               SizedBox(height: 16.h),
-              if (widget.showListView) ...[
+              if (widget.showListView && !_isNetworkImage) ...[
                 SizedBox(
                   height: 100.h,
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
-                    itemCount: _images.length,
+                    itemCount: _fallbackImages.length,
                     separatorBuilder: (context, index) => SizedBox(width: 10.w),
                     itemBuilder: (context, index) {
-                      final image = _images[index];
+                      final image = _fallbackImages[index];
                       final isSelected = _selectedImage == image;
                       return GestureDetector(
                         onTap: () {
                           setState(() {
                             _selectedImage = image;
+                            _isNetworkImage = false;
                           });
                         },
                         child: Container(
@@ -109,7 +123,6 @@ class _GenerateResultViewState extends State<GenerateResultView> {
                             width: 100.w,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10.r),
-
                               image: DecorationImage(
                                 image: AssetImage(image),
                                 fit: BoxFit.cover,
