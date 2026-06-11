@@ -24,18 +24,22 @@ abstract class AppStrings {
   static const String skip = 'Skip';
   static const String back = 'Back';
   static const String onboarding1Title = 'Design your space with AI';
-  static const String onboarding1Subtitle = 'Generate new room designs from text prompts or edit existing rooms using uploaded images.';
+  static const String onboarding1Subtitle =
+      'Generate new room designs from text prompts or edit existing rooms using uploaded images.';
   static const String onboarding2Title = 'Find items in your design';
-  static const String onboarding2Subtitle = 'Select any item in the generated image and discover where it\'s available.';
+  static const String onboarding2Subtitle =
+      'Select any item in the generated image and discover where it\'s available.';
   static const String onboarding3Title = 'Share & earn tokens';
-  static const String onboarding3Subtitle = 'Explore community designs, share your creations, and earn free tokens as rewards.';
+  static const String onboarding3Subtitle =
+      'Explore community designs, share your creations, and earn free tokens as rewards.';
 
   static const String greetingPrefix = "Welcome,";
   static const String subtitle = "Let's design your dream space.";
   static const String searchHint = "Search for......";
   static const String aiTag = "AI POWERED";
   static const String aiBannerTitle = "Visualize your room with AI";
-  static const String aiBannerSubtitle = "Type what you imagine and AI will generate your room.";
+  static const String aiBannerSubtitle =
+      "Type what you imagine and AI will generate your room.";
   static const String startGenerateBtn = "Start Generate";
   static const String exploreStyles = "Explore Styles";
   static const String viewAll = "view all";
@@ -83,11 +87,13 @@ abstract class AppStrings {
 
   // invite friends dialog
   static const String inviteFriends = "Invite Friends";
-  static const String inviteFriendsDesc = "Tell your friend its free and easy to generate your own design";
+  static const String inviteFriendsDesc =
+      "Tell your friend its free and easy to generate your own design";
   static const String copyLink = "COPY LINK";
   static const String linkCopied = "Link Copied!";
   static const String orShareOn = "Or share on....";
-  static const String dummyInviteLink = "https://invite.Sammly.com/\nASDGFJKHHUHSULWDIH";
+  static const String dummyInviteLink =
+      "https://invite.Sammly.com/\nASDGFJKHHUHSULWDIH";
 
   // log out bottom sheet
   static const String logoutConfirmMsg = "Are you sure you want to log out?";
@@ -95,20 +101,25 @@ abstract class AppStrings {
 
   // home
   static const String aiRoomGeneration = "AI Room Generation";
-  static const String aiRoomGenerationDesc = "Describe your dream room with a simple prompt and generate realistic interior designs instantly.";
+  static const String aiRoomGenerationDesc =
+      "Describe your dream room with a simple prompt and generate realistic interior designs instantly.";
   static const String fullHomeDesign = "Full Home Design";
-  static const String fullHomeDesignDesc = "Upload one room photo and generate matching designs for the rest of your home.";
+  static const String fullHomeDesignDesc =
+      "Upload one room photo and generate matching designs for the rest of your home.";
   static const String fullHomeTag = "Full Home";
   static const String roomRedesign = "Room Redesign";
-  static const String roomRedesignDesc = "Transform your existing room into a completely new style while keeping the same layout.";
+  static const String roomRedesignDesc =
+      "Transform your existing room into a completely new style while keeping the same layout.";
   static const String restyleRoomTag = "Restyle Room";
 
   // generate loading
   static const String yourRoomIsComingSoon = "Your room is coming soon...";
   static const String addingDetails = "Adding details and finishing touches.";
-  static const String loadingDisclaimer = "keep the app open and don't lock your device as the\nprocess may take approximately 10 seconds";
+  static const String loadingDisclaimer =
+      "keep the app open and don't lock your device as the\nprocess may take approximately 10 seconds";
   static const String maskInpainting = "Mask Inpainting";
-  static const String maskInpaintingDesc = "Upload a photo, draw a mask on the area you want to change, and describe your vision.";
+  static const String maskInpaintingDesc =
+      "Upload a photo, draw a mask on the area you want to change, and describe your vision.";
   static const String maskInpaintingTag = "Inpainting";
 
   // generate views
@@ -119,7 +130,7 @@ abstract class AppStrings {
   static const String describeDreamRoomHint = "Describe your dream room.......";
   static const String addReferenceImage = "Add Reference Image(Optional)";
   static const String generateDesign = "Generate Design";
-  
+
   static const String traditional = "Traditional";
   static const String coastal = "Coastal";
   static const String rustic = "Rustic";
@@ -142,14 +153,17 @@ abstract class AppStrings {
   static const String next = "Next";
   static const String pleaseSelectARoom = "Please select a Room";
   static const String pleaseSelectAStyle = "Please select a Style";
-  static const String pleaseDescribeYourDreamRoom = "Please describe your dream room.";
+  static const String pleaseDescribeYourDreamRoom =
+      "Please describe your dream room.";
   static const String pleaseUploadImage = "Please upload an image first";
-  static const String pleaseSelectAtLeastOneRoom = "Please select at least one room";
+  static const String pleaseSelectAtLeastOneRoom =
+      "Please select at least one room";
 
-  static const String buildYourRoom = "Build your rooms based on one room";
+  static const String buildYourRoom =
+      "Selet rooms to build based on your image";
 
-  static const String  generatedBySammly = "Generated by SAMMLY";
-  static const String  smartLens = "Smart Lens";
-  static const String  yourGeneratedDesign = "Your Generated Designs";
-  static const String  modernLivingRoom = "Modern Living Room";
+  static const String generatedBySammly = "Generated by SAMMLY";
+  static const String smartLens = "Smart Lens";
+  static const String yourGeneratedDesign = "Your Generated Designs";
+  static const String modernLivingRoom = "Modern Living Room";
 }

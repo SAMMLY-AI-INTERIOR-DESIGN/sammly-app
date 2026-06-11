@@ -7,6 +7,8 @@ import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/core/widgets/action_buttons_row.dart';
 import 'package:sammly/features/History/presentation/widgets/history_main_image_section.dart';
 import 'package:sammly/features/History/presentation/widgets/history_details_section.dart';
+import 'package:sammly/features/search/presentation/widgets/similar_item_card.dart';
+import 'package:sammly/features/search/presentation/views/search_view.dart';
 
 class HistoryDetailsView extends StatefulWidget {
   final String title;
@@ -24,6 +26,25 @@ class HistoryDetailsView extends StatefulWidget {
 
 class _HistoryDetailsViewState extends State<HistoryDetailsView> {
   bool _isMaximized = false;
+
+  final List<SimilarItemModel> products = [
+    SimilarItemModel(title: "Sofa", subtitle: "Modern gray", imageUrl: "https://placehold.co/175x94"),
+    SimilarItemModel(title: "Sofa Premium", subtitle: "Scandynavian textile", imageUrl: "https://placehold.co/175x94"),
+    SimilarItemModel(title: "Sofa Luxury", subtitle: "Velvet fabric", imageUrl: "https://placehold.co/175x94"),
+    SimilarItemModel(title: "Sofa Minimalist", subtitle: "Cozy wood feet", imageUrl: "https://placehold.co/175x94"),
+  ];
+
+  void _openSmartLens(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      enableDrag: true,
+      isScrollControlled: true,
+      builder: (context) {
+        return SmartLensBottomSheet(dummyItems: products);
+      },
+    );
+  }
 
   void _toggleMaximize() {
     setState(() {
@@ -80,6 +101,7 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
               imageUrl: widget.imageUrl,
               isMaximized: false,
               onToggleMaximize: _toggleMaximize,
+              onSmartLensTap: () => _openSmartLens(context),
             ),
           ),
           SizedBox(height: 24.h),
