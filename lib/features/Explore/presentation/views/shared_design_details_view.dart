@@ -168,6 +168,7 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                   },
                 ),
 
+
                 // Gradient overlay at top for heart
                 Container(
                   height: 80.h,

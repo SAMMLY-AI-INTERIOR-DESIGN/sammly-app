@@ -10,7 +10,8 @@ import 'package:sammly/core/theme/text_styles.dart';
 
 class ResultImageWidget extends StatelessWidget {
   final String imagePath;
-  const ResultImageWidget({super.key, required this.imagePath});
+  final VoidCallback? onSmartLensTap;
+  const ResultImageWidget({super.key, required this.imagePath, this.onSmartLensTap});
 
   @override
   Widget build(BuildContext context) {
@@ -26,34 +27,37 @@ class ResultImageWidget extends StatelessWidget {
           Positioned(
             top: 16.h,
             left: 16.w,
-            child: ClipRRect( // لازم عشان الـ Blur مايفرشحش بره
-              borderRadius: BorderRadius.circular(20.r),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-                  decoration: BoxDecoration(
-                    // استخدمنا أسود شفاف عشان يدي تأثير الزجاج الغامق زي الديزاين
-                    color: Colors.white.withValues(alpha: 0.2), 
-                    borderRadius: BorderRadius.circular(20.r),
-                    border: Border.all(
-                      // بوردر أبيض شفاف بيدي لمعة خفيفة
-                      color: Colors.white.withValues(alpha: 0.3), 
-                      width: 1.5,
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(AppImages.smartLensIcon),
-                      SizedBox(width: 8.w),
-                      Text(
-                        AppStrings.smartLens,
-                        style: AppTextStyles.badge14SemiBold.copyWith(
-                          color: Colors.white, // النص أبيض عشان يبان على الزجاج الغامق
-                          fontSize: 16.sp,
-                        ),
+            child: GestureDetector(
+              onTap: onSmartLensTap,
+              child: ClipRRect( // لازم عشان الـ Blur مايفرشحش بره
+                borderRadius: BorderRadius.circular(20.r),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                    decoration: BoxDecoration(
+                      // استخدمنا أسود شفاف عشان يدي تأثير الزجاج الغامق زي الديزاين
+                      color: Colors.white.withValues(alpha: 0.2), 
+                      borderRadius: BorderRadius.circular(20.r),
+                      border: Border.all(
+                        // بوردر أبيض شفاف بيدي لمعة خفيفة
+                        color: Colors.white.withValues(alpha: 0.3), 
+                        width: 1.5,
                       ),
-                    ],
+                    ),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(AppImages.smartLensIcon),
+                        SizedBox(width: 8.w),
+                        Text(
+                          AppStrings.smartLens,
+                          style: AppTextStyles.badge14SemiBold.copyWith(
+                            color: Colors.white, // النص أبيض عشان يبان على الزجاج الغامق
+                            fontSize: 16.sp,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

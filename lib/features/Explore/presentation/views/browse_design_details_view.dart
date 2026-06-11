@@ -110,6 +110,7 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
                   },
                 ),
 
+
                 // Gradient overlay at top for heart
                 Container(
                   height: 80.h,

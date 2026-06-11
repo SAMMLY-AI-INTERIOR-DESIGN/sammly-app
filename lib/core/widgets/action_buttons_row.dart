@@ -18,24 +18,30 @@ class ActionButtonsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        CustomActionButton(
-          title: 'Customize',
-          iconPath: AppImages.customizeIcon,
-          onTap: onCustomize ?? () {},
+        Expanded(
+          child: CustomActionButton(
+            title: 'Customize',
+            iconPath: AppImages.customizeIcon,
+            onTap: onCustomize ?? () {},
+          ),
         ),
         SizedBox(width: 8.w),
-        CustomActionButton(
-          title: 'Share',
-          iconPath: AppImages.shareIcon,
-          onTap: onShare ?? () {},
+        Expanded(
+          child: CustomActionButton(
+            title: 'Share',
+            iconPath: AppImages.shareIcon,
+            onTap: onShare ?? () {},
+          ),
         ),
         SizedBox(width: 8.w),
-        CustomActionButton(
-          title: 'Download',
-          iconPath: AppImages.downloadIcon,
-          onTap: onDownload ?? () {},
+        Expanded(
+          child: CustomActionButton(
+            title: 'Download',
+            iconPath: AppImages.downloadIcon,
+            onTap: onDownload ?? () {},
+          ),
         ),
       ],
     );
