@@ -29,6 +29,8 @@ import 'package:sammly/features/Auth/presentation/views/change_password_view.dar
 import 'package:sammly/features/Explore/presentation/views/browse_design_details_view.dart';
 import 'package:sammly/features/Explore/presentation/views/shared_design_details_view.dart';
 import 'package:sammly/features/Explore/presentation/views/user_profile_view.dart';
+import 'package:sammly/features/subscrition/presentation/views/subscription_view.dart';
+import 'package:sammly/features/Explore/presentation/views/choose_room.dart' as choose_room;
 
 abstract class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -234,6 +236,20 @@ abstract class AppRouter {
         return MaterialPageRoute(
           builder: (context) {
             return GenerateResultView(showListView: showListView);
+          },
+        );
+
+      case AppRoutes.subscriptionView:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const SubscriptionView();
+          },
+        );
+
+      case AppRoutes.chooseRoom:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const choose_room.ExploreView(); 
           },
         );
 

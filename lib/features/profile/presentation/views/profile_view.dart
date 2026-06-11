@@ -174,45 +174,53 @@ class ProfileView extends StatelessWidget {
                             SizedBox(height: 12.h),
                             Align(
                               alignment: Alignment.centerRight,
-                              child: Container(
-                                padding: const EdgeInsets.all(1.5),
-                                decoration: BoxDecoration(
-                                  gradient: AppColors.primaryGradient3,
-                                  borderRadius: BorderRadius.circular(20.r),
-                                ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    AppRoutes.subscriptionView,
+                                  );
+                                },
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 16.w,
-                                    vertical: 6.h,
-                                  ),
+                                  padding: const EdgeInsets.all(1.5),
                                   decoration: BoxDecoration(
+                                    gradient: AppColors.primaryGradient3,
                                     borderRadius: BorderRadius.circular(20.r),
-                                    color: AppColors.whiteColor.withValues(
-                                      alpha: 0.9,
-                                    ),
                                   ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      SvgPicture.asset(
-                                        AppImages.upgrade,
-                                        width: 16.w,
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 16.w,
+                                      vertical: 6.h,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20.r),
+                                      color: AppColors.whiteColor.withValues(
+                                        alpha: 0.9,
                                       ),
-                                      SizedBox(width: 6.w),
-                                      ShaderMask(
-                                        shaderCallback: (bounds) {
-                                          return AppColors.primaryGradient3
-                                              .createShader(bounds);
-                                        },
-                                        child: Text(
-                                          AppStrings.upgradePro,
-                                          style: AppTextStyles.body14Regular
-                                              .copyWith(
-                                                color: AppColors.whiteColor,
-                                              ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        SvgPicture.asset(
+                                          AppImages.upgrade,
+                                          width: 16.w,
                                         ),
-                                      ),
-                                    ],
+                                        SizedBox(width: 6.w),
+                                        ShaderMask(
+                                          shaderCallback: (bounds) {
+                                            return AppColors.primaryGradient3
+                                                .createShader(bounds);
+                                          },
+                                          child: Text(
+                                            AppStrings.upgradePro,
+                                            style: AppTextStyles.body14Regular
+                                                .copyWith(
+                                                  color: AppColors.whiteColor,
+                                                ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -274,7 +282,12 @@ class ProfileView extends StatelessWidget {
                       ProfileMenuItem(
                         title: AppStrings.manageSubscription,
                         svgIcon: AppImages.manageSubscriptions,
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            AppRoutes.subscriptionView,
+                          );
+                        },
                       ),
                     ],
                   ),

@@ -91,4 +91,9 @@ class AppImages {
   static const String styleMidCentury = "assets/images/mid_century_modern.png";
   static const String arrowRight = "assets/images/arrow_right.svg";
   static const String smartLensIcon = "assets/images/smart_lens_icon.svg";
+  static const String starIcon = "assets/images/star.svg";
+  static const String crownIcon = "assets/images/crown.svg";
+  static const String diamondIcon = "assets/images/diamond.svg";
+  static const String giftIcon = "assets/images/gift.svg";
+  static const String subscriptionBgPlaceholder = "assets/images/subscription_bg_placeholder.png";
 }
