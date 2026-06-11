@@ -75,13 +75,16 @@ class _TextToImageGenerateViewState extends State<TextToImageGenerateView> {
       return;
     }
 
-    //  Send data to the backend API.
-    debugPrint("Room: $_selectedRoom");
-    debugPrint("Style: $_selectedStyle");
-    debugPrint("Prompt: $prompt");
-    debugPrint("Reference Image: ${_referenceImage?.path}");
-
-    Navigator.pushNamed(context, AppRoutes.generateLoadingView);
+    Navigator.pushNamed(
+      context,
+      AppRoutes.generateLoadingView,
+      arguments: {
+        'room': _selectedRoom ?? '',
+        'style': _selectedStyle ?? '',
+        'prompt': prompt,
+        'imageUrl': _referenceImage?.path,
+      },
+    );
   }
 
   String _getAppBarTitle() {

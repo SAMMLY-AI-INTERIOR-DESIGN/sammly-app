@@ -1,39 +1,69 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sammly/features/generate/data/model/generate_mappers.dart';
+import 'package:sammly/features/generate/data/repo/generate_design_repo.dart';
 import 'package:sammly/features/generate_loading/presentation/cubits/loading_states.dart';
 
-
-
-// --- Cubit ---
 class GenerationCubit extends Cubit<GenerationState> {
   GenerationCubit() : super(GenerationInitial());
 
   Timer? _timer;
   int _currentStep = 0;
 
-  void startLoadingCycle() {
+  void startLoadingWithApi({
+    required String uiStyle,
+    required String uiRoom,
+    required String prompt,
+    String? imageUrl,
+    required GenerateDesignRepo repo,
+  }) {
     _currentStep = 0;
-    emit(GenerationLoadingStep(_currentStep)); // ابدأ بأول شاشة فوراً
+    
+    emit(GenerationLoadingStep(_currentStep));
 
-    // شغل الـ Timer عشان يكرر الكود كل ثانيتين
     _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
-      if (_currentStep < 3) {
-        _currentStep++;
-        emit(GenerationLoadingStep(_currentStep)); // ابعت الـ State بالشاشة الجديدة
-      } else {
-        // لو وصلنا لآخر شاشة (رقم 3)، وقف الـ Timer عشان ميفضلش يعد عالفاضي
-        _timer?.cancel(); 
-        emit(GenerationFinished());
-        
-        // ملاحظة: لو عايزهم يلفوا من الأول تاني للأبد، بدل سطر الـ cancel خليها:
-        // _currentStep = 0; 
-        // emit(GenerationLoadingStep(_currentStep));
-      }
+      _currentStep = (_currentStep + 1) % 4; 
+      emit(GenerationLoadingStep(_currentStep));
     });
+
+    _callApi(
+      uiStyle: uiStyle,
+      uiRoom: uiRoom,
+      prompt: prompt,
+      imageUrl: imageUrl,
+      repo: repo,
+    );
   }
 
-  // 🔴 مهم جداً جداً 🔴
-  // لازم نوقف الـ Timer لما اليوزر يخرج من الشاشة عشان ميعملش كراش أو يستهلك الرامات
+  Future<void> _callApi({
+    required String uiStyle,
+    required String uiRoom,
+    required String prompt,
+    String? imageUrl,
+    required GenerateDesignRepo repo,
+  }) async {
+    final apiStyle = GenerateMappers.styleToApi(uiStyle);
+    final apiRoom = GenerateMappers.roomToApi(uiRoom);
+
+    final result = await repo.generateDesign(
+      style: apiStyle,
+      room: apiRoom,
+      prompt: prompt,
+      imageUrl: imageUrl,
+    );
+
+    _timer?.cancel();
+
+    result.fold(
+      (error) {
+        emit(GenerationFailed(errorMsg: error));
+      },
+      (design) {
+        emit(GenerationFinished(imageUrl: design.imageUrl));
+      },
+    );
+  }
+
   @override
   Future<void> close() {
     _timer?.cancel();

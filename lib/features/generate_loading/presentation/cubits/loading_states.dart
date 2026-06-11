@@ -5,8 +5,16 @@ abstract class GenerationState {}
 class GenerationInitial extends GenerationState {}
 
 class GenerationLoadingStep extends GenerationState {
-  final int stepIndex; // هتشيل رقم من 0 لـ 3
+  final int stepIndex; // 0 to 3
   GenerationLoadingStep(this.stepIndex);
 }
 
-class GenerationFinished extends GenerationState {}
+class GenerationFinished extends GenerationState {
+  final String? imageUrl;
+  GenerationFinished({this.imageUrl});
+}
+
+class GenerationFailed extends GenerationState {
+  final String errorMsg;
+  GenerationFailed({required this.errorMsg});
+}
