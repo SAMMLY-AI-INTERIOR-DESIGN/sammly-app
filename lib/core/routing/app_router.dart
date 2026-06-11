@@ -233,9 +233,13 @@ abstract class AppRouter {
       case AppRoutes.generateResultView:
         final args = settings.arguments as Map<String, dynamic>?;
         final showListView = args?['showListView'] as bool? ?? false;
+        final imageUrl = args?['imageUrl'] as String?;
         return MaterialPageRoute(
           builder: (context) {
-            return GenerateResultView(showListView: showListView);
+            return GenerateResultView(
+              showListView: showListView,
+              networkImageUrl: imageUrl,
+            );
           },
         );
 

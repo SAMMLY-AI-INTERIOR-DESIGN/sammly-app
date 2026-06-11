@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/constant/app_images.dart';
+import 'package:sammly/core/functions.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/routing/routes.dart';
+import 'package:sammly/features/generate/data/repo/generate_design_repo.dart';
 import 'package:sammly/features/generate_loading/presentation/cubits/loading_cubit.dart';
 import 'package:sammly/features/generate_loading/presentation/cubits/loading_states.dart';
 
@@ -14,7 +17,7 @@ class GenerationLoadingWrapper extends StatelessWidget {
   final Map<String, dynamic>? arguments;
   const GenerationLoadingWrapper({super.key, this.arguments});
 
-  // جهزنا الداتا بالترتيب اللي هتظهر بيه
+  // Loading screen assets
   final List<String> images = const [
     AppImages.generateLoading1,
     AppImages.generateLoading2,
@@ -24,16 +27,33 @@ class GenerationLoadingWrapper extends StatelessWidget {
 
   final List<String> titles = const [
     AppStrings.yourRoomIsComingSoon,
-    AppStrings.yourRoomIsComingSoon, // لو التانية نفس النص زي ما في الديزاين
+    AppStrings.yourRoomIsComingSoon,
     AppStrings.addingDetails,
     AppStrings.addingDetails,
   ];
 
   @override
   Widget build(BuildContext context) {
-    // استخدمنا BlocProvider عشان نكريت الكيوبت ونشغل الدالة أول ما الشاشة تفتح
     return BlocProvider(
-      create: (context) => GenerationCubit()..startLoadingCycle(),
+      create: (context) {
+        final cubit = GenerationCubit();
+
+        // Extract arguments passed from the generate view
+        final style = arguments?['style'] as String? ?? '';
+        final room = arguments?['room'] as String? ?? '';
+        final prompt = arguments?['prompt'] as String? ?? '';
+        final imageUrl = arguments?['imageUrl'] as String?;
+
+        cubit.startLoadingWithApi(
+          uiStyle: style,
+          uiRoom: room,
+          prompt: prompt,
+          imageUrl: imageUrl,
+          repo: GenerateDesignRepo(),
+        );
+
+        return cubit;
+      },
       child: Scaffold(
         backgroundColor: AppColors.whiteColor,
         body: SafeArea(
@@ -42,17 +62,26 @@ class GenerationLoadingWrapper extends StatelessWidget {
             child: BlocConsumer<GenerationCubit, GenerationState>(
               listener: (context, state) {
                 if (state is GenerationFinished) {
-                  // final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-                  // final showListView = args?['showListView'] as bool? ?? false;
+                  final showListView =
+                      arguments?['showListView'] as bool? ?? false;
                   Navigator.pushReplacementNamed(
-                    context, 
-                    AppRoutes.generateResultView, 
-                    arguments: arguments,
+                    context,
+                    AppRoutes.generateResultView,
+                    arguments: {
+                      'showListView': showListView,
+                      'imageUrl': state.imageUrl,
+                    },
                   );
+                } else if (state is GenerationFailed) {
+                  showCustomSnackBar(
+                    context: context,
+                    message: state.errorMsg,
+                    isError: true,
+                  );
+                  Navigator.pop(context);
                 }
               },
               builder: (context, state) {
-                // بنجيب رقم الخطوة، ولو لسه بيبدأ نعتبرها 0
                 int currentStep = 0;
                 if (state is GenerationLoadingStep) {
                   currentStep = state.stepIndex;
@@ -62,21 +91,21 @@ class GenerationLoadingWrapper extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Spacer(),
-                    
-                    // 1. الصورة بتتغير حسب الـ currentStep
+
+                    // Animated loading image
                     AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 500), // أنيميشن خفيف لما الصورة تتغير
+                      duration: const Duration(milliseconds: 500),
                       child: SvgPicture.asset(
                         images[currentStep],
-                        key: ValueKey<int>(currentStep), // مهم عشان الأنيميشن يشتغل
+                        key: ValueKey<int>(currentStep),
                         height: 80.h,
                         fit: BoxFit.contain,
                       ),
                     ),
-                    
+
                     SizedBox(height: 12.h),
-                    
-                    // 2. النص بيتغير حسب الـ currentStep
+
+                    // Animated loading text
                     AnimatedSwitcher(
                       duration: const Duration(milliseconds: 500),
                       child: Text(
@@ -88,10 +117,10 @@ class GenerationLoadingWrapper extends StatelessWidget {
                         ),
                       ),
                     ),
-                    
+
                     const Spacer(),
-                    
-                    // 3. النص الثابت
+
+                    // Disclaimer text
                     Text(
                       AppStrings.loadingDisclaimer,
                       textAlign: TextAlign.center,
@@ -100,7 +129,7 @@ class GenerationLoadingWrapper extends StatelessWidget {
                         height: 1.5,
                       ),
                     ),
-                    
+
                     SizedBox(height: 40.h),
                   ],
                 );
