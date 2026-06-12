@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
+import 'package:sammly/core/functions.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/core/widgets/action_buttons_row.dart';
 import 'package:sammly/core/routing/routes.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_toggle_cubit.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_toggle_state.dart';
 
 class SharedDesignDetailsView extends StatefulWidget {
   final String imageUrl;
+  final String designId;
 
-  const SharedDesignDetailsView({super.key, required this.imageUrl});
+  const SharedDesignDetailsView({
+    super.key,
+    required this.imageUrl,
+    this.designId = '',
+  });
 
   @override
   State<SharedDesignDetailsView> createState() =>
@@ -18,7 +27,6 @@ class SharedDesignDetailsView extends StatefulWidget {
 }
 
 class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
-  bool _isLiked = true;
   int _likesCount = 34;
   bool _isSaved = false;
   bool _isMaximized = false;
@@ -39,32 +47,40 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: !_isMaximized,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) return;
-        if (_isMaximized) _toggleMaximize();
+    return BlocListener<FavoriteToggleCubit, FavoriteToggleState>(
+      listener: (context, state) {
+        if (state is FavoriteToggleReverted && state.designId == widget.designId) {
+          showCustomSnackBar(context: context, message: state.errorMessage, isError: true);
+
+        }
       },
-      child: Scaffold(
-        backgroundColor: AppColors.whiteColor,
-        appBar: _isMaximized
-            ? null
-            : CustomAppbar(
-                title: 'Living Room',
-                onBack: _handleBack,
-                actions: [
-                  IconButton(
-                    icon: Icon(
-                      Icons.more_vert,
-                      color: AppColors.blackColor,
-                      size: 24.sp,
+      child: PopScope(
+        canPop: !_isMaximized,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          if (_isMaximized) _toggleMaximize();
+        },
+        child: Scaffold(
+          backgroundColor: AppColors.whiteColor,
+          appBar: _isMaximized
+              ? null
+              : CustomAppbar(
+                  title: 'Living Room',
+                  onBack: _handleBack,
+                  actions: [
+                    IconButton(
+                      icon: Icon(
+                        Icons.more_vert,
+                        color: AppColors.blackColor,
+                        size: 24.sp,
+                      ),
+                      onPressed: () {},
                     ),
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-        body: SafeArea(
-          child: _isMaximized ? _buildMaximizedView() : _buildNormalView(),
+                  ],
+                ),
+          body: SafeArea(
+            child: _isMaximized ? _buildMaximizedView() : _buildNormalView(),
+          ),
         ),
       ),
     );
@@ -206,26 +222,7 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                 Positioned(
                   top: 12.h,
                   right: 12.w,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _isSaved = !_isSaved;
-                      });
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(8.w),
-                      decoration: const BoxDecoration(
-                        color: AppColors.bg2Color,
-                        shape: BoxShape.circle,
-                      ),
-                      child: SvgPicture.asset(
-                        _isSaved
-                            ? AppImages.withsaving
-                            : AppImages.withoutsaving,
-                        width: 24.w,
-                      ),
-                    ),
-                  ),
+                  child: _buildHeartButton(),
                 ),
 
                 // Maximize Icon (Bottom Right)
@@ -263,37 +260,56 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
               // Like Button
               GestureDetector(
                 onTap: () {
+                  final toggleCubit = context.read<FavoriteToggleCubit>();
+                  final wasLiked = toggleCubit.isFavorited(widget.designId);
+                  toggleCubit.toggleFavorite(widget.designId);
                   setState(() {
-                    _isLiked = !_isLiked;
-                    _isLiked ? _likesCount++ : _likesCount--;
+                    wasLiked ? _likesCount-- : _likesCount++;
                   });
                 },
-                child: Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(6.w),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryColor.withValues(alpha: 0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: SvgPicture.asset(
-                        _isLiked
-                            ? AppImages.heartFilled
-                            : AppImages.heartOutline,
-                        width: 16.w,
-                      ),
-                    ),
-                    SizedBox(width: 8.w),
-                    Text(
-                      'Like',
-                      style: TextStyle(
-                        color: AppColors.greyColor,
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: 'Manrope',
-                      ),
-                    ),
-                  ],
+                child: BlocBuilder<FavoriteToggleCubit, FavoriteToggleState>(
+                  buildWhen: (prev, curr) {
+                    if (curr is FavoriteToggleUpdated) {
+                      return curr.designId == widget.designId;
+                    }
+                    if (curr is FavoriteToggleReverted) {
+                      return curr.designId == widget.designId;
+                    }
+                    return false;
+                  },
+                  builder: (context, state) {
+                    final isLiked = context
+                        .read<FavoriteToggleCubit>()
+                        .isFavorited(widget.designId);
+
+                    return Row(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(6.w),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryColor.withValues(alpha: 0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: SvgPicture.asset(
+                            isLiked
+                                ? AppImages.heartFilled
+                                : AppImages.heartOutline,
+                            width: 16.w,
+                          ),
+                        ),
+                        SizedBox(width: 8.w),
+                        Text(
+                          'Like',
+                          style: TextStyle(
+                            color: AppColors.greyColor,
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: 'Manrope',
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
 
@@ -330,6 +346,42 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
           SizedBox(height: 20.h),
         ],
       ),
+    );
+  }
+
+  Widget _buildHeartButton() {
+    return BlocBuilder<FavoriteToggleCubit, FavoriteToggleState>(
+      buildWhen: (prev, curr) {
+        if (curr is FavoriteToggleUpdated) {
+          return curr.designId == widget.designId;
+        }
+        if (curr is FavoriteToggleReverted) {
+          return curr.designId == widget.designId;
+        }
+        return false;
+      },
+      builder: (context, state) {
+        final isLiked = context
+            .read<FavoriteToggleCubit>()
+            .isFavorited(widget.designId);
+
+        return GestureDetector(
+          onTap: () {
+            context.read<FavoriteToggleCubit>().toggleFavorite(widget.designId);
+          },
+          child: Container(
+            padding: EdgeInsets.all(8.w),
+            decoration: const BoxDecoration(
+              color: AppColors.bg2Color,
+              shape: BoxShape.circle,
+            ),
+            child: SvgPicture.asset(
+              isLiked ? AppImages.heartFilled : AppImages.heartOutline,
+              width: 20.w,
+            ),
+          ),
+        );
+      },
     );
   }
 

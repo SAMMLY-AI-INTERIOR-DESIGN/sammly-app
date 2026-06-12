@@ -112,18 +112,40 @@ abstract class AppRouter {
         );
 
       case AppRoutes.browseDesignDetailsView:
-        final imageUrl = settings.arguments as String? ?? '';
+        final args = settings.arguments;
+        String imageUrl = '';
+        String designId = '';
+        if (args is Map<String, dynamic>) {
+          imageUrl = args['imageUrl'] ?? '';
+          designId = args['designId'] ?? '';
+        } else if (args is String) {
+          imageUrl = args;
+        }
         return MaterialPageRoute(
           builder: (context) {
-            return BrowseDesignDetailsView(imageUrl: imageUrl);
+            return BrowseDesignDetailsView(
+              imageUrl: imageUrl,
+              designId: designId,
+            );
           },
         );
 
       case AppRoutes.sharedDesignDetailsView:
-        final imageUrl = settings.arguments as String? ?? '';
+        final args = settings.arguments;
+        String imageUrl = '';
+        String designId = '';
+        if (args is Map<String, dynamic>) {
+          imageUrl = args['imageUrl'] ?? '';
+          designId = args['designId'] ?? '';
+        } else if (args is String) {
+          imageUrl = args;
+        }
         return MaterialPageRoute(
           builder: (context) {
-            return SharedDesignDetailsView(imageUrl: imageUrl);
+            return SharedDesignDetailsView(
+              imageUrl: imageUrl,
+              designId: designId,
+            );
           },
         );
 

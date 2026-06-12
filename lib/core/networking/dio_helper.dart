@@ -136,4 +136,30 @@ abstract class DioHelper {
       }
     }
   }
-}
+
+  static Future<Response> deleteData({
+    required String endPoint,
+    Map<String, dynamic>? queryParameters,
+    String? token,
+  }) async {
+    dio.options.headers['Authorization'] = token != null ? 'Bearer $token' : '';
+
+    int retries = 2;
+    while (true) {
+      try {
+        return await dio.delete(
+          endPoint,
+          queryParameters: queryParameters,
+        );
+      } catch (e) {
+        if (retries == 0) rethrow;
+        if (e is DioException && _shouldRetry(e)) {
+          retries--;
+          await Future.delayed(const Duration(milliseconds: 1500));
+          continue;
+        }
+        rethrow;
+      }
+    }
+  }
+}
