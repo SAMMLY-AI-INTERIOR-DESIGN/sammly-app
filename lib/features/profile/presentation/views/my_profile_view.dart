@@ -50,8 +50,7 @@ class MyProfileView extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                
-                                SizedBox(height: 110.h),
+                                SizedBox(height: 80.h),
                                 PostsDataSection(),
                                 SizedBox(height: 16.h),
 
