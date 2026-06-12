@@ -10,6 +10,7 @@ import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/core/widgets/custombutton.dart';
+import 'package:sammly/features/home/logic/home_cubit.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/custom_drop_town.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/custom_text_field.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/edit_image_section.dart';
@@ -162,6 +163,8 @@ class _EditProfileViewState extends State<EditProfileView> {
                 if (state is EditProfileSuccess) {
                   // نعمل refresh من الـ API عشان نجيب الـ avatar URL الجديد من السيرفر
                   context.read<ProfileCubit>().fetchProfile(forceRefresh: true);
+                  context.read<ProfileCubit>().fetchSettingInfo();
+                  context.read<HomeCubit>().fetchHomeData();
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Profile updated successfully!')),
                   );

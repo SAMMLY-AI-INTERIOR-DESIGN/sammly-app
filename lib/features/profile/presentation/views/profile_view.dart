@@ -26,7 +26,7 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   void initState() {
     super.initState();
-    context.read<ProfileCubit>().fetchSettingInfo();
+    // context.read<ProfileCubit>().fetchSettingInfo();
   }
 
   @override
@@ -108,6 +108,9 @@ class _ProfileViewState extends State<ProfileView> {
                         final settingInfo = context
                             .read<ProfileCubit>()
                             .currentSettingInfo;
+                        final gender = context
+                            .read<ProfileCubit>()
+                            .currentProfile?.gender;
 
                         return Column(
                           children: [
@@ -124,6 +127,7 @@ class _ProfileViewState extends State<ProfileView> {
                                 children: [
                                   AvatarWidget(
                                     avatarPath: settingInfo?.avatar,
+                                    gender: gender,
                                     width: 65.w,
                                     height: 65.h,
                                     borderRadius: BorderRadius.circular(16.r),
