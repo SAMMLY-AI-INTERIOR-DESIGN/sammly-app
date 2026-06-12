@@ -22,4 +22,6 @@ abstract class ApiConstants {
 
   // Favorite endpoints
   static const String getFavorites = '/api/designs/favorites';
+  /// Use: '${ApiConstants.toggleFavorite}/$designId'
+  static const String toggleFavorite = '/api/designs/favorites';
 }

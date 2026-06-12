@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:sammly/core/networking/api_constants.dart';
@@ -38,6 +40,62 @@ class FavoriteRepo {
       } else {
         final msg =
             response.data['message']?.toString() ?? 'Failed to load favorites.';
+        return left(msg);
+      }
+    } on DioException catch (e) {
+      return left(_handleDioError(e));
+    } catch (e) {
+      return left('An unexpected error occurred.');
+    }
+  }
+
+  /// GET /api/designs/favorites/:designId
+  /// Adds the design to favorites.
+  Future<Either<String, String>> addToFavorites(String designId) async {
+    try {
+      final token = SharedPref.getData(key: 'jwt');
+
+      final response = await DioHelper.getData(
+        endPoint: '${ApiConstants.toggleFavorite}/$designId',
+        token: token,
+      );
+      log(response.statusCode.toString());
+      if (response.statusCode == 200 &&
+          response.data['status'] == 'success') {
+        final msg = response.data['data']?['message']?.toString() ??
+            'Added to favorites successfully';
+        return right(msg);
+      } else {
+        final msg =
+            response.data['message']?.toString() ?? 'Failed to add to favorites.';
+        return left(msg);
+      }
+    } on DioException catch (e) {
+      return left(_handleDioError(e));
+    } catch (e) {
+      return left('An unexpected error occurred.');
+    }
+  }
+
+  /// DELETE /api/designs/favorites/:designId
+  /// Removes the design from favorites.
+  Future<Either<String, String>> removeFromFavorites(String designId) async {
+    try {
+      final token = SharedPref.getData(key: 'jwt');
+
+      final response = await DioHelper.deleteData(
+        endPoint: '${ApiConstants.toggleFavorite}/$designId',
+        token: token,
+      );
+
+      if (response.statusCode == 200 &&
+          response.data['status'] == 'success') {
+        final msg = response.data['data']?['message']?.toString() ??
+            'Removed from favorites successfully';
+        return right(msg);
+      } else {
+        final msg = response.data['message']?.toString() ??
+            'Failed to remove from favorites.';
         return left(msg);
       }
     } on DioException catch (e) {
