@@ -24,7 +24,7 @@ class FullHomeView extends StatefulWidget {
 class _FullHomeViewState extends State<FullHomeView> {
   int _currentStep = 0;
   XFile? _selectedImage;
-  
+
   final List<String> _allRooms = [
     AppStrings.bedroom,
     AppStrings.diningRoom,
@@ -82,11 +82,7 @@ class _FullHomeViewState extends State<FullHomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomAppbar(
-        title: '',
-        onBack: _previousStep,
-        showLeading: true,
-      ),
+      appBar: CustomAppbar(title: '', onBack: _previousStep, showLeading: true),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -161,7 +157,7 @@ class _FullHomeViewState extends State<FullHomeView> {
                 );
               } else {
                 Navigator.pushNamed(
-                  context, 
+                  context,
                   AppRoutes.generateLoadingView,
                   arguments: {'showListView': true},
                 );

@@ -377,7 +377,7 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
               shape: BoxShape.circle,
             ),
             child: SvgPicture.asset(
-              isLiked ? AppImages.heartFilled : AppImages.heartOutline,
+              isLiked ? AppImages.withsaving : AppImages.withoutsaving,
               width: 20.w,
             ),
           ),
