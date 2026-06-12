@@ -194,8 +194,8 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
                           ),
                           child: SvgPicture.asset(
                             isLiked
-                                ? AppImages.heartFilled
-                                : AppImages.heartOutline,
+                                ? AppImages.withsaving
+                                : AppImages.withoutsaving,
                             width: 20.w,
                           ),
                         ),
