@@ -12,6 +12,8 @@ import 'package:sammly/features/profile/data/repo/profile_repo.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:sammly/features/support/cubit/support_cubit.dart';
 import 'package:sammly/features/support/data/repo/support_repo.dart';
+import 'package:sammly/features/favorite/data/repo/favorite_repo.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_toggle_cubit.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -37,7 +39,7 @@ class SammlyApp extends StatelessWidget {
           create: (context) => ProfileCubit(ProfileRepo())..fetchProfile(),
         ),
         BlocProvider(create: (context) => SupportCubit(SupportRepo())),
-        // NetworkCubit removed for auto-check
+        BlocProvider(create: (context) => FavoriteToggleCubit(FavoriteRepo())),
       ],
       child: ScreenUtilInit(
         designSize: const Size(430, 932),

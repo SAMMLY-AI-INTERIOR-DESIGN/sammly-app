@@ -8,6 +8,8 @@ import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/features/favorite/data/models/favorite_response_model.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_state.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_toggle_cubit.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_toggle_state.dart';
 import 'package:sammly/features/favorite/presentation/views/widgets/favorite_heart_item.dart';
 
 class FavoriteGridView extends StatefulWidget {
@@ -43,6 +45,24 @@ class _FavoriteGridViewState extends State<FavoriteGridView> {
   void initState() {
     super.initState();
     _scrollController = ScrollController()..addListener(_onScroll);
+
+    // Seed all current favorite designs into the global toggle cubit
+    final toggleCubit = context.read<FavoriteToggleCubit>();
+    for (final design in widget.designs) {
+      toggleCubit.seedFavoriteStatus(design.id, true);
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant FavoriteGridView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Seed any newly loaded designs (pagination)
+    if (widget.designs.length != oldWidget.designs.length) {
+      final toggleCubit = context.read<FavoriteToggleCubit>();
+      for (final design in widget.designs) {
+        toggleCubit.seedFavoriteStatus(design.id, true);
+      }
+    }
   }
 
   @override
@@ -63,7 +83,6 @@ class _FavoriteGridViewState extends State<FavoriteGridView> {
   @override
   Widget build(BuildContext context) {
     final baseWidth = (MediaQuery.of(context).size.width - 44.w) / 2;
-    // Total count = designs + 1 if still loading more
     final isPaginationLoading =
         context.read<FavoriteCubit>().state is FavoritePaginationLoading;
     final itemCount =
@@ -96,21 +115,44 @@ class _FavoriteGridViewState extends State<FavoriteGridView> {
           final itemHeight =
               baseWidth * _itemHeights[index % _itemHeights.length];
 
-          return GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(
-                context,
-                AppRoutes.sharedDesignDetailsView,
-                arguments: design.imageUrl,
+          return BlocBuilder<FavoriteToggleCubit, FavoriteToggleState>(
+            buildWhen: (prev, curr) {
+              if (curr is FavoriteToggleUpdated) {
+                return curr.designId == design.id;
+              }
+              if (curr is FavoriteToggleReverted) {
+                return curr.designId == design.id;
+              }
+              return false;
+            },
+            builder: (context, state) {
+              final isLiked = context
+                  .read<FavoriteToggleCubit>()
+                  .isFavorited(design.id);
+
+              // If the item was un-favorited, hide it from the grid
+              if (!isLiked) return const SizedBox.shrink();
+
+              return GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    AppRoutes.sharedDesignDetailsView,
+                    arguments: {
+                      'imageUrl': design.imageUrl,
+                      'designId': design.id,
+                    },
+                  );
+                },
+                child: SizedBox(
+                  height: itemHeight,
+                  child: FavoriteHeartItem(
+                    imageUrl: design.imageUrl,
+                    designId: design.id,
+                  ),
+                ),
               );
             },
-            child: SizedBox(
-              height: itemHeight,
-              child: FavoriteHeartItem(
-                imageUrl: design.imageUrl,
-                initialIsLiked: true,
-              ),
-            ),
           );
         },
       ),

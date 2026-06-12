@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
+import 'package:sammly/core/functions.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/core/widgets/action_buttons_row.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_toggle_cubit.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_toggle_state.dart';
 
 class BrowseDesignDetailsView extends StatefulWidget {
   final String imageUrl;
+  final String designId;
 
-  const BrowseDesignDetailsView({super.key, required this.imageUrl});
+  const BrowseDesignDetailsView({
+    super.key,
+    required this.imageUrl,
+    required this.designId,
+  });
 
   @override
   State<BrowseDesignDetailsView> createState() =>
@@ -17,7 +27,6 @@ class BrowseDesignDetailsView extends StatefulWidget {
 }
 
 class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
-  bool _isLiked = true;
   bool _isMaximized = false;
 
   void _toggleMaximize() {
@@ -36,32 +45,39 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: !_isMaximized,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) return;
-        if (_isMaximized) _toggleMaximize();
+    return BlocListener<FavoriteToggleCubit, FavoriteToggleState>(
+      listener: (context, state) {
+        if (state is FavoriteToggleReverted && state.designId == widget.designId) {
+          showCustomSnackBar(context: context, message: state.errorMessage, isError: true);
+        }
       },
-      child: Scaffold(
-        backgroundColor: AppColors.whiteColor,
-        appBar: _isMaximized
-            ? null
-            : CustomAppbar(
-                title: 'Living Room',
-                onBack: _handleBack,
-                actions: [
-                  IconButton(
-                    icon: Icon(
-                      Icons.more_vert,
-                      color: AppColors.blackColor,
-                      size: 24.sp,
+      child: PopScope(
+        canPop: !_isMaximized,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          if (_isMaximized) _toggleMaximize();
+        },
+        child: Scaffold(
+          backgroundColor: AppColors.whiteColor,
+          appBar: _isMaximized
+              ? null
+              : CustomAppbar(
+                  title: 'Living Room',
+                  onBack: _handleBack,
+                  actions: [
+                    IconButton(
+                      icon: Icon(
+                        Icons.more_vert,
+                        color: AppColors.blackColor,
+                        size: 24.sp,
+                      ),
+                      onPressed: () {},
                     ),
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-        body: SafeArea(
-          child: _isMaximized ? _buildMaximizedView() : _buildNormalView(),
+                  ],
+                ),
+          body: SafeArea(
+            child: _isMaximized ? _buildMaximizedView() : _buildNormalView(),
+          ),
         ),
       ),
     );
@@ -149,25 +165,42 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
                 Positioned(
                   top: 12.h,
                   right: 12.w,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _isLiked = !_isLiked;
-                      });
+                  child: BlocBuilder<FavoriteToggleCubit, FavoriteToggleState>(
+                    buildWhen: (prev, curr) {
+                      if (curr is FavoriteToggleUpdated) {
+                        return curr.designId == widget.designId;
+                      }
+                      if (curr is FavoriteToggleReverted) {
+                        return curr.designId == widget.designId;
+                      }
+                      return false;
                     },
-                    child: Container(
-                      padding: EdgeInsets.all(8.w),
-                      decoration: const BoxDecoration(
-                        color: AppColors.bg2Color,
-                        shape: BoxShape.circle,
-                      ),
-                      child: SvgPicture.asset(
-                        _isLiked
-                            ? AppImages.heartFilled
-                            : AppImages.heartOutline,
-                        width: 20.w,
-                      ),
-                    ),
+                    builder: (context, state) {
+                      final isLiked = context
+                          .read<FavoriteToggleCubit>()
+                          .isFavorited(widget.designId);
+
+                      return GestureDetector(
+                        onTap: () {
+                          context
+                              .read<FavoriteToggleCubit>()
+                              .toggleFavorite(widget.designId);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(8.w),
+                          decoration: const BoxDecoration(
+                            color: AppColors.bg2Color,
+                            shape: BoxShape.circle,
+                          ),
+                          child: SvgPicture.asset(
+                            isLiked
+                                ? AppImages.heartFilled
+                                : AppImages.heartOutline,
+                            width: 20.w,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
 

@@ -1,108 +1,22 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_svg/flutter_svg.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import 'package:sammly/core/constant/app_colors.dart';
-// import 'package:sammly/features/favorite/data/models/favorite_item_model.dart';
-
-// class FavoriteGridItem extends StatelessWidget {
-//   final FavoriteItemModel item;
-//   final VoidCallback onFavoriteTap;
-//   final int index;
-
-//   const FavoriteGridItem({
-//     super.key,
-//     required this.item,
-//     required this.onFavoriteTap,
-//     required this.index,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final double height = (index % 3 == 0) ? 250.h : ((index % 2 == 0) ? 200.h : 300.h);
-
-//     return Container(
-//       height: height,
-//       decoration: BoxDecoration(
-//         color: AppColors.whiteColor,
-//         borderRadius: BorderRadius.circular(16.r),
-//         boxShadow: [
-//           BoxShadow(
-//             color: Colors.black.withValues(alpha: 0.05),
-//             blurRadius: 10,
-//             offset: const Offset(0, 4),
-//           ),
-//         ],
-//       ),
-//       child: Stack(
-//         fit: StackFit.expand,
-//         children: [
-//           ClipRRect(
-//             borderRadius: BorderRadius.circular(16.r),
-//             child: Container(
-//               color: AppColors.bg1Color,
-//               child: SvgPicture.asset(
-//                 item.imagePath,
-//                 fit: BoxFit.scaleDown,
-//                 width: double.infinity,
-//                 height: double.infinity,
-//               ),
-//             ),
-//           ),
-
-//           Positioned(
-//             top: 16.h,
-//             right: 12.w,
-//             child: GestureDetector(
-//               onTap: onFavoriteTap,
-//               child: ShaderMask(
-//                 blendMode: BlendMode.srcIn,
-//                 shaderCallback: (bounds) {
-//                   return AppColors.primaryGradient3.createShader(bounds);
-//                 },
-//                 child: Icon(
-//                     item.isFavorite ? Icons.favorite : Icons.favorite_border,
-//                     color: Colors.white,
-//                     size: 20.sp,
-//                   ),
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_toggle_cubit.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_toggle_state.dart';
 
-class FavoriteHeartItem extends StatefulWidget {
+class FavoriteHeartItem extends StatelessWidget {
   final String imageUrl;
-  final bool initialIsLiked;
-  final Function(bool isLiked)? onFavoriteToggled;
+  final String designId;
 
   const FavoriteHeartItem({
     super.key,
     required this.imageUrl,
-    this.initialIsLiked = false,
-    this.onFavoriteToggled,
+    required this.designId,
   });
-
-  @override
-  State<FavoriteHeartItem> createState() => _FavoriteHeartItemState();
-}
-
-class _FavoriteHeartItemState extends State<FavoriteHeartItem> {
-  late bool _isLiked;
-
-  @override
-  void initState() {
-    super.initState();
-    _isLiked = widget.initialIsLiked;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +26,7 @@ class _FavoriteHeartItemState extends State<FavoriteHeartItem> {
         fit: StackFit.expand,
         children: [
           Image.network(
-            widget.imageUrl,
+            imageUrl,
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) {
               return Container(
@@ -143,26 +57,42 @@ class _FavoriteHeartItemState extends State<FavoriteHeartItem> {
           Positioned(
             top: 12.h,
             right: 6.w,
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  _isLiked = !_isLiked;
-                });
-                if (widget.onFavoriteToggled != null) {
-                  widget.onFavoriteToggled!(_isLiked);
+            child: BlocBuilder<FavoriteToggleCubit, FavoriteToggleState>(
+              buildWhen: (prev, curr) {
+                if (curr is FavoriteToggleUpdated) {
+                  return curr.designId == designId;
                 }
+                if (curr is FavoriteToggleReverted) {
+                  return curr.designId == designId;
+                }
+                return false;
               },
-              child: Container(
-                padding: EdgeInsets.all(6.w),
-                decoration: const BoxDecoration(
-                  color: AppColors.bg2Color,
-                  shape: BoxShape.circle,
-                ),
-                child: SvgPicture.asset(
-                  _isLiked ? AppImages.heartFilled : AppImages.heartOutline,
-                  width: 19.w,
-                ),
-              ),
+              builder: (context, state) {
+                final isLiked = context
+                    .read<FavoriteToggleCubit>()
+                    .isFavorited(designId);
+
+                return GestureDetector(
+                  onTap: () {
+                    context
+                        .read<FavoriteToggleCubit>()
+                        .toggleFavorite(designId);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(6.w),
+                    decoration: const BoxDecoration(
+                      color: AppColors.bg2Color,
+                      shape: BoxShape.circle,
+                    ),
+                    child: SvgPicture.asset(
+                      isLiked
+                          ? AppImages.heartFilled
+                          : AppImages.heartOutline,
+                      width: 19.w,
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ],

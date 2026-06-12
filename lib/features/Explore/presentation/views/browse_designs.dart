@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:sammly/core/constant/app_colors.dart';
+import 'package:sammly/core/functions.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
-import 'package:sammly/features/explore/presentation/widgets/design_grid_item.dart';
 import 'package:sammly/core/routing/routes.dart';
+import 'package:sammly/features/Explore/presentation/widgets/design_grid_item.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_toggle_cubit.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_toggle_state.dart';
 
 const Color kTextDark = Color(0xFF2E2E2E);
 
@@ -38,16 +43,23 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.bg1Color,
-      appBar: const CustomAppbar(title: 'Browse Categories'),
-      body: SafeArea(
-        child: Column(
-          children: [
-            _buildFilterBar(),
-            SizedBox(height: 16.h),
-            Expanded(child: _buildDesignGrid()),
-          ],
+    return BlocListener<FavoriteToggleCubit, FavoriteToggleState>(
+      listener: (context, state) {
+        if (state is FavoriteToggleReverted) {
+          showCustomSnackBar(context: context, message: state.errorMessage, isError: true);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.bg1Color,
+        appBar: const CustomAppbar(title: 'Browse Categories'),
+        body: SafeArea(
+          child: Column(
+            children: [
+              _buildFilterBar(),
+              SizedBox(height: 16.h),
+              Expanded(child: _buildDesignGrid()),
+            ],
+          ),
         ),
       ),
     );
@@ -113,15 +125,25 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
       ),
       itemCount: _designImageUrls.length,
       itemBuilder: (context, index) {
+        final imageUrl = _designImageUrls[index];
+        // TODO: Replace with real design IDs from API
+        final designId = 'browse_design_$index';
+
         return GestureDetector(
           onTap: () {
             Navigator.pushNamed(
               context,
               AppRoutes.browseDesignDetailsView,
-              arguments: _designImageUrls[index],
+              arguments: {
+                'imageUrl': imageUrl,
+                'designId': designId,
+              },
             );
           },
-          child: DesignGridItem(imageUrl: _designImageUrls[index]),
+          child: DesignGridItem(
+            imageUrl: imageUrl,
+            designId: designId,
+          ),
         );
       },
     );

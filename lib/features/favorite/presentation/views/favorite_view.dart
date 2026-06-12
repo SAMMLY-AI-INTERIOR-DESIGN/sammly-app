@@ -8,6 +8,8 @@ import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/features/favorite/data/repo/favorite_repo.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_state.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_toggle_cubit.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_toggle_state.dart';
 import 'package:sammly/features/favorite/presentation/views/widgets/favorite_grid_view.dart';
 import 'package:sammly/features/favorite/presentation/views/widgets/filter_bar.dart';
 import 'package:sammly/features/favorite/presentation/views/widgets/no_favorite_widget.dart';
@@ -19,21 +21,34 @@ class FavoriteView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => FavoriteCubit(FavoriteRepo())..getFavorites(),
-      child: Scaffold(
-        backgroundColor: AppColors.whiteColor,
-        appBar: CustomAppbar(title: AppStrings.favorite),
-        body: SafeArea(
-          child: BlocBuilder<FavoriteCubit, FavoriteState>(
-            builder: (context, state) {
-              return Column(
-                children: [
-                  SizedBox(height: 16.h),
-                  const FilterBar(),
-                  SizedBox(height: 16.h),
-                  _buildBody(state),
-                ],
-              );
-            },
+      child: BlocListener<FavoriteToggleCubit, FavoriteToggleState>(
+        listener: (context, state) {
+          if (state is FavoriteToggleReverted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.errorMessage),
+                backgroundColor: Colors.red,
+                duration: const Duration(seconds: 2),
+              ),
+            );
+          }
+        },
+        child: Scaffold(
+          backgroundColor: AppColors.whiteColor,
+          appBar: CustomAppbar(title: AppStrings.favorite),
+          body: SafeArea(
+            child: BlocBuilder<FavoriteCubit, FavoriteState>(
+              builder: (context, state) {
+                return Column(
+                  children: [
+                    SizedBox(height: 16.h),
+                    const FilterBar(),
+                    SizedBox(height: 16.h),
+                    _buildBody(state),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),
