@@ -28,7 +28,6 @@ class SharedDesignDetailsView extends StatefulWidget {
 
 class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
   int _likesCount = 34;
-  bool _isSaved = false;
   bool _isMaximized = false;
 
   void _toggleMaximize() {
@@ -101,56 +100,58 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
               Navigator.pushNamed(
                 context,
                 AppRoutes.userProfileView,
-                arguments: {'userName': 'Fatma Salah'},
+                arguments: {
+                  'userName': 'Fatma Salah',
+                },
               );
             },
             child: Row(
               children: [
-                Container(
-                  width: 48.w,
-                  height: 48.w,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.bg2Color,
-                    image: const DecorationImage(
-                      image: AssetImage(AppImages.defaultprofile),
-                      fit: BoxFit.cover,
-                    ),
+              Container(
+                width: 48.w,
+                height: 48.w,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.bg2Color,
+                  image: const DecorationImage(
+                    image: AssetImage(AppImages.defaultprofile),
+                    fit: BoxFit.cover,
                   ),
                 ),
-                SizedBox(width: 12.w),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Fatma Salah',
-                      style: TextStyle(
-                        color: AppColors.blackColor2,
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Manrope',
-                      ),
+              ),
+              SizedBox(width: 12.w),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Fatma Salah',
+                    style: TextStyle(
+                      color: AppColors.blackColor2,
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Manrope',
                     ),
-                    SizedBox(height: 2.h),
-                    Text(
-                      '15 December 2024',
-                      style: TextStyle(
-                        color: AppColors.greyColor,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Manrope',
-                      ),
+                  ),
+                  SizedBox(height: 2.h),
+                  Text(
+                    '15 December 2024',
+                    style: TextStyle(
+                      color: AppColors.greyColor,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Manrope',
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
+          ),
           ),
           SizedBox(height: 16.h),
 
           // 2. Prompt text
           Text(
-            'Lorem ipsum dolor sit amet consectetur. Fermentum volutpat praesent purus massa neque leo. Gravida sapien non tristique justo non adipiscing sem nam.',
+            'Prompt : Lorem ipsum dolor sit amet consectetur. Fermentum volutpat praesent purus massa neque leo. Gravida sapien non tristique justo non adipiscing sem nam.',
             style: TextStyle(
               color: AppColors.blackColor.withOpacity(0.8),
               fontSize: 14.sp,
@@ -376,7 +377,7 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
               shape: BoxShape.circle,
             ),
             child: SvgPicture.asset(
-              isLiked ? AppImages.heartFilled : AppImages.heartOutline,
+              isLiked ? AppImages.withsaving : AppImages.withoutsaving,
               width: 20.w,
             ),
           ),

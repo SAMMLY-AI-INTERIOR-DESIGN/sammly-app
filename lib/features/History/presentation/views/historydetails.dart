@@ -106,6 +106,7 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
   }
 
   /// الوضع العادي: صورة + تفاصيل + أزرار
+  /// الوضع العادي: صورة + تفاصيل + أزرار
   Widget _buildNormalView() {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
@@ -113,19 +114,27 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // الصورة بالوضع العادي مع زرار القلب
+          // الصورة بالوضع العادي مع زرار القلب وعدسات الذكاء الاصطناعي
           SizedBox(
             height: 320.h,
             width: double.infinity,
             child: Stack(
               children: [
+                // 1. كود صاحبك: خصائص الـ Smart Lens والـ Save
                 HistoryMainImageSection(
                   imageUrl: widget.imageUrl,
                   isMaximized: false,
                   onToggleMaximize: _toggleMaximize,
+                  onSmartLensTap: () => _openSmartLens(context),
+                  isSaved: _isSaved,
+                  onSaveTap: () {
+                    setState(() {
+                      _isSaved = !_isSaved;
+                    });
+                  },
                 ),
 
-                // Heart Icon (Top Right)
+                // 2. كودك: زرار القلب (Favorite) بالكيوبت
                 if (widget.designId.isNotEmpty)
                   Positioned(
                     top: 12.h,
