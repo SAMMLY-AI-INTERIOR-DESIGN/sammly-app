@@ -15,10 +15,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_state.dart';
 import 'package:sammly/features/layout/presentation/cubit/layout_cubit/layout_cubit.dart';
-import 'package:intl/intl.dart';
-
-class ProfileView extends StatelessWidget {
+class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
+
+  @override
+  State<ProfileView> createState() => _ProfileViewState();
+}
+
+class _ProfileViewState extends State<ProfileView> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ProfileCubit>().fetchSettingInfo();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,19 +105,9 @@ class ProfileView extends StatelessWidget {
                     ),
                     child: BlocBuilder<ProfileCubit, ProfileState>(
                       builder: (context, state) {
-                        final profile = context
+                        final settingInfo = context
                             .read<ProfileCubit>()
-                            .currentProfile;
-                        String joinDate = "Loading...";
-                        if (profile?.createdAt != null) {
-                          try {
-                            final date = DateTime.parse(profile!.createdAt!);
-                            joinDate =
-                                "Joined ${DateFormat('MMMM yyyy').format(date)}";
-                          } catch (e) {
-                            joinDate = "Joined Recently";
-                          }
-                        }
+                            .currentSettingInfo;
 
                         return Column(
                           children: [
@@ -124,7 +123,7 @@ class ProfileView extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   AvatarWidget(
-                                    avatarPath: profile?.avatar,
+                                    avatarPath: settingInfo?.avatar,
                                     width: 65.w,
                                     height: 65.h,
                                     borderRadius: BorderRadius.circular(16.r),
@@ -136,23 +135,25 @@ class ProfileView extends StatelessWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          profile?.name ??
-                                              (state is ProfileLoading
-                                                  ? "Loading..."
+                                          settingInfo?.name ??
+                                              (state is SettingInfoLoading
+                                                  ? "..."
                                                   : "User"),
                                           style: AppTextStyles.title18SemiBold,
                                         ),
                                         Text(
-                                          profile?.username != null
-                                              ? "@${profile!.username}"
-                                              : "@user",
+                                          settingInfo?.username != null
+                                              ? "@${settingInfo!.username}"
+                                              : "@...",
                                           style: AppTextStyles.body14Regular
                                               .copyWith(
                                                 color: AppColors.greyColor,
                                               ),
                                         ),
                                         Text(
-                                          joinDate,
+                                          settingInfo?.joinedAt != null
+                                              ? "Joined ${settingInfo!.joinedAt}"
+                                              : "...",
                                           style: AppTextStyles.body14Regular
                                               .copyWith(
                                                 color: AppColors.greyColor,

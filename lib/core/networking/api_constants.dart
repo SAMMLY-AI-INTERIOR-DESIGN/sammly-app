@@ -26,6 +26,6 @@ abstract class ApiConstants {
   static const String toggleFavorite = '/api/designs/favorites';
   static const String homeEndpoint = '/api/profile/home';
 
-  
-
+  // Settings endpoint
+  static const String settingsEndpoint = '/api/profile/settings';
 }
