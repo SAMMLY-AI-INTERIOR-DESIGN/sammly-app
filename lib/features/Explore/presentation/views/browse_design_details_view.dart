@@ -93,7 +93,7 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
         children: [
           // Prompt text
           Text(
-            'Lorem ipsum dolor sit amet consectetur. Fermentum volutpat praesent purus massa neque leo. Gravida sapien non tristique justo non adipiscing sem nam.',
+            'Prompt : Lorem ipsum dolor sit amet consectetur. Fermentum volutpat praesent purus massa neque leo. Gravida sapien non tristique justo non adipiscing sem nam.',
             style: TextStyle(
               color: AppColors.blackColor.withOpacity(0.8),
               fontSize: 14.sp,
@@ -194,8 +194,8 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
                           ),
                           child: SvgPicture.asset(
                             isLiked
-                                ? AppImages.heartFilled
-                                : AppImages.heartOutline,
+                                ? AppImages.withsaving
+                                : AppImages.withoutsaving,
                             width: 20.w,
                           ),
                         ),

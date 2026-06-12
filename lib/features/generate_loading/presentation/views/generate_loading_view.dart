@@ -12,6 +12,7 @@ import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/features/generate/data/repo/generate_design_repo.dart';
 import 'package:sammly/features/generate_loading/presentation/cubits/loading_cubit.dart';
 import 'package:sammly/features/generate_loading/presentation/cubits/loading_states.dart';
+import 'package:sammly/features/home/logic/home_cubit.dart';
 
 class GenerationLoadingWrapper extends StatelessWidget {
   final Map<String, dynamic>? arguments;
@@ -62,6 +63,7 @@ class GenerationLoadingWrapper extends StatelessWidget {
             child: BlocConsumer<GenerationCubit, GenerationState>(
               listener: (context, state) {
                 if (state is GenerationFinished) {
+                  context.read<HomeCubit>().fetchHomeData();
                   final showListView =
                       arguments?['showListView'] as bool? ?? false;
                   Navigator.pushReplacementNamed(

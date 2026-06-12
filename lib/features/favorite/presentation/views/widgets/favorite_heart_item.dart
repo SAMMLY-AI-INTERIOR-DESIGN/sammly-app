@@ -86,8 +86,8 @@ class FavoriteHeartItem extends StatelessWidget {
                     ),
                     child: SvgPicture.asset(
                       isLiked
-                          ? AppImages.heartFilled
-                          : AppImages.heartOutline,
+                          ? AppImages.withsaving
+                          : AppImages.withoutsaving,
                       width: 19.w,
                     ),
                   ),
