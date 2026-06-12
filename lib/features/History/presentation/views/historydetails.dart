@@ -1,23 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/core/widgets/action_buttons_row.dart';
 import 'package:sammly/features/History/presentation/widgets/history_main_image_section.dart';
 import 'package:sammly/features/History/presentation/widgets/history_details_section.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_toggle_cubit.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_toggle_state.dart';
 import 'package:sammly/features/search/presentation/widgets/similar_item_card.dart';
 import 'package:sammly/features/search/presentation/views/search_view.dart';
 
 class HistoryDetailsView extends StatefulWidget {
   final String title;
   final String imageUrl;
+  final String designId;
 
   const HistoryDetailsView({
     super.key,
     required this.title,
     required this.imageUrl,
+    this.designId = '',
   });
 
   @override
@@ -66,21 +72,34 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
 
-    return PopScope(
-      canPop: !_isMaximized,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) return;
-        if (_isMaximized) _toggleMaximize();
+    return BlocListener<FavoriteToggleCubit, FavoriteToggleState>(
+      listener: (context, state) {
+        if (state is FavoriteToggleReverted && state.designId == widget.designId) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.errorMessage),
+              backgroundColor: Colors.red,
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
       },
-      child: Scaffold(
-        backgroundColor: AppColors.whiteColor,
-        appBar: _isMaximized
-            ? null
-            : CustomAppbar(title: widget.title, onBack: _handleBack),
-        body: SafeArea(
-          child: _isMaximized
-              ? _buildMaximizedView(screenHeight, screenWidth)
-              : _buildNormalView(),
+      child: PopScope(
+        canPop: !_isMaximized,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          if (_isMaximized) _toggleMaximize();
+        },
+        child: Scaffold(
+          backgroundColor: AppColors.whiteColor,
+          appBar: _isMaximized
+              ? null
+              : CustomAppbar(title: widget.title, onBack: _handleBack),
+          body: SafeArea(
+            child: _isMaximized
+                ? _buildMaximizedView(screenHeight, screenWidth)
+                : _buildNormalView(),
+          ),
         ),
       ),
     );
@@ -94,21 +113,62 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // الصورة بالوضع العادي (بدون دوران)
+          // الصورة بالوضع العادي مع زرار القلب
           SizedBox(
             height: 320.h,
             width: double.infinity,
-            child: HistoryMainImageSection(
-              imageUrl: widget.imageUrl,
-              isMaximized: false,
-              onToggleMaximize: _toggleMaximize,
-              onSmartLensTap: () => _openSmartLens(context),
-              isSaved: _isSaved,
-              onSaveTap: () {
-                setState(() {
-                  _isSaved = !_isSaved;
-                });
-              },
+            child: Stack(
+              children: [
+                HistoryMainImageSection(
+                  imageUrl: widget.imageUrl,
+                  isMaximized: false,
+                  onToggleMaximize: _toggleMaximize,
+                ),
+
+                // Heart Icon (Top Right)
+                if (widget.designId.isNotEmpty)
+                  Positioned(
+                    top: 12.h,
+                    right: 12.w,
+                    child: BlocBuilder<FavoriteToggleCubit, FavoriteToggleState>(
+                      buildWhen: (prev, curr) {
+                        if (curr is FavoriteToggleUpdated) {
+                          return curr.designId == widget.designId;
+                        }
+                        if (curr is FavoriteToggleReverted) {
+                          return curr.designId == widget.designId;
+                        }
+                        return false;
+                      },
+                      builder: (context, state) {
+                        final isLiked = context
+                            .read<FavoriteToggleCubit>()
+                            .isFavorited(widget.designId);
+
+                        return GestureDetector(
+                          onTap: () {
+                            context
+                                .read<FavoriteToggleCubit>()
+                                .toggleFavorite(widget.designId);
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(8.w),
+                            decoration: const BoxDecoration(
+                              color: AppColors.bg2Color,
+                              shape: BoxShape.circle,
+                            ),
+                            child: SvgPicture.asset(
+                              isLiked
+                                  ? AppImages.heartFilled
+                                  : AppImages.heartOutline,
+                              width: 20.w,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+              ],
             ),
           ),
           SizedBox(height: 24.h),

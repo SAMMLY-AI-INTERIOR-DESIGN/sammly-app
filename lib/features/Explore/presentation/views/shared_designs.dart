@@ -268,6 +268,7 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
                 height: itemHeight,
                 child: DesignGridItem(
                   imageUrl: _designImageUrls[index],
+                  designId: 'shared_design_$index',
                   showLikeButton: false,
                 ),
               ),
