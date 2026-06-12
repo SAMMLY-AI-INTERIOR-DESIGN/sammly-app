@@ -84,7 +84,8 @@ class AppImages {
   static const String roomBedroom = "assets/images/bed_room.png";
   static const String roomDining = "assets/images/dining_room.png";
   static const String roomKitchen = "assets/images/kitchen.png";
-  static const String roomLivingBohoTraditional = "assets/images/living_room_boho_traditional.png";
+  static const String roomLivingBohoTraditional =
+      "assets/images/living_room_boho_traditional.png";
 
   static const String styleCoastal = "assets/images/coastal.png";
   static const String styleRustic = "assets/images/rustic.png";
@@ -95,5 +96,9 @@ class AppImages {
   static const String crownIcon = "assets/images/crown.svg";
   static const String diamondIcon = "assets/images/diamond.svg";
   static const String giftIcon = "assets/images/gift.svg";
-  static const String subscriptionBgPlaceholder = "assets/images/subscription_bg_placeholder.png";
+  static const String withsaving = "assets/images/withsaving.svg";
+  static const String withoutsaving = "assets/images/withoutsaving.svg";
+  static const String favoriteprofileicon = "assets/images/savinginprofile.svg";
+  static const String subscriptionBgPlaceholder =
+      "assets/images/subscription_bg_placeholder.png";
 }

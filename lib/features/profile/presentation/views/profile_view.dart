@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -110,7 +109,7 @@ class ProfileView extends StatelessWidget {
                             joinDate = "Joined Recently";
                           }
                         }
-    
+
                         return Column(
                           children: [
                             GestureDetector(
@@ -122,54 +121,57 @@ class ProfileView extends StatelessWidget {
                                 );
                               },
                               child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                AvatarWidget(
-                                  avatarPath: profile?.avatar,
-                                  width: 65.w,
-                                  height: 65.h,
-                                  borderRadius: BorderRadius.circular(16.r),
-                                ),
-                                SizedBox(width: 12.w),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        profile?.name ?? (state is ProfileLoading ? "Loading..." : "User"),
-                                        style: AppTextStyles.title18SemiBold,
-                                      ),
-                                      Text(
-                                        profile?.username != null
-                                            ? "@${profile!.username}"
-                                            : "@user",
-                                        style: AppTextStyles.body14Regular
-                                            .copyWith(
-                                              color: AppColors.greyColor,
-                                            ),
-                                      ),
-                                      Text(
-                                        joinDate,
-                                        style: AppTextStyles.body14Regular
-                                            .copyWith(
-                                              color: AppColors.greyColor,
-                                            ),
-                                      ),
-                                    ],
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  AvatarWidget(
+                                    avatarPath: profile?.avatar,
+                                    width: 65.w,
+                                    height: 65.h,
+                                    borderRadius: BorderRadius.circular(16.r),
                                   ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      AppRoutes.editProfileView,
-                                    );
-                                  },
-                                  child: SvgPicture.asset(AppImages.edit),
-                                ),
-                              ],
-                            ),
+                                  SizedBox(width: 12.w),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          profile?.name ??
+                                              (state is ProfileLoading
+                                                  ? "Loading..."
+                                                  : "User"),
+                                          style: AppTextStyles.title18SemiBold,
+                                        ),
+                                        Text(
+                                          profile?.username != null
+                                              ? "@${profile!.username}"
+                                              : "@user",
+                                          style: AppTextStyles.body14Regular
+                                              .copyWith(
+                                                color: AppColors.greyColor,
+                                              ),
+                                        ),
+                                        Text(
+                                          joinDate,
+                                          style: AppTextStyles.body14Regular
+                                              .copyWith(
+                                                color: AppColors.greyColor,
+                                              ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        AppRoutes.editProfileView,
+                                      );
+                                    },
+                                    child: SvgPicture.asset(AppImages.edit),
+                                  ),
+                                ],
+                              ),
                             ),
                             SizedBox(height: 12.h),
                             Align(
@@ -237,30 +239,21 @@ class ProfileView extends StatelessWidget {
                         title: AppStrings.viewMyPosts,
                         svgIcon: AppImages.profileIcon,
                         onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            AppRoutes.myProfileView,
-                          );
+                          Navigator.pushNamed(context, AppRoutes.myProfileView);
                         },
                       ),
                       ProfileMenuItem(
                         title: AppStrings.favorites,
-                        svgIcon: AppImages.favorites,
+                        svgIcon: AppImages.favoriteprofileicon,
                         onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            AppRoutes.favoriteView,
-                          );
+                          Navigator.pushNamed(context, AppRoutes.favoriteView);
                         },
                       ),
                       ProfileMenuItem(
                         title: AppStrings.following,
                         svgIcon: AppImages.following,
                         onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            AppRoutes.followingView,
-                          );
+                          Navigator.pushNamed(context, AppRoutes.followingView);
                         },
                       ),
                     ],
