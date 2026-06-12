@@ -1,13 +1,16 @@
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:sammly/features/profile/data/models/profile_model.dart';
+import 'package:sammly/features/profile/data/models/setting_info_model.dart';
 import 'package:sammly/features/profile/data/repo/profile_repo.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
   final ProfileRepo _repository;
   ProfileModel? currentProfile;
+  SettingInfoModel? currentSettingInfo;
 
   ProfileCubit(this._repository) : super(ProfileInitial());
 
@@ -23,6 +26,20 @@ class ProfileCubit extends Cubit<ProfileState> {
       (profile) {
         currentProfile = profile;
         emit(ProfileLoaded(profile));
+      },
+    );
+  }
+
+  Future<void> fetchSettingInfo() async {
+    emit(SettingInfoLoading());
+
+    final result = await _repository.getSettingInfo();
+
+    result.fold(
+      (error) => emit(SettingInfoError(error)),
+      (settingInfo) {
+        currentSettingInfo = settingInfo;
+        emit(SettingInfoLoaded(settingInfo));
       },
     );
   }

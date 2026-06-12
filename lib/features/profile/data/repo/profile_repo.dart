@@ -7,6 +7,7 @@ import 'package:sammly/core/networking/api_constants.dart';
 import 'package:sammly/core/networking/dio_helper.dart';
 import 'package:sammly/core/shared_pref/shared_pref.dart';
 import 'package:sammly/features/profile/data/models/profile_model.dart';
+import 'package:sammly/features/profile/data/models/setting_info_model.dart';
 
 class ProfileRepo {
   // static const String _profileCacheKey = 'cached_profile_data';
@@ -114,6 +115,31 @@ class ProfileRepo {
       return left(_handleDioError(e));
     } catch (e) {
       log('Edit profile error: $e');
+      return left('An unexpected error occurred.');
+    }
+  }
+
+  Future<Either<String, SettingInfoModel>> getSettingInfo() async {
+    try {
+      final token = SharedPref.getData(key: 'jwt');
+      if (token == null) {
+        return left('Unauthorized: No token found.');
+      }
+
+      final response = await DioHelper.getData(
+        endPoint: ApiConstants.settingsEndpoint,
+        token: token,
+      );
+
+      if (response.statusCode == 200 && response.data['status'] == 'success') {
+        final dataMap = response.data['data'] as Map<String, dynamic>;
+        return right(SettingInfoModel.fromJson(dataMap));
+      } else {
+        return left(response.data['message'] ?? 'Failed to get settings data.');
+      }
+    } on DioException catch (e) {
+      return left(_handleDioError(e));
+    } catch (e) {
       return left('An unexpected error occurred.');
     }
   }
