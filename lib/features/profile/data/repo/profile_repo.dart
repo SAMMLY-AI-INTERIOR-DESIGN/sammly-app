@@ -43,7 +43,7 @@ class ProfileRepo {
 
       if (response.statusCode == 200 && response.data['status'] == 'success') {
         final userMap = response.data['data']['profile'] as Map<String, dynamic>;
-        log(userMap.toString());
+        // log(userMap.toString());
 
         // 6. نسيف الداتا في الكاش المخصص لليوزر ده
         await SharedPref.saveData(
@@ -58,7 +58,7 @@ class ProfileRepo {
 
         return right(ProfileModel.fromJson(userMap));
       } else {
-        log(response.data.toString());
+        // log(response.data.toString());
         return left(response.data['message'] ?? 'Failed to get profile data.');
       }
     } on DioException catch (e) {

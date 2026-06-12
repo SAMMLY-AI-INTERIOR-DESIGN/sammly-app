@@ -8,6 +8,8 @@ import 'package:sammly/core/networking/dio_helper.dart';
 import 'package:sammly/core/routing/app_router.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/shared_pref/shared_pref.dart';
+import 'package:sammly/features/home/data/repo/home_repo.dart';
+import 'package:sammly/features/home/logic/home_cubit.dart';
 import 'package:sammly/features/profile/data/repo/profile_repo.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:sammly/features/support/cubit/support_cubit.dart';
@@ -38,7 +40,9 @@ class SammlyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => ProfileCubit(ProfileRepo())..fetchProfile(),
         ),
+       
         BlocProvider(create: (context) => SupportCubit(SupportRepo())),
+        BlocProvider(create: (context) => HomeCubit(HomeRepo())..fetchHomeData()),
         BlocProvider(create: (context) => FavoriteToggleCubit(FavoriteRepo())),
       ],
       child: ScreenUtilInit(
