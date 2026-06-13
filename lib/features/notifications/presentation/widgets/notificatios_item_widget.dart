@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_colors.dart';
+import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/custom_heart_item.dart';
-import 'package:sammly/features/profile/data/models/notifications_model.dart';
+import 'package:sammly/core/widgets/avatar_widget.dart';
+import 'package:sammly/features/notifications/data/model/notifications_model.dart';
 
 class NotificationItemWidget extends StatelessWidget {
-  final NotificationModel item;
+  final NotificationItemModel item;
 
   const NotificationItemWidget({super.key, required this.item});
 
@@ -23,7 +25,13 @@ class NotificationItemWidget extends StatelessWidget {
               CircleAvatar(
                 radius: 26.r,
                 backgroundColor: AppColors.bg1Color,
-                backgroundImage: NetworkImage(item.imageUrl), 
+                child: AvatarWidget(
+                  avatarPath: item.avatar,
+                  gender: null,
+                  width: 52.r,
+                  height: 52.r,
+                  borderRadius: BorderRadius.circular(26.r),
+                ),
               ),
               Positioned(
                 bottom: 0,
@@ -40,12 +48,12 @@ class NotificationItemWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  item.name,
+                  item.title,
                   style: AppTextStyles.body16Medium
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  item.action,
+                  AppStrings.likeYourSharedDesign,
                   style: AppTextStyles.body14Regular.copyWith(
                     color: AppColors.greyColor.withValues(alpha: 0.7),
                   ),
@@ -55,7 +63,7 @@ class NotificationItemWidget extends StatelessWidget {
           ),
           
           Text(
-            item.time,
+            item.createdAt,
             style: AppTextStyles.body14Regular.copyWith(
               color: AppColors.greyColor.withValues(alpha: 0.7),
             ),

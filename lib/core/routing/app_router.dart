@@ -18,7 +18,7 @@ import 'package:sammly/features/onboarding/presentation/views/onboarding_view.da
 import 'package:sammly/features/profile/presentation/views/edit_profile_view.dart';
 import 'package:sammly/features/following/presentation/following_view.dart';
 import 'package:sammly/features/profile/presentation/views/my_profile_view.dart';
-import 'package:sammly/features/profile/presentation/views/notifications_view.dart';
+import 'package:sammly/features/notifications/presentation/notifications_view.dart';
 import 'package:sammly/features/profile/presentation/views/privacy_policy_view.dart';
 import 'package:sammly/features/profile/presentation/views/profile_view.dart';
 import 'package:sammly/features/profile/presentation/views/terms_conditions_view.dart';
