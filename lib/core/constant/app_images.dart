@@ -99,6 +99,7 @@ class AppImages {
   static const String withsaving = "assets/images/withs.svg";
   static const String withoutsaving = "assets/images/withouts.svg";
   static const String favoriteprofileicon = "assets/images/withouts.svg";
+  static const String noFollowing = "assets/images/no_following.png";
   static const String subscriptionBgPlaceholder =
       "assets/images/subscription_bg_placeholder.png";
 }
