@@ -16,7 +16,7 @@ import 'package:sammly/features/generate/presentation/views/text_to_image_genera
 import 'package:sammly/features/layout/presentation/views/layout_view.dart';
 import 'package:sammly/features/onboarding/presentation/views/onboarding_view.dart';
 import 'package:sammly/features/profile/presentation/views/edit_profile_view.dart';
-import 'package:sammly/features/profile/presentation/views/following_view.dart';
+import 'package:sammly/features/following/presentation/following_view.dart';
 import 'package:sammly/features/profile/presentation/views/my_profile_view.dart';
 import 'package:sammly/features/profile/presentation/views/notifications_view.dart';
 import 'package:sammly/features/profile/presentation/views/privacy_policy_view.dart';
@@ -197,6 +197,7 @@ abstract class AppRouter {
             return UserProfileView(
               userName: args['userName'] ?? 'User',
               userAvatar: args['userAvatar'],
+              userId: '6a0f45d7ebb3777b24a01009',
             );
           },
         );
