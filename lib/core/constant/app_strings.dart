@@ -111,6 +111,13 @@ abstract class AppStrings {
   static const String roomRedesignDesc =
       "Transform your existing room into a completely new style while keeping the same layout.";
   static const String restyleRoomTag = "Restyle Room";
+  static const String roomRestyle = "Room Restyle";
+  static const String replace = "Replace";
+  static const String replaceObject = "Replace Object";
+  static const String removeObject = "Remove Object";
+  static const String remove = "Remove";
+  static const String mask = "Mask";
+  static const String removeDesc = "Upload a photo, draw a mask on the area you want to remove";
 
   // generate loading
   static const String yourRoomIsComingSoon = "Your room is coming soon...";

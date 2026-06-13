@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart'; 
+import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/constant/app_colors.dart';
-import 'package:sammly/features/home/presentation/views/widgets/home_tag_widget.dart'; // مسار الـ Tag بتاعك
+import 'package:sammly/features/home/presentation/views/widgets/home_tag_widget.dart';
 
 class HomeCardWidget extends StatelessWidget {
   final String title;
@@ -11,6 +13,8 @@ class HomeCardWidget extends StatelessWidget {
   final String tagText;
   final String tagIcon;
   final VoidCallback onTap;
+  
+  final bool showCenterIcon; 
 
   const HomeCardWidget({
     super.key,
@@ -20,6 +24,7 @@ class HomeCardWidget extends StatelessWidget {
     required this.tagText,
     required this.tagIcon,
     required this.onTap,
+    this.showCenterIcon = false, 
   });
 
   @override
@@ -43,6 +48,7 @@ class HomeCardWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Stack(
+              alignment: Alignment.center, 
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
@@ -53,6 +59,7 @@ class HomeCardWidget extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
+                
                 Positioned(
                   top: 12.h,
                   left: 12.w,
@@ -61,6 +68,13 @@ class HomeCardWidget extends StatelessWidget {
                     iconPath: tagIcon,
                   ),
                 ),
+
+                if (showCenterIcon)
+                  SvgPicture.asset(
+                    AppImages.replaceRemoveIcon,
+                    width: 24.w, 
+                    height: 24.h,
+                  ),
               ],
             ),
             
