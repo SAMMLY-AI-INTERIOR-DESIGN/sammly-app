@@ -116,6 +116,7 @@ abstract class AppStrings {
   static const String replaceObject = "Replace Object";
   static const String removeObject = "Remove Object";
   static const String remove = "Remove";
+  static const String mask = "Mask";
   static const String removeDesc = "Upload a photo, draw a mask on the area you want to remove";
 
   // generate loading

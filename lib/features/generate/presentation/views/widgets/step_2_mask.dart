@@ -13,11 +13,13 @@ import 'package:sammly/core/widgets/custombutton.dart';
 class Step2Mask extends StatefulWidget {
   final XFile uploadedImage;
   final Function(XFile) onNext;
+  final String buttonText;
 
   const Step2Mask({
     super.key,
     required this.uploadedImage,
     required this.onNext,
+    this.buttonText = "Next",
   });
 
   @override
@@ -332,7 +334,7 @@ class _Step2MaskState extends State<Step2Mask> {
                     color: AppColors.secondaryColor,
                   ),
                 )
-              : CustomButton(text: "Next", onPressed: _extractAndProceed),
+              : CustomButton(text: widget.buttonText, onPressed: _extractAndProceed),
         ),
         SizedBox(height: 16.h),
       ],

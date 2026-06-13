@@ -28,4 +28,6 @@ abstract class AppRoutes {
   static const String generateResultView = '/generateresultview';
   static const String subscriptionView = '/subscriptionview';
   static const String chooseRoom = '/chooseroom';
+  static const String removeView = '/removeview';
+  static const String imageGenerationStepperView = '/imageGenerationStepperView';
 }

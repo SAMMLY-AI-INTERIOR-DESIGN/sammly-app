@@ -75,11 +75,19 @@ class CustomStepper extends StatelessWidget {
                 ),
         ),
         SizedBox(height: 8.h),
-        Text(
-          title,
-          style: AppTextStyles.body14Regular.copyWith(
-            color: isActive ? AppColors.blackColor2 : Colors.grey,
-            fontWeight: isActive ? FontWeight.w500 : FontWeight.w400,
+        SizedBox(
+          width: 40.w,
+          height: 24.h, // Fixed height so OverflowBox doesn't crash in Column
+          child: OverflowBox(
+            maxWidth: double.infinity,
+            child: Text(
+              title,
+              textAlign: TextAlign.center,
+              style: AppTextStyles.body14Regular.copyWith(
+                color: isActive ? AppColors.blackColor2 : Colors.grey,
+                fontWeight: isActive ? FontWeight.w500 : FontWeight.w400,
+              ),
+            ),
           ),
         ),
       ],
