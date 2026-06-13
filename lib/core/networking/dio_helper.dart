@@ -111,7 +111,7 @@ abstract class DioHelper {
 
   static Future<Response> patchData({
     required String endPoint,
-    dynamic data,
+    required dynamic data,
     Map<String, dynamic>? queryParameters,
     String? token,
   }) async {
@@ -162,4 +162,4 @@ abstract class DioHelper {
       }
     }
   }
-}
+}

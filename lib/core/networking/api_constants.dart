@@ -38,4 +38,10 @@ abstract class ApiConstants {
   // Favorites endpoints
   static const String favorites = '/api/designs/favorites';
   static String favoriteDesign(String designId) => '/api/designs/favorites/$designId';
+
+  // Home endpoint
+  static const String homeEndpoint = '/api/profile/home';
+
+  // Settings endpoint
+  static const String settingsEndpoint = '/api/profile/settings';
 }

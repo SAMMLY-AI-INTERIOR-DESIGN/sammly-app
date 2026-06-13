@@ -1,4 +1,5 @@
 import 'package:sammly/features/profile/data/models/profile_model.dart';
+import 'package:sammly/features/profile/data/models/setting_info_model.dart';
 
 abstract class ProfileState {}
 
@@ -31,4 +32,19 @@ class EditProfileError extends ProfileState {
   final String message;
 
   EditProfileError(this.message);
+}
+
+// Setting Info States
+class SettingInfoLoading extends ProfileState {}
+
+class SettingInfoLoaded extends ProfileState {
+  final SettingInfoModel settingInfo;
+
+  SettingInfoLoaded(this.settingInfo);
+}
+
+class SettingInfoError extends ProfileState {
+  final String message;
+
+  SettingInfoError(this.message);
 }
