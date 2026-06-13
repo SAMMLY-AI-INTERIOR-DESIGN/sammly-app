@@ -12,6 +12,16 @@ import 'package:sammly/features/profile/data/repo/profile_repo.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:sammly/features/support/cubit/support_cubit.dart';
 import 'package:sammly/features/support/data/repo/support_repo.dart';
+import 'package:sammly/features/History/cubit/historycubit.dart';
+import 'package:sammly/features/History/data/history_repo.dart';
+import 'package:sammly/features/Explore/cubit/explorecubit.dart';
+import 'package:sammly/features/Explore/cubit/explorerepo.dart';
+import 'package:sammly/features/Explore/cubit/static_designs_cubit.dart';
+import 'package:sammly/features/Explore/cubit/static_designs_repo.dart';
+import 'package:sammly/features/Explore/cubit/design_details_cubit.dart';
+import 'package:sammly/features/Explore/cubit/design_details_repo.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
+import 'package:sammly/features/favorite/data/repo/favorite_repo.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -37,6 +47,11 @@ class SammlyApp extends StatelessWidget {
           create: (context) => ProfileCubit(ProfileRepo())..fetchProfile(),
         ),
         BlocProvider(create: (context) => SupportCubit(SupportRepo())),
+        BlocProvider(create: (context) => HistoryCubit(HistoryRepo())),
+        BlocProvider(create: (context) => ExploreCubit(ExploreRepo())),
+        BlocProvider(create: (context) => StaticDesignsCubit(StaticDesignsRepo())),
+        BlocProvider(create: (context) => DesignDetailsCubit(DesignDetailsRepo())),
+        BlocProvider(create: (context) => FavoriteCubit(FavoriteRepo())),
         // NetworkCubit removed for auto-check
       ],
       child: ScreenUtilInit(

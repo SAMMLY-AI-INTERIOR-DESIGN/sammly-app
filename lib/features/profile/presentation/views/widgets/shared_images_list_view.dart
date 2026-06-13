@@ -52,6 +52,7 @@ class SharedImagesListView extends StatelessWidget {
                 builder: (context) => HistoryDetailsView(
                   title: item.title,
                   imageUrl: item.imageUrl,
+                  designId: 'dummy_id',
                 ),
               ),
             );

@@ -2,7 +2,7 @@ import 'package:sammly/core/constant/app_strings.dart';
 
 /// Maps UI display values to API-accepted values and vice versa.
 ///
-/// API style values: midcentury modern, bohemian, rustic, coastal, traditional
+/// API style values: mid century modern, bohemian, rustic, coastal, traditional
 /// API room values: bedroom, bathroom, kitchen, livingroom, diningroom
 abstract class GenerateMappers {
   // ── Style Mapping ──
@@ -11,7 +11,7 @@ abstract class GenerateMappers {
     AppStrings.traditional: 'traditional',
     AppStrings.coastal: 'coastal',
     AppStrings.rustic: 'rustic',
-    AppStrings.midCenturyModern: 'midcentury modern',
+    AppStrings.midCenturyModern: 'mid century modern',
     AppStrings.boho: 'bohemian',
   };
 
@@ -19,13 +19,13 @@ abstract class GenerateMappers {
     'traditional': AppStrings.traditional,
     'coastal': AppStrings.coastal,
     'rustic': AppStrings.rustic,
-    'midcentury modern': AppStrings.midCenturyModern,
+    'mid century modern': AppStrings.midCenturyModern,
     'bohemian': AppStrings.boho,
     'modern': AppStrings.midCenturyModern,
   };
 
   /// Converts a UI style display value to its API equivalent.
-  /// e.g. "Boho" → "bohemian", "Mid-century modern" → "midcentury modern"
+  /// e.g. "Boho" → "bohemian", "Mid-century modern" → "mid century modern"
   static String styleToApi(String uiValue) {
     return _styleUiToApi[uiValue] ?? uiValue.toLowerCase();
   }

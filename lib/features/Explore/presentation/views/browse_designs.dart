@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
+import 'package:sammly/features/Explore/cubit/static_designs_cubit.dart';
+import 'package:sammly/features/Explore/cubit/static_designs_states.dart';
 import 'package:sammly/features/explore/presentation/widgets/design_grid_item.dart';
 import 'package:sammly/core/routing/routes.dart';
-
+import 'package:sammly/core/constant/app_images.dart';
+import 'package:sammly/core/theme/text_styles.dart';
 const Color kTextDark = Color(0xFF2E2E2E);
 
 class BrowseDesigns extends StatefulWidget {
-  const BrowseDesigns({super.key});
+  final String? room;
+
+  const BrowseDesigns({super.key, this.room});
 
   @override
   State<BrowseDesigns> createState() => _BrowseDesignsState();
@@ -25,16 +31,42 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
   ];
   String _selectedFilter = 'All';
 
-  final List<String> _designImageUrls = [
-    'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?q=80&w=600&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=600&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1616046229478-9901c5536a45?q=80&w=600&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=600&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1617104678098-de229db51175?q=80&w=600&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1634712282287-14ed57b9cc89?q=80&w=600&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=600&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=600&auto=format&fit=crop',
-  ];
+  final ScrollController _scrollController = ScrollController();
+
+  /// Map UI filter label to API style value.
+  String _styleApiValue(String uiLabel) {
+    if (uiLabel == 'All') return 'all';
+    return uiLabel.toLowerCase().replaceAll('-', ' ');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+
+    // Fetch first page with room and default style
+    context.read<StaticDesignsCubit>().fetchStaticDesigns(
+      room: widget.room,
+      style: _styleApiValue(_selectedFilter),
+    );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      final cubit = context.read<StaticDesignsCubit>();
+      if (cubit.hasMore && cubit.state is! StaticDesignsPaginationLoading) {
+        cubit.loadMore();
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,9 +96,13 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
             padding: EdgeInsets.only(right: 8.w),
             child: GestureDetector(
               onTap: () {
+                if (_selectedFilter == filter) return;
                 setState(() {
                   _selectedFilter = filter;
                 });
+                context.read<StaticDesignsCubit>().changeStyle(
+                  _styleApiValue(filter),
+                );
               },
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
@@ -103,26 +139,127 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
   }
 
   Widget _buildDesignGrid() {
-    return GridView.builder(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 12.w,
-        mainAxisSpacing: 12.h,
-        childAspectRatio: 1.0,
-      ),
-      itemCount: _designImageUrls.length,
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {
-            Navigator.pushNamed(
-              context,
-              AppRoutes.browseDesignDetailsView,
-              arguments: _designImageUrls[index],
+    return BlocBuilder<StaticDesignsCubit, StaticDesignsState>(
+      builder: (context, state) {
+        // Initial loading
+        if (state is StaticDesignsLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        // Error
+        if (state is StaticDesignsError) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  size: 48.sp,
+                  color: AppColors.greyColor,
+                ),
+                SizedBox(height: 12.h),
+                Text(
+                  state.message,
+                  style: TextStyle(
+                    color: AppColors.greyColor,
+                    fontSize: 14.sp,
+                    fontFamily: 'Manrope',
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 12.h),
+                TextButton(
+                  onPressed: () =>
+                      context.read<StaticDesignsCubit>().fetchStaticDesigns(
+                        room: widget.room,
+                        style: _styleApiValue(_selectedFilter),
+                      ),
+                  child: Text(
+                    'Retry',
+                    style: TextStyle(
+                      color: AppColors.primaryColor,
+                      fontSize: 14.sp,
+                      fontFamily: 'Manrope',
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        // Loaded or pagination loading
+        if (state is StaticDesignsLoaded ||
+            state is StaticDesignsPaginationLoading) {
+          final designs = state is StaticDesignsLoaded
+              ? state.designs
+              : context.read<StaticDesignsCubit>().currentDesigns;
+
+          if (designs.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(AppImages.noImage),
+                  Text('No Designs', style: AppTextStyles.title20Bold),
+                  Text(
+                    'No designs found',
+                    style: AppTextStyles.body16Regular.copyWith(
+                      color: AppColors.greyColor.withValues(alpha: 0.6),
+                    ),
+                  ),
+                ],
+              ),
             );
-          },
-          child: DesignGridItem(imageUrl: _designImageUrls[index]),
-        );
+          }
+
+          final isPaginationLoading = state is StaticDesignsPaginationLoading;
+
+          return GridView.builder(
+            controller: _scrollController,
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 12.w,
+              mainAxisSpacing: 12.h,
+              childAspectRatio: 1.0,
+            ),
+            itemCount: designs.length + (isPaginationLoading ? 1 : 0),
+            itemBuilder: (context, index) {
+              // Pagination loader
+              if (index >= designs.length) {
+                return Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16.h),
+                    child: const CircularProgressIndicator(),
+                  ),
+                );
+              }
+
+              final design = designs[index];
+              return GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    AppRoutes.browseDesignDetailsView,
+                    arguments: design.id,
+                  );
+                },
+                child: DesignGridItem(
+                  imageUrl: design.imageUrl,
+                  initialIsLiked: design.isFavorited,
+                  onFavoriteToggled: (isLiked) {
+                    context.read<StaticDesignsCubit>().toggleFavoriteLocal(
+                      design.id,
+                    );
+                  },
+                ),
+              );
+            },
+          );
+        }
+
+        return const SizedBox.shrink();
       },
     );
   }

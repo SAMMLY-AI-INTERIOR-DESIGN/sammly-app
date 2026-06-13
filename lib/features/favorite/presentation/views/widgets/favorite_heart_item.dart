@@ -75,17 +75,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:sammly/core/constant/app_colors.dart';
-import 'package:sammly/core/constant/app_images.dart';
 
 class FavoriteHeartItem extends StatefulWidget {
+  final String designId;
   final String imageUrl;
   final bool initialIsLiked;
   final Function(bool isLiked)? onFavoriteToggled;
 
   const FavoriteHeartItem({
     super.key,
+    required this.designId,
     required this.imageUrl,
     this.initialIsLiked = false,
     this.onFavoriteToggled,
@@ -102,6 +102,14 @@ class _FavoriteHeartItemState extends State<FavoriteHeartItem> {
   void initState() {
     super.initState();
     _isLiked = widget.initialIsLiked;
+  }
+  
+  @override
+  void didUpdateWidget(FavoriteHeartItem oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialIsLiked != oldWidget.initialIsLiked) {
+      _isLiked = widget.initialIsLiked;
+    }
   }
 
   @override
@@ -158,9 +166,10 @@ class _FavoriteHeartItemState extends State<FavoriteHeartItem> {
                   color: AppColors.bg2Color,
                   shape: BoxShape.circle,
                 ),
-                child: SvgPicture.asset(
-                  _isLiked ? AppImages.withsaving : AppImages.withoutsaving,
-                  width: 19.w,
+                child: Icon(
+                  _isLiked ? Icons.bookmark : Icons.bookmark_border,
+                  color: AppColors.primaryColor,
+                  size: 20.sp,
                 ),
               ),
             ),

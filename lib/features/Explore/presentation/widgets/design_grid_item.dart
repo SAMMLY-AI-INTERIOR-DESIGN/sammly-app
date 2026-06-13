@@ -33,6 +33,14 @@ class _DesignGridItemState extends State<DesignGridItem> {
   }
 
   @override
+  void didUpdateWidget(DesignGridItem oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialIsLiked != oldWidget.initialIsLiked) {
+      _isLiked = widget.initialIsLiked;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16.r),
@@ -70,31 +78,32 @@ class _DesignGridItemState extends State<DesignGridItem> {
           // أيقونة القلب
           if (widget.showLikeButton)
             Positioned(
-            top: 8.h,
-            right: 8.w,
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  _isLiked = !_isLiked;
-                });
-                // لو شاشة تانية مستنية تعرف النتيجة، نبعتلها الحالة الجديدة
-                if (widget.onFavoriteToggled != null) {
-                  widget.onFavoriteToggled!(_isLiked);
-                }
-              },
-              child: Container(
-                padding: EdgeInsets.all(6.w),
-                decoration: const BoxDecoration(
-                  color: AppColors.bg2Color,
-                  shape: BoxShape.circle,
-                ),
-                child: SvgPicture.asset(
-                  _isLiked ? AppImages.withsaving : AppImages.withoutsaving,
-                  width: 19.w,
+              top: 8.h,
+              right: 8.w,
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _isLiked = !_isLiked;
+                  });
+                  // لو شاشة تانية مستنية تعرف النتيجة، نبعتلها الحالة الجديدة
+                  if (widget.onFavoriteToggled != null) {
+                    widget.onFavoriteToggled!(_isLiked);
+                  }
+                },
+                child: Container(
+                  padding: EdgeInsets.all(6.w),
+                  decoration: const BoxDecoration(
+                    color: AppColors.bg2Color,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    _isLiked ? Icons.bookmark : Icons.bookmark_border,
+                    color: AppColors.primaryColor,
+                    size: 20.sp,
+                  ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );
