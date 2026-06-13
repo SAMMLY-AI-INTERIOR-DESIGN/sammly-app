@@ -27,7 +27,7 @@ class FavoriteCubit extends Cubit<FavoriteState> {
 
   Future<void> fetchFavorites({int limit = 20, String? room}) async {
     if (room != null) {
-      _selectedRoom = room.toLowerCase() == 'all' ? 'all' : room;
+      _selectedRoom = room.toLowerCase();
     }
 
     _allDesigns.clear();
@@ -101,7 +101,7 @@ class FavoriteCubit extends Cubit<FavoriteState> {
   }
 
   Future<void> changeRoom(String room) async {
-    final newRoom = room.toLowerCase() == 'all' ? 'all' : room;
+    final newRoom = room.toLowerCase();
     if (_selectedRoom == newRoom) return;
     await fetchFavorites(room: newRoom);
   }

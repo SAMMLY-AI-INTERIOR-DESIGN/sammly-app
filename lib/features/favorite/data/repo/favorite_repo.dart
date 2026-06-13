@@ -27,8 +27,9 @@ class FavoriteRepo {
         'page': page,
         'limit': limit,
       };
-      if (room != 'all') {
-        queryParams['room'] = room;
+      final cleanRoom = room.toLowerCase().replaceAll(' ', '');
+      if (cleanRoom != 'all') {
+        queryParams['room'] = cleanRoom;
       }
 
       final response = await DioHelper.getData(

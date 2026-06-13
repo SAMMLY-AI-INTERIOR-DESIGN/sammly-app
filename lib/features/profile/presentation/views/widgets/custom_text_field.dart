@@ -10,6 +10,8 @@ class CustomTextField extends StatelessWidget {
   final Widget? prefix;
   final TextEditingController? controller;
   final void Function(String)? onChanged;
+  final bool readOnly;
+  final VoidCallback? onTap;
 
   const CustomTextField({
     super.key,
@@ -19,6 +21,8 @@ class CustomTextField extends StatelessWidget {
     this.prefix,
     this.controller,
     this.onChanged,
+    this.readOnly = false,
+    this.onTap,
   });
 
   @override
@@ -58,6 +62,8 @@ class CustomTextField extends StatelessWidget {
                     controller: controller,
                     initialValue: controller == null ? initialValue : null,
                     onChanged: onChanged,
+                    readOnly: readOnly,
+                    onTap: onTap,
                     style: AppTextStyles.body14Regular,
                     decoration: const InputDecoration(
                       isDense: true,
