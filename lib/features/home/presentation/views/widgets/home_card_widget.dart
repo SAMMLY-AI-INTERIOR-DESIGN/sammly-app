@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart'; // ضفنا الـ SvgPicture هنا
+import 'package:sammly/core/constant/app_images.dart'; // تأكد إن مسار الصور موجود هنا
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/constant/app_colors.dart';
-import 'package:sammly/features/home/presentation/views/widgets/home_tag_widget.dart'; // مسار الـ Tag بتاعك
+import 'package:sammly/features/home/presentation/views/widgets/home_tag_widget.dart';
 
 class HomeCardWidget extends StatelessWidget {
   final String title;
@@ -11,6 +13,9 @@ class HomeCardWidget extends StatelessWidget {
   final String tagText;
   final String tagIcon;
   final VoidCallback onTap;
+  
+  // المتغير الجديد اللي طلبته (الـ Default بتاعه false)
+  final bool showCenterIcon; 
 
   const HomeCardWidget({
     super.key,
@@ -20,6 +25,7 @@ class HomeCardWidget extends StatelessWidget {
     required this.tagText,
     required this.tagIcon,
     required this.onTap,
+    this.showCenterIcon = false, // الـ Default False
   });
 
   @override
@@ -43,6 +49,7 @@ class HomeCardWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Stack(
+              alignment: Alignment.center, // عشان يسنتر الأيقونة في نص הـ Stack
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
@@ -53,6 +60,8 @@ class HomeCardWidget extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
+                
+                // التاج اللي فوق على الشمال
                 Positioned(
                   top: 12.h,
                   left: 12.w,
@@ -61,6 +70,14 @@ class HomeCardWidget extends StatelessWidget {
                     iconPath: tagIcon,
                   ),
                 ),
+
+                // الأيقونة اللي في النص (بتظهر بس لو showCenterIcon بـ true)
+                if (showCenterIcon)
+                  SvgPicture.asset(
+                    AppImages.replaceRemoveIcon, // غير الاسم ده لاسم الأيقونة عندك في الثوابت
+                    width: 24.w, // اضبط المقاس زي ما تحب
+                    height: 24.h,
+                  ),
               ],
             ),
             

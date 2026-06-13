@@ -63,7 +63,7 @@ class HomeView extends StatelessWidget {
                     ),
                     
                     HomeCardWidget(
-                      title: AppStrings.roomRedesign,
+                      title: AppStrings.roomRestyle,
                       description: AppStrings.roomRedesignDesc,
                       imagePath: AppImages.redesignPlaceholder,
                       tagText: AppStrings.restyleRoomTag,
@@ -74,11 +74,12 @@ class HomeView extends StatelessWidget {
                     ),
                     
                     HomeCardWidget(
-                      title: AppStrings.maskInpainting,
+                      title: AppStrings.replace,
                       description: AppStrings.maskInpaintingDesc,
-                      imagePath: AppImages.homeGenerationPlaceholder,
-                      tagText: AppStrings.maskInpaintingTag,
-                      tagIcon: AppImages.aiPoweredIcon, 
+                      imagePath: AppImages.replaceImage,
+                      tagText: AppStrings.replaceObject,
+                      tagIcon: AppImages.replaceObjectIcon, 
+                      showCenterIcon: true,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -86,6 +87,18 @@ class HomeView extends StatelessWidget {
                             builder: (context) => const ImageGenerationStepperView(),
                           ),
                         );
+                      },
+                    ),
+                    
+                    HomeCardWidget(
+                      title: AppStrings.remove,
+                      description: AppStrings.removeDesc,
+                      imagePath: AppImages.removeImage,
+                      tagText: AppStrings.removeObject,
+                      tagIcon: AppImages.removeObjectIcon,
+                      showCenterIcon: true, 
+                      onTap: () {
+                        
                       },
                     ),
                     
