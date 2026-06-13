@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:sammly/core/widgets/avatar_widget.dart';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -84,14 +85,11 @@ class _EditImageSectionState extends State<EditImageSection> {
 
     // 2. Current avatar from API
     if (widget.currentAvatarUrl != null && widget.currentAvatarUrl!.isNotEmpty) {
-      return ClipOval(
-        child: Image.network(
-          widget.currentAvatarUrl!,
-          fit: BoxFit.cover,
-          width: 140.w,
-          height: 140.h,
-          errorBuilder: (_, __, ___) => _buildUploadPlaceholder(),
-        ),
+      return AvatarWidget(
+        avatarPath: widget.currentAvatarUrl,
+        width: 140.w,
+        height: 140.h,
+        borderRadius: BorderRadius.circular(70.r),
       );
     }
 
@@ -100,18 +98,24 @@ class _EditImageSectionState extends State<EditImageSection> {
   }
 
   Widget _buildUploadPlaceholder() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SvgPicture.asset(AppImages.uploadImage, width: 40.w, height: 40.h),
-        SizedBox(height: 4.h),
-        Text(
-          AppStrings.uploadImage,
-          style: AppTextStyles.body16Medium.copyWith(
-            color: Colors.grey,
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset(AppImages.uploadImage, width: 24.w, height: 24.h),
+          SizedBox(height: 4.h),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              AppStrings.uploadImage,
+              style: AppTextStyles.body16Medium.copyWith(
+                color: Colors.grey,
+              ),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
   
@@ -138,16 +142,39 @@ class _EditImageSectionState extends State<EditImageSection> {
             Center(
               child: GestureDetector(
                 onTap: _pickImage,
-                child: DottedBorder(
-                  color: AppColors.greyColor.withValues(alpha: 0.5),
-                  strokeWidth: 1.5,
-                  dashPattern: const [8, 6],
-                  borderType: BorderType.Circle,
-                  child: Container(
-                    width: 140.w,
-                    height: 140.h,
-                    decoration: const BoxDecoration(shape: BoxShape.circle),
-                    child: _buildImageContent(),
+                child: SizedBox(
+                  width: 150.w,
+                  height: 150.h,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      DottedBorder(
+                        color: AppColors.greyColor.withValues(alpha: 0.5),
+                        strokeWidth: 1.5,
+                        dashPattern: const [8, 6],
+                        borderType: BorderType.Circle,
+                        child: Container(
+                          width: 140.w,
+                          height: 140.h,
+                          decoration: const BoxDecoration(shape: BoxShape.circle),
+                          child: _buildImageContent(),
+                        ),
+                      ),
+                      if (_selectedImage != null || (widget.currentAvatarUrl != null && widget.currentAvatarUrl!.isNotEmpty))
+                        Positioned(
+                          bottom: 4.h,
+                          right: 8.w,
+                          child: Container(
+                            padding: EdgeInsets.all(6.r),
+                            decoration: BoxDecoration(
+                              gradient: AppColors.primaryGradient3,
+                              shape: BoxShape.circle,
+                              border: Border.all(color: AppColors.whiteColor, width: 2.5),
+                            ),
+                            child: Icon(Icons.edit, color: AppColors.whiteColor, size: 18.sp),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ),

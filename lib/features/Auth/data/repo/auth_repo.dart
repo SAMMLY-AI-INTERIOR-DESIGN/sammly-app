@@ -140,7 +140,7 @@ class AuthRepo {
 
       print('📋 Login response: statusCode=${response.statusCode}, data=${response.data}');
       if (response.data['success'] == true || response.data['status'] == 'success') {
-        final token = response.data['data']?['token'];
+        final token = response.data['data']?['token'] ?? response.data['token'];
         if (token != null) {
           // Decode JWT to check for 'pending' status
           try {
