@@ -98,18 +98,11 @@ class HistoryMainImageSection extends StatelessWidget {
               right: 12.w,
               child: GestureDetector(
                 onTap: onSaveTap,
-                child: Container(
-                  padding: EdgeInsets.all(8.w),
-                  decoration: const BoxDecoration(
-                    color: AppColors.bg2Color,
-                    shape: BoxShape.circle,
-                  ),
-                  child: SvgPicture.asset(
-                    isSaved
-                        ? AppImages.withsaving
-                        : AppImages.withoutsaving,
-                    width: 24.w,
-                  ),
+                child: SvgPicture.asset(
+                  isSaved
+                      ? AppImages.withsaving
+                      : AppImages.withoutsaving,
+                  width: 24.w,
                 ),
               ),
             ),

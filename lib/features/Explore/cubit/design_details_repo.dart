@@ -42,6 +42,7 @@ class DesignDetailsRepo {
 
       final response = await DioHelper.patchData(
         endPoint: ApiConstants.shareDesign(designId),
+        data: {},
         token: token,
       );
 
@@ -67,6 +68,7 @@ class DesignDetailsRepo {
 
       final response = await DioHelper.patchData(
         endPoint: ApiConstants.cancelShareDesign(designId),
+        data: {},
         token: token,
       );
 

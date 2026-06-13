@@ -59,8 +59,9 @@ class FavoriteRepo {
         return left('Unauthorized: No token found.');
       }
 
-      final response = await DioHelper.getData(
+      final response = await DioHelper.postData(
         endPoint: ApiConstants.favoriteDesign(designId),
+        data: {},
         token: token,
       );
 

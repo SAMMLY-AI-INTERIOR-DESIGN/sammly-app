@@ -50,12 +50,12 @@ class SammlyApp extends StatelessWidget {
         ),
        
         BlocProvider(create: (context) => SupportCubit(SupportRepo())),
+        BlocProvider(create: (context) => HomeCubit(HomeRepo())..fetchHomeData()),
         BlocProvider(create: (context) => HistoryCubit(HistoryRepo())),
         BlocProvider(create: (context) => ExploreCubit(ExploreRepo())),
         BlocProvider(create: (context) => StaticDesignsCubit(StaticDesignsRepo())),
         BlocProvider(create: (context) => DesignDetailsCubit(DesignDetailsRepo())),
         BlocProvider(create: (context) => FavoriteCubit(FavoriteRepo())),
-        BlocProvider(create: (context) => HomeCubit(HomeRepo())..fetchHomeData()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(430, 932),
