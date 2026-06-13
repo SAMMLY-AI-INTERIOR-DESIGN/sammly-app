@@ -340,17 +340,9 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                         onTap: () {
                           context.read<FavoriteCubit>().toggleFavorite(design.id, isFav);
                         },
-                        child: Container(
-                          padding: EdgeInsets.all(8.w),
-                          decoration: const BoxDecoration(
-                            color: AppColors.bg2Color,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            isFav ? Icons.bookmark : Icons.bookmark_border,
-                            color: AppColors.primaryColor,
-                            size: 24.w,
-                          ),
+                        child: SvgPicture.asset(
+                          isFav ? AppImages.withsaving : AppImages.withoutsaving,
+                          width: 24.w,
                         ),
                       );
                     },
