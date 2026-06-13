@@ -197,7 +197,7 @@ abstract class AppRouter {
             return UserProfileView(
               userName: args['userName'] ?? 'User',
               userAvatar: args['userAvatar'],
-              userId: '6a0f45d7ebb3777b24a01009',
+              userId: args['userId'] ?? '',
             );
           },
         );

@@ -64,6 +64,8 @@ abstract class AppStrings {
   static const String security = "Security";
   static const String email = "Email";
   static const String changePassword = "Change Password";
+  static const String noFollowings = "No followings";
+  static const String noFollowingsDesc = "Your followings list is empty";
 
   // edit profile
   static const String editProfile = "Edit profile";

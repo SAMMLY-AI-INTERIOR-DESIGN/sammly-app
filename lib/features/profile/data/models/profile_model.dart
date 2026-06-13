@@ -24,17 +24,19 @@ class ProfileModel {
   });
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
+    final user = json['user'] as Map<String, dynamic>?;
+
     return ProfileModel(
-      id: json['id']?.toString(),
-      name: json['name']?.toString(),
-      username: json['username']?.toString(),
-      email: json['email']?.toString(),
-      avatar: json['avatar']?.toString(),
+      id: json['id']?.toString() ?? json['_id']?.toString() ?? user?['_id']?.toString() ?? user?['id']?.toString(),
+      name: json['name']?.toString() ?? user?['name']?.toString(),
+      username: json['username']?.toString() ?? user?['username']?.toString(),
+      email: json['email']?.toString() ?? user?['email']?.toString(),
+      avatar: json['avatar']?.toString() ?? user?['avatar']?.toString(),
       country: json['country']?.toString(),
       gender: json['gender']?.toString(),
       dateOfBirth: json['dateOfBirth']?.toString(),
-      verified: json['verified'] as bool?,
-      createdAt: json['createdAt']?.toString(),
+      verified: json['verified'] as bool? ?? user?['verified'] as bool?,
+      createdAt: json['createdAt']?.toString() ?? user?['createdAt']?.toString(),
     );
   }
 
