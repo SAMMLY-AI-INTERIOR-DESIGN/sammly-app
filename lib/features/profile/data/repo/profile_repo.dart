@@ -41,7 +41,7 @@ class ProfileRepo {
         endPoint: ApiConstants.getProfile,
         token: token,
       );
-
+      log('Profile Data: ${response.data.toString()}');
       if (response.statusCode == 200 && response.data['status'] == 'success') {
         final userMap = response.data['data']['profile'] as Map<String, dynamic>;
         // log(userMap.toString());
@@ -54,7 +54,10 @@ class ProfileRepo {
 
         // خطوة تأكيدية: لو مكنتش بتسيف الـ userId وقت اللوجين، احفظه من هنا للمرات الجاية
         if (SharedPref.getData(key: 'userId') == null) {
-          await SharedPref.saveData(key: 'userId', value: userMap['userId']);
+          final idToSave = userMap['userId'] ?? userMap['id'] ?? userMap['_id'];
+          if (idToSave != null) {
+            await SharedPref.saveData(key: 'userId', value: idToSave.toString());
+          }
         }
 
         return right(ProfileModel.fromJson(userMap));

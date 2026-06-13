@@ -72,12 +72,8 @@ class LogoutBottomSheet extends StatelessWidget {
                     // 1. Clear ALL stored data (jwt, userId, cached profile, etc.)
                     await SharedPref.clearAll();
 
-                    // 2. Reset in-memory cubit states (profile image, name, favorites)
-                    if (context.mounted) {
-                      context.read<ProfileCubit>().reset();
-                      context.read<FavoriteCubit>().reset();
-                      context.read<HomeCubit>().reset();
-                    }
+                    // 2. The cubits will be updated automatically upon next login.
+                    // Removed reset() calls to prevent the UI from showing empty data before fetch completes.
 
                     // 3. Navigate to login and remove all previous routes
                     if (context.mounted) {
@@ -111,4 +107,4 @@ class LogoutBottomSheet extends StatelessWidget {
       ),
     );
   }
-}
+}

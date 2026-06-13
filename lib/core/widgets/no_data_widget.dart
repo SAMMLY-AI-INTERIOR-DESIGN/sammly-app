@@ -13,22 +13,20 @@ class NoDataWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: SizedBox(
-        width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(image),
-            Text(title, style: AppTextStyles.title20Bold),
-            Text(
-              description,
-              style: AppTextStyles.body16Regular.copyWith(
-                color: AppColors.greyColor.withValues(alpha: 0.6),
-              ),
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(image),
+          Text(title, style: AppTextStyles.title20Bold),
+          Text(
+            description,
+            style: AppTextStyles.body16Regular.copyWith(
+              color: AppColors.greyColor.withValues(alpha: 0.6),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

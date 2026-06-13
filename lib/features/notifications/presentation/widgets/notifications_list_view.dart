@@ -51,10 +51,12 @@ class _NotificationsListViewState extends State<NotificationsListView> {
         if (cubit.notifications.isEmpty) {
           return const Column(
             children: [
-              NoDataWidget(
-                image: AppImages.noNotifications,
-                title: AppStrings.noNotifications,
-                description: AppStrings.noNotificationsDesc,
+              Expanded(
+                child: NoDataWidget(
+                  image: AppImages.noNotifications,
+                  title: AppStrings.noNotifications,
+                  description: AppStrings.noNotificationsDesc,
+                ),
               ),
             ],
           );

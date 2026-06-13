@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:sammly/core/constant/app_images.dart';
+import 'package:sammly/core/constant/app_strings.dart';
+import 'package:sammly/core/widgets/no_data_widget.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_state.dart';
 import 'package:sammly/features/favorite/presentation/views/widgets/favorite_heart_item.dart';
-import 'package:sammly/features/favorite/presentation/views/widgets/no_favorite_widget.dart';
 import 'package:sammly/core/routing/routes.dart';
 
 class FavoriteGridView extends StatefulWidget {
@@ -83,7 +85,11 @@ class _FavoriteGridViewState extends State<FavoriteGridView> {
           final designs = cubit.currentDesigns;
 
           if (designs.isEmpty && state is! FavoritePaginationLoading) {
-            return const NoFavoriteWidget();
+            return const NoDataWidget(
+              image: AppImages.noFavorite,
+              title: AppStrings.noFavorites,
+              description: AppStrings.noFavoritesDesc,
+            );
           }
 
           return MasonryGridView.builder(
@@ -134,4 +140,4 @@ class _FavoriteGridViewState extends State<FavoriteGridView> {
       ),
     );
   }
-}
+}
