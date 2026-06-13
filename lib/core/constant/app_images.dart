@@ -100,6 +100,10 @@ class AppImages {
   static const String withoutsaving = "assets/images/withouts.svg";
   static const String favoriteprofileicon = "assets/images/withouts.svg";
   static const String noFollowing = "assets/images/no_following.png";
-  static const String subscriptionBgPlaceholder =
-      "assets/images/subscription_bg_placeholder.png";
+  static const String removeObjectIcon = "assets/images/remove_object_icon.svg";
+  static const String replaceObjectIcon = "assets/images/replace_object_icon.svg";
+  static const String replaceImage = "assets/images/replace_image.png";
+  static const String removeImage = "assets/images/remove_image.png";
+  static const String replaceRemoveIcon = "assets/images/replace_remove_icon.svg";
+  static const String subscriptionBgPlaceholder = "assets/images/subscription_bg_placeholder.png";
 }
