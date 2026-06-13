@@ -5,11 +5,15 @@ import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 
 class GradientFollowButton extends StatefulWidget {
-  final VoidCallback onPressed;
+  final VoidCallback onFollow;
+  final VoidCallback onUnfollow;
+  final bool isFollowing;
 
   const GradientFollowButton({
     super.key,
-    required this.onPressed,
+    required this.onFollow,
+    required this.onUnfollow,
+    this.isFollowing = false,
   });
 
   @override
@@ -17,11 +21,13 @@ class GradientFollowButton extends StatefulWidget {
 }
 
 class _GradientFollowButtonState extends State<GradientFollowButton> {
-  bool isFollowing = false;
+  // متغير عشان نتابع المنيو مفتوحة ولا مقفولة
+  bool _isMenuOpen = false;
 
   void _showUnfollowMenu(BuildContext context) async {
     final RenderBox button = context.findRenderObject() as RenderBox;
     final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    
     final RelativeRect position = RelativeRect.fromRect(
       Rect.fromPoints(
         button.localToGlobal(Offset(0, button.size.height), ancestor: overlay),
@@ -30,40 +36,62 @@ class _GradientFollowButtonState extends State<GradientFollowButton> {
       Offset.zero & overlay.size,
     );
 
+    final double buttonWidth = button.size.width;
+
+    // 1. نقلب السهم لفوق أول ما نضغط
+    setState(() {
+      _isMenuOpen = true;
+    });
+
     final result = await showMenu<String>(
       context: context,
       position: position,
       color: AppColors.whiteColor,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+      constraints: BoxConstraints(
+        minWidth: buttonWidth,
+        maxWidth: buttonWidth,
+      ),
       items: [
         PopupMenuItem(
+          // 2. قللنا ارتفاع المنيو هنا (تقدر تصغر الرقم لو عايزها أرفع)
+          height: 35.h, 
           value: 'unfollow',
+          padding: EdgeInsets.zero,
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.person_remove, color: AppColors.redColor, size: 20.sp),
+              Icon(Icons.person_remove, color: AppColors.redColor, size: 18.sp),
               SizedBox(width: 8.w),
-              Text('Unfollow', style: AppTextStyles.body14Regular.copyWith(color: AppColors.redColor)),
+              Text(
+                AppStrings.unfollow, 
+                style: AppTextStyles.body14Regular.copyWith(color: AppColors.redColor),
+              ),
             ],
           ),
         ),
       ],
     );
 
-    if (result == 'unfollow') {
+    // 3. نرجع السهم لتحت أول ما المنيو تتقفل (سواء اختار حاجة أو داس بره)
+    if (mounted) {
       setState(() {
-        isFollowing = false;
+        _isMenuOpen = false;
       });
-      widget.onPressed();
+    }
+
+    if (result == 'unfollow') {
+      widget.onUnfollow();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (isFollowing) {
+    if (widget.isFollowing) {
       return Container(
         height: 38.h,
         decoration: BoxDecoration(
-          border: Border.all(color: AppColors.secondaryColor, width: 1.5),
+          gradient: AppColors.primaryGradient3,
           borderRadius: BorderRadius.circular(8.r),
         ),
         child: ElevatedButton(
@@ -79,37 +107,36 @@ class _GradientFollowButtonState extends State<GradientFollowButton> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Following',
+                AppStrings.following,
                 style: AppTextStyles.body16Medium.copyWith(
-                  color: AppColors.secondaryColor,
-                  fontSize: 15.sp,
+                  color: AppColors.whiteColor,
                   letterSpacing: 0.5,
                 ),
               ),
               SizedBox(width: 6.w),
-              Icon(Icons.keyboard_arrow_down, color: AppColors.secondaryColor, size: 20.sp),
+              // 4. تغيير الأيقونة بناءً على حالة المنيو
+              Icon(
+                _isMenuOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, 
+                color: AppColors.whiteColor, 
+                size: 20.sp,
+              ),
             ],
           ),
         ),
       );
     }
 
+    // زرار Follow (الوضع العادي)
     return Container(
-      height: 38.h, // ارتفاع مناسب لزرار الـ Follow
+      height: 38.h,
       decoration: BoxDecoration(
-        // الجرادينت الرأسي من الأزرق للأخضر
         gradient: AppColors.primaryGradient3,
-        borderRadius: BorderRadius.circular(8.r), // حواف دائرية خفيفة
+        borderRadius: BorderRadius.circular(8.r),
       ),
       child: ElevatedButton(
-        onPressed: () {
-          setState(() {
-            isFollowing = true;
-          });
-          widget.onPressed();
-        },
+        onPressed: widget.onFollow,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent, // عشان الجرادينت يبان
+          backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
           elevation: 0,
           padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -118,9 +145,8 @@ class _GradientFollowButtonState extends State<GradientFollowButton> {
           ),
         ),
         child: Row(
-          mainAxisSize: MainAxisSize.min, // عشان الزرار ياخد مساحة المحتوى بس
+          mainAxisSize: MainAxisSize.min,
           children: [
-            // 1. الدايرة البيضا اللي جواها علامة (+)
             Container(
               padding: EdgeInsets.all(2.w),
               decoration: const BoxDecoration(
@@ -129,20 +155,17 @@ class _GradientFollowButtonState extends State<GradientFollowButton> {
               ),
               child: Icon(
                 Icons.add,
-                color: AppColors.secondaryColor, // علامة الزائد بلون أخضر/Teal
+                color: AppColors.secondaryColor,
                 size: 16.sp,
               ),
             ),
-            
             SizedBox(width: 8.w),
-            
-            // 2. كلمة Follow
             Text(
               AppStrings.follow,
               style: AppTextStyles.body16Medium.copyWith(
                 color: Colors.white,
                 fontSize: 15.sp,
-                letterSpacing: 0.5, // مسافة خفيفة بين الحروف
+                letterSpacing: 0.5,
               ),
             ),
           ],

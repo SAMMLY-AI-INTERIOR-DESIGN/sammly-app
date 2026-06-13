@@ -51,6 +51,7 @@ abstract class AppStrings {
   static const String favorites = "Favorites";
   static const String following = "Following";
   static const String follow = "Follow";
+  static const String unfollow = "Unfollow";
   static const String freeGenerations = "Free Generations";
   static const String manageSubscription = "Manage Subscription";
   static const String support = "Support";
@@ -81,9 +82,6 @@ abstract class AppStrings {
   static const String likeYourSharedDesign = "Like your shared design";
   static const String noNotifications = "No Notifications";
   static const String noNotificationsDesc = "Notification Inbox Empty";
-
-  // following
-  static const String unfollow = "Unfollow";
 
   // invite friends dialog
   static const String inviteFriends = "Invite Friends";

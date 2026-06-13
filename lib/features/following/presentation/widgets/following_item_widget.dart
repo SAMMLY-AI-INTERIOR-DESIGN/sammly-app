@@ -4,16 +4,19 @@ import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/routing/routes.dart';
-import 'package:sammly/features/profile/data/models/followings_model.dart';
+import 'package:sammly/core/widgets/avatar_widget.dart';
+import 'package:sammly/features/following/data/model/following_model.dart';
 
 class FollowingItemWidget extends StatefulWidget {
   final FollowingModel item;
   final VoidCallback onUnfollowTap;
+  final VoidCallback onFollowTap;
 
   const FollowingItemWidget({
     super.key,
     required this.item,
     required this.onUnfollowTap,
+    required this.onFollowTap,
   });
 
   @override
@@ -34,8 +37,9 @@ class _FollowingItemWidgetState extends State<FollowingItemWidget> {
             context,
             AppRoutes.userProfileView,
             arguments: {
+              'userId': widget.item.id,
               'userName': widget.item.name,
-              'userAvatar': widget.item.imageUrl,
+              'userAvatar': widget.item.avatar,
             },
           );
         },
@@ -44,7 +48,13 @@ class _FollowingItemWidgetState extends State<FollowingItemWidget> {
           CircleAvatar(
             radius: 22.r,
             backgroundColor: AppColors.bg1Color,
-            backgroundImage: NetworkImage(widget.item.imageUrl),
+            child: AvatarWidget(
+              avatarPath: widget.item.avatar,
+              gender: null,
+              width: 44.r,
+              height: 44.r,
+              borderRadius: BorderRadius.circular(22.r),
+            ),
           ),
           
           SizedBox(width: 12.w),
@@ -63,6 +73,8 @@ class _FollowingItemWidgetState extends State<FollowingItemWidget> {
               });
               if (!isFollowing) {
                  widget.onUnfollowTap();
+              } else {
+                 widget.onFollowTap();
               }
             },
             borderRadius: BorderRadius.circular(20.r),
