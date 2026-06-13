@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'package:sammly/core/networking/api_constants.dart';
 /// 3. relative path (uploads/...) → Image.network مع baseUrl
 class AvatarWidget extends StatelessWidget {
   final String? avatarPath;
+  final String? gender;
   final double width;
   final double height;
   final BoxFit fit;
@@ -21,6 +23,7 @@ class AvatarWidget extends StatelessWidget {
   const AvatarWidget({
     super.key,
     required this.avatarPath,
+    this.gender,
     required this.width,
     required this.height,
     this.fit = BoxFit.cover,
@@ -35,12 +38,7 @@ class AvatarWidget extends StatelessWidget {
     if (avatarPath == null || avatarPath!.isEmpty) {
       return ClipRRect(
         borderRadius: br,
-        child: SvgPicture.asset(
-          AppImages.maleProfilePlaceholder,
-          width: width,
-          height: height,
-          fit: fit,
-        ),
+        child: _placeholder(),
       );
     }
 
@@ -78,6 +76,20 @@ class AvatarWidget extends StatelessWidget {
       );
     }
 
+    // 3. لو صورة من الـ Gallery (مسار محلي على الموبايل)
+    if (avatarPath!.startsWith('/') || avatarPath!.startsWith('file://')) {
+      return ClipRRect(
+        borderRadius: br,
+        child: Image.file(
+          File(avatarPath!),
+          width: width,
+          height: height,
+          fit: fit,
+          errorBuilder: (context, error, stackTrace) => _placeholder(),
+        ),
+      );
+    }
+
     // 3. لو الـ avatar هو relative path (زي uploads/profile-male.png)
     final fullUrl = '${ApiConstants.baseUrl}/$avatarPath';
     return ClipRRect(
@@ -93,8 +105,12 @@ class AvatarWidget extends StatelessWidget {
   }
 
   Widget _placeholder() {
+    final placeholder = (gender?.toLowerCase() == 'female')
+        ? AppImages.femaleProfilePlaceholder
+        : AppImages.maleProfilePlaceholder;
+
     return SvgPicture.asset(
-      AppImages.maleProfilePlaceholder,
+      placeholder,
       width: width,
       height: height,
       fit: fit,

@@ -102,67 +102,85 @@ class _TextToImageGenerateViewState extends State<TextToImageGenerateView> {
 
   @override
   Widget build(BuildContext context) {
+    final availableHeight = MediaQuery.of(context).size.height -
+        MediaQuery.of(context).padding.top -
+        MediaQuery.of(context).padding.bottom;
+
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         backgroundColor: AppColors.whiteColor,
-        appBar: CustomAppbar(title: _getAppBarTitle(), onBack: _previousStep),
-        body: Column(
-          children: [
-            if (_currentStep == 2) ...[
-              LogoWidget(),
-              SizedBox(height: 10.h),
-            ],
-            CustomStepper(
-              currentStep: _currentStep,
-              stepTitles: const [
-                AppStrings.type,
-                AppStrings.style,
-                AppStrings.describe,
-              ],
-            ),
-            Expanded(
-              child: PageView(
-                controller: _pageController,
-                physics: const NeverScrollableScrollPhysics(),
+        
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: SizedBox(
+              height: availableHeight,
+              child: Column(
                 children: [
-                  TextToImageStep1Room(
-                    selectedRoom: _selectedRoom,
-                    onRoomSelected: (room) {
-                      setState(() {
-                        _selectedRoom = room;
-                      });
-                    },
-                    onNext: _nextStep,
+                  CustomAppbar(
+                    title: _getAppBarTitle(), 
+                    onBack: _previousStep,
                   ),
-                  TextToImageStep2Style(
-                    selectedStyle: _selectedStyle,
-                    onStyleSelected: (style) {
-                      setState(() {
-                        _selectedStyle = style;
-                      });
-                    },
-                    onNext: _nextStep,
+                  
+                  if (_currentStep == 2) ...[
+                    LogoWidget(),
+                    SizedBox(height: 10.h),
+                  ],
+                  
+                  CustomStepper(
+                    currentStep: _currentStep,
+                    stepTitles: const [
+                      AppStrings.type,
+                      AppStrings.style,
+                      AppStrings.describe,
+                    ],
                   ),
-                  TextToImageStep3Describe(
-                    promptController: _promptController,
-                    referenceImage: _referenceImage,
-                    onImageSelected: (image) {
-                      setState(() {
-                        _referenceImage = image;
-                      });
-                    },
-                    onImageRemoved: () {
-                      setState(() {
-                        _referenceImage = null;
-                      });
-                    },
-                    onGenerate: _generateDesign,
+                  
+                  Expanded(
+                    child: PageView(
+                      controller: _pageController,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: [
+                        TextToImageStep1Room(
+                          selectedRoom: _selectedRoom,
+                          onRoomSelected: (room) {
+                            setState(() {
+                              _selectedRoom = room;
+                            });
+                          },
+                          onNext: _nextStep,
+                        ),
+                        TextToImageStep2Style(
+                          selectedStyle: _selectedStyle,
+                          onStyleSelected: (style) {
+                            setState(() {
+                              _selectedStyle = style;
+                            });
+                          },
+                          onNext: _nextStep,
+                        ),
+                        TextToImageStep3Describe(
+                          promptController: _promptController,
+                          referenceImage: _referenceImage,
+                          onImageSelected: (image) {
+                            setState(() {
+                              _referenceImage = image;
+                            });
+                          },
+                          onImageRemoved: () {
+                            setState(() {
+                              _referenceImage = null;
+                            });
+                          },
+                          onGenerate: _generateDesign,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );

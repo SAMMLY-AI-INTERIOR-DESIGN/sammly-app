@@ -19,7 +19,11 @@ class ProfileImageNameWidget extends StatelessWidget {
           alignment: Alignment.topCenter,
           child: Column(
             children: [
-              ClipRRect(
+              AvatarWidget(
+                avatarPath: profile?.avatar,
+                gender: profile?.gender,
+                width: 100.w,
+                height: 100.h,
                 borderRadius: BorderRadius.circular(16.r),
               ),
               SizedBox(height: 14.h),

@@ -8,6 +8,8 @@ import 'package:sammly/core/networking/dio_helper.dart';
 import 'package:sammly/core/routing/app_router.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/shared_pref/shared_pref.dart';
+import 'package:sammly/features/home/data/repo/home_repo.dart';
+import 'package:sammly/features/home/logic/home_cubit.dart';
 import 'package:sammly/features/profile/data/repo/profile_repo.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:sammly/features/support/cubit/support_cubit.dart';
@@ -46,13 +48,14 @@ class SammlyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => ProfileCubit(ProfileRepo())..fetchProfile(),
         ),
+       
         BlocProvider(create: (context) => SupportCubit(SupportRepo())),
         BlocProvider(create: (context) => HistoryCubit(HistoryRepo())),
         BlocProvider(create: (context) => ExploreCubit(ExploreRepo())),
         BlocProvider(create: (context) => StaticDesignsCubit(StaticDesignsRepo())),
         BlocProvider(create: (context) => DesignDetailsCubit(DesignDetailsRepo())),
         BlocProvider(create: (context) => FavoriteCubit(FavoriteRepo())),
-        // NetworkCubit removed for auto-check
+        BlocProvider(create: (context) => HomeCubit(HomeRepo())..fetchHomeData()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(430, 932),
