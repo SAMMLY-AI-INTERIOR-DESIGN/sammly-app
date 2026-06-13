@@ -19,7 +19,13 @@ class HomeHeader extends StatelessWidget {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
         final home = context.read<HomeCubit>().currentHome;
-        final gender = context.read<ProfileCubit>().currentProfile?.gender;
+        final profile = context.read<ProfileCubit>().currentProfile;
+        final gender = profile?.gender;
+
+        // Use home data first, fall back to profile data for consistency
+        final displayAvatar = home?.avatar ?? profile?.avatar;
+        final displayName = home?.name ?? profile?.name;
+
         return Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 24.0,
@@ -37,7 +43,7 @@ class HomeHeader extends StatelessWidget {
                   radius: 30,
                   backgroundColor: AppColors.activeNavBarBg,
                   child: AvatarWidget(
-                    avatarPath: home?.avatar,
+                    avatarPath: displayAvatar,
                     gender: gender,
                     width: 60,
                     height: 60,
@@ -56,7 +62,7 @@ class HomeHeader extends StatelessWidget {
                         children: [
                           TextSpan(text: '${AppStrings.greetingPrefix} '),
                           TextSpan(
-                            text: home?.name ?? 'Broo',
+                            text: displayName ?? '...',
                             style: AppTextStyles.title18SemiBold,
                           ),
                         ],

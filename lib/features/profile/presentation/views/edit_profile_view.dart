@@ -32,6 +32,7 @@ class _EditProfileViewState extends State<EditProfileView> {
   String selectedCountry = "🇪🇬 Egypt";
   String selectedGender = "male";
   DateTime? selectedDobDate;
+  bool _fieldsPopulated = false;
 
   final List<String> countriesList = ["🇪🇬 Egypt", "🌐 International"];
   final List<String> gendersList = ["male", "female"];
@@ -41,31 +42,42 @@ class _EditProfileViewState extends State<EditProfileView> {
     super.initState();
     final profile = context.read<ProfileCubit>().currentProfile;
     if (profile != null) {
-      nameController.text = profile.name ?? '';
-      usernameController.text = profile.username ?? '';
+      _populateFields(profile);
+    } else {
+      // Profile not loaded yet — fetch it
+      context.read<ProfileCubit>().fetchProfile(forceRefresh: true);
+    }
+  }
 
-      if (profile.country != null) {
-        final lowerCountry = profile.country!.toLowerCase();
-        if (lowerCountry.contains('egypt')) {
-          selectedCountry = "🇪🇬 Egypt";
-        } else if (lowerCountry.contains('international') ||
-            lowerCountry.contains('usa')) {
-          selectedCountry = "🌐 International";
-        }
-      }
-      if (profile.gender != null && gendersList.contains(profile.gender)) {
-        selectedGender = profile.gender!;
-      }
+  /// Populates form fields from ProfileModel (called once).
+  void _populateFields(profile) {
+    if (_fieldsPopulated) return;
+    _fieldsPopulated = true;
 
-      if (profile.dateOfBirth != null) {
-        final parsedDate = DateTime.tryParse(profile.dateOfBirth!);
-        if (parsedDate != null) {
-          selectedDobDate = parsedDate;
-          dobController.text =
-              "${parsedDate.day.toString().padLeft(2, '0')}/${parsedDate.month.toString().padLeft(2, '0')}/${parsedDate.year}";
-        } else {
-          dobController.text = profile.dateOfBirth!;
-        }
+    nameController.text = profile.name ?? '';
+    usernameController.text = profile.username ?? '';
+
+    if (profile.country != null) {
+      final lowerCountry = profile.country!.toLowerCase();
+      if (lowerCountry.contains('egypt')) {
+        selectedCountry = "🇪🇬 Egypt";
+      } else if (lowerCountry.contains('international') ||
+          lowerCountry.contains('usa')) {
+        selectedCountry = "🌐 International";
+      }
+    }
+    if (profile.gender != null && gendersList.contains(profile.gender)) {
+      selectedGender = profile.gender!;
+    }
+
+    if (profile.dateOfBirth != null) {
+      final parsedDate = DateTime.tryParse(profile.dateOfBirth!);
+      if (parsedDate != null) {
+        selectedDobDate = parsedDate;
+        dobController.text =
+            "${parsedDate.day.toString().padLeft(2, '0')}/${parsedDate.month.toString().padLeft(2, '0')}/${parsedDate.year}";
+      } else {
+        dobController.text = profile.dateOfBirth!;
       }
     }
   }
@@ -80,14 +92,24 @@ class _EditProfileViewState extends State<EditProfileView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.whiteColor,
-      appBar: const CustomAppbar(title: AppStrings.editProfile),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
-        child: Column(
-          children: [
+    return BlocListener<ProfileCubit, ProfileState>(
+      listener: (context, state) {
+        // When profile data arrives, populate the form fields
+        if (state is ProfileLoaded && !_fieldsPopulated) {
+          setState(() {
+            _populateFields(state.profile);
+          });
+        }
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.whiteColor,
+        appBar: const CustomAppbar(title: AppStrings.editProfile),
+        body: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+          child: Column(
+            children: [
             EditImageSection(
+              currentAvatarUrl: context.read<ProfileCubit>().currentProfile?.avatar,
               onImagePicked: (file) {
                 _selectedImageFile = file;
               },
@@ -227,6 +249,7 @@ class _EditProfileViewState extends State<EditProfileView> {
             SizedBox(height: 20.h),
           ],
         ),
+      ),
       ),
     );
   }

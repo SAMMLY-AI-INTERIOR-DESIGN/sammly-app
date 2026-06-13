@@ -7,6 +7,7 @@ import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/core/widgets/action_buttons_row.dart';
 import 'package:sammly/core/routing/routes.dart';
+import 'package:sammly/core/widgets/avatar_widget.dart';
 import 'package:sammly/features/Explore/cubit/design_details_cubit.dart';
 import 'package:sammly/features/Explore/cubit/design_details_states.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
@@ -216,17 +217,12 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
               },
               child: Row(
                 children: [
-                  Container(
+                  AvatarWidget(
+                    avatarPath: creator.avatar,
+                    gender: null,
                     width: 48.w,
                     height: 48.w,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.bg2Color,
-                      image: DecorationImage(
-                        image: NetworkImage(creator.avatar),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                    borderRadius: BorderRadius.circular(24.r),
                   ),
                   SizedBox(width: 12.w),
                   Column(

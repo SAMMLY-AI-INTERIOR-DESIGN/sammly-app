@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sammly/core/constant/app_colors.dart';
@@ -7,6 +8,9 @@ import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/shared_pref/shared_pref.dart';
+import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
+import 'package:sammly/features/home/logic/home_cubit.dart';
 
 class LogoutBottomSheet extends StatelessWidget {
   const LogoutBottomSheet({super.key});
@@ -65,8 +69,17 @@ class LogoutBottomSheet extends StatelessWidget {
               Expanded(
                 child: ElevatedButton(
                   onPressed: () async {
-                    // Clear stored data
-                    await SharedPref.removeData(key: 'token');
+                    // 1. Clear ALL stored data (jwt, userId, cached profile, etc.)
+                    await SharedPref.clearAll();
+
+                    // 2. Reset in-memory cubit states (profile image, name, favorites)
+                    if (context.mounted) {
+                      context.read<ProfileCubit>().reset();
+                      context.read<FavoriteCubit>().reset();
+                      context.read<HomeCubit>().reset();
+                    }
+
+                    // 3. Navigate to login and remove all previous routes
                     if (context.mounted) {
                       Navigator.of(context).pushNamedAndRemoveUntil(
                         AppRoutes.loginView,
@@ -98,4 +111,4 @@ class LogoutBottomSheet extends StatelessWidget {
       ),
     );
   }
-}
+}

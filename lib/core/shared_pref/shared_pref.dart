@@ -21,4 +21,9 @@ class SharedPref {
   static Future<bool> removeData({required String key}) async {
     return await _pref.remove(key);
   }
+
+  /// Clears ALL stored data (used on logout).
+  static Future<bool> clearAll() async {
+    return await _pref.clear();
+  }
 }
