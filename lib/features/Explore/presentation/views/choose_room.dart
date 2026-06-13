@@ -42,9 +42,15 @@ class ExploreView extends StatelessWidget {
 
           return GestureDetector(
             onTap: () {
+              // Map display name to API room value
+              final roomApiValue = room['name']!
+                  .toLowerCase()
+                  .replaceAll(' ', '');
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const BrowseDesigns()),
+                MaterialPageRoute(
+                  builder: (context) => BrowseDesigns(room: roomApiValue),
+                ),
               );
             },
             child: Container(

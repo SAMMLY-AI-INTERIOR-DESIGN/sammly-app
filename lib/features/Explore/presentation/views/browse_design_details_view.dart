@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/core/widgets/action_buttons_row.dart';
+import 'package:sammly/features/Explore/cubit/design_details_cubit.dart';
+import 'package:sammly/features/Explore/cubit/design_details_states.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_state.dart';
 
 class BrowseDesignDetailsView extends StatefulWidget {
-  final String imageUrl;
+  final String designId;
 
-  const BrowseDesignDetailsView({super.key, required this.imageUrl});
+  const BrowseDesignDetailsView({super.key, required this.designId});
 
   @override
   State<BrowseDesignDetailsView> createState() =>
@@ -17,8 +22,13 @@ class BrowseDesignDetailsView extends StatefulWidget {
 }
 
 class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
-  bool _isLiked = true;
   bool _isMaximized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<DesignDetailsCubit>().fetchDesignDetails(widget.designId);
+  }
 
   void _toggleMaximize() {
     setState(() {
@@ -34,6 +44,16 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
     }
   }
 
+  void _showSnackbar(String message, {bool isError = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isError ? Colors.red : AppColors.primaryColor,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -47,21 +67,121 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
         appBar: _isMaximized
             ? null
             : CustomAppbar(
-                title: 'Living Room',
+                title: 'Design Details',
                 onBack: _handleBack,
                 actions: [
-                  IconButton(
-                    icon: Icon(
-                      Icons.more_vert,
-                      color: AppColors.blackColor,
-                      size: 24.sp,
-                    ),
-                    onPressed: () {},
+                  BlocBuilder<DesignDetailsCubit, DesignDetailsState>(
+                    builder: (context, state) {
+                      final cubit = context.read<DesignDetailsCubit>();
+                      if (cubit.currentDesign == null || !cubit.isPublisher) {
+                        return const SizedBox.shrink();
+                      }
+                      
+                      return PopupMenuButton<String>(
+                        icon: Icon(
+                          Icons.more_vert,
+                          color: AppColors.blackColor,
+                          size: 24.sp,
+                        ),
+                        onSelected: (value) {
+                          if (value == 'share') {
+                            cubit.shareDesign(widget.designId);
+                          } else if (value == 'cancel_share') {
+                            cubit.cancelShareDesign(widget.designId);
+                          }
+                        },
+                        itemBuilder: (context) {
+                          final isShared = cubit.currentDesign!.isShared;
+                          return [
+                            PopupMenuItem(
+                              value: isShared ? 'cancel_share' : 'share',
+                              child: Text(isShared ? 'Cancel Share' : 'Share Design'),
+                            ),
+                          ];
+                        },
+                      );
+                    },
                   ),
                 ],
               ),
         body: SafeArea(
-          child: _isMaximized ? _buildMaximizedView() : _buildNormalView(),
+          child: BlocConsumer<DesignDetailsCubit, DesignDetailsState>(
+            listener: (context, state) {
+              if (state is DesignShareSuccess) {
+                _showSnackbar(state.message);
+              } else if (state is DesignCancelShareSuccess) {
+                _showSnackbar(state.message);
+              } else if (state is DesignLikeSuccess) {
+                _showSnackbar(state.message);
+              } else if (state is DesignUnlikeSuccess) {
+                _showSnackbar(state.message);
+              } else if (state is DesignActionError) {
+                _showSnackbar(state.message, isError: true);
+              }
+            },
+            buildWhen: (previous, current) {
+              return current is DesignDetailsLoading ||
+                  current is DesignDetailsLoaded ||
+                  current is DesignDetailsError;
+            },
+            builder: (context, state) {
+              if (state is DesignDetailsLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (state is DesignDetailsError) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.error_outline,
+                          size: 48.sp, color: AppColors.greyColor),
+                      SizedBox(height: 12.h),
+                      Text(
+                        state.message,
+                        style: TextStyle(
+                          color: AppColors.greyColor,
+                          fontSize: 14.sp,
+                          fontFamily: 'Manrope',
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 12.h),
+                      TextButton(
+                        onPressed: () => context
+                            .read<DesignDetailsCubit>()
+                            .fetchDesignDetails(widget.designId),
+                        child: Text(
+                          'Retry',
+                          style: TextStyle(
+                            color: AppColors.primaryColor,
+                            fontSize: 14.sp,
+                            fontFamily: 'Manrope',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              final cubit = context.read<DesignDetailsCubit>();
+              if (cubit.currentDesign == null) {
+                return const Center(child: Text('No design details found'));
+              }
+
+              return BlocListener<FavoriteCubit, FavoriteState>(
+                listener: (context, favState) {
+                  if (favState is FavoriteToggleSuccess) {
+                    _showSnackbar(favState.message);
+                  } else if (favState is FavoriteToggleError) {
+                    _showSnackbar(favState.message, isError: true);
+                  }
+                },
+                child: _isMaximized ? _buildMaximizedView() : _buildNormalView(),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -69,6 +189,8 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
 
   /// الوضع العادي: صورة + تفاصيل + أزرار
   Widget _buildNormalView() {
+    final design = context.read<DesignDetailsCubit>().currentDesign!;
+    
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
@@ -77,7 +199,7 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
         children: [
           // Prompt text
           Text(
-            'Lorem ipsum dolor sit amet consectetur. Fermentum volutpat praesent purus massa neque leo. Gravida sapien non tristique justo non adipiscing sem nam.',
+            design.prompt,
             style: TextStyle(
               color: AppColors.blackColor.withOpacity(0.8),
               fontSize: 14.sp,
@@ -94,7 +216,7 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
             child: Stack(
               children: [
                 Image.network(
-                  widget.imageUrl,
+                  design.imageUrl,
                   width: double.infinity,
                   height: 350.h,
                   fit: BoxFit.cover,
@@ -145,29 +267,31 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
                   ),
                 ),
 
-                // Heart Icon
+                // Bookmark Icon (Favorite)
                 Positioned(
                   top: 12.h,
                   right: 12.w,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _isLiked = !_isLiked;
-                      });
+                  child: BlocBuilder<FavoriteCubit, FavoriteState>(
+                    builder: (context, favState) {
+                      final isFav = context.read<FavoriteCubit>().isFavorite(design.id);
+                      return GestureDetector(
+                        onTap: () {
+                          context.read<FavoriteCubit>().toggleFavorite(design.id, isFav);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(8.w),
+                          decoration: const BoxDecoration(
+                            color: AppColors.bg2Color,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            isFav ? Icons.bookmark : Icons.bookmark_border,
+                            color: AppColors.primaryColor,
+                            size: 24.w,
+                          ),
+                        ),
+                      );
                     },
-                    child: Container(
-                      padding: EdgeInsets.all(8.w),
-                      decoration: const BoxDecoration(
-                        color: AppColors.bg2Color,
-                        shape: BoxShape.circle,
-                      ),
-                      child: SvgPicture.asset(
-                        _isLiked
-                            ? AppImages.withsaving
-                            : AppImages.withoutsaving,
-                        width: 24.w,
-                      ),
-                    ),
                   ),
                 ),
 
@@ -199,10 +323,45 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
           ),
           SizedBox(height: 12.h),
 
+          // Likes Action Row
+          GestureDetector(
+            onTap: () {
+              context.read<DesignDetailsCubit>().toggleLike(design.id);
+            },
+            child: Row(
+              children: [
+                 Container(
+                    padding: EdgeInsets.all(6.w),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor.withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: SvgPicture.asset(
+                      design.isLiked ? AppImages.heartFilled : AppImages.heartOutline,
+                      width: 14.w,
+                      colorFilter: design.isLiked 
+                          ? null 
+                          : const ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
+                    ),
+                  ),
+                  SizedBox(width: 8.w),
+                  Text(
+                    '${design.likesCount} Likes',
+                    style: TextStyle(
+                      color: AppColors.greyColor,
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Manrope',
+                    ),
+                  ),
+              ],
+            ),
+          ),
+
           SizedBox(height: 40.h),
 
           // Bottom Buttons
-          const ActionButtonsRow(),
+          ActionButtonsRow(imageUrl: design.imageUrl),
           SizedBox(height: 20.h),
         ],
       ),
@@ -211,12 +370,13 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
 
   /// وضع التكبير: الصورة بتملا الشاشة كلها
   Widget _buildMaximizedView() {
+    final design = context.read<DesignDetailsCubit>().currentDesign!;
     return Stack(
       children: [
         // الصورة مفرودة بالكامل
         Positioned.fill(
           child: Image.network(
-            widget.imageUrl,
+            design.imageUrl,
             fit: BoxFit.contain,
             errorBuilder: (context, error, stackTrace) {
               return Container(
@@ -237,11 +397,11 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
             child: Container(
               padding: EdgeInsets.all(8.w),
               decoration: BoxDecoration(
-                color: AppColors.whiteColor.withValues(alpha: 0.85),
+                color: AppColors.whiteColor.withOpacity(0.85),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.2),
+                    color: Colors.black.withOpacity(0.2),
                     blurRadius: 8,
                   ),
                 ],
@@ -271,7 +431,7 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.2),
+                    color: Colors.black.withOpacity(0.2),
                     blurRadius: 8,
                   ),
                 ],

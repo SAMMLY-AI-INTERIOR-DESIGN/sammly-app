@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sammly/core/constant/app_colors.dart';
@@ -6,11 +7,15 @@ import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/core/widgets/action_buttons_row.dart';
 import 'package:sammly/core/routing/routes.dart';
+import 'package:sammly/features/Explore/cubit/design_details_cubit.dart';
+import 'package:sammly/features/Explore/cubit/design_details_states.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_state.dart';
 
 class SharedDesignDetailsView extends StatefulWidget {
-  final String imageUrl;
+  final String designId;
 
-  const SharedDesignDetailsView({super.key, required this.imageUrl});
+  const SharedDesignDetailsView({super.key, required this.designId});
 
   @override
   State<SharedDesignDetailsView> createState() =>
@@ -18,10 +23,13 @@ class SharedDesignDetailsView extends StatefulWidget {
 }
 
 class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
-  bool _isLiked = true;
-  int _likesCount = 34;
-  bool _isSaved = false;
   bool _isMaximized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<DesignDetailsCubit>().fetchDesignDetails(widget.designId);
+  }
 
   void _toggleMaximize() {
     setState(() {
@@ -37,6 +45,16 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
     }
   }
 
+  void _showSnackbar(String message, {bool isError = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isError ? Colors.red : AppColors.primaryColor,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -50,21 +68,121 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
         appBar: _isMaximized
             ? null
             : CustomAppbar(
-                title: 'Living Room',
+                title: 'Design Details',
                 onBack: _handleBack,
                 actions: [
-                  IconButton(
-                    icon: Icon(
-                      Icons.more_vert,
-                      color: AppColors.blackColor,
-                      size: 24.sp,
-                    ),
-                    onPressed: () {},
+                  BlocBuilder<DesignDetailsCubit, DesignDetailsState>(
+                    builder: (context, state) {
+                      final cubit = context.read<DesignDetailsCubit>();
+                      if (cubit.currentDesign == null || !cubit.isPublisher) {
+                        return const SizedBox.shrink();
+                      }
+                      
+                      return PopupMenuButton<String>(
+                        icon: Icon(
+                          Icons.more_vert,
+                          color: AppColors.blackColor,
+                          size: 24.sp,
+                        ),
+                        onSelected: (value) {
+                          if (value == 'share') {
+                            cubit.shareDesign(widget.designId);
+                          } else if (value == 'cancel_share') {
+                            cubit.cancelShareDesign(widget.designId);
+                          }
+                        },
+                        itemBuilder: (context) {
+                          final isShared = cubit.currentDesign!.isShared;
+                          return [
+                            PopupMenuItem(
+                              value: isShared ? 'cancel_share' : 'share',
+                              child: Text(isShared ? 'Cancel Share' : 'Share Design'),
+                            ),
+                          ];
+                        },
+                      );
+                    },
                   ),
                 ],
               ),
         body: SafeArea(
-          child: _isMaximized ? _buildMaximizedView() : _buildNormalView(),
+          child: BlocConsumer<DesignDetailsCubit, DesignDetailsState>(
+            listener: (context, state) {
+              if (state is DesignShareSuccess) {
+                _showSnackbar(state.message);
+              } else if (state is DesignCancelShareSuccess) {
+                _showSnackbar(state.message);
+              } else if (state is DesignLikeSuccess) {
+                _showSnackbar(state.message);
+              } else if (state is DesignUnlikeSuccess) {
+                _showSnackbar(state.message);
+              } else if (state is DesignActionError) {
+                _showSnackbar(state.message, isError: true);
+              }
+            },
+            buildWhen: (previous, current) {
+              return current is DesignDetailsLoading ||
+                  current is DesignDetailsLoaded ||
+                  current is DesignDetailsError;
+            },
+            builder: (context, state) {
+              if (state is DesignDetailsLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (state is DesignDetailsError) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.error_outline,
+                          size: 48.sp, color: AppColors.greyColor),
+                      SizedBox(height: 12.h),
+                      Text(
+                        state.message,
+                        style: TextStyle(
+                          color: AppColors.greyColor,
+                          fontSize: 14.sp,
+                          fontFamily: 'Manrope',
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 12.h),
+                      TextButton(
+                        onPressed: () => context
+                            .read<DesignDetailsCubit>()
+                            .fetchDesignDetails(widget.designId),
+                        child: Text(
+                          'Retry',
+                          style: TextStyle(
+                            color: AppColors.primaryColor,
+                            fontSize: 14.sp,
+                            fontFamily: 'Manrope',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              final cubit = context.read<DesignDetailsCubit>();
+              if (cubit.currentDesign == null) {
+                return const Center(child: Text('No design details found'));
+              }
+
+              return BlocListener<FavoriteCubit, FavoriteState>(
+                listener: (context, favState) {
+                  if (favState is FavoriteToggleSuccess) {
+                    _showSnackbar(favState.message);
+                  } else if (favState is FavoriteToggleError) {
+                    _showSnackbar(favState.message, isError: true);
+                  }
+                },
+                child: _isMaximized ? _buildMaximizedView() : _buildNormalView(),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -72,69 +190,78 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
 
   /// الوضع العادي: صورة + تفاصيل + أزرار
   Widget _buildNormalView() {
+    final cubit = context.read<DesignDetailsCubit>();
+    final design = cubit.currentDesign!;
+    final creator = cubit.currentCreator;
+
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 1. User Info Header
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () {
-              Navigator.pushNamed(
-                context,
-                AppRoutes.userProfileView,
-                arguments: {'userName': 'Fatma Salah'},
-              );
-            },
-            child: Row(
-              children: [
-                Container(
-                  width: 48.w,
-                  height: 48.w,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.bg2Color,
-                    image: const DecorationImage(
-                      image: AssetImage(AppImages.defaultprofile),
-                      fit: BoxFit.cover,
+          // 1. User Info Header (if not publisher)
+          if (creator != null)
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  AppRoutes.userProfileView,
+                  arguments: {
+                    'userName': creator.name,
+                    'userAvatar': creator.avatar,
+                  },
+                );
+              },
+              child: Row(
+                children: [
+                  Container(
+                    width: 48.w,
+                    height: 48.w,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.bg2Color,
+                      image: DecorationImage(
+                        image: NetworkImage(creator.avatar),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(width: 12.w),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Fatma Salah',
-                      style: TextStyle(
-                        color: AppColors.blackColor2,
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Manrope',
+                  SizedBox(width: 12.w),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        creator.name,
+                        style: TextStyle(
+                          color: AppColors.blackColor2,
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Manrope',
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 2.h),
-                    Text(
-                      '15 December 2024',
-                      style: TextStyle(
-                        color: AppColors.greyColor,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Manrope',
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                      SizedBox(height: 2.h),
+                      if (design.sharedAt != null)
+                        Text(
+                          _formatDate(design.sharedAt!),
+                          style: TextStyle(
+                            color: AppColors.greyColor,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Manrope',
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          SizedBox(height: 16.h),
+          if (creator != null) SizedBox(height: 16.h),
 
           // 2. Prompt text
           Text(
-            'Lorem ipsum dolor sit amet consectetur. Fermentum volutpat praesent purus massa neque leo. Gravida sapien non tristique justo non adipiscing sem nam.',
+            design.prompt,
             style: TextStyle(
               color: AppColors.blackColor.withOpacity(0.8),
               fontSize: 14.sp,
@@ -151,7 +278,7 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
             child: Stack(
               children: [
                 Image.network(
-                  widget.imageUrl,
+                  design.imageUrl,
                   width: double.infinity,
                   height: 350.h,
                   fit: BoxFit.cover,
@@ -202,29 +329,31 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                   ),
                 ),
 
-                // Heart Icon (Top Right)
+                // Bookmark Icon (Favorite)
                 Positioned(
                   top: 12.h,
                   right: 12.w,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _isSaved = !_isSaved;
-                      });
+                  child: BlocBuilder<FavoriteCubit, FavoriteState>(
+                    builder: (context, favState) {
+                      final isFav = context.read<FavoriteCubit>().isFavorite(design.id);
+                      return GestureDetector(
+                        onTap: () {
+                          context.read<FavoriteCubit>().toggleFavorite(design.id, isFav);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(8.w),
+                          decoration: const BoxDecoration(
+                            color: AppColors.bg2Color,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            isFav ? Icons.bookmark : Icons.bookmark_border,
+                            color: AppColors.primaryColor,
+                            size: 24.w,
+                          ),
+                        ),
+                      );
                     },
-                    child: Container(
-                      padding: EdgeInsets.all(8.w),
-                      decoration: const BoxDecoration(
-                        color: AppColors.bg2Color,
-                        shape: BoxShape.circle,
-                      ),
-                      child: SvgPicture.asset(
-                        _isSaved
-                            ? AppImages.withsaving
-                            : AppImages.withoutsaving,
-                        width: 24.w,
-                      ),
-                    ),
                   ),
                 ),
 
@@ -263,21 +392,18 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
               // Like Button
               GestureDetector(
                 onTap: () {
-                  setState(() {
-                    _isLiked = !_isLiked;
-                    _isLiked ? _likesCount++ : _likesCount--;
-                  });
+                  cubit.toggleLike(design.id);
                 },
                 child: Row(
                   children: [
                     Container(
                       padding: EdgeInsets.all(6.w),
                       decoration: BoxDecoration(
-                        color: AppColors.primaryColor.withValues(alpha: 0.1),
+                        color: AppColors.primaryColor.withOpacity(0.1),
                         shape: BoxShape.circle,
                       ),
                       child: SvgPicture.asset(
-                        _isLiked
+                        design.isLiked
                             ? AppImages.heartFilled
                             : AppImages.heartOutline,
                         width: 16.w,
@@ -285,7 +411,7 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                     ),
                     SizedBox(width: 8.w),
                     Text(
-                      'Like',
+                      design.isLiked ? 'Liked' : 'Like',
                       style: TextStyle(
                         color: AppColors.greyColor,
                         fontSize: 15.sp,
@@ -296,21 +422,20 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                   ],
                 ),
               ),
-
               // Total Likes
               Row(
                 children: [
                   Container(
                     padding: EdgeInsets.all(6.w),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryColor.withValues(alpha: 0.1),
+                      color: AppColors.primaryColor.withOpacity(0.1),
                       shape: BoxShape.circle,
                     ),
                     child: SvgPicture.asset(AppImages.heartFilled, width: 12.w),
                   ),
                   SizedBox(width: 8.w),
                   Text(
-                    '$_likesCount',
+                    '${design.likesCount}',
                     style: TextStyle(
                       color: AppColors.greyColor,
                       fontSize: 15.sp,
@@ -326,7 +451,7 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
           SizedBox(height: 32.h),
 
           // Bottom Buttons
-          const ActionButtonsRow(),
+          ActionButtonsRow(imageUrl: design.imageUrl),
           SizedBox(height: 20.h),
         ],
       ),
@@ -335,12 +460,13 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
 
   /// وضع التكبير: الصورة بتملا الشاشة كلها
   Widget _buildMaximizedView() {
+    final design = context.read<DesignDetailsCubit>().currentDesign!;
     return Stack(
       children: [
         // الصورة مفرودة بالكامل
         Positioned.fill(
           child: Image.network(
-            widget.imageUrl,
+            design.imageUrl,
             fit: BoxFit.contain,
             errorBuilder: (context, error, stackTrace) {
               return Container(
@@ -361,11 +487,11 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
             child: Container(
               padding: EdgeInsets.all(8.w),
               decoration: BoxDecoration(
-                color: AppColors.whiteColor.withValues(alpha: 0.85),
+                color: AppColors.whiteColor.withOpacity(0.85),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.2),
+                    color: Colors.black.withOpacity(0.2),
                     blurRadius: 8,
                   ),
                 ],
@@ -395,7 +521,7 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.2),
+                    color: Colors.black.withOpacity(0.2),
                     blurRadius: 8,
                   ),
                 ],
@@ -406,5 +532,18 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
         ),
       ],
     );
+  }
+
+  String _formatDate(String isoDate) {
+    try {
+      final date = DateTime.parse(isoDate);
+      final months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+      ];
+      return '${date.day} ${months[date.month - 1]} ${date.year}';
+    } catch (_) {
+      return isoDate;
+    }
   }
 }

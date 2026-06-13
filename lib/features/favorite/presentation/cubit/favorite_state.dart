@@ -6,16 +6,33 @@ class FavoriteInitial extends FavoriteState {}
 
 class FavoriteLoading extends FavoriteState {}
 
-class FavoriteSuccess extends FavoriteState {
+class FavoritePaginationLoading extends FavoriteState {}
+
+class FavoriteLoaded extends FavoriteState {
   final List<FavoriteModel> favorites;
-  final String selectedCategory;
+  final String selectedRoom;
+  final int currentPage;
+  final bool hasMore;
 
-  FavoriteSuccess({required this.favorites, required this.selectedCategory});
+  FavoriteLoaded({
+    required this.favorites,
+    required this.selectedRoom,
+    required this.currentPage,
+    required this.hasMore,
+  });
 }
-
-class FavoriteEmpty extends FavoriteState {}
 
 class FavoriteError extends FavoriteState {
   final String message;
   FavoriteError(this.message);
+}
+
+class FavoriteToggleSuccess extends FavoriteState {
+  final String message;
+  FavoriteToggleSuccess(this.message);
+}
+
+class FavoriteToggleError extends FavoriteState {
+  final String message;
+  FavoriteToggleError(this.message);
 }

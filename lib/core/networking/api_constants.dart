@@ -19,4 +19,23 @@ abstract class ApiConstants {
 
   // Design generation endpoints
   static const String generateDesign = '/api/designs/generate';
+
+  // Design history endpoints
+  static const String designHistory = '/api/designs/history';
+
+  // Shared explore endpoints
+  static const String sharedDesigns = '/api/designs/shared';
+
+  // Static designs endpoints
+  static const String staticDesigns = '/api/designs/static-designs';
+
+  // Design details & actions endpoints
+  static String designDetails(String designId) => '/api/designs/$designId';
+  static String shareDesign(String designId) => '/api/designs/$designId/share';
+  static String cancelShareDesign(String designId) => '/api/designs/$designId/cancel-share';
+  static String likeDesign(String designId) => '/api/designs/$designId/like';
+
+  // Favorites endpoints
+  static const String favorites = '/api/designs/favorites';
+  static String favoriteDesign(String designId) => '/api/designs/favorites/$designId';
 }

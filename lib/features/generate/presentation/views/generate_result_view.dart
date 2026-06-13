@@ -139,9 +139,9 @@ class _GenerateResultViewState extends State<GenerateResultView> {
                   ? SizedBox(height: 17.h)
                   : SizedBox(height: 56.h),
               ActionButtonsRow(
+                imageUrl: _isNetworkImage ? _selectedImage : null,
                 onCustomize: () {},
                 onShare: () {},
-                onDownload: () {},
               ),
               SizedBox(height: 24.h),
             ],

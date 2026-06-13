@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
+import 'package:sammly/features/Explore/cubit/explorecubit.dart';
+import 'package:sammly/features/Explore/cubit/explorestates.dart';
 import 'package:sammly/features/Explore/presentation/widgets/design_grid_item.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
+import 'package:sammly/core/theme/text_styles.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_state.dart';
 
 class SharedDesignsView extends StatefulWidget {
   const SharedDesignsView({super.key});
@@ -17,35 +23,19 @@ class SharedDesignsView extends StatefulWidget {
 
 class _SharedDesignsViewState extends State<SharedDesignsView>
     with TickerProviderStateMixin {
-  // خيارات الترتيب
+  // Sort options
   final List<String> _sortOptions = ['Most liked', 'Most recent'];
   String _selectedSort = 'Most liked';
 
-  // داتا وهمية
-  final List<String> _designImageUrls = [
-    'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?q=80&w=600&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=600&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1616046229478-9901c5536a45?q=80&w=600&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=600&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1617104678098-de229db51175?q=80&w=600&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1634712282287-14ed57b9cc89?q=80&w=600&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=600&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=600&auto=format&fit=crop',
-  ];
-
-  // Heights to simulate staggered look (will come from DB in future)
-  final List<double> _itemHeights = [
-    1.2, // tall
-    0.85, // short
-    1.4, // taller
-    0.9, // short
-    1.0, // medium
-    1.3, // tall
-    0.8, // short
-    1.1, // medium
-  ];
+  final ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
 
   late final AnimationController _gridAnimController;
+
+  // Map UI sort labels to API sort values
+  String _sortApiValue(String uiLabel) {
+    return uiLabel == 'Most liked' ? 'likes' : 'latest';
+  }
 
   @override
   void initState() {
@@ -54,7 +44,11 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
       vsync: this,
       duration: const Duration(milliseconds: 800),
     );
-    // بعد بناء الـ frame الأول نشغّل الأنيميشن
+    _scrollController.addListener(_onScroll);
+
+    // Fetch initial data
+    context.read<ExploreCubit>().fetchExplore(sort: _sortApiValue(_selectedSort));
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _gridAnimController.forward();
     });
@@ -62,35 +56,40 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
 
   @override
   void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    _searchController.dispose();
     _gridAnimController.dispose();
     super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      final cubit = context.read<ExploreCubit>();
+      if (cubit.hasMore && cubit.state is! ExplorePaginationLoading) {
+        cubit.loadMore();
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // خلفية متدرجة بدلاً من لون ثابت
       body: Container(
         decoration: const BoxDecoration(gradient: AppColors.scafoldBgGradient),
         child: SafeArea(
           child: Column(
             children: [
-              // AppBar مخصص
               const CustomAppbar(
                 title: 'Shared Designs',
                 backgroundColor: Colors.transparent,
               ),
               SizedBox(height: 4.h),
-
-              // 1. شريط البحث
               _buildSearchBar(),
               SizedBox(height: 16.h),
-
-              // 2. الفلاتر (Most liked / Most recent)
               _buildSortBar(),
               SizedBox(height: 12.h),
-
-              // 3. شبكة التصميمات
               Expanded(child: _buildDesignGrid()),
             ],
           ),
@@ -120,6 +119,13 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
           ],
         ),
         child: TextField(
+          controller: _searchController,
+          onSubmitted: (value) {
+            final query = value.trim().isEmpty ? null : value.trim();
+            context.read<ExploreCubit>().searchDesigns(query);
+            _gridAnimController.reset();
+            _gridAnimController.forward();
+          },
           decoration: InputDecoration(
             hintText: 'Search designs...',
             hintStyle: TextStyle(
@@ -132,10 +138,22 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
               padding: EdgeInsets.all(13.w),
               child: SvgPicture.asset(AppImages.searchIcon).withAppGradient(),
             ),
-
+            suffixIcon: _searchController.text.isNotEmpty
+                ? IconButton(
+                    icon: Icon(Icons.clear, size: 18.sp, color: AppColors.greyColor),
+                    onPressed: () {
+                      _searchController.clear();
+                      context.read<ExploreCubit>().searchDesigns(null);
+                      _gridAnimController.reset();
+                      _gridAnimController.forward();
+                      setState(() {});
+                    },
+                  )
+                : null,
             border: InputBorder.none,
             contentPadding: EdgeInsets.symmetric(vertical: 15.h),
           ),
+          onChanged: (_) => setState(() {}),
         ),
       ),
     );
@@ -154,9 +172,13 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
               padding: EdgeInsets.only(right: 8.w),
               child: GestureDetector(
                 onTap: () {
+                  if (_selectedSort == option) return;
                   setState(() {
                     _selectedSort = option;
                   });
+                  context.read<ExploreCubit>().changeSort(_sortApiValue(option));
+                  _gridAnimController.reset();
+                  _gridAnimController.forward();
                 },
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
@@ -216,65 +238,160 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
   }
 
   Widget _buildDesignGrid() {
-    return ScrollConfiguration(
-      behavior: const ScrollBehavior().copyWith(overscroll: false),
-      child: MasonryGridView.builder(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-        gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-        ),
-        mainAxisSpacing: 12.h,
-        crossAxisSpacing: 12.w,
-        itemCount: _designImageUrls.length,
-        itemBuilder: (context, index) {
-          // أنيميشن ظهور تدريجي لكل كارت
-          final delay = index * 0.12;
-          final animation = Tween<double>(begin: 0.0, end: 1.0).animate(
-            CurvedAnimation(
-              parent: _gridAnimController,
-              curve: Interval(
-                delay.clamp(0.0, 0.8),
-                (delay + 0.4).clamp(0.0, 1.0),
-                curve: Curves.easeOutCubic,
-              ),
+    return BlocBuilder<ExploreCubit, ExploreState>(
+      builder: (context, state) {
+        // Initial loading
+        if (state is ExploreLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        // Error
+        if (state is ExploreError) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.error_outline, size: 48.sp, color: AppColors.greyColor),
+                SizedBox(height: 12.h),
+                Text(
+                  state.message,
+                  style: TextStyle(
+                    color: AppColors.greyColor,
+                    fontSize: 14.sp,
+                    fontFamily: 'Manrope',
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 12.h),
+                TextButton(
+                  onPressed: () => context.read<ExploreCubit>().fetchExplore(
+                        sort: _sortApiValue(_selectedSort),
+                      ),
+                  child: Text(
+                    'Retry',
+                    style: TextStyle(
+                      color: AppColors.primaryColor,
+                      fontSize: 14.sp,
+                      fontFamily: 'Manrope',
+                    ),
+                  ),
+                ),
+              ],
             ),
           );
+        }
 
-          // Staggered height based on aspect ratio multiplier
-          final baseWidth = (MediaQuery.of(context).size.width - 44.w) / 2;
-          final itemHeight =
-              baseWidth * _itemHeights[index % _itemHeights.length];
+        // Loaded or pagination loading
+        if (state is ExploreLoaded || state is ExplorePaginationLoading) {
+          final designs = state is ExploreLoaded
+              ? state.designs
+              : context.read<ExploreCubit>().currentDesigns;
 
-          return AnimatedBuilder(
-            animation: animation,
-            builder: (context, child) {
-              return Opacity(
-                opacity: animation.value,
-                child: Transform.translate(
-                  offset: Offset(0, 30 * (1 - animation.value)),
-                  child: child,
-                ),
-              );
-            },
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  AppRoutes.sharedDesignDetailsView,
-                  arguments: _designImageUrls[index],
+          if (designs.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(AppImages.noImage),
+                  Text('No Shared Designs', style: AppTextStyles.title20Bold),
+                  Text(
+                    'No shared designs found',
+                    style: AppTextStyles.body16Regular.copyWith(
+                      color: AppColors.greyColor.withValues(alpha: 0.6),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          final isPaginationLoading = state is ExplorePaginationLoading;
+
+          return ScrollConfiguration(
+            behavior: const ScrollBehavior().copyWith(overscroll: false),
+            child: MasonryGridView.builder(
+              controller: _scrollController,
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+              gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+              ),
+              mainAxisSpacing: 12.h,
+              crossAxisSpacing: 12.w,
+              itemCount: designs.length + (isPaginationLoading ? 1 : 0),
+              itemBuilder: (context, index) {
+                // Pagination loader
+                if (index >= designs.length) {
+                  return Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16.h),
+                      child: const CircularProgressIndicator(),
+                    ),
+                  );
+                }
+
+                final design = designs[index];
+
+                // Staggered height
+                final List<double> itemHeights = [1.2, 0.85, 1.4, 0.9, 1.0, 1.3, 0.8, 1.1];
+                final baseWidth = (MediaQuery.of(context).size.width - 44.w) / 2;
+                final itemHeight = baseWidth * itemHeights[index % itemHeights.length];
+
+                // Entry animation
+                final delay = index * 0.12;
+                final animation = Tween<double>(begin: 0.0, end: 1.0).animate(
+                  CurvedAnimation(
+                    parent: _gridAnimController,
+                    curve: Interval(
+                      delay.clamp(0.0, 0.8),
+                      (delay + 0.4).clamp(0.0, 1.0),
+                      curve: Curves.easeOutCubic,
+                    ),
+                  ),
+                );
+
+                return AnimatedBuilder(
+                  animation: animation,
+                  builder: (context, child) {
+                    return Opacity(
+                      opacity: animation.value,
+                      child: Transform.translate(
+                        offset: Offset(0, 30 * (1 - animation.value)),
+                        child: child,
+                      ),
+                    );
+                  },
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          AppRoutes.sharedDesignDetailsView,
+                          arguments: design.id,
+                        );
+                      },
+                      child: SizedBox(
+                        height: itemHeight,
+                        child: BlocBuilder<FavoriteCubit, FavoriteState>(
+                          builder: (context, favState) {
+                            final isFav = context.read<FavoriteCubit>().isFavorite(design.id);
+                            return DesignGridItem(
+                              imageUrl: design.imageUrl,
+                              initialIsLiked: isFav,
+                              onFavoriteToggled: (isLiked) {
+                                context.read<FavoriteCubit>().toggleFavorite(design.id, !isLiked);
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                  ),
                 );
               },
-              child: SizedBox(
-                height: itemHeight,
-                child: DesignGridItem(
-                  imageUrl: _designImageUrls[index],
-                  showLikeButton: false,
-                ),
-              ),
             ),
           );
-        },
-      ),
+        }
+
+        return const SizedBox.shrink();
+      },
     );
   }
 }

@@ -5,6 +5,9 @@ import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/core/widgets/action_buttons_row.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_state.dart';
 import 'package:sammly/features/History/presentation/widgets/history_main_image_section.dart';
 import 'package:sammly/features/History/presentation/widgets/history_details_section.dart';
 import 'package:sammly/features/search/presentation/widgets/similar_item_card.dart';
@@ -13,11 +16,13 @@ import 'package:sammly/features/search/presentation/views/search_view.dart';
 class HistoryDetailsView extends StatefulWidget {
   final String title;
   final String imageUrl;
+  final String designId;
 
   const HistoryDetailsView({
     super.key,
     required this.title,
     required this.imageUrl,
+    required this.designId,
   });
 
   @override
@@ -26,7 +31,12 @@ class HistoryDetailsView extends StatefulWidget {
 
 class _HistoryDetailsViewState extends State<HistoryDetailsView> {
   bool _isMaximized = false;
-  bool _isSaved = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // context.read<FavoriteCubit>().isFavorite(widget.designId) is used directly in the build method.
+  }
 
   final List<SimilarItemModel> products = [
     SimilarItemModel(title: "Sofa", subtitle: "Modern gray", imageUrl: "https://placehold.co/175x94"),
@@ -72,15 +82,28 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
         if (didPop) return;
         if (_isMaximized) _toggleMaximize();
       },
-      child: Scaffold(
-        backgroundColor: AppColors.whiteColor,
-        appBar: _isMaximized
-            ? null
-            : CustomAppbar(title: widget.title, onBack: _handleBack),
-        body: SafeArea(
-          child: _isMaximized
-              ? _buildMaximizedView(screenHeight, screenWidth)
-              : _buildNormalView(),
+      child: BlocListener<FavoriteCubit, FavoriteState>(
+        listener: (context, state) {
+          if (state is FavoriteToggleSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message), backgroundColor: AppColors.primaryColor),
+            );
+          } else if (state is FavoriteToggleError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+            );
+          }
+        },
+        child: Scaffold(
+          backgroundColor: AppColors.whiteColor,
+          appBar: _isMaximized
+              ? null
+              : CustomAppbar(title: widget.title, onBack: _handleBack),
+          body: SafeArea(
+            child: _isMaximized
+                ? _buildMaximizedView(screenHeight, screenWidth)
+                : _buildNormalView(),
+          ),
         ),
       ),
     );
@@ -98,23 +121,26 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
           SizedBox(
             height: 320.h,
             width: double.infinity,
-            child: HistoryMainImageSection(
-              imageUrl: widget.imageUrl,
-              isMaximized: false,
-              onToggleMaximize: _toggleMaximize,
-              onSmartLensTap: () => _openSmartLens(context),
-              isSaved: _isSaved,
-              onSaveTap: () {
-                setState(() {
-                  _isSaved = !_isSaved;
-                });
+            child: BlocBuilder<FavoriteCubit, FavoriteState>(
+              builder: (context, state) {
+                final isSaved = context.read<FavoriteCubit>().isFavorite(widget.designId);
+                return HistoryMainImageSection(
+                  imageUrl: widget.imageUrl,
+                  isMaximized: false,
+                  onToggleMaximize: _toggleMaximize,
+                  onSmartLensTap: () => _openSmartLens(context),
+                  isSaved: isSaved,
+                  onSaveTap: () {
+                    context.read<FavoriteCubit>().toggleFavorite(widget.designId, isSaved);
+                  },
+                );
               },
             ),
           ),
           SizedBox(height: 24.h),
           const HistoryDetailsSection(),
           SizedBox(height: 40.h),
-          const ActionButtonsRow(),
+          ActionButtonsRow(imageUrl: widget.imageUrl),
           SizedBox(height: 20.h),
         ],
       ),

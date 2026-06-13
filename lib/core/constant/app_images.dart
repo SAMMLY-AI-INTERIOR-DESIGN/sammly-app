@@ -96,9 +96,9 @@ class AppImages {
   static const String crownIcon = "assets/images/crown.svg";
   static const String diamondIcon = "assets/images/diamond.svg";
   static const String giftIcon = "assets/images/gift.svg";
-  static const String withsaving = "assets/images/withsaving.svg";
-  static const String withoutsaving = "assets/images/withoutsaving.svg";
-  static const String favoriteprofileicon = "assets/images/savinginprofile.svg";
+  static const String withsaving = "assets/images/withs.svg";
+  static const String withoutsaving = "assets/images/withouts.svg";
+  static const String favoriteprofileicon = "assets/images/withouts.svg";
   static const String subscriptionBgPlaceholder =
       "assets/images/subscription_bg_placeholder.png";
 }

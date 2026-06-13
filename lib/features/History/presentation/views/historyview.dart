@@ -6,35 +6,48 @@ import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
+import 'package:sammly/features/History/cubit/historycubit.dart';
+import 'package:sammly/features/History/cubit/history_state.dart';
 import 'package:sammly/features/History/presentation/widgets/customhistory.dart';
 import 'package:sammly/features/History/presentation/views/historydetails.dart';
 import 'package:sammly/features/layout/presentation/cubit/layout_cubit/layout_cubit.dart';
 
-class HistoryView extends StatelessWidget {
+class HistoryView extends StatefulWidget {
   const HistoryView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // قائمة من الصور المختلفة (أفقي وعمودي) عشان نجرب عليها
-    final List<Map<String, String>> historyData = [
-      {
-        'imageUrl': 'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?q=80&w=600&auto=format&fit=crop',
-        'title': 'Modern Living Room',
-      },
-      {
-        'imageUrl': 'https://images.unsplash.com/photo-1616046229478-9901c5536a45?q=80&w=600&auto=format&fit=crop',
-        'title': 'Minimalist Bedroom',
-      },
-      {
-        'imageUrl': 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=600&auto=format&fit=crop',
-        'title': 'Cozy Apartment',
-      },
-      {
-        'imageUrl': 'https://images.unsplash.com/photo-1617104678098-de229db51175?q=80&w=600&auto=format&fit=crop',
-        'title': 'Elegant Kitchen',
-      },
-    ];
+  State<HistoryView> createState() => _HistoryViewState();
+}
 
+class _HistoryViewState extends State<HistoryView> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<HistoryCubit>().fetchHistory();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      final cubit = context.read<HistoryCubit>();
+      if (cubit.hasMore && cubit.state is! HistoryPaginationLoading) {
+        cubit.loadMore();
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
       appBar: CustomAppbar(
@@ -42,51 +55,118 @@ class HistoryView extends StatelessWidget {
         onBack: () => context.read<LayoutCubit>().changeIndex(0),
       ),
       body: SafeArea(
-        child: historyData.isEmpty
-            ? Center(
+        child: BlocBuilder<HistoryCubit, HistoryState>(
+          builder: (context, state) {
+            // Initial loading
+            if (state is HistoryLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
+            // Error state
+            if (state is HistoryError) {
+              return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(AppImages.noImage),
+                    SizedBox(height: 16.h),
                     Text(
-                      AppStrings.noHistory,
-                      style: AppTextStyles.title20Bold,
-                    ),
-                    Text(
-                      AppStrings.noHistoryDesc,
+                      state.message,
                       style: AppTextStyles.body16Regular.copyWith(
                         color: AppColors.greyColor.withValues(alpha: 0.6),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 16.h),
+                    TextButton(
+                      onPressed: () =>
+                          context.read<HistoryCubit>().fetchHistory(),
+                      child: Text(
+                        'Retry',
+                        style: AppTextStyles.body16Regular.copyWith(
+                          color: AppColors.primaryColor,
+                        ),
                       ),
                     ),
                   ],
                 ),
-              )
-            : ListView.separated(
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-                itemCount: historyData.length,
+              );
+            }
+
+            // Loaded state (or loading more pages)
+            if (state is HistoryLoaded || state is HistoryPaginationLoading) {
+              final displayDesigns = state is HistoryLoaded
+                  ? state.designs
+                  : context.read<HistoryCubit>().currentDesigns;
+
+              if (displayDesigns.isEmpty) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(AppImages.noImage),
+                      Text(
+                        AppStrings.noHistory,
+                        style: AppTextStyles.title20Bold,
+                      ),
+                      Text(
+                        AppStrings.noHistoryDesc,
+                        style: AppTextStyles.body16Regular.copyWith(
+                          color: AppColors.greyColor.withValues(alpha: 0.6),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              return ListView.separated(
+                controller: _scrollController,
+                padding:
+                    EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+                itemCount: displayDesigns.length +
+                    (state is HistoryPaginationLoading ? 1 : 0),
                 separatorBuilder: (context, index) => SizedBox(height: 12.h),
                 itemBuilder: (context, index) {
-                  final item = historyData[index];
+                  // Pagination loader at the bottom
+                  if (index >= displayDesigns.length) {
+                    return Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16.h),
+                        child: const CircularProgressIndicator(),
+                      ),
+                    );
+                  }
+
+                  final item = displayDesigns[index];
                   return CustomHistoryContainer(
-                    imageUrl: item['imageUrl']!,
-                    title: item['title']!,
-                    description:
-                        'Lorem ipsum dolor sit amet consectetur adipisicing elit',
-                    date: '9 Feb 2026',
+                    imageUrl: item.imageUrl,
+                    title: item.prompt,
+                    description: item.prompt,
+                    date: item.createdAt,
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => HistoryDetailsView(
-                            title: item['title']!,
-                            imageUrl: item['imageUrl']!,
+                            title: item.prompt,
+                            imageUrl: item.imageUrl,
+                            designId: item.id,
                           ),
                         ),
                       );
                     },
                   );
                 },
-              ),
+              );
+            }
+
+            // Initial state
+            return const SizedBox.shrink();
+          },
+        ),
       ),
     );
   }

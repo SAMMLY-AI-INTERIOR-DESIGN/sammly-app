@@ -112,18 +112,18 @@ abstract class AppRouter {
         );
 
       case AppRoutes.browseDesignDetailsView:
-        final imageUrl = settings.arguments as String? ?? '';
+        final designId = settings.arguments as String? ?? '';
         return MaterialPageRoute(
           builder: (context) {
-            return BrowseDesignDetailsView(imageUrl: imageUrl);
+            return BrowseDesignDetailsView(designId: designId);
           },
         );
 
       case AppRoutes.sharedDesignDetailsView:
-        final imageUrl = settings.arguments as String? ?? '';
+        final designId = settings.arguments as String? ?? '';
         return MaterialPageRoute(
           builder: (context) {
-            return SharedDesignDetailsView(imageUrl: imageUrl);
+            return SharedDesignDetailsView(designId: designId);
           },
         );
 

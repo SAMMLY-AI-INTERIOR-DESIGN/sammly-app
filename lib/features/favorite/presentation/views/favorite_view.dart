@@ -9,25 +9,33 @@ import 'package:sammly/features/favorite/presentation/views/widgets/favorite_gri
 import 'package:sammly/features/favorite/presentation/views/widgets/filter_bar.dart';
 
 
-class FavoriteView extends StatelessWidget {
+class FavoriteView extends StatefulWidget {
   const FavoriteView({super.key});
 
   @override
+  State<FavoriteView> createState() => _FavoriteViewState();
+}
+
+class _FavoriteViewState extends State<FavoriteView> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<FavoriteCubit>().fetchFavorites();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => FavoriteCubit(),
-      child: Scaffold(
-        backgroundColor: AppColors.whiteColor,
-        appBar: CustomAppbar(title: AppStrings.favorite),
-        body: SafeArea(
-          child: Column(
-            children: [
-              SizedBox(height: 16.h),
-              FilterBar(),
-              SizedBox(height: 16.h),
-              FavoriteGridView(),
-            ],
-          ),
+    return Scaffold(
+      backgroundColor: AppColors.whiteColor,
+      appBar: CustomAppbar(title: AppStrings.favorite),
+      body: SafeArea(
+        child: Column(
+          children: [
+            SizedBox(height: 16.h),
+            FilterBar(),
+            SizedBox(height: 16.h),
+            FavoriteGridView(),
+          ],
         ),
       ),
     );
