@@ -44,4 +44,11 @@ abstract class ApiConstants {
 
   // Settings endpoint
   static const String settingsEndpoint = '/api/profile/settings';
+
+  // Following endpoints
+  static const String getFollows = '/api/profile/follows';
+  static String followProfile(String userId) => '/api/profile/follows/$userId';
+
+  // Notifications endpoint
+  static const String getNotifications = '/api/profile/notifications';
 }
