@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/constant/app_strings.dart';
-import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/core/widgets/custombutton.dart';
 import 'package:sammly/features/home/logic/home_cubit.dart';
@@ -28,16 +27,13 @@ class _EditProfileViewState extends State<EditProfileView> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController dobController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
   File? _selectedImageFile;
-  
-  String selectedCountry = "usa";
-  String selectedGender = "male";
 
-  final List<String> countriesList = [
-  "usa",
-  "egypt",
-];
+  String selectedCountry = "🇪🇬 Egypt";
+  String selectedGender = "male";
+  DateTime? selectedDobDate;
+
+  final List<String> countriesList = ["🇪🇬 Egypt", "🌐 International"];
   final List<String> gendersList = ["male", "female"];
 
   @override
@@ -47,13 +43,29 @@ class _EditProfileViewState extends State<EditProfileView> {
     if (profile != null) {
       nameController.text = profile.name ?? '';
       usernameController.text = profile.username ?? '';
-      dobController.text = profile.dateOfBirth ?? '';
-      
-      if (profile.country != null && countriesList.contains(profile.country)) {
-        selectedCountry = profile.country!;
+
+      if (profile.country != null) {
+        final lowerCountry = profile.country!.toLowerCase();
+        if (lowerCountry.contains('egypt')) {
+          selectedCountry = "🇪🇬 Egypt";
+        } else if (lowerCountry.contains('international') ||
+            lowerCountry.contains('usa')) {
+          selectedCountry = "🌐 International";
+        }
       }
       if (profile.gender != null && gendersList.contains(profile.gender)) {
         selectedGender = profile.gender!;
+      }
+
+      if (profile.dateOfBirth != null) {
+        final parsedDate = DateTime.tryParse(profile.dateOfBirth!);
+        if (parsedDate != null) {
+          selectedDobDate = parsedDate;
+          dobController.text =
+              "${parsedDate.day.toString().padLeft(2, '0')}/${parsedDate.month.toString().padLeft(2, '0')}/${parsedDate.year}";
+        } else {
+          dobController.text = profile.dateOfBirth!;
+        }
       }
     }
   }
@@ -63,14 +75,13 @@ class _EditProfileViewState extends State<EditProfileView> {
     nameController.dispose();
     usernameController.dispose();
     dobController.dispose();
-    phoneController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.whiteColor, 
+      backgroundColor: AppColors.whiteColor,
       appBar: const CustomAppbar(title: AppStrings.editProfile),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
@@ -81,43 +92,41 @@ class _EditProfileViewState extends State<EditProfileView> {
                 _selectedImageFile = file;
               },
             ),
-            
+
             SizedBox(height: 20.h),
 
             CustomTextField(
-              label: AppStrings.fullName, 
+              label: AppStrings.fullName,
               controller: nameController,
             ),
             CustomTextField(
-              label: AppStrings.userName, 
+              label: AppStrings.userName,
               controller: usernameController,
-            ),
-            
-            CustomTextField(
-              label: AppStrings.dateOfBirth, 
-              controller: dobController,
-              suffixIcon: SvgPicture.asset(AppImages.caledar, width: 20.w, height: 20.h),
             ),
 
             CustomTextField(
-              label: AppStrings.phoneNumber,
-              controller: phoneController,
-              prefix: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12.w),
-                    child: Row(
-                      children: [
-                        Text("20+", style: AppTextStyles.body14Regular),
-                        Icon(Icons.keyboard_arrow_down, size: 18.sp),
-                        SizedBox(width: 8.w),
-                        Container(width: 1, height: 20.h, color: Colors.grey), 
-                        SizedBox(width: 8.w),
-                      ],
-                    ),
-                  ),
-                ],
+              label: AppStrings.dateOfBirth,
+              controller: dobController,
+              readOnly: true,
+              onTap: () async {
+                final DateTime? picked = await showDatePicker(
+                  context: context,
+                  initialDate: selectedDobDate ?? DateTime(2000),
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime.now(),
+                );
+                if (picked != null) {
+                  setState(() {
+                    selectedDobDate = picked;
+                    dobController.text =
+                        "${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year}";
+                  });
+                }
+              },
+              suffixIcon: SvgPicture.asset(
+                AppImages.caledar,
+                width: 20.w,
+                height: 20.h,
               ),
             ),
 
@@ -126,7 +135,7 @@ class _EditProfileViewState extends State<EditProfileView> {
               children: [
                 Expanded(
                   child: CustomDropdown(
-                    label: AppStrings.country, 
+                    label: AppStrings.country,
                     value: selectedCountry,
                     items: countriesList,
                     onChanged: (val) {
@@ -141,7 +150,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                 SizedBox(width: 12.w),
                 Expanded(
                   child: CustomDropdown(
-                    label: AppStrings.gender, 
+                    label: AppStrings.gender,
                     value: selectedGender,
                     items: gendersList,
                     onChanged: (val) {
@@ -166,13 +175,15 @@ class _EditProfileViewState extends State<EditProfileView> {
                   context.read<ProfileCubit>().fetchSettingInfo();
                   context.read<HomeCubit>().fetchHomeData();
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Profile updated successfully!')),
+                    const SnackBar(
+                      content: Text('Profile updated successfully!'),
+                    ),
                   );
                   Navigator.pop(context);
                 } else if (state is EditProfileError) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.message)),
-                  );
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(state.message)));
                 }
               },
               builder: (context, state) {
@@ -182,16 +193,33 @@ class _EditProfileViewState extends State<EditProfileView> {
                 return CustomButton(
                   text: AppStrings.update,
                   onPressed: () {
-                    context.read<ProfileCubit>().editProfile(
-                      {
-                        "name": nameController.text,
-                        "username": usernameController.text,
-                        "country": selectedCountry,
-                        "gender": selectedGender,
-                        "dateOfBirth": dobController.text.isNotEmpty ? dobController.text : null,
-                      },
-                      imageFile: _selectedImageFile,
-                    );
+                    String? apiDob;
+                    if (selectedDobDate != null) {
+                      apiDob =
+                          "${selectedDobDate!.year}-${selectedDobDate!.month.toString().padLeft(2, '0')}-${selectedDobDate!.day.toString().padLeft(2, '0')}";
+                    } else if (dobController.text.isNotEmpty) {
+                      final parts = dobController.text.split('/');
+                      if (parts.length == 3) {
+                        final d = int.tryParse(parts[0]);
+                        final m = int.tryParse(parts[1]);
+                        final y = int.tryParse(parts[2]);
+                        if (d != null && m != null && y != null) {
+                          apiDob =
+                              "$y-${m.toString().padLeft(2, '0')}-${d.toString().padLeft(2, '0')}";
+                        }
+                      }
+                      apiDob ??= dobController.text;
+                    }
+
+                    context.read<ProfileCubit>().editProfile({
+                      "name": nameController.text,
+                      "username": usernameController.text,
+                      "country": selectedCountry == "🇪🇬 Egypt"
+                          ? "egypt"
+                          : "international",
+                      "gender": selectedGender,
+                      "dateOfBirth": apiDob,
+                    }, imageFile: _selectedImageFile);
                   },
                 );
               },
