@@ -4,9 +4,8 @@ import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/routing/routes.dart';
-import 'package:sammly/features/home/presentation/views/widgets/home_header.dart'; // مسار الهيدر بتاعك
+import 'package:sammly/features/home/presentation/views/widgets/home_header.dart'; 
 import 'package:sammly/features/home/presentation/views/widgets/home_card_widget.dart';
-import 'package:sammly/features/generate/presentation/views/image_generation_stepper_view.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -81,12 +80,7 @@ class HomeView extends StatelessWidget {
                       tagIcon: AppImages.replaceObjectIcon, 
                       showCenterIcon: true,
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ImageGenerationStepperView(),
-                          ),
-                        );
+                        Navigator.pushNamed(context, AppRoutes.imageGenerationStepperView);
                       },
                     ),
                     
@@ -98,7 +92,7 @@ class HomeView extends StatelessWidget {
                       tagIcon: AppImages.removeObjectIcon,
                       showCenterIcon: true, 
                       onTap: () {
-                        
+                        Navigator.pushNamed(context, AppRoutes.removeView);
                       },
                     ),
                     
