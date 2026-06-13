@@ -10,6 +10,12 @@ class HomeCubit extends Cubit<HomeState> {
 
   HomeCubit(this._repository) : super(HomeInitial());
 
+  /// Resets all in-memory home state (used on logout).
+  void reset() {
+    currentHome = null;
+    emit(HomeInitial());
+  }
+
   Future<void> fetchHomeData() async {
     emit(HomeLoading());
 

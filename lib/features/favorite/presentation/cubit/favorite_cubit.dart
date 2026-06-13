@@ -25,6 +25,16 @@ class FavoriteCubit extends Cubit<FavoriteState> {
     return _favoriteIds.contains(designId);
   }
 
+  /// Resets all in-memory favorites state (used on logout).
+  void reset() {
+    _allDesigns.clear();
+    _favoriteIds.clear();
+    _currentPage = 1;
+    _hasMore = true;
+    _selectedRoom = 'all';
+    emit(FavoriteInitial());
+  }
+
   Future<void> fetchFavorites({int limit = 20, String? room}) async {
     if (room != null) {
       _selectedRoom = room.toLowerCase();

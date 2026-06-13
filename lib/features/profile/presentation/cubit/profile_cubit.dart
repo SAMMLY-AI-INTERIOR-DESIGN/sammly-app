@@ -14,6 +14,13 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   ProfileCubit(this._repository) : super(ProfileInitial());
 
+  /// Resets all in-memory profile state (used on logout).
+  void reset() {
+    currentProfile = null;
+    currentSettingInfo = null;
+    emit(ProfileInitial());
+  }
+
   Future<void> fetchProfile({bool forceRefresh = false}) async {
     if (currentProfile == null || forceRefresh) {
       emit(ProfileLoading());

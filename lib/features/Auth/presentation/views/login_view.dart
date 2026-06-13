@@ -19,6 +19,8 @@ import 'package:sammly/features/Auth/presentation/widgets/custom_line.dart';
 import 'package:sammly/features/Auth/presentation/widgets/custom_text_field.dart';
 import 'package:sammly/features/Auth/presentation/widgets/loginwith.dart';
 import 'package:sammly/features/Auth/presentation/widgets/signlogin.dart';
+import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:sammly/features/home/logic/home_cubit.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -50,6 +52,10 @@ class _LoginScreenState extends State<LoginScreen> {
       child: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is LoginSuccessState) {
+            // Fetch fresh profile, settings & home data for the new account
+            context.read<ProfileCubit>().fetchProfile(forceRefresh: true);
+            context.read<ProfileCubit>().fetchSettingInfo();
+            context.read<HomeCubit>().fetchHomeData();
             Navigator.pushReplacementNamed(context, AppRoutes.layoutView);
           } else if (state is AuthNeedsVerificationState) {
             ScaffoldMessenger.of(context).showSnackBar(

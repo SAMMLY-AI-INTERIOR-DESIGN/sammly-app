@@ -11,6 +11,8 @@ import 'package:sammly/features/Auth/cubit/auth_cubit.dart';
 import 'package:sammly/features/Auth/cubit/auth_states.dart';
 import 'package:sammly/features/Auth/presentation/widgets/signlogin.dart';
 import 'package:pinput/pinput.dart';
+import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:sammly/features/home/logic/home_cubit.dart';
 
 class SignUpVerificationView extends StatefulWidget {
   final String email;
@@ -71,6 +73,12 @@ class _SignUpVerificationViewState extends State<SignUpVerificationView> {
       child: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is VerifyRegisterCodeSuccessState) {
+            // Fetch fresh profile, settings & home data for the new account
+            if (widget.isFromLogin) {
+              context.read<ProfileCubit>().fetchProfile(forceRefresh: true);
+              context.read<ProfileCubit>().fetchSettingInfo();
+              context.read<HomeCubit>().fetchHomeData();
+            }
             // JWT is saved, navigate to onboarding/home
             Navigator.pushNamedAndRemoveUntil(
               context,

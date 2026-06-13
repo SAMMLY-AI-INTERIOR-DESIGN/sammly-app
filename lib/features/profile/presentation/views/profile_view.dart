@@ -26,7 +26,8 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   void initState() {
     super.initState();
-    // context.read<ProfileCubit>().fetchSettingInfo();
+    // Fetch settings data for profile header (avatar, name, username, joinedAt)
+    context.read<ProfileCubit>().fetchSettingInfo();
   }
 
   @override
@@ -105,12 +106,14 @@ class _ProfileViewState extends State<ProfileView> {
                     ),
                     child: BlocBuilder<ProfileCubit, ProfileState>(
                       builder: (context, state) {
-                        final settingInfo = context
-                            .read<ProfileCubit>()
-                            .currentSettingInfo;
-                        final gender = context
-                            .read<ProfileCubit>()
-                            .currentProfile?.gender;
+                        final cubit = context.read<ProfileCubit>();
+                        final settingInfo = cubit.currentSettingInfo;
+                        final profile = cubit.currentProfile;
+                        final gender = profile?.gender;
+
+                        // Use settingInfo first, fall back to profile data
+                        final displayAvatar = settingInfo?.avatar ?? profile?.avatar;
+                        final displayName = settingInfo?.name ?? profile?.name;
 
                         return Column(
                           children: [
@@ -126,7 +129,7 @@ class _ProfileViewState extends State<ProfileView> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   AvatarWidget(
-                                    avatarPath: settingInfo?.avatar,
+                                    avatarPath: displayAvatar,
                                     gender: gender,
                                     width: 65.w,
                                     height: 65.h,
@@ -139,8 +142,8 @@ class _ProfileViewState extends State<ProfileView> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          settingInfo?.name ??
-                                              (state is SettingInfoLoading
+                                          displayName ??
+                                              (state is SettingInfoLoading || state is ProfileLoading
                                                   ? "..."
                                                   : "User"),
                                           style: AppTextStyles.title18SemiBold,

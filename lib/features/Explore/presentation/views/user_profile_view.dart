@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:sammly/core/constant/app_colors.dart';
-import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/theme/text_styles.dart';
+import 'package:sammly/core/widgets/avatar_widget.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/gradient_follow_bottom.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/posts_data_section.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/shared_images_list_view.dart';
@@ -96,29 +95,12 @@ class UserProfileView extends StatelessWidget {
                             alignment: Alignment.topCenter,
                             child: Column(
                               children: [
-                                ClipRRect(
+                                AvatarWidget(
+                                  avatarPath: userAvatar,
+                                  gender: null,
+                                  width: 100.w,
+                                  height: 100.h,
                                   borderRadius: BorderRadius.circular(16.r),
-                                  child: userAvatar != null
-                                      ? Image.network(
-                                          userAvatar!,
-                                          width: 100.w,
-                                          height: 100.h,
-                                          fit: BoxFit.cover,
-                                          errorBuilder:
-                                              (context, error, stackTrace) =>
-                                                  SvgPicture.asset(
-                                            AppImages.maleProfilePlaceholder,
-                                            width: 100.w,
-                                            height: 100.h,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        )
-                                      : SvgPicture.asset(
-                                          AppImages.maleProfilePlaceholder,
-                                          width: 100.w,
-                                          height: 100.h,
-                                          fit: BoxFit.cover,
-                                        ),
                                 ),
                                 SizedBox(height: 14.h),
                                 Text(
