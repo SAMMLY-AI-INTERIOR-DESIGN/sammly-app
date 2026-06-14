@@ -78,20 +78,41 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(gradient: AppColors.scafoldBgGradient),
-        child: SafeArea(
-          child: Column(
-            children: [
-              const CustomAppbar(
-                title: 'Shared Designs',
-                backgroundColor: Colors.transparent,
-              ),
-              SizedBox(height: 4.h),
-              _buildSearchBar(),
-              SizedBox(height: 16.h),
-              _buildSortBar(),
-              SizedBox(height: 12.h),
-              Expanded(child: _buildDesignGrid()),
-            ],
+        child: BlocListener<FavoriteCubit, FavoriteState>(
+          listener: (context, state) {
+            if (state is FavoriteToggleSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: AppColors.primaryColor,
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+            } else if (state is FavoriteToggleError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.red,
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+            }
+          },
+          child: SafeArea(
+            child: Column(
+              children: [
+                const CustomAppbar(
+                  title: 'Shared Designs',
+                  backgroundColor: Colors.transparent,
+                ),
+                SizedBox(height: 4.h),
+                _buildSearchBar(),
+                SizedBox(height: 16.h),
+                _buildSortBar(),
+                SizedBox(height: 12.h),
+                Expanded(child: _buildDesignGrid()),
+              ],
+            ),
           ),
         ),
       ),

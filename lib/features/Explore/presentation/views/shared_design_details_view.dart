@@ -131,6 +131,15 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                 return const Center(child: CircularProgressIndicator());
               }
 
+              // Sync favorite status from backend when details are loaded
+              if (state is DesignDetailsLoaded) {
+                final design = state.design;
+                context.read<FavoriteCubit>().syncFavoriteStatus(
+                  design.id,
+                  design.isFavorited,
+                );
+              }
+
               if (state is DesignDetailsError) {
                 return Center(
                   child: Column(
@@ -273,22 +282,31 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
             borderRadius: BorderRadius.circular(16.r),
             child: Stack(
               children: [
-                Image.network(
-                  design.imageUrl,
-                  width: double.infinity,
-                  height: 350.h,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      width: double.infinity,
-                      height: 350.h,
-                      color: Colors.grey[200],
-                      child: const Center(
-                        child: Icon(Icons.broken_image, color: Colors.grey),
+                design.imageUrl.isEmpty
+                    ? Container(
+                        width: double.infinity,
+                        height: 350.h,
+                        color: Colors.grey[200],
+                        child: const Center(
+                          child: Icon(Icons.broken_image, color: Colors.grey),
+                        ),
+                      )
+                    : Image.network(
+                        design.imageUrl,
+                        width: double.infinity,
+                        height: 350.h,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            width: double.infinity,
+                            height: 350.h,
+                            color: Colors.grey[200],
+                            child: const Center(
+                              child: Icon(Icons.broken_image, color: Colors.grey),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
 
                 // Gradient overlay at top for heart
                 Container(
@@ -335,6 +353,8 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                       return GestureDetector(
                         onTap: () {
                           context.read<FavoriteCubit>().toggleFavorite(design.id, isFav);
+                          // Also update the design details cubit locally
+                          context.read<DesignDetailsCubit>().updateFavoriteStatus(!isFav);
                         },
                         child: SvgPicture.asset(
                           isFav ? AppImages.withsaving : AppImages.withoutsaving,
@@ -453,18 +473,25 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
       children: [
         // الصورة مفرودة بالكامل
         Positioned.fill(
-          child: Image.network(
-            design.imageUrl,
-            fit: BoxFit.contain,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                color: Colors.grey[200],
-                child: const Center(
-                  child: Icon(Icons.broken_image, color: Colors.grey),
+          child: design.imageUrl.isEmpty
+              ? Container(
+                  color: Colors.grey[200],
+                  child: const Center(
+                    child: Icon(Icons.broken_image, color: Colors.grey),
+                  ),
+                )
+              : Image.network(
+                  design.imageUrl,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.grey[200],
+                      child: const Center(
+                        child: Icon(Icons.broken_image, color: Colors.grey),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
         ),
         // زرار الرجوع (أعلى يسار)
         Positioned(

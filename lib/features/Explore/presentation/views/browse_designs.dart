@@ -218,6 +218,14 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
               ? state.designs
               : context.read<StaticDesignsCubit>().currentDesigns;
 
+          // Sync isFavorited from backend into FavoriteCubit
+          for (final design in designs) {
+            context.read<FavoriteCubit>().syncFavoriteStatus(
+              design.id,
+              design.isFavorited,
+            );
+          }
+
           if (designs.isEmpty) {
             return Center(
               child: Column(

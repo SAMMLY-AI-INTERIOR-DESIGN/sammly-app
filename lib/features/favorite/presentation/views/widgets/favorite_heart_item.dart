@@ -121,20 +121,31 @@ class _FavoriteHeartItemState extends State<FavoriteHeartItem> {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          Image.network(
-            widget.imageUrl,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                color: AppColors.greyColor.withValues(alpha: 0.2),
-                child: Icon(
-                  Icons.broken_image,
-                  color: AppColors.greyColor.withValues(alpha: 0.5),
-                  size: 30.sp,
+          widget.imageUrl.isEmpty
+              ? Container(
+                  color: AppColors.greyColor.withOpacity(0.2),
+                  child: Center(
+                    child: Icon(
+                      Icons.broken_image,
+                      color: AppColors.greyColor.withOpacity(0.5),
+                      size: 30.sp,
+                    ),
+                  ),
+                )
+              : Image.network(
+                  widget.imageUrl,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: AppColors.greyColor.withOpacity(0.2),
+                      child: Icon(
+                        Icons.broken_image,
+                        color: AppColors.greyColor.withOpacity(0.5),
+                        size: 30.sp,
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
 
           Container(
             decoration: BoxDecoration(

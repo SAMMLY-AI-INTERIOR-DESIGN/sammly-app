@@ -77,18 +77,25 @@ class HistoryMainImageSection extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             height: double.infinity,
-            child: Image.network(
-              imageUrl,
-              fit: isMaximized ? BoxFit.contain : BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  color: Colors.grey[200],
-                  child: const Center(
-                    child: Icon(Icons.broken_image, color: Colors.grey),
+            child: imageUrl.isEmpty
+                ? Container(
+                    color: Colors.grey[200],
+                    child: const Center(
+                      child: Icon(Icons.broken_image, color: Colors.grey),
+                    ),
+                  )
+                : Image.network(
+                    imageUrl,
+                    fit: isMaximized ? BoxFit.contain : BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: Colors.grey[200],
+                        child: const Center(
+                          child: Icon(Icons.broken_image, color: Colors.grey),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
           ),
 
           // Bookmark Save Icon (Top Right)
