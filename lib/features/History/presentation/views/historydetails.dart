@@ -32,11 +32,19 @@ class HistoryDetailsView extends StatefulWidget {
 
 class _HistoryDetailsViewState extends State<HistoryDetailsView> {
   bool _isMaximized = false;
+  late final SearchCubit _searchCubit;
 
   @override
   void initState() {
     super.initState();
+    _searchCubit = SearchCubit(SearchRepo());
     // context.read<FavoriteCubit>().isFavorite(widget.designId) is used directly in the build method.
+  }
+
+  @override
+  void dispose() {
+    _searchCubit.close();
+    super.dispose();
   }
 
   void _openSmartLens(BuildContext context) {
@@ -56,8 +64,8 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
       enableDrag: true,
       isScrollControlled: true,
       builder: (context) {
-        return BlocProvider(
-          create: (_) => SearchCubit(SearchRepo()),
+        return BlocProvider.value(
+          value: _searchCubit,
           child: SmartLensBottomSheet(designId: widget.designId),
         );
       },

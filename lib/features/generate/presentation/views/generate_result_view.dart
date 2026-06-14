@@ -36,6 +36,8 @@ class _GenerateResultViewState extends State<GenerateResultView> {
     AppImages.styleMidCentury,
   ];
 
+  late final SearchCubit _searchCubit;
+
   void _openSmartLens(BuildContext context) {
     if (widget.designId == null || widget.designId!.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -53,8 +55,8 @@ class _GenerateResultViewState extends State<GenerateResultView> {
       enableDrag: true,
       isScrollControlled: true,
       builder: (context) {
-        return BlocProvider(
-          create: (_) => SearchCubit(SearchRepo()),
+        return BlocProvider.value(
+          value: _searchCubit,
           child: SmartLensBottomSheet(designId: widget.designId!),
         );
       },
@@ -67,6 +69,7 @@ class _GenerateResultViewState extends State<GenerateResultView> {
   @override
   void initState() {
     super.initState();
+    _searchCubit = SearchCubit(SearchRepo());
     if (widget.networkImageUrl != null && widget.networkImageUrl!.isNotEmpty) {
       _selectedImage = widget.networkImageUrl!;
       _isNetworkImage = true;
@@ -74,6 +77,12 @@ class _GenerateResultViewState extends State<GenerateResultView> {
       _selectedImage = _fallbackImages[0];
       _isNetworkImage = false;
     }
+  }
+
+  @override
+  void dispose() {
+    _searchCubit.close();
+    super.dispose();
   }
 
   @override
