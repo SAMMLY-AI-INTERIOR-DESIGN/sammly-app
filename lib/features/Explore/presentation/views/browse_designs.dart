@@ -9,6 +9,8 @@ import 'package:sammly/features/explore/presentation/widgets/design_grid_item.da
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/theme/text_styles.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_state.dart';
 const Color kTextDark = Color(0xFF2E2E2E);
 
 class BrowseDesigns extends StatefulWidget {
@@ -74,12 +76,33 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
       backgroundColor: AppColors.bg1Color,
       appBar: const CustomAppbar(title: 'Browse Categories'),
       body: SafeArea(
-        child: Column(
-          children: [
-            _buildFilterBar(),
-            SizedBox(height: 16.h),
-            Expanded(child: _buildDesignGrid()),
-          ],
+        child: BlocListener<FavoriteCubit, FavoriteState>(
+          listener: (context, state) {
+            if (state is FavoriteToggleError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.red,
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+            } else if (state is FavoriteToggleSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: AppColors.primaryColor,
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+            }
+          },
+          child: Column(
+            children: [
+              _buildFilterBar(),
+              SizedBox(height: 16.h),
+              Expanded(child: _buildDesignGrid()),
+            ],
+          ),
         ),
       ),
     );
@@ -245,12 +268,18 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
                     arguments: design.id,
                   );
                 },
-                child: DesignGridItem(
-                  imageUrl: design.imageUrl,
-                  initialIsLiked: design.isFavorited,
-                  onFavoriteToggled: (isLiked) {
-                    context.read<StaticDesignsCubit>().toggleFavoriteLocal(
-                      design.id,
+                child: BlocBuilder<FavoriteCubit, FavoriteState>(
+                  builder: (context, favState) {
+                    final isFav = context.read<FavoriteCubit>().isFavorite(design.id);
+                    return DesignGridItem(
+                      imageUrl: design.imageUrl,
+                      initialIsLiked: isFav,
+                      onFavoriteToggled: (isLiked) {
+                        context.read<FavoriteCubit>().toggleFavorite(design.id, !isLiked);
+                        context.read<StaticDesignsCubit>().toggleFavoriteLocal(
+                          design.id,
+                        );
+                      },
                     );
                   },
                 ),

@@ -59,7 +59,7 @@ class GenerationCubit extends Cubit<GenerationState> {
         emit(GenerationFailed(errorMsg: error));
       },
       (design) {
-        emit(GenerationFinished(imageUrl: design.imageUrl));
+        emit(GenerationFinished(imageUrl: design.imageUrl, designId: design.id));
       },
     );
   }

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -43,7 +44,8 @@ class FavoriteRepo {
         return right(FavoriteResponse.fromJson(data));
       } else {
         log(response.data.toString());
-        return left(response.data['message'] ?? 'Failed to load favorites.');
+        final backendError = _extractErrorMessage(response.data);
+        return left(backendError.isNotEmpty ? backendError : 'Failed to load favorites.');
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
@@ -60,16 +62,23 @@ class FavoriteRepo {
         return left('Unauthorized: No token found.');
       }
 
+      // Add to favorites: POST, returns 201
+      final endpoint = ApiConstants.favoriteDesign(designId);
+      log('Add favorite → endpoint: $endpoint, designId: $designId');
       final response = await DioHelper.postData(
-        endPoint: ApiConstants.favoriteDesign(designId),
+        endPoint: endpoint,
         data: {},
         token: token,
       );
 
-      if (response.statusCode == 200 && response.data['status'] == 'success') {
-        return right(response.data['message'] ?? 'Added to favorites.');
+      if (response.statusCode == 201 && response.data['status'] == 'success') {
+        final msg = response.data['data']?['message']
+            ?? response.data['message']
+            ?? 'Added to favorites.';
+        return right(msg);
       } else {
-        return left(response.data['message'] ?? 'Failed to add to favorites.');
+        final backendError = _extractErrorMessage(response.data);
+        return left(backendError.isNotEmpty ? backendError : 'Failed to add to favorites.');
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
@@ -86,15 +95,20 @@ class FavoriteRepo {
         return left('Unauthorized: No token found.');
       }
 
+      // API spec: remove from favorites uses DELETE method, returns 200
       final response = await DioHelper.deleteData(
         endPoint: ApiConstants.favoriteDesign(designId),
         token: token,
       );
 
       if (response.statusCode == 200 && response.data['status'] == 'success') {
-        return right(response.data['message'] ?? 'Removed from favorites.');
+        final msg = response.data['data']?['message']
+            ?? response.data['message']
+            ?? 'Removed from favorites.';
+        return right(msg);
       } else {
-        return left(response.data['message'] ?? 'Failed to remove from favorites.');
+        final backendError = _extractErrorMessage(response.data);
+        return left(backendError.isNotEmpty ? backendError : 'Failed to remove from favorites.');
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
@@ -104,19 +118,32 @@ class FavoriteRepo {
     }
   }
 
+  String _extractErrorMessage(dynamic responseData) {
+    try {
+      var data = responseData;
+      if (data is String) {
+        try {
+          data = jsonDecode(data);
+        } catch (_) {}
+      }
+      if (data is Map) {
+        final msg = data['message']
+            ?? data['msg']
+            ?? data['error']
+            ?? (data['data'] is Map ? (data['data']['msg'] ?? data['data']['message']) : null)
+            ?? (data['errors'] is List ? (data['errors'] as List).join(', ') : data['errors']);
+        if (msg != null && msg.toString().isNotEmpty) {
+          return msg.toString();
+        }
+      }
+    } catch (_) {}
+    return '';
+  }
+
   String _handleDioError(DioException e) {
     if (e.response != null && e.response?.data != null) {
-      try {
-        final data = e.response!.data;
-        log('API Error Response: $data');
-        if (data is Map) {
-          final msg = data['message']
-              ?? data['msg']
-              ?? data['error']
-              ?? (data['errors'] is List ? (data['errors'] as List).join(', ') : null);
-          if (msg != null) return msg.toString();
-        }
-      } catch (_) {}
+      final msg = _extractErrorMessage(e.response!.data);
+      if (msg.isNotEmpty) return msg;
     }
 
     switch (e.type) {
@@ -125,6 +152,8 @@ class FavoriteRepo {
       case DioExceptionType.receiveTimeout:
       case DioExceptionType.connectionError:
         return 'Server Failed Connection , Try again';
+      case DioExceptionType.badResponse:
+        return 'Bad response: ${e.response?.statusCode} - ${e.response?.statusMessage ?? 'Error'}';
       default:
         return 'Network error occurred';
     }

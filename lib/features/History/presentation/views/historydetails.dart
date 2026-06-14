@@ -10,8 +10,9 @@ import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart'
 import 'package:sammly/features/favorite/presentation/cubit/favorite_state.dart';
 import 'package:sammly/features/History/presentation/widgets/history_main_image_section.dart';
 import 'package:sammly/features/History/presentation/widgets/history_details_section.dart';
-import 'package:sammly/features/search/presentation/widgets/similar_item_card.dart';
-import 'package:sammly/features/search/presentation/views/search_view.dart';
+import 'package:sammly/features/smart_lens/cubit/search_cubit.dart';
+import 'package:sammly/features/smart_lens/data/repo/search_repo.dart';
+import 'package:sammly/features/smart_lens/presentation/widgets/smart_lens_bottom_sheet.dart';
 
 class HistoryDetailsView extends StatefulWidget {
   final String title;
@@ -38,21 +39,27 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
     // context.read<FavoriteCubit>().isFavorite(widget.designId) is used directly in the build method.
   }
 
-  final List<SimilarItemModel> products = [
-    SimilarItemModel(title: "Sofa", subtitle: "Modern gray", imageUrl: "https://placehold.co/175x94"),
-    SimilarItemModel(title: "Sofa Premium", subtitle: "Scandynavian textile", imageUrl: "https://placehold.co/175x94"),
-    SimilarItemModel(title: "Sofa Luxury", subtitle: "Velvet fabric", imageUrl: "https://placehold.co/175x94"),
-    SimilarItemModel(title: "Sofa Minimalist", subtitle: "Cozy wood feet", imageUrl: "https://placehold.co/175x94"),
-  ];
-
   void _openSmartLens(BuildContext context) {
+    if (widget.designId.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Design ID not available for this item."),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       enableDrag: true,
       isScrollControlled: true,
       builder: (context) {
-        return SmartLensBottomSheet(dummyItems: products);
+        return BlocProvider(
+          create: (_) => SearchCubit(SearchRepo()),
+          child: SmartLensBottomSheet(designId: widget.designId),
+        );
       },
     );
   }

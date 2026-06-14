@@ -11,7 +11,8 @@ class GenerationLoadingStep extends GenerationState {
 
 class GenerationFinished extends GenerationState {
   final String? imageUrl;
-  GenerationFinished({this.imageUrl});
+  final String? designId;
+  GenerationFinished({this.imageUrl, this.designId});
 }
 
 class GenerationFailed extends GenerationState {
