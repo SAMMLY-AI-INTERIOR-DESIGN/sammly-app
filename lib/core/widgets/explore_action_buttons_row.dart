@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/utils/image_download_helper.dart';
+import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/widgets/custom_action_button.dart';
 
 class ExploreActionButtonsRow extends StatelessWidget {
@@ -25,7 +26,17 @@ class ExploreActionButtonsRow extends StatelessWidget {
           child: CustomActionButton(
             title: 'Try this Style',
             iconPath: AppImages.startGenerateIcon,
-            onTap: onTryStyle ?? () {},
+            onTap: onTryStyle ?? () {
+              if (imageUrl != null && imageUrl!.isNotEmpty) {
+                Navigator.pushNamed(
+                  context,
+                  AppRoutes.restyleView,
+                  arguments: {
+                    'initialImageUrl': imageUrl,
+                  },
+                );
+              }
+            },
           ),
         ),
         SizedBox(width: 8.w),

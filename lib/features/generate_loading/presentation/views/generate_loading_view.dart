@@ -45,13 +45,43 @@ class GenerationLoadingWrapper extends StatelessWidget {
         final prompt = arguments?['prompt'] as String? ?? '';
         final imageUrl = arguments?['imageUrl'] as String?;
 
-        cubit.startLoadingWithApi(
-          uiStyle: style,
-          uiRoom: room,
-          prompt: prompt,
-          imageUrl: imageUrl,
-          repo: GenerateDesignRepo(),
-        );
+        final isRestyle = arguments?['isRestyle'] as bool? ?? false;
+        final isFullHome = arguments?['isFullHome'] as bool? ?? false;
+        final isMask = arguments?['isMask'] as bool? ?? false;
+
+        if (isMask) {
+          final operationMode = arguments?['operationMode'] as String? ?? 'replace';
+          final maskUrl = arguments?['maskUrl'] as String? ?? '';
+          cubit.startMaskWithApi(
+            imageUrl: imageUrl ?? '',
+            maskUrl: maskUrl,
+            prompt: prompt,
+            operationMode: operationMode,
+            repo: GenerateDesignRepo(),
+          );
+        } else if (isRestyle) {
+          cubit.startRestyleWithApi(
+            uiStyle: style,
+            imageUrl: imageUrl ?? '',
+            repo: GenerateDesignRepo(),
+          );
+        } else if (isFullHome) {
+          final roomTypes = arguments?['roomTypes'] as List<String>? ?? [];
+          cubit.startFullHomeWithApi(
+            uiStyle: style,
+            uiRoomTypes: roomTypes,
+            imageUrl: imageUrl,
+            repo: GenerateDesignRepo(),
+          );
+        } else {
+          cubit.startLoadingWithApi(
+            uiStyle: style,
+            uiRoom: room,
+            prompt: prompt,
+            imageUrl: imageUrl,
+            repo: GenerateDesignRepo(),
+          );
+        }
 
         return cubit;
       },
@@ -73,6 +103,7 @@ class GenerationLoadingWrapper extends StatelessWidget {
                       'showListView': showListView,
                       'imageUrl': state.imageUrl,
                       'designId': state.designId,
+                      'designs': state.designs,
                     },
                   );
                 } else if (state is GenerationFailed) {

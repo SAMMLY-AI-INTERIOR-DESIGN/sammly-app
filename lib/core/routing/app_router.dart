@@ -7,6 +7,8 @@ import 'package:sammly/features/Auth/presentation/views/login_view.dart';
 import 'package:sammly/features/Auth/presentation/views/signup_view.dart';
 import 'package:sammly/features/Auth/presentation/views/verfictionofsign.dart';
 import 'package:sammly/features/favorite/presentation/views/favorite_view.dart';
+import 'package:sammly/features/generate/data/repo/generate_design_repo.dart';
+import 'package:sammly/features/generate/presentation/cubits/generate_design_cubit.dart';
 import 'package:sammly/features/generate/presentation/views/image_generation_stepper_view.dart';
 import 'package:sammly/features/generate/presentation/views/remove_view.dart';
 import 'package:sammly/features/home/presentation/views/home_view.dart';
@@ -220,10 +222,10 @@ abstract class AppRouter {
         );
 
       case AppRoutes.restyleView:
+        final args = settings.arguments as Map<String, dynamic>?;
+        final initialImageUrl = args?['initialImageUrl'] as String?;
         return MaterialPageRoute(
-          builder: (context) {
-            return const RestyleView();
-          },
+          builder: (context) => RestyleView(initialImageUrl: initialImageUrl),
         );
 
       case AppRoutes.removeView:
@@ -234,16 +236,23 @@ abstract class AppRouter {
         );
 
       case AppRoutes.imageGenerationStepperView:
+        final args = settings.arguments as Map<String, dynamic>?;
+        final initialImageUrl = args?['initialImageUrl'] as String?;
+        final isEditMode = args?['isEditMode'] as bool? ?? false;
         return MaterialPageRoute(
-          builder: (context) {
-            return const ImageGenerationStepperView();
-          },
+          builder: (context) => ImageGenerationStepperView(
+            initialImageUrl: initialImageUrl,
+            isEditMode: isEditMode,
+          ),
         );
 
       case AppRoutes.fullHomeView:
         return MaterialPageRoute(
           builder: (context) {
-            return const FullHomeView();
+            return BlocProvider(
+              create: (context) => GenerateDesignCubit(GenerateDesignRepo()),
+              child: const FullHomeView(),
+            );
           },
         );
 
@@ -252,12 +261,14 @@ abstract class AppRouter {
         final showListView = args?['showListView'] as bool? ?? false;
         final imageUrl = args?['imageUrl'] as String?;
         final designId = args?['designId'] as String?;
+        final designs = args?['designs']; // Add this
         return MaterialPageRoute(
           builder: (context) {
             return GenerateResultView(
               showListView: showListView,
               networkImageUrl: imageUrl,
               designId: designId,
+              designs: designs, // Pass to view
             );
           },
         );
