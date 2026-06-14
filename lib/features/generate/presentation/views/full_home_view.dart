@@ -13,6 +13,7 @@ import 'package:sammly/features/generate/presentation/views/widgets/custom_stepp
 import 'package:sammly/features/generate/presentation/views/widgets/logo_widget.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/room_filter_widget.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/step_1_upload.dart';
+import 'package:sammly/features/generate/presentation/views/widgets/text_to_image_step_2_style.dart';
 
 class FullHomeView extends StatefulWidget {
   const FullHomeView({super.key});
@@ -24,6 +25,7 @@ class FullHomeView extends StatefulWidget {
 class _FullHomeViewState extends State<FullHomeView> {
   int _currentStep = 0;
   XFile? _selectedImage;
+  String? _selectedStyle;
 
   final List<String> _allRooms = [
     AppStrings.bedroom,
@@ -41,7 +43,7 @@ class _FullHomeViewState extends State<FullHomeView> {
   }
 
   void _nextStep() {
-    if (_currentStep < 1) {
+    if (_currentStep < 2) {
       setState(() {
         _currentStep++;
       });
@@ -88,15 +90,16 @@ class _FullHomeViewState extends State<FullHomeView> {
         children: [
           const LogoWidget(),
           SizedBox(height: 16.h),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 80.w),
-            child: CustomStepper(
-              currentStep: _currentStep,
-              stepTitles: const [AppStrings.upload, AppStrings.select],
-            ),
+          CustomStepper(
+            currentStep: _currentStep,
+            stepTitles: const [AppStrings.upload, AppStrings.style, AppStrings.select],
           ),
           Expanded(
-            child: _currentStep == 0 ? _buildUploadStep() : _buildSelectStep(),
+            child: _currentStep == 0
+                ? _buildUploadStep()
+                : _currentStep == 1
+                    ? _buildStyleStep()
+                    : _buildSelectStep(),
           ),
         ],
       ),
@@ -106,10 +109,11 @@ class _FullHomeViewState extends State<FullHomeView> {
   Widget _buildUploadStep() {
     return Step1Upload(
       title: AppStrings.uploadReferenceImage,
-      subtitle: AppStrings.addReferenceImageOnly,
+      subtitle: AppStrings.addReferenceImage,
       titleIcon: AppImages.aiPoweredIcon,
       isButtonInsideCard: true,
       initialImage: _selectedImage,
+      isImageOptional: true,
       onImageSelected: (image) {
         setState(() {
           _selectedImage = image;
@@ -118,6 +122,18 @@ class _FullHomeViewState extends State<FullHomeView> {
       onImageRemoved: () {
         setState(() {
           _selectedImage = null;
+        });
+      },
+      onNext: _nextStep,
+    );
+  }
+
+  Widget _buildStyleStep() {
+    return TextToImageStep2Style(
+      selectedStyle: _selectedStyle,
+      onStyleSelected: (style) {
+        setState(() {
+          _selectedStyle = style;
         });
       },
       onNext: _nextStep,
@@ -159,7 +175,13 @@ class _FullHomeViewState extends State<FullHomeView> {
                 Navigator.pushNamed(
                   context,
                   AppRoutes.generateLoadingView,
-                  arguments: {'showListView': true},
+                  arguments: {
+                    'showListView': true,
+                    'isFullHome': true,
+                    'style': _selectedStyle ?? '',
+                    'roomTypes': _selectedRooms,
+                    'imageUrl': _selectedImage?.path,
+                  },
                 );
               }
             },
