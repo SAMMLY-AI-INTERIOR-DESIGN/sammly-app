@@ -6,6 +6,8 @@ class GenerateDesignResponseModel {
   final int height;
   final String imageUrl;
   final String prompt;
+  final String? aspectRatio;
+
 
   GenerateDesignResponseModel({
     required this.id,
@@ -15,6 +17,7 @@ class GenerateDesignResponseModel {
     required this.height,
     required this.imageUrl,
     required this.prompt,
+    this.aspectRatio,
   });
 
   factory GenerateDesignResponseModel.fromJson(Map<String, dynamic> json) {
@@ -26,6 +29,7 @@ class GenerateDesignResponseModel {
       height: json['height'] ?? 0,
       imageUrl: json['imageUrl'] ?? '',
       prompt: json['prompt'] ?? '',
+      aspectRatio: json['aspect_ratio'],
     );
   }
 }
