@@ -4,15 +4,15 @@ import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/utils/image_download_helper.dart';
 import 'package:sammly/core/widgets/custom_action_button.dart';
 
-class ActionButtonsRow extends StatelessWidget {
-  final VoidCallback? onCustomize;
+class GenerateActionButtonsRow extends StatelessWidget {
+  final VoidCallback? onEdit;
   final VoidCallback? onShare;
   final VoidCallback? onDownload;
   final String? imageUrl;
 
-  const ActionButtonsRow({
+  const GenerateActionButtonsRow({
     super.key,
-    this.onCustomize,
+    this.onEdit,
     this.onShare,
     this.onDownload,
     this.imageUrl,
@@ -25,9 +25,9 @@ class ActionButtonsRow extends StatelessWidget {
       children: [
         Expanded(
           child: CustomActionButton(
-            title: 'Customize',
-            iconPath: AppImages.customizeIcon,
-            onTap: onCustomize ?? () {},
+            title: 'Edit',
+            iconPath: AppImages.edit,
+            onTap: onEdit ?? () {},
           ),
         ),
         SizedBox(width: 8.w),
