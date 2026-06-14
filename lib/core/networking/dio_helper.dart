@@ -4,6 +4,8 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 import 'package:sammly/core/networking/api_constants.dart';
 import 'package:sammly/main.dart';
 import 'package:sammly/core/widgets/no_internet_view.dart';
+import 'package:sammly/core/routing/routes.dart';
+import 'package:sammly/core/shared_pref/shared_pref.dart';
 
 abstract class DioHelper {
   static late Dio dio;
@@ -41,6 +43,30 @@ abstract class DioHelper {
                 MaterialPageRoute(builder: (context) => const NoInternetView()),
               );
             }
+          }
+        }
+
+        // Handle 401 Unauthorized (Session Expired)
+        if (e.response?.statusCode == 401) {
+          final BuildContext? context = navigatorKey.currentContext;
+          if (context != null) {
+            // Clear user data
+            await SharedPref.clearAll();
+            
+            // Show message
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("You logged in with another device. Please log in again."),
+                backgroundColor: Colors.red,
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+
+            // Redirect to login
+            Navigator.of(context).pushNamedAndRemoveUntil(
+              AppRoutes.loginView,
+              (route) => false,
+            );
           }
         }
         return handler.next(e);

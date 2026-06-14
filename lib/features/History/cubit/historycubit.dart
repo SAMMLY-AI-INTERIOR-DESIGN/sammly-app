@@ -18,7 +18,16 @@ class HistoryCubit extends Cubit<HistoryState> {
   int get totalDesigns => _totalDesigns;
   List<HistoryDesignModel> get currentDesigns => List.unmodifiable(_allDesigns);
 
-  /// Fetch the first page (resets everything).
+  /// Resets all in-memory history state (used on logout).
+  void reset() {
+    _allDesigns.clear();
+    _currentPage = 1;
+    _hasMore = true;
+    _totalDesigns = 0;
+    emit(HistoryInitial());
+  }
+
+  /// Fetch the first page.
   Future<void> fetchHistory({int limit = 20}) async {
     _allDesigns.clear();
     _currentPage = 1;

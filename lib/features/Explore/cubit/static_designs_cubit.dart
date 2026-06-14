@@ -21,7 +21,17 @@ class StaticDesignsCubit extends Cubit<StaticDesignsState> {
   String get currentStyle => _currentStyle;
   List<StaticDesignModel> get currentDesigns => List.unmodifiable(_allDesigns);
 
-  /// Fetch the first page (resets everything).
+  /// Resets all in-memory static designs state (used on logout).
+  void reset() {
+    _allDesigns.clear();
+    _currentPage = 1;
+    _hasMore = true;
+    _currentRoom = null;
+    _currentStyle = 'all';
+    emit(StaticDesignsInitial());
+  }
+
+  /// Fetch the first page.
   Future<void> fetchStaticDesigns({
     int limit = 20,
     String? room,

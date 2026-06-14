@@ -61,25 +61,39 @@ class _SharedImageCardState extends State<SharedImageCard> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(5.r),
-              child: Image.network(
-                widget.item.imageUrl,
-                width: 113.w,
-                height: 112.h,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  width: 113.w,
-                  height: 112.h,
-                  decoration: BoxDecoration(
-                    color: AppColors.bg2Color,
-                    borderRadius: BorderRadius.circular(5.r),
-                  ),
-                  child: Icon(
-                    Icons.image_outlined,
-                    color: AppColors.secondaryColor,
-                    size: 30.sp,
-                  ),
-                ),
-              ),
+              child: widget.item.imageUrl.isEmpty
+                  ? Container(
+                      width: 113.w,
+                      height: 112.h,
+                      decoration: BoxDecoration(
+                        color: AppColors.bg2Color,
+                        borderRadius: BorderRadius.circular(5.r),
+                      ),
+                      child: Icon(
+                        Icons.image_outlined,
+                        color: AppColors.secondaryColor,
+                        size: 30.sp,
+                      ),
+                    )
+                  : Image.network(
+                      widget.item.imageUrl,
+                      width: 113.w,
+                      height: 112.h,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        width: 113.w,
+                        height: 112.h,
+                        decoration: BoxDecoration(
+                          color: AppColors.bg2Color,
+                          borderRadius: BorderRadius.circular(5.r),
+                        ),
+                        child: Icon(
+                          Icons.image_outlined,
+                          color: AppColors.secondaryColor,
+                          size: 30.sp,
+                        ),
+                      ),
+                    ),
             ),
             SizedBox(width: 14.w),
 
