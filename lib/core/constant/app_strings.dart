@@ -65,7 +65,7 @@ abstract class AppStrings {
   static const String email = "Email";
   static const String changePassword = "Change Password";
   static const String noFollowings = "No followings";
-  static const String noFollowingsDesc = "Your followings list is empty";
+  static const String noFollowingsDesc = "Browse Designs and Follow Others";
 
   // edit profile
   static const String editProfile = "Edit profile";
@@ -117,7 +117,8 @@ abstract class AppStrings {
   static const String removeObject = "Remove Object";
   static const String remove = "Remove";
   static const String mask = "Mask";
-  static const String removeDesc = "Upload a photo, draw a mask on the area you want to remove";
+  static const String removeDesc =
+      "Upload a photo, draw a mask on the area you want to remove";
 
   // generate loading
   static const String yourRoomIsComingSoon = "Your room is coming soon...";

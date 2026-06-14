@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sammly/core/constant/app_colors.dart';
+import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 
 // موديل بسيط لتنظيم بيانات المنتجات القادمة من الباك إند
@@ -49,83 +51,60 @@ class SimilarItemCard extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // صورة المنتج
-            Image.network(
-              item.imageUrl,
-              height: 95.h,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Container(
-                height: 95.h,
-                color: AppColors.bg2Color,
-                child: const Icon(
-                  Icons.image_outlined,
-                  color: AppColors.greyColor,
+            // صورة المنتج (تأخذ المساحة الأكبر)
+            Expanded(
+              child: Image.network(
+                item.imageUrl,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  width: double.infinity,
+                  color: AppColors.bg2Color,
+                  child: const Icon(
+                    Icons.image_outlined,
+                    color: AppColors.greyColor,
+                  ),
                 ),
               ),
             ),
             // تفاصيل المنتج مع الجراديانت الأنيق من فيجما
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(12.w),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [Color(0xFFE5F6F2), Color(0xFFEBF2FB)],
-                  ),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(15.r),
-                    bottomRight: Radius.circular(15.r),
-                  ),
+            Container(
+              width: double.infinity,
+              height: 56.h,
+              padding: EdgeInsets.symmetric(horizontal: 12.w),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Color(0xFFE5F6F2), Color(0xFFEBF2FB)],
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item.title,
-                          style: AppTextStyles.body16Medium.copyWith(
-                            color: const Color(0xFF2E2E2E),
-                            fontWeight: FontWeight.w600,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        SizedBox(height: 4.h),
-                        Text(
-                          item.subtitle,
-                          style: AppTextStyles.body14Regular.copyWith(
-                            color: const Color(0xFF5B5B5B),
-                            fontSize: 12.sp,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                    // زرار السهم الصغير
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: Container(
-                        padding: EdgeInsets.all(4.w),
-                        decoration: const BoxDecoration(
-                          color: AppColors.whiteColor,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.arrow_forward,
-                          size: 16.sp,
-                          color: AppColors.primaryColor,
-                        ),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(15.r),
+                  bottomRight: Radius.circular(15.r),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      item.title,
+                      style: AppTextStyles.body16Medium.copyWith(
+                        color: const Color(0xFF2E2E2E),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16.sp,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ],
-                ),
+                  ),
+                  SizedBox(width: 8.w),
+                  // أيقونة السهم
+                  SvgPicture.asset(
+                    AppImages.goArrow,
+                    width: 24.w,
+                    height: 24.w,
+                  ),
+                ],
               ),
             ),
           ],

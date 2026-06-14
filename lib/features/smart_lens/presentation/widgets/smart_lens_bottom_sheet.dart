@@ -23,7 +23,10 @@ class _SmartLensBottomSheetState extends State<SmartLensBottomSheet> {
   @override
   void initState() {
     super.initState();
-    context.read<SearchCubit>().searchDesign(widget.designId);
+    final cubit = context.read<SearchCubit>();
+    if (cubit.state is! SearchLoaded && cubit.state is! SearchLoading) {
+      cubit.searchDesign(widget.designId);
+    }
   }
 
   @override
@@ -80,15 +83,24 @@ class _SmartLensBottomSheetState extends State<SmartLensBottomSheet> {
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      SizedBox(height: 6.h),
-                      Text(
-                        'We found similar items for your design.',
-                        style: TextStyle(
-                          color: const Color(0xFF5B5B5B),
-                          fontSize: 14.sp,
-                          fontFamily: 'Manrope',
-                          fontWeight: FontWeight.w500,
-                        ),
+                      BlocBuilder<SearchCubit, SearchState>(
+                        builder: (context, state) {
+                          if (state is SearchLoaded && state.response.data.any((r) => r.productMatches.isNotEmpty)) {
+                            return Padding(
+                              padding: EdgeInsets.only(top: 6.h),
+                              child: Text(
+                                'We found similar items for your design.',
+                                style: TextStyle(
+                                  color: const Color(0xFF5B5B5B),
+                                  fontSize: 14.sp,
+                                  fontFamily: 'Manrope',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            );
+                          }
+                          return const SizedBox.shrink();
+                        },
                       ),
                     ],
                   ),
@@ -178,7 +190,7 @@ class _SmartLensBottomSheetState extends State<SmartLensBottomSheet> {
               ),
             ),
             SizedBox(height: 8.h),
-            const Divider(color: Color(0xFFEAEAEA), thickness: 1),
+            const Divider(color: Color(0xFFC0C0C0), thickness: 1),
             SizedBox(height: 16.h),
             
             // Grid of products
