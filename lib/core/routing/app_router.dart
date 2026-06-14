@@ -222,10 +222,10 @@ abstract class AppRouter {
         );
 
       case AppRoutes.restyleView:
+        final args = settings.arguments as Map<String, dynamic>?;
+        final initialImageUrl = args?['initialImageUrl'] as String?;
         return MaterialPageRoute(
-          builder: (context) {
-            return const RestyleView();
-          },
+          builder: (context) => RestyleView(initialImageUrl: initialImageUrl),
         );
 
       case AppRoutes.removeView:
