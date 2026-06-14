@@ -72,6 +72,7 @@ class GenerationLoadingWrapper extends StatelessWidget {
                     arguments: {
                       'showListView': showListView,
                       'imageUrl': state.imageUrl,
+                      'designId': state.designId,
                     },
                   );
                 } else if (state is GenerationFailed) {

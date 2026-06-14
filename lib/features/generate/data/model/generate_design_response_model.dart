@@ -19,7 +19,7 @@ class GenerateDesignResponseModel {
 
   factory GenerateDesignResponseModel.fromJson(Map<String, dynamic> json) {
     return GenerateDesignResponseModel(
-      id: json['_id'] ?? '',
+      id: json['_id'] ?? json['id'] ?? '',
       style: json['style'] ?? '',
       room: json['room'] ?? '',
       width: json['width'] ?? 0,

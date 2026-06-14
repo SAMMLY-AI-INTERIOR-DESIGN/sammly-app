@@ -39,8 +39,33 @@ class GenerateDesignRepo {
       log(response.statusCode.toString());
       if (response.statusCode == 201 ||
           response.data['status'] == 'success') {
-        final designJson = response.data['data']?['design'];
+        
+        final dataMap = response.data['data'] as Map<String, dynamic>?;
+        final designJson = dataMap?['design'];
+        
         if (designJson != null && designJson is Map<String, dynamic>) {
+          // Aggressively extract the ID from various possible locations in the response
+          final extractedId = designJson['_id']?.toString()
+              ?? designJson['id']?.toString()
+              ?? designJson['designId']?.toString()
+              ?? designJson['design_id']?.toString()
+              ?? dataMap?['_id']?.toString()
+              ?? dataMap?['id']?.toString()
+              ?? dataMap?['designId']?.toString()
+              ?? dataMap?['design_id']?.toString()
+              ?? response.data['_id']?.toString()
+              ?? response.data['id']?.toString()
+              ?? response.data['designId']?.toString()
+              ?? response.data['design_id']?.toString()
+              ?? '';
+              
+          if (extractedId.isEmpty) {
+            log('WARNING: Could not find any ID field in generation response! Data: ${response.data}');
+          }
+              
+          // Inject the extracted ID into designJson so the model parses it
+          designJson['_id'] = extractedId;
+          
           final model = GenerateDesignResponseModel.fromJson(designJson);
           return right(model);
         }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:sammly/core/constant/app_colors.dart';
@@ -7,16 +8,20 @@ import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/widgets/action_buttons_row.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/generate_results_app_bar.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/result_image_widget.dart';
-import 'package:sammly/features/search/presentation/widgets/similar_item_card.dart';
+import 'package:sammly/features/smart_lens/cubit/search_cubit.dart';
+import 'package:sammly/features/smart_lens/data/repo/search_repo.dart';
+import 'package:sammly/features/smart_lens/presentation/widgets/smart_lens_bottom_sheet.dart';
 
 class GenerateResultView extends StatefulWidget {
   final bool showListView;
   final String? networkImageUrl;
+  final String? designId;
 
   const GenerateResultView({
     super.key,
     this.showListView = false,
     this.networkImageUrl,
+    this.designId,
   });
 
   @override
@@ -31,24 +36,30 @@ class _GenerateResultViewState extends State<GenerateResultView> {
     AppImages.styleMidCentury,
   ];
 
-  final List<SimilarItemModel> products = [
-    SimilarItemModel(title: "Sofa", subtitle: "Modern gray", imageUrl: "https://placehold.co/175x94"),
-    SimilarItemModel(title: "Sofa Premium", subtitle: "Scandynavian textile", imageUrl: "https://placehold.co/175x94"),
-    SimilarItemModel(title: "Sofa Luxury", subtitle: "Velvet fabric", imageUrl: "https://placehold.co/175x94"),
-    SimilarItemModel(title: "Sofa Minimalist", subtitle: "Cozy wood feet", imageUrl: "https://placehold.co/175x94"),
-  ];
+  void _openSmartLens(BuildContext context) {
+    if (widget.designId == null || widget.designId!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Design ID not available. Please try generating again."),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
 
-  // void _openSmartLens(BuildContext context) {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     backgroundColor: Colors.transparent, // عشان حواف الـ Container المستديرة تبان
-  //     enableDrag: true,
-  //     isScrollControlled: true,
-  //     builder: (context) {
-  //       return SmartLensBottomSheet(dummyItems: products);
-  //     },
-  //   );
-  // }
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      enableDrag: true,
+      isScrollControlled: true,
+      builder: (context) {
+        return BlocProvider(
+          create: (_) => SearchCubit(SearchRepo()),
+          child: SmartLensBottomSheet(designId: widget.designId!),
+        );
+      },
+    );
+  }
 
   late String _selectedImage;
   late bool _isNetworkImage;
@@ -83,6 +94,7 @@ class _GenerateResultViewState extends State<GenerateResultView> {
               ResultImageWidget(
                 imagePath: _selectedImage,
                 isNetworkImage: _isNetworkImage,
+                onSmartLensTap: () => _openSmartLens(context),
               ),
               SizedBox(height: 16.h),
               if (widget.showListView && !_isNetworkImage) ...[

@@ -51,4 +51,7 @@ abstract class ApiConstants {
 
   // Notifications endpoint
   static const String getNotifications = '/api/profile/notifications';
+
+  // Smart Lens search endpoint
+  static String searchDesign(String designId) => '/api/designs/search/$designId';
 }

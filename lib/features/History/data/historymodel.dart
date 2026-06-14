@@ -39,7 +39,7 @@ class HistoryDesignModel {
 
   factory HistoryDesignModel.fromJson(Map<String, dynamic> json) {
     return HistoryDesignModel(
-      id: json['_id'] ?? '',
+      id: json['_id'] ?? json['id'] ?? '',
       imageUrl: json['imageUrl'] ?? '',
       prompt: json['prompt'] ?? '',
       createdAt: json['createdAt'] ?? '',
