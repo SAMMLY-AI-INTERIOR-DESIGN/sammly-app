@@ -47,8 +47,19 @@ class GenerationLoadingWrapper extends StatelessWidget {
 
         final isRestyle = arguments?['isRestyle'] as bool? ?? false;
         final isFullHome = arguments?['isFullHome'] as bool? ?? false;
+        final isMask = arguments?['isMask'] as bool? ?? false;
 
-        if (isRestyle) {
+        if (isMask) {
+          final operationMode = arguments?['operationMode'] as String? ?? 'replace';
+          final maskUrl = arguments?['maskUrl'] as String? ?? '';
+          cubit.startMaskWithApi(
+            imageUrl: imageUrl ?? '',
+            maskUrl: maskUrl,
+            prompt: prompt,
+            operationMode: operationMode,
+            repo: GenerateDesignRepo(),
+          );
+        } else if (isRestyle) {
           cubit.startRestyleWithApi(
             uiStyle: style,
             imageUrl: imageUrl ?? '',

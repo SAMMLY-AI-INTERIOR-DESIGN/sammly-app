@@ -85,4 +85,25 @@ class GenerateDesignCubit extends Cubit<GenerateDesignState> {
       (designs) => emit(GenerateDesignSuccess(designs: designs)),
     );
   }
+
+  Future<void> generateMaskDesign({
+    required String imageUrl,
+    required String maskUrl,
+    String? prompt,
+    required String operationMode,
+  }) async {
+    emit(GenerateDesignLoading());
+
+    final result = await generateDesignRepo.generateMaskDesign(
+      imageUrl: imageUrl,
+      maskUrl: maskUrl,
+      prompt: prompt,
+      operationMode: operationMode,
+    );
+
+    result.fold(
+      (error) => emit(GenerateDesignFailure(errorMsg: error)),
+      (design) => emit(GenerateDesignSuccess(designs: [design])),
+    );
+  }
 }

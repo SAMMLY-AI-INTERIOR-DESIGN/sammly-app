@@ -167,6 +167,61 @@ class GenerationCubit extends Cubit<GenerationState> {
     );
   }
 
+  void startMaskWithApi({
+    required String imageUrl,
+    required String maskUrl,
+    String? prompt,
+    required String operationMode,
+    required GenerateDesignRepo repo,
+  }) {
+    _currentStep = 0;
+    
+    emit(GenerationLoadingStep(_currentStep));
+
+    _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      _currentStep = (_currentStep + 1) % 4; 
+      emit(GenerationLoadingStep(_currentStep));
+    });
+
+    _callMaskApi(
+      imageUrl: imageUrl,
+      maskUrl: maskUrl,
+      prompt: prompt,
+      operationMode: operationMode,
+      repo: repo,
+    );
+  }
+
+  Future<void> _callMaskApi({
+    required String imageUrl,
+    required String maskUrl,
+    String? prompt,
+    required String operationMode,
+    required GenerateDesignRepo repo,
+  }) async {
+    final result = await repo.generateMaskDesign(
+      imageUrl: imageUrl,
+      maskUrl: maskUrl,
+      prompt: prompt,
+      operationMode: operationMode,
+    );
+
+    _timer?.cancel();
+
+    result.fold(
+      (error) {
+        emit(GenerationFailed(errorMsg: error));
+      },
+      (design) {
+        emit(GenerationFinished(
+          imageUrl: design.imageUrl, 
+          designId: design.id,
+          designs: [design],
+        ));
+      },
+    );
+  }
+
   @override
   Future<void> close() {
     _timer?.cancel();

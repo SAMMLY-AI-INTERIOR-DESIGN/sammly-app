@@ -94,7 +94,14 @@ class _ImageGenerationStepperViewState
     Navigator.pushNamed(
       context, 
       AppRoutes.generateLoadingView,
-      arguments: {'showListView': false},
+      arguments: {
+        'showListView': false,
+        'isMask': true,
+        'operationMode': 'replace',
+        'imageUrl': _uploadedImage?.path,
+        'maskUrl': _maskImage?.path,
+        'prompt': prompt,
+      },
     );
   }
 
