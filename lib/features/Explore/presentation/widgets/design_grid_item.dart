@@ -47,20 +47,31 @@ class _DesignGridItemState extends State<DesignGridItem> {
         fit: StackFit.expand,
         children: [
           // الصورة الأساسية
-          Image.network(
-            widget.imageUrl,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                color: Colors.grey[300],
-                child: Icon(
-                  Icons.broken_image,
-                  color: Colors.grey,
-                  size: 30.sp,
+          widget.imageUrl.isEmpty
+              ? Container(
+                  color: Colors.grey[300],
+                  child: Center(
+                    child: Icon(
+                      Icons.broken_image,
+                      color: Colors.grey,
+                      size: 30.sp,
+                    ),
+                  ),
+                )
+              : Image.network(
+                  widget.imageUrl,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.grey[300],
+                      child: Icon(
+                        Icons.broken_image,
+                        color: Colors.grey,
+                        size: 30.sp,
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
 
           // تدرج لوني خفيف فوق الصورة عشان القلب الأبيض يبان لو الصورة فاتحة
           Container(

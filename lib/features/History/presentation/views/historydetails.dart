@@ -170,18 +170,25 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
       children: [
         // الصورة مفرودة بالكامل
         Positioned.fill(
-          child: Image.network(
-            widget.imageUrl,
-            fit: BoxFit.contain,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                color: Colors.grey[200],
-                child: const Center(
-                  child: Icon(Icons.broken_image, color: Colors.grey),
+          child: widget.imageUrl.isEmpty
+              ? Container(
+                  color: Colors.grey[200],
+                  child: const Center(
+                    child: Icon(Icons.broken_image, color: Colors.grey),
+                  ),
+                )
+              : Image.network(
+                  widget.imageUrl,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.grey[200],
+                      child: const Center(
+                        child: Icon(Icons.broken_image, color: Colors.grey),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
         ),
         // زرار الرجوع (أعلى يسار)
         Positioned(

@@ -147,4 +147,11 @@ class DesignDetailsCubit extends Cubit<DesignDetailsState> {
       ));
     }
   }
+
+  /// Update local isFavorited state (called when FavoriteCubit toggles).
+  void updateFavoriteStatus(bool isFavorited) {
+    if (_currentDesign == null) return;
+    _currentDesign = _currentDesign!.copyWith(isFavorited: isFavorited);
+    _emitLoadedIfAvailable();
+  }
 }

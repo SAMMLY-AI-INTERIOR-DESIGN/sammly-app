@@ -65,18 +65,26 @@ class FavoriteRepo {
       // Add to favorites: POST, returns 201
       final endpoint = ApiConstants.favoriteDesign(designId);
       log('Add favorite → endpoint: $endpoint, designId: $designId');
-      final response = await DioHelper.postData(
-        endPoint: endpoint,
-        data: {},
-        token: token,
+
+      // Use validateStatus to accept all status codes (201, 404, 409)
+      // so Dio doesn't throw DioException for expected error responses
+      DioHelper.dio.options.headers['Authorization'] = 'Bearer $token';
+      final response = await DioHelper.dio.post(
+        endpoint,
+        options: Options(
+          validateStatus: (status) => status != null && status < 500,
+        ),
       );
 
-      if (response.statusCode == 201 && response.data['status'] == 'success') {
+      final isMap = response.data is Map;
+
+      if (response.statusCode == 201 && isMap && response.data['status'] == 'success') {
         final msg = response.data['data']?['message']
             ?? response.data['message']
             ?? 'Added to favorites.';
         return right(msg);
       } else {
+        // Handle 404 (Design not found) and 409 (Already in favorites)
         final backendError = _extractErrorMessage(response.data);
         return left(backendError.isNotEmpty ? backendError : 'Failed to add to favorites.');
       }
@@ -96,12 +104,17 @@ class FavoriteRepo {
       }
 
       // API spec: remove from favorites uses DELETE method, returns 200
-      final response = await DioHelper.deleteData(
-        endPoint: ApiConstants.favoriteDesign(designId),
-        token: token,
+      DioHelper.dio.options.headers['Authorization'] = 'Bearer $token';
+      final response = await DioHelper.dio.delete(
+        ApiConstants.favoriteDesign(designId),
+        options: Options(
+          validateStatus: (status) => status != null && status < 500,
+        ),
       );
 
-      if (response.statusCode == 200 && response.data['status'] == 'success') {
+      final isMap = response.data is Map;
+
+      if (response.statusCode == 200 && isMap && response.data['status'] == 'success') {
         final msg = response.data['data']?['message']
             ?? response.data['message']
             ?? 'Removed from favorites.';
