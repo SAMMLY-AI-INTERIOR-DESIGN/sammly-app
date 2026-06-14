@@ -7,6 +7,13 @@ import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/shared_pref/shared_pref.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:sammly/features/home/logic/home_cubit.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
+import 'package:sammly/features/History/cubit/historycubit.dart';
+import 'package:sammly/features/Explore/cubit/explorecubit.dart';
+import 'package:sammly/features/Explore/cubit/static_designs_cubit.dart';
 
 
 class LogoutBottomSheet extends StatelessWidget {
@@ -69,8 +76,15 @@ class LogoutBottomSheet extends StatelessWidget {
                     // 1. Clear ALL stored data (jwt, userId, cached profile, etc.)
                     await SharedPref.clearAll();
 
-                    // 2. The cubits will be updated automatically upon next login.
-                    // Removed reset() calls to prevent the UI from showing empty data before fetch completes.
+                    // 2. Reset the cubits to prevent state leaks across different accounts.
+                    if (context.mounted) {
+                      context.read<ProfileCubit>().reset();
+                      context.read<HomeCubit>().reset();
+                      context.read<FavoriteCubit>().reset();
+                      context.read<HistoryCubit>().reset();
+                      context.read<ExploreCubit>().reset();
+                      context.read<StaticDesignsCubit>().reset();
+                    }
 
                     // 3. Navigate to login and remove all previous routes
                     if (context.mounted) {

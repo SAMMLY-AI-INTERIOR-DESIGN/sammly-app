@@ -129,6 +129,15 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
                 return const Center(child: CircularProgressIndicator());
               }
 
+              // Sync favorite status from backend when details are loaded
+              if (state is DesignDetailsLoaded) {
+                final design = state.design;
+                context.read<FavoriteCubit>().syncFavoriteStatus(
+                  design.id,
+                  design.isFavorited,
+                );
+              }
+
               if (state is DesignDetailsError) {
                 return Center(
                   child: Column(
@@ -215,22 +224,31 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
             borderRadius: BorderRadius.circular(16.r),
             child: Stack(
               children: [
-                Image.network(
-                  design.imageUrl,
-                  width: double.infinity,
-                  height: 350.h,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      width: double.infinity,
-                      height: 350.h,
-                      color: Colors.grey[200],
-                      child: const Center(
-                        child: Icon(Icons.broken_image, color: Colors.grey),
+                design.imageUrl.isEmpty
+                    ? Container(
+                        width: double.infinity,
+                        height: 350.h,
+                        color: Colors.grey[200],
+                        child: const Center(
+                          child: Icon(Icons.broken_image, color: Colors.grey),
+                        ),
+                      )
+                    : Image.network(
+                        design.imageUrl,
+                        width: double.infinity,
+                        height: 350.h,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            width: double.infinity,
+                            height: 350.h,
+                            color: Colors.grey[200],
+                            child: const Center(
+                              child: Icon(Icons.broken_image, color: Colors.grey),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
 
                 // Gradient overlay at top for heart
                 Container(
@@ -277,6 +295,8 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
                       return GestureDetector(
                         onTap: () {
                           context.read<FavoriteCubit>().toggleFavorite(design.id, isFav);
+                          // Also update the design details cubit locally
+                          context.read<DesignDetailsCubit>().updateFavoriteStatus(!isFav);
                         },
                         child: SvgPicture.asset(
                           isFav ? AppImages.withsaving : AppImages.withoutsaving,
@@ -315,40 +335,7 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
           ),
           SizedBox(height: 12.h),
 
-          // Likes Action Row
-          GestureDetector(
-            onTap: () {
-              context.read<DesignDetailsCubit>().toggleLike(design.id);
-            },
-            child: Row(
-              children: [
-                 Container(
-                    padding: EdgeInsets.all(6.w),
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryColor.withValues(alpha: 0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: SvgPicture.asset(
-                      design.isLiked ? AppImages.heartFilled : AppImages.heartOutline,
-                      width: 14.w,
-                      colorFilter: design.isLiked 
-                          ? null 
-                          : const ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
-                    ),
-                  ),
-                  SizedBox(width: 8.w),
-                  Text(
-                    '${design.likesCount} Likes',
-                    style: TextStyle(
-                      color: AppColors.greyColor,
-                      fontSize: 15.sp,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'Manrope',
-                    ),
-                  ),
-              ],
-            ),
-          ),
+          // Likes Action Row removed
 
           SizedBox(height: 40.h),
 
@@ -367,18 +354,25 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
       children: [
         // الصورة مفرودة بالكامل
         Positioned.fill(
-          child: Image.network(
-            design.imageUrl,
-            fit: BoxFit.contain,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                color: Colors.grey[200],
-                child: const Center(
-                  child: Icon(Icons.broken_image, color: Colors.grey),
+          child: design.imageUrl.isEmpty
+              ? Container(
+                  color: Colors.grey[200],
+                  child: const Center(
+                    child: Icon(Icons.broken_image, color: Colors.grey),
+                  ),
+                )
+              : Image.network(
+                  design.imageUrl,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.grey[200],
+                      child: const Center(
+                        child: Icon(Icons.broken_image, color: Colors.grey),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
         ),
         // زرار الرجوع (أعلى يسار)
         Positioned(

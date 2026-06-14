@@ -115,10 +115,11 @@ class _FavoriteGridViewState extends State<FavoriteGridView> {
               final design = designs[index];
 
               return GestureDetector(
+                key: ValueKey(design.id),
                 onTap: () {
                   Navigator.pushNamed(
                     context,
-                    AppRoutes.sharedDesignDetailsView,
+                    AppRoutes.browseDesignDetailsView,
                     arguments: design.id,
                   );
                 },

@@ -21,7 +21,17 @@ class ExploreCubit extends Cubit<ExploreState> {
   String? get currentSearch => _currentSearch;
   List<ExploreDesignModel> get currentDesigns => List.unmodifiable(_allDesigns);
 
-  /// Fetch the first page (resets everything).
+  /// Resets all in-memory explore state (used on logout).
+  void reset() {
+    _allDesigns.clear();
+    _currentPage = 1;
+    _hasMore = true;
+    _currentSort = 'latest';
+    _currentSearch = null;
+    emit(ExploreInitial());
+  }
+
+  /// Fetch the first page.
   Future<void> fetchExplore({
     int limit = 20,
     String sort = 'latest',

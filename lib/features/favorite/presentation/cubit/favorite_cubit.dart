@@ -25,6 +25,27 @@ class FavoriteCubit extends Cubit<FavoriteState> {
     return _favoriteIds.contains(designId);
   }
 
+  /// Sync a single design's favorite status from backend data.
+  /// Call this when you get `isFavorited` from design details or static designs API.
+  void syncFavoriteStatus(String designId, bool isFavorited) {
+    if (isFavorited) {
+      _favoriteIds.add(designId);
+    } else {
+      _favoriteIds.remove(designId);
+    }
+  }
+
+  /// Sync multiple designs' favorite status from backend data.
+  void syncFavoriteStatuses(Map<String, bool> statuses) {
+    statuses.forEach((designId, isFavorited) {
+      if (isFavorited) {
+        _favoriteIds.add(designId);
+      } else {
+        _favoriteIds.remove(designId);
+      }
+    });
+  }
+
   /// Resets all in-memory favorites state (used on logout).
   void reset() {
     _allDesigns.clear();
@@ -117,10 +138,16 @@ class FavoriteCubit extends Cubit<FavoriteState> {
   }
 
   Future<void> toggleFavorite(String designId, bool isCurrentlyFavorite) async {
+    FavoriteModel? removedItem;
+    int? removedIndex;
+
     // Optimistic UI update
     if (isCurrentlyFavorite) {
       _favoriteIds.remove(designId);
-      _allDesigns.removeWhere((element) => element.id == designId);
+      removedIndex = _allDesigns.indexWhere((element) => element.id == designId);
+      if (removedIndex != -1) {
+        removedItem = _allDesigns.removeAt(removedIndex);
+      }
     } else {
       _favoriteIds.add(designId);
     }
@@ -142,6 +169,14 @@ class FavoriteCubit extends Cubit<FavoriteState> {
         // Revert optimistic update on error
         if (isCurrentlyFavorite) {
           _favoriteIds.add(designId);
+          if (removedItem != null && removedIndex != null) {
+            // Restore item to its original position or at the end if out of bounds
+            if (removedIndex <= _allDesigns.length) {
+              _allDesigns.insert(removedIndex, removedItem);
+            } else {
+              _allDesigns.add(removedItem);
+            }
+          }
         } else {
           _favoriteIds.remove(designId);
         }
@@ -156,6 +191,13 @@ class FavoriteCubit extends Cubit<FavoriteState> {
       },
       (message) {
         emit(FavoriteToggleSuccess(message));
+        // Re-emit loaded state so all BlocBuilders get a consistent state
+        emit(FavoriteLoaded(
+          favorites: List.unmodifiable(_allDesigns),
+          selectedRoom: _selectedRoom,
+          currentPage: _currentPage,
+          hasMore: _hasMore,
+        ));
       },
     );
   }

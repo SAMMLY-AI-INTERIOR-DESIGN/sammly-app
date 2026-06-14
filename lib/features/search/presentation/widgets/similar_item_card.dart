@@ -53,19 +53,28 @@ class SimilarItemCard extends StatelessWidget {
           children: [
             // صورة المنتج (تأخذ المساحة الأكبر)
             Expanded(
-              child: Image.network(
-                item.imageUrl,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  width: double.infinity,
-                  color: AppColors.bg2Color,
-                  child: const Icon(
-                    Icons.image_outlined,
-                    color: AppColors.greyColor,
-                  ),
-                ),
-              ),
+              child: item.imageUrl.isEmpty
+                  ? Container(
+                      width: double.infinity,
+                      color: AppColors.bg2Color,
+                      child: const Icon(
+                        Icons.image_outlined,
+                        color: AppColors.greyColor,
+                      ),
+                    )
+                  : Image.network(
+                      item.imageUrl,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        width: double.infinity,
+                        color: AppColors.bg2Color,
+                        child: const Icon(
+                          Icons.image_outlined,
+                          color: AppColors.greyColor,
+                        ),
+                      ),
+                    ),
             ),
             // تفاصيل المنتج مع الجراديانت الأنيق من فيجما
             Container(
