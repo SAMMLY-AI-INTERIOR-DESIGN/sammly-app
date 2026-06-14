@@ -236,10 +236,14 @@ abstract class AppRouter {
         );
 
       case AppRoutes.imageGenerationStepperView:
+        final args = settings.arguments as Map<String, dynamic>?;
+        final initialImageUrl = args?['initialImageUrl'] as String?;
+        final isEditMode = args?['isEditMode'] as bool? ?? false;
         return MaterialPageRoute(
-          builder: (context) {
-            return const ImageGenerationStepperView();
-          },
+          builder: (context) => ImageGenerationStepperView(
+            initialImageUrl: initialImageUrl,
+            isEditMode: isEditMode,
+          ),
         );
 
       case AppRoutes.fullHomeView:

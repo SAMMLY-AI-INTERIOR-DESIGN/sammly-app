@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/constant/app_strings.dart';
+import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/widgets/generate_action_buttons_row.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/generate_results_app_bar.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/result_image_widget.dart';
@@ -113,6 +114,13 @@ class _GenerateResultViewState extends State<GenerateResultView> {
             ? AppStrings.yourGeneratedDesign
             : AppStrings.modernLivingRoom,
         subtitle: AppStrings.generatedBySammly,
+        onBack: () {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            AppRoutes.layoutView,
+            (route) => false,
+          );
+        },
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -185,7 +193,16 @@ class _GenerateResultViewState extends State<GenerateResultView> {
                   : SizedBox(height: 56.h),
               GenerateActionButtonsRow(
                 imageUrl: _isNetworkImage ? _selectedImage : null,
-                onEdit: () {},
+                onEdit: () {
+                  Navigator.pushNamed(
+                    context,
+                    AppRoutes.imageGenerationStepperView,
+                    arguments: {
+                      'initialImageUrl': _selectedImage,
+                      'isEditMode': true,
+                    },
+                  );
+                },
                 onShare: () {},
               ),
               SizedBox(height: 24.h),

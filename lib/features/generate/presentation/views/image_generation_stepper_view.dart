@@ -1,6 +1,9 @@
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/routing/routes.dart';
@@ -10,7 +13,14 @@ import 'package:sammly/features/generate/presentation/views/widgets/step_2_mask.
 import 'package:sammly/features/generate/presentation/views/widgets/step_3_describe.dart';
 
 class ImageGenerationStepperView extends StatefulWidget {
-  const ImageGenerationStepperView({super.key});
+  final String? initialImageUrl;
+  final bool isEditMode;
+
+  const ImageGenerationStepperView({
+    super.key,
+    this.initialImageUrl,
+    this.isEditMode = false,
+  });
 
   @override
   State<ImageGenerationStepperView> createState() =>
@@ -25,6 +35,55 @@ class _ImageGenerationStepperViewState
   XFile? _uploadedImage;
   XFile? _maskImage;
   final TextEditingController _promptController = TextEditingController();
+  bool _isDownloadingImage = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialImageUrl != null && widget.initialImageUrl!.isNotEmpty) {
+      _downloadInitialImage(widget.initialImageUrl!);
+    }
+  }
+
+  Future<void> _downloadInitialImage(String url) async {
+    setState(() {
+      _isDownloadingImage = true;
+    });
+    try {
+      final dio = Dio();
+      final response = await dio.get<List<int>>(
+        url,
+        options: Options(responseType: ResponseType.bytes),
+      );
+      
+      final tempDir = await getTemporaryDirectory();
+      final file = File('${tempDir.path}/initial_image_${DateTime.now().millisecondsSinceEpoch}.jpg');
+      await file.writeAsBytes(response.data!);
+
+      if (!mounted) return;
+
+      setState(() {
+        _uploadedImage = XFile(file.path);
+        _currentStep = 1; // Move directly to mask step
+        _isDownloadingImage = false;
+      });
+      
+      // Delay jumping the page controller to allow layout to build
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (mounted) {
+          _pageController.jumpToPage(1);
+        }
+      });
+      
+    } catch (e) {
+      debugPrint("Failed to download image: $e");
+      if (mounted) {
+        setState(() {
+          _isDownloadingImage = false;
+        });
+      }
+    }
+  }
 
   @override
   void dispose() {
@@ -97,7 +156,7 @@ class _ImageGenerationStepperViewState
       arguments: {
         'showListView': false,
         'isMask': true,
-        'operationMode': 'replace',
+        'operationMode': widget.isEditMode ? 'edit' : 'replace',
         'imageUrl': _uploadedImage?.path,
         'maskUrl': _maskImage?.path,
         'prompt': prompt,
@@ -129,8 +188,10 @@ class _ImageGenerationStepperViewState
           ),
         ),
       ),
-      body: Column(
-        children: [
+      body: _isDownloadingImage 
+          ? const Center(child: CircularProgressIndicator(color: AppColors.primaryColor))
+          : Column(
+              children: [
           CustomStepper(
             currentStep: _currentStep,
             stepTitles: const ['Upload', 'Mask', 'Describe'],
