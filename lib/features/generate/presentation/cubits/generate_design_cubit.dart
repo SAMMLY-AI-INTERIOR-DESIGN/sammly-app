@@ -40,7 +40,27 @@ class GenerateDesignCubit extends Cubit<GenerateDesignState> {
 
     result.fold(
       (error) => emit(GenerateDesignFailure(errorMsg: error)),
-      (design) => emit(GenerateDesignSuccess(design: design)),
+      (design) => emit(GenerateDesignSuccess(designs: [design])),
+    );
+  }
+
+  Future<void> restyleDesign({
+    required String uiStyle,
+    required String imageUrl,
+  }) async {
+    emit(GenerateDesignLoading());
+
+    // Map UI values to API values
+    final apiStyle = GenerateMappers.styleToApi(uiStyle);
+
+    final result = await generateDesignRepo.restyleDesign(
+      style: apiStyle,
+      imageUrl: imageUrl,
+    );
+
+    result.fold(
+      (error) => emit(GenerateDesignFailure(errorMsg: error)),
+      (design) => emit(GenerateDesignSuccess(designs: [design])),
     );
   }
 }

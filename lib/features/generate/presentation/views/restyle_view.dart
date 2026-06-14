@@ -6,6 +6,7 @@ import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/custom_stepper.dart';
+import 'package:sammly/core/functions.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/step_1_upload.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/text_to_image_step_2_style.dart';
 
@@ -22,6 +23,14 @@ class _RestyleViewState extends State<RestyleView> {
   XFile? _selectedImage;
 
   void _nextStep() {
+    if (_currentStep == 0 && _selectedImage == null) {
+      showCustomSnackBar(
+        context: context,
+        message: 'Please upload a reference image.',
+        isError: true,
+      );
+      return;
+    }
     if (_currentStep < 1) {
       setState(() {
         _currentStep++;
@@ -87,7 +96,12 @@ class _RestyleViewState extends State<RestyleView> {
                       Navigator.pushNamed(
                         context,
                         AppRoutes.generateLoadingView,
-                        arguments: {'showListView': false},
+                        arguments: {
+                          'isRestyle': true,
+                          'style': _selectedStyle ?? '',
+                          'imageUrl': _selectedImage?.path,
+                          'showListView': false,
+                        },
                       );
                     },
                     buttonText: AppStrings.restyleYourSpace,
