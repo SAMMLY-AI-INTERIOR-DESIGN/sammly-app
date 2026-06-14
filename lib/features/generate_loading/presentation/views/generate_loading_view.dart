@@ -46,11 +46,20 @@ class GenerationLoadingWrapper extends StatelessWidget {
         final imageUrl = arguments?['imageUrl'] as String?;
 
         final isRestyle = arguments?['isRestyle'] as bool? ?? false;
+        final isFullHome = arguments?['isFullHome'] as bool? ?? false;
 
         if (isRestyle) {
           cubit.startRestyleWithApi(
             uiStyle: style,
             imageUrl: imageUrl ?? '',
+            repo: GenerateDesignRepo(),
+          );
+        } else if (isFullHome) {
+          final roomTypes = arguments?['roomTypes'] as List<String>? ?? [];
+          cubit.startFullHomeWithApi(
+            uiStyle: style,
+            uiRoomTypes: roomTypes,
+            imageUrl: imageUrl,
             repo: GenerateDesignRepo(),
           );
         } else {
@@ -83,6 +92,7 @@ class GenerationLoadingWrapper extends StatelessWidget {
                       'showListView': showListView,
                       'imageUrl': state.imageUrl,
                       'designId': state.designId,
+                      'designs': state.designs,
                     },
                   );
                 } else if (state is GenerationFailed) {

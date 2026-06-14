@@ -63,4 +63,26 @@ class GenerateDesignCubit extends Cubit<GenerateDesignState> {
       (design) => emit(GenerateDesignSuccess(designs: [design])),
     );
   }
+
+  Future<void> generateFullHomeDesign({
+    required String uiStyle,
+    required List<String> uiRoomTypes,
+    String? imageUrl,
+  }) async {
+    emit(GenerateDesignLoading());
+
+    final apiStyle = GenerateMappers.styleToApi(uiStyle);
+    final apiRoomTypes = uiRoomTypes.map((room) => GenerateMappers.roomToApi(room)).toList();
+
+    final result = await generateDesignRepo.generateFullHomeDesign(
+      style: apiStyle,
+      roomTypes: apiRoomTypes,
+      styleImageUrl: imageUrl,
+    );
+
+    result.fold(
+      (error) => emit(GenerateDesignFailure(errorMsg: error)),
+      (designs) => emit(GenerateDesignSuccess(designs: designs)),
+    );
+  }
 }

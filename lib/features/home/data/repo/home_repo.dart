@@ -20,7 +20,7 @@ class HomeRepo {
         endPoint: ApiConstants.homeEndpoint,
         token: token,
       );
-      log(response.data.toString());
+      // log(response.data.toString());
       if (response.statusCode == 200 && response.data['status'] == 'success') {
         final dataMap = response.data['data'] as Map<String, dynamic>;
         log('Home data: $dataMap');

@@ -1,5 +1,7 @@
 
 // --- States ---
+import 'package:sammly/features/generate/data/model/generate_design_response_model.dart';
+
 abstract class GenerationState {}
 
 class GenerationInitial extends GenerationState {}
@@ -12,7 +14,8 @@ class GenerationLoadingStep extends GenerationState {
 class GenerationFinished extends GenerationState {
   final String? imageUrl;
   final String? designId;
-  GenerationFinished({this.imageUrl, this.designId});
+  final List<GenerateDesignResponseModel>? designs;
+  GenerationFinished({this.imageUrl, this.designId, this.designs});
 }
 
 class GenerationFailed extends GenerationState {

@@ -109,6 +109,64 @@ class GenerationCubit extends Cubit<GenerationState> {
     );
   }
 
+  void startFullHomeWithApi({
+    required String uiStyle,
+    required List<String> uiRoomTypes,
+    String? imageUrl,
+    required GenerateDesignRepo repo,
+  }) {
+    _currentStep = 0;
+    
+    emit(GenerationLoadingStep(_currentStep));
+
+    _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      _currentStep = (_currentStep + 1) % 4; 
+      emit(GenerationLoadingStep(_currentStep));
+    });
+
+    _callFullHomeApi(
+      uiStyle: uiStyle,
+      uiRoomTypes: uiRoomTypes,
+      imageUrl: imageUrl,
+      repo: repo,
+    );
+  }
+
+  Future<void> _callFullHomeApi({
+    required String uiStyle,
+    required List<String> uiRoomTypes,
+    String? imageUrl,
+    required GenerateDesignRepo repo,
+  }) async {
+    final apiStyle = GenerateMappers.styleToApi(uiStyle);
+    final apiRoomTypes = uiRoomTypes.map((room) => GenerateMappers.roomToApi(room)).toList();
+
+    final result = await repo.generateFullHomeDesign(
+      style: apiStyle,
+      roomTypes: apiRoomTypes,
+      styleImageUrl: imageUrl,
+    );
+
+    _timer?.cancel();
+
+    result.fold(
+      (error) {
+        emit(GenerationFailed(errorMsg: error));
+      },
+      (designs) {
+        if (designs.isNotEmpty) {
+          emit(GenerationFinished(
+            imageUrl: designs.first.imageUrl, 
+            designId: designs.first.id,
+            designs: designs,
+          ));
+        } else {
+          emit(GenerationFailed(errorMsg: 'No designs returned.'));
+        }
+      },
+    );
+  }
+
   @override
   Future<void> close() {
     _timer?.cancel();
