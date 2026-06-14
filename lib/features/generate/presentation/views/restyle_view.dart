@@ -1,6 +1,10 @@
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/routing/routes.dart';
@@ -11,7 +15,8 @@ import 'package:sammly/features/generate/presentation/views/widgets/step_1_uploa
 import 'package:sammly/features/generate/presentation/views/widgets/text_to_image_step_2_style.dart';
 
 class RestyleView extends StatefulWidget {
-  const RestyleView({super.key});
+  final String? initialImageUrl;
+  const RestyleView({super.key, this.initialImageUrl});
 
   @override
   State<RestyleView> createState() => _RestyleViewState();
@@ -21,6 +26,47 @@ class _RestyleViewState extends State<RestyleView> {
   int _currentStep = 0;
   String? _selectedStyle;
   XFile? _selectedImage;
+  bool _isDownloadingImage = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialImageUrl != null && widget.initialImageUrl!.isNotEmpty) {
+      _downloadInitialImage(widget.initialImageUrl!);
+    }
+  }
+
+  Future<void> _downloadInitialImage(String url) async {
+    setState(() {
+      _isDownloadingImage = true;
+    });
+    try {
+      final dio = Dio();
+      final response = await dio.get<List<int>>(
+        url,
+        options: Options(responseType: ResponseType.bytes),
+      );
+      
+      final tempDir = await getTemporaryDirectory();
+      final file = File('${tempDir.path}/restyle_initial_image_${DateTime.now().millisecondsSinceEpoch}.jpg');
+      await file.writeAsBytes(response.data!);
+
+      if (!mounted) return;
+
+      setState(() {
+        _selectedImage = XFile(file.path);
+        _currentStep = 1; // Move directly to style step
+        _isDownloadingImage = false;
+      });
+    } catch (e) {
+      debugPrint("Failed to download image: $e");
+      if (mounted) {
+        setState(() {
+          _isDownloadingImage = false;
+        });
+      }
+    }
+  }
 
   void _nextStep() {
     if (_currentStep == 0 && _selectedImage == null) {
@@ -57,9 +103,11 @@ class _RestyleViewState extends State<RestyleView> {
             : AppStrings.selectStyle,
         onBack: _previousStep,
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
+      body: _isDownloadingImage
+          ? const Center(child: CircularProgressIndicator(color: AppColors.primaryColor))
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 80.w),
             child: CustomStepper(
