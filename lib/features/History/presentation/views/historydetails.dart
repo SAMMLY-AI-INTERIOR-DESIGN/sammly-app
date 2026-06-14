@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
-import 'package:sammly/core/widgets/action_buttons_row.dart';
+import 'package:sammly/core/widgets/generate_action_buttons_row.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_state.dart';
@@ -155,7 +155,7 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
           SizedBox(height: 24.h),
           const HistoryDetailsSection(),
           SizedBox(height: 40.h),
-          ActionButtonsRow(imageUrl: widget.imageUrl),
+          GenerateActionButtonsRow(imageUrl: widget.imageUrl),
           SizedBox(height: 20.h),
         ],
       ),

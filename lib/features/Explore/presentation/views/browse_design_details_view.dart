@@ -5,7 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
-import 'package:sammly/core/widgets/action_buttons_row.dart';
+import 'package:sammly/core/widgets/explore_action_buttons_row.dart';
 import 'package:sammly/features/Explore/cubit/design_details_cubit.dart';
 import 'package:sammly/features/Explore/cubit/design_details_states.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
@@ -353,7 +353,7 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
           SizedBox(height: 40.h),
 
           // Bottom Buttons
-          ActionButtonsRow(imageUrl: design.imageUrl),
+          ExploreActionButtonsRow(imageUrl: design.imageUrl),
           SizedBox(height: 20.h),
         ],
       ),
