@@ -104,4 +104,64 @@ class GenerateDesignRepo {
         return 'Error: ${e.message ?? e.error ?? 'Something went wrong.'}';
     }
   }
+
+  Future<Either<String, GenerateDesignResponseModel>> restyleDesign({
+    required String style,
+    required String imageUrl,
+  }) async {
+    try {
+      final token = SharedPref.getData(key: 'jwt');
+
+      final Map<String, dynamic> requestData = {
+        'style': style,
+        'imageUrl': imageUrl,
+      };
+
+      final response = await DioHelper.postData(
+        endPoint: ApiConstants.restyleDesign,
+        data: requestData,
+        token: token,
+      );
+      log(response.statusCode.toString());
+      if (response.statusCode == 201 ||
+          response.data['status'] == 'success') {
+        
+        final dataMap = response.data['data'] as Map<String, dynamic>?;
+        final designJson = dataMap?['design'];
+        
+        if (designJson != null && designJson is Map<String, dynamic>) {
+          final extractedId = designJson['_id']?.toString()
+              ?? designJson['id']?.toString()
+              ?? designJson['designId']?.toString()
+              ?? designJson['design_id']?.toString()
+              ?? dataMap?['_id']?.toString()
+              ?? dataMap?['id']?.toString()
+              ?? dataMap?['designId']?.toString()
+              ?? dataMap?['design_id']?.toString()
+              ?? response.data['_id']?.toString()
+              ?? response.data['id']?.toString()
+              ?? response.data['designId']?.toString()
+              ?? response.data['design_id']?.toString()
+              ?? '';
+              
+          if (extractedId.isEmpty) {
+            log('WARNING: Could not find any ID field in generation response! Data: ${response.data}');
+          }
+              
+          designJson['_id'] = extractedId;
+          
+          final model = GenerateDesignResponseModel.fromJson(designJson);
+          return right(model);
+        }
+        return left('Unexpected response format.');
+      } else {
+        final msg = response.data['message']?.toString() ?? 'Restyle failed.';
+        return left(msg);
+      }
+    } on DioException catch (e) {
+      return left(_handleDioError(e));
+    } catch (e) {
+      return left('An unexpected error occurred.');
+    }
+  }
 }

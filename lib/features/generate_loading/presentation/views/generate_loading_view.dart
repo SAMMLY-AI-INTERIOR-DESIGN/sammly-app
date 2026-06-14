@@ -45,13 +45,23 @@ class GenerationLoadingWrapper extends StatelessWidget {
         final prompt = arguments?['prompt'] as String? ?? '';
         final imageUrl = arguments?['imageUrl'] as String?;
 
-        cubit.startLoadingWithApi(
-          uiStyle: style,
-          uiRoom: room,
-          prompt: prompt,
-          imageUrl: imageUrl,
-          repo: GenerateDesignRepo(),
-        );
+        final isRestyle = arguments?['isRestyle'] as bool? ?? false;
+
+        if (isRestyle) {
+          cubit.startRestyleWithApi(
+            uiStyle: style,
+            imageUrl: imageUrl ?? '',
+            repo: GenerateDesignRepo(),
+          );
+        } else {
+          cubit.startLoadingWithApi(
+            uiStyle: style,
+            uiRoom: room,
+            prompt: prompt,
+            imageUrl: imageUrl,
+            repo: GenerateDesignRepo(),
+          );
+        }
 
         return cubit;
       },

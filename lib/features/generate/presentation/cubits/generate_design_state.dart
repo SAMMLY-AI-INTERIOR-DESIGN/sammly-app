@@ -7,8 +7,8 @@ class GenerateDesignInitial extends GenerateDesignState {}
 class GenerateDesignLoading extends GenerateDesignState {}
 
 class GenerateDesignSuccess extends GenerateDesignState {
-  final GenerateDesignResponseModel design;
-  GenerateDesignSuccess({required this.design});
+  final List<GenerateDesignResponseModel> designs;
+  GenerateDesignSuccess({required this.designs});
 }
 
 class GenerateDesignFailure extends GenerateDesignState {

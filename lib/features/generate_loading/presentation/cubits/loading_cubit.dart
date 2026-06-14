@@ -64,6 +64,51 @@ class GenerationCubit extends Cubit<GenerationState> {
     );
   }
 
+  void startRestyleWithApi({
+    required String uiStyle,
+    required String imageUrl,
+    required GenerateDesignRepo repo,
+  }) {
+    _currentStep = 0;
+    
+    emit(GenerationLoadingStep(_currentStep));
+
+    _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      _currentStep = (_currentStep + 1) % 4; 
+      emit(GenerationLoadingStep(_currentStep));
+    });
+
+    _callRestyleApi(
+      uiStyle: uiStyle,
+      imageUrl: imageUrl,
+      repo: repo,
+    );
+  }
+
+  Future<void> _callRestyleApi({
+    required String uiStyle,
+    required String imageUrl,
+    required GenerateDesignRepo repo,
+  }) async {
+    final apiStyle = GenerateMappers.styleToApi(uiStyle);
+
+    final result = await repo.restyleDesign(
+      style: apiStyle,
+      imageUrl: imageUrl,
+    );
+
+    _timer?.cancel();
+
+    result.fold(
+      (error) {
+        emit(GenerationFailed(errorMsg: error));
+      },
+      (design) {
+        emit(GenerationFinished(imageUrl: design.imageUrl, designId: design.id));
+      },
+    );
+  }
+
   @override
   Future<void> close() {
     _timer?.cancel();
