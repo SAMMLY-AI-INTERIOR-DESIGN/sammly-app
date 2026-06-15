@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -9,38 +10,72 @@ import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 
-class ResultImageWidget extends StatelessWidget {
+class ResultImageWidget extends StatefulWidget {
   final String imagePath;
   final bool isNetworkImage;
   final VoidCallback? onSmartLensTap;
+  final String? originalImagePath;
 
   const ResultImageWidget({
     super.key,
     required this.imagePath,
     this.isNetworkImage = false,
     this.onSmartLensTap,
+    this.originalImagePath,
   });
 
   @override
+  State<ResultImageWidget> createState() => _ResultImageWidgetState();
+}
+
+class _ResultImageWidgetState extends State<ResultImageWidget> {
+  bool _showOriginal = false;
+
+  @override
   Widget build(BuildContext context) {
-    final imageProvider = isNetworkImage
-        ? NetworkImage(imagePath) as ImageProvider
-        : AssetImage(imagePath);
+    final imageProvider = widget.isNetworkImage
+        ? NetworkImage(widget.imagePath) as ImageProvider
+        : AssetImage(widget.imagePath);
 
     return Container(
       width: double.infinity,
       height: 400.h,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.r),
-        image: DecorationImage(image: imageProvider, fit: BoxFit.fill),
       ),
       child: Stack(
+        fit: StackFit.expand,
         children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(16.r),
+            child: widget.originalImagePath != null
+                ? Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Image(
+                        image: imageProvider,
+                        fit: BoxFit.fill,
+                      ),
+                      AnimatedOpacity(
+                        opacity: _showOriginal ? 1.0 : 0.0,
+                        duration: const Duration(milliseconds: 300),
+                        child: Image.file(
+                          File(widget.originalImagePath!),
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    ],
+                  )
+                : Image(
+                    image: imageProvider,
+                    fit: BoxFit.fill,
+                  ),
+          ),
           Positioned(
             top: 16.h,
             left: 16.w,
             child: GestureDetector(
-              onTap: onSmartLensTap,
+              onTap: widget.onSmartLensTap,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20.r),
                 child: BackdropFilter(
@@ -118,6 +153,21 @@ class ResultImageWidget extends StatelessWidget {
               ),
             ),
           ),
+          if (widget.originalImagePath != null)
+            Positioned(
+              bottom: 16.h,
+              right: 16.w,
+              child: GestureDetector(
+                onTapDown: (_) => setState(() => _showOriginal = true),
+                onTapUp: (_) => setState(() => _showOriginal = false),
+                onTapCancel: () => setState(() => _showOriginal = false),
+                child: SvgPicture.asset(
+                  AppImages.switchImageIcon,
+                  width: 28.w,
+                  height: 28.h,
+                ),
+              ),
+            ),
         ],
       ),
     );

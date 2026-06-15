@@ -21,6 +21,7 @@ class GenerateResultView extends StatefulWidget {
   final String? networkImageUrl;
   final String? designId;
   final List<dynamic>? designs;
+  final String? originalImageUrl;
 
   const GenerateResultView({
     super.key,
@@ -28,6 +29,7 @@ class GenerateResultView extends StatefulWidget {
     this.networkImageUrl,
     this.designId,
     this.designs,
+    this.originalImageUrl,
   });
 
   @override
@@ -158,6 +160,7 @@ class _GenerateResultViewState extends State<GenerateResultView> {
                       imagePath: _selectedImage,
                       isNetworkImage: _isNetworkImage,
                       onSmartLensTap: () => _openSmartLens(context),
+                      originalImagePath: widget.originalImageUrl,
                     ),
                     SizedBox(height: 16.h),
                     if (widget.showListView) ...[
