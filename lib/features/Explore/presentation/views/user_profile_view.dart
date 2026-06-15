@@ -5,12 +5,15 @@ import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/functions.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/avatar_widget.dart';
+import 'package:sammly/features/Explore/cubit/explorecubit.dart';
+import 'package:sammly/features/History/presentation/views/historydetails.dart';
 import 'package:sammly/features/following/cubit/following_cubit.dart';
 import 'package:sammly/features/following/cubit/following_states.dart';
 import 'package:sammly/features/following/data/repo/following_repo.dart';
 import 'package:sammly/features/following/presentation/widgets/gradient_follow_bottom.dart';
+import 'package:sammly/features/profile/data/models/shared_images_model.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/posts_data_section.dart';
-import 'package:sammly/features/profile/presentation/views/widgets/shared_images_list_view.dart';
+import 'package:sammly/features/profile/presentation/views/widgets/shared_image_card.dart';
 
 class UserProfileView extends StatefulWidget {
   final String userId;
@@ -33,6 +36,17 @@ class _UserProfileViewState extends State<UserProfileView> {
 
   @override
   Widget build(BuildContext context) {
+    final allDesigns = context.read<ExploreCubit>().currentDesigns;
+    final userDesigns = allDesigns
+        .where((d) => d.name == widget.userName)
+        .toList();
+
+    final int postsCount = userDesigns.length;
+    final int likesCount = userDesigns.fold(
+      0,
+      (sum, item) => sum + item.likesCount,
+    );
+
     return BlocProvider(
       create: (context) => FollowingCubit(FollowingRepo()),
       child: Scaffold(
@@ -42,7 +56,9 @@ class _UserProfileViewState extends State<UserProfileView> {
             // Gradient header background
             Container(
               height: 300.h,
-              decoration: const BoxDecoration(gradient: AppColors.primaryGradient3),
+              decoration: const BoxDecoration(
+                gradient: AppColors.primaryGradient3,
+              ),
             ),
             SafeArea(
               child: Column(
@@ -65,10 +81,7 @@ class _UserProfileViewState extends State<UserProfileView> {
                         }
                       },
                     ),
-                    title: Text(
-                      widget.userName,
-                      style: AppTextStyles.title20Bold.copyWith(color: AppColors.whiteColor),
-                    ),
+                    
                   ),
                   SizedBox(height: 20.h),
                   Expanded(
@@ -96,9 +109,43 @@ class _UserProfileViewState extends State<UserProfileView> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(height: 110.h),
-                                  PostsDataSection(),
+                                  PostsDataSection(
+                                    postsCount: postsCount.toString(),
+                                    likesCount: likesCount.toString(),
+                                  ),
                                   SizedBox(height: 16.h),
-                                  SharedImagesListView(),
+                                  ListView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: userDesigns.length,
+                                    itemBuilder: (context, index) {
+                                      final design = userDesigns[index];
+                                      final item = SharedImageModel(
+                                        title: 'Shared Design',
+                                        description: design.prompt,
+                                        imageUrl: design.imageUrl,
+                                        likes: design.likesCount,
+                                      );
+
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  HistoryDetailsView(
+                                                    title: item.title,
+                                                    imageUrl: item.imageUrl,
+                                                    designId: design.id,
+                                                  ),
+                                            ),
+                                          );
+                                        },
+                                        child: SharedImageCard(item: item),
+                                      );
+                                    },
+                                  ),
                                 ],
                               ),
                             ),
@@ -122,26 +169,47 @@ class _UserProfileViewState extends State<UserProfileView> {
                                   SizedBox(height: 14.h),
                                   BlocConsumer<FollowingCubit, FollowingState>(
                                     listener: (context, state) {
-                                      if (state is FollowSuccess && state.userId == widget.userId) {
+                                      if (state is FollowSuccess &&
+                                          state.userId == widget.userId) {
                                         setState(() {
                                           isFollowing = true;
                                         });
-                                        showCustomSnackBar(context: context, message: state.message);
-                                      } else if (state is FollowFailure && state.userId == widget.userId) {
-                                        showCustomSnackBar(context: context, message: state.error, isError: true);
-                                      } else if (state is UnfollowSuccess && state.userId == widget.userId) {
+                                        showCustomSnackBar(
+                                          context: context,
+                                          message: state.message,
+                                        );
+                                      } else if (state is FollowFailure &&
+                                          state.userId == widget.userId) {
+                                        showCustomSnackBar(
+                                          context: context,
+                                          message: state.error,
+                                          isError: true,
+                                        );
+                                      } else if (state is UnfollowSuccess &&
+                                          state.userId == widget.userId) {
                                         setState(() {
                                           isFollowing = false;
                                         });
-                                        showCustomSnackBar(context: context, message: state.message);
-                                      } else if (state is UnfollowFailure && state.userId == widget.userId) {
-                                        showCustomSnackBar(context: context, message: state.error, isError: true);
+                                        showCustomSnackBar(
+                                          context: context,
+                                          message: state.message,
+                                        );
+                                      } else if (state is UnfollowFailure &&
+                                          state.userId == widget.userId) {
+                                        showCustomSnackBar(
+                                          context: context,
+                                          message: state.error,
+                                          isError: true,
+                                        );
                                       }
                                     },
                                     builder: (context, state) {
-                                      final isLoading = (state is FollowLoading && state.userId == widget.userId) ||
-                                          (state is UnfollowLoading && state.userId == widget.userId);
-                                      
+                                      final isLoading =
+                                          (state is FollowLoading &&
+                                              state.userId == widget.userId) ||
+                                          (state is UnfollowLoading &&
+                                              state.userId == widget.userId);
+
                                       if (isLoading) {
                                         return const CircularProgressIndicator();
                                       }
@@ -149,10 +217,14 @@ class _UserProfileViewState extends State<UserProfileView> {
                                       return GradientFollowButton(
                                         isFollowing: isFollowing,
                                         onFollow: () {
-                                          context.read<FollowingCubit>().followUser(widget.userId);
+                                          context
+                                              .read<FollowingCubit>()
+                                              .followUser(widget.userId);
                                         },
                                         onUnfollow: () {
-                                          context.read<FollowingCubit>().unfollowUser(widget.userId);
+                                          context
+                                              .read<FollowingCubit>()
+                                              .unfollowUser(widget.userId);
                                         },
                                       );
                                     },
