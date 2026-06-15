@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sammly/core/shared_pref/shared_pref.dart';
 import 'package:sammly/features/Explore/cubit/design_details_states.dart';
 import 'package:sammly/features/Explore/cubit/design_details_repo.dart';
 import 'package:sammly/features/Explore/data/design_details_model.dart';
@@ -6,16 +7,36 @@ import 'package:sammly/features/Explore/data/design_details_model.dart';
 class DesignDetailsCubit extends Cubit<DesignDetailsState> {
   final DesignDetailsRepo _repository;
 
-  DesignDetailsCubit(this._repository) : super(DesignDetailsInitial());
+  DesignDetailsCubit(this._repository) : super(DesignDetailsInitial()) {
+    _loadSharedDesignIds();
+  }
 
   DesignDetailsModel? _currentDesign;
   DesignCreatorModel? _currentCreator;
+
+  final Set<String> _sharedDesignIds = {};
 
   DesignDetailsModel? get currentDesign => _currentDesign;
   DesignCreatorModel? get currentCreator => _currentCreator;
 
   /// Whether the current user is the publisher (creator is null).
   bool get isPublisher => _currentCreator == null && _currentDesign != null;
+
+  void _loadSharedDesignIds() {
+    final ids = SharedPref.getData(key: 'shared_design_ids') ?? '';
+    if (ids.isNotEmpty) {
+      _sharedDesignIds.addAll(ids.split(','));
+    }
+  }
+
+  void _saveSharedDesignId(String id) {
+    _sharedDesignIds.add(id);
+    SharedPref.saveData(key: 'shared_design_ids', value: _sharedDesignIds.join(','));
+  }
+
+  bool isSharedLocal(String designId) {
+    return _sharedDesignIds.contains(designId);
+  }
 
   /// Fetch design details by ID.
   Future<void> fetchDesignDetails(String designId) async {
@@ -28,6 +49,9 @@ class DesignDetailsCubit extends Cubit<DesignDetailsState> {
       (response) {
         _currentDesign = response.design;
         _currentCreator = response.creator;
+        if (_currentDesign!.isShared) {
+          _saveSharedDesignId(_currentDesign!.id);
+        }
 
         emit(DesignDetailsLoaded(
           design: _currentDesign!,
@@ -45,12 +69,19 @@ class DesignDetailsCubit extends Cubit<DesignDetailsState> {
 
     result.fold(
       (error) {
-        emit(DesignActionError(error));
-        // Re-emit loaded state so the UI stays intact
-        _emitLoadedIfAvailable();
+        // Even if error is "already shared", we can mark it locally
+        if (error.toLowerCase().contains('already shared')) {
+           _saveSharedDesignId(designId);
+           emit(DesignShareSuccess("Design already shared"));
+           _emitLoadedIfAvailable();
+        } else {
+           emit(DesignActionError(error));
+           _emitLoadedIfAvailable();
+        }
       },
       (message) {
-        // Update local state with sharedAt
+        // Update local state
+        _saveSharedDesignId(designId);
         if (_currentDesign != null) {
           _currentDesign = _currentDesign!.copyWith(
             sharedAt: DateTime.now().toIso8601String(),

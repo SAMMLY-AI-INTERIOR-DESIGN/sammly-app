@@ -18,7 +18,6 @@ class SmartLensBottomSheet extends StatefulWidget {
 }
 
 class _SmartLensBottomSheetState extends State<SmartLensBottomSheet> {
-  final int _selectedCategoryIndex = 0;
 
   @override
   void initState() {
