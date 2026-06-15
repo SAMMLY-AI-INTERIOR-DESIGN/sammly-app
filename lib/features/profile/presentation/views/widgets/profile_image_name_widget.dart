@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/avatar_widget.dart';
-import 'package:sammly/core/widgets/custom_heart_item.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_state.dart';
 
@@ -33,21 +32,7 @@ class ProfileImageNameWidget extends StatelessWidget {
                     (state is ProfileLoading ? "Loading..." : "User"),
                 style: AppTextStyles.title20Bold,
               ),
-              SizedBox(height: 8.h),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text("23 post", style: AppTextStyles.body14Regular),
-                  SizedBox(width: 24.w),
-                  Row(
-                    children: [
-                      const CustomHeartItem(),
-                      SizedBox(width: 4.w),
-                      Text("120", style: AppTextStyles.body14Regular),
-                    ],
-                  ),
-                ],
-              ),
+              
               SizedBox(height: 14.h),
             ],
           ),

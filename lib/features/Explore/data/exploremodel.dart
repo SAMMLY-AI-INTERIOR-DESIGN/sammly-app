@@ -13,8 +13,11 @@ class ExploreResponse {
     return ExploreResponse(
       page: json['page'] ?? 1,
       hasMore: json['hasMore'] ?? false,
-      designs: (json['designs'] as List<dynamic>?)
-              ?.map((e) => ExploreDesignModel.fromJson(e as Map<String, dynamic>))
+      designs:
+          (json['designs'] as List<dynamic>?)
+              ?.map(
+                (e) => ExploreDesignModel.fromJson(e as Map<String, dynamic>),
+              )
               .toList() ??
           [],
     );
@@ -56,10 +59,7 @@ class ExploreDesignModel {
   }
 
   /// Returns a copy with updated like status and count.
-  ExploreDesignModel copyWith({
-    bool? isLiked,
-    int? likesCount,
-  }) {
+  ExploreDesignModel copyWith({bool? isLiked, int? likesCount}) {
     return ExploreDesignModel(
       id: id,
       name: name,

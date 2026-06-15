@@ -6,8 +6,16 @@ import 'package:sammly/features/profile/presentation/views/widgets/posts_data_se
 import 'package:sammly/features/profile/presentation/views/widgets/profile_image_name_widget.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/shared_images_list_view.dart';
 
-class MyProfileView extends StatelessWidget {
+class MyProfileView extends StatefulWidget {
   const MyProfileView({super.key});
+
+  @override
+  State<MyProfileView> createState() => _MyProfileViewState();
+}
+
+class _MyProfileViewState extends State<MyProfileView> {
+  int _postsCount = 0;
+  int _likesCount = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +59,22 @@ class MyProfileView extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SizedBox(height: 80.h),
-                                PostsDataSection(),
+                                PostsDataSection(
+                                  postsCount: _postsCount.toString(),
+                                  likesCount: _likesCount.toString(),
+                                ),
                                 SizedBox(height: 16.h),
 
-                                SharedImagesListView(),
+                                SharedImagesListView(
+                                  onDataCalculated: (posts, likes) {
+                                    if (_postsCount != posts || _likesCount != likes) {
+                                      setState(() {
+                                        _postsCount = posts;
+                                        _likesCount = likes;
+                                      });
+                                    }                    
+                                  },
+                                ),
                               ],
                             ),
                           ),
