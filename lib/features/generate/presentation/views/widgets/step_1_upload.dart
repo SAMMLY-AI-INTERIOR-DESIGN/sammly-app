@@ -21,6 +21,7 @@ class Step1Upload extends StatefulWidget {
   final String subtitle;
   final String? titleIcon; 
   final bool isButtonInsideCard; 
+  final bool isImageOptional;
 
   const Step1Upload({
     super.key,
@@ -32,6 +33,7 @@ class Step1Upload extends StatefulWidget {
     required this.subtitle,
     this.titleIcon,
     this.isButtonInsideCard = false,
+    this.isImageOptional = false,
   });
 
   @override
@@ -154,7 +156,7 @@ class _Step1UploadState extends State<Step1Upload> {
    Widget nextButton = CustomButton(
       text: AppStrings.next,
       suffixIcon: AppImages.arrowRight,
-      onPressed: _selectedImage != null
+      onPressed: (_selectedImage != null || widget.isImageOptional)
           ? widget.onNext
           : () {
               showCustomSnackBar(

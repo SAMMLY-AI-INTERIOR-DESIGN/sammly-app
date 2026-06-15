@@ -40,7 +40,70 @@ class GenerateDesignCubit extends Cubit<GenerateDesignState> {
 
     result.fold(
       (error) => emit(GenerateDesignFailure(errorMsg: error)),
-      (design) => emit(GenerateDesignSuccess(design: design)),
+      (design) => emit(GenerateDesignSuccess(designs: [design])),
+    );
+  }
+
+  Future<void> restyleDesign({
+    required String uiStyle,
+    required String imageUrl,
+  }) async {
+    emit(GenerateDesignLoading());
+
+    // Map UI values to API values
+    final apiStyle = GenerateMappers.styleToApi(uiStyle);
+
+    final result = await generateDesignRepo.restyleDesign(
+      style: apiStyle,
+      imageUrl: imageUrl,
+    );
+
+    result.fold(
+      (error) => emit(GenerateDesignFailure(errorMsg: error)),
+      (design) => emit(GenerateDesignSuccess(designs: [design])),
+    );
+  }
+
+  Future<void> generateFullHomeDesign({
+    required String uiStyle,
+    required List<String> uiRoomTypes,
+    String? imageUrl,
+  }) async {
+    emit(GenerateDesignLoading());
+
+    final apiStyle = GenerateMappers.styleToApi(uiStyle);
+    final apiRoomTypes = uiRoomTypes.map((room) => GenerateMappers.roomToApi(room)).toList();
+
+    final result = await generateDesignRepo.generateFullHomeDesign(
+      style: apiStyle,
+      roomTypes: apiRoomTypes,
+      styleImageUrl: imageUrl,
+    );
+
+    result.fold(
+      (error) => emit(GenerateDesignFailure(errorMsg: error)),
+      (designs) => emit(GenerateDesignSuccess(designs: designs)),
+    );
+  }
+
+  Future<void> generateMaskDesign({
+    required String imageUrl,
+    required String maskUrl,
+    String? prompt,
+    required String operationMode,
+  }) async {
+    emit(GenerateDesignLoading());
+
+    final result = await generateDesignRepo.generateMaskDesign(
+      imageUrl: imageUrl,
+      maskUrl: maskUrl,
+      prompt: prompt,
+      operationMode: operationMode,
+    );
+
+    result.fold(
+      (error) => emit(GenerateDesignFailure(errorMsg: error)),
+      (design) => emit(GenerateDesignSuccess(designs: [design])),
     );
   }
 }

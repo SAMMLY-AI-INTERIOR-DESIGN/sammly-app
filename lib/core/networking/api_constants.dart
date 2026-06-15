@@ -19,6 +19,9 @@ abstract class ApiConstants {
 
   // Design generation endpoints
   static const String generateDesign = '/api/designs/generate';
+  static const String restyleDesign = '/api/designs/restyle';
+  static const String fullHomeDesign = '/api/designs/full-home';
+  static const String maskDesign = '/api/designs/mask';
 
   // Design history endpoints
   static const String designHistory = '/api/designs/history';
