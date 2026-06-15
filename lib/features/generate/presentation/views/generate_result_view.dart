@@ -6,7 +6,9 @@ import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/routing/routes.dart';
+import 'package:sammly/core/utils/image_download_helper.dart';
 import 'package:sammly/core/widgets/generate_action_buttons_row.dart';
+import 'package:sammly/core/widgets/edit_download_action_buttons_row.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/generate_results_app_bar.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/result_image_widget.dart';
 import 'package:sammly/features/generate/data/model/generate_design_response_model.dart';
@@ -22,6 +24,7 @@ class GenerateResultView extends StatefulWidget {
   final String? designId;
   final List<dynamic>? designs;
   final String? originalImageUrl;
+  final bool isFromStepper;
 
   const GenerateResultView({
     super.key,
@@ -30,6 +33,7 @@ class GenerateResultView extends StatefulWidget {
     this.designId,
     this.designs,
     this.originalImageUrl,
+    this.isFromStepper = false,
   });
 
   @override
@@ -221,33 +225,52 @@ class _GenerateResultViewState extends State<GenerateResultView> {
                     widget.showListView
                         ? SizedBox(height: 17.h)
                         : SizedBox(height: 56.h),
-                    GenerateActionButtonsRow(
-                      imageUrl: _isNetworkImage ? _selectedImage : null,
-                      isShared: isShared,
-                      onEdit: () {
-                        Navigator.pushNamed(
-                          context,
-                          AppRoutes.imageGenerationStepperView,
-                          arguments: {
-                            'initialImageUrl': _selectedImage,
-                            'isEditMode': true,
-                          },
-                        );
-                      },
-                      onShare: () {
-                        if (widget.designId != null && widget.designId!.isNotEmpty) {
-                          context.read<DesignDetailsCubit>().shareDesign(widget.designId!);
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Design ID not available. Cannot share.'),
-                              backgroundColor: Colors.red,
-                              behavior: SnackBarBehavior.floating,
-                            ),
-                          );
-                        }
-                      },
-                    ),
+                    widget.isFromStepper
+                        ? EditDownloadActionButtonsRow(
+                            imageUrl: _isNetworkImage ? _selectedImage : null,
+                            onEdit: () {
+                              Navigator.pushNamed(
+                                context,
+                                AppRoutes.imageGenerationStepperView,
+                                arguments: {
+                                  'initialImageUrl': _selectedImage,
+                                  'isEditMode': true,
+                                },
+                              );
+                            },
+                            onDownload: () {
+                              if (_isNetworkImage) {
+                                ImageDownloadHelper.downloadNetworkImage(context, _selectedImage);
+                              }
+                            },
+                          )
+                        : GenerateActionButtonsRow(
+                            imageUrl: _isNetworkImage ? _selectedImage : null,
+                            isShared: isShared,
+                            onEdit: () {
+                              Navigator.pushNamed(
+                                context,
+                                AppRoutes.imageGenerationStepperView,
+                                arguments: {
+                                  'initialImageUrl': _selectedImage,
+                                  'isEditMode': true,
+                                },
+                              );
+                            },
+                            onShare: () {
+                              if (widget.designId != null && widget.designId!.isNotEmpty) {
+                                context.read<DesignDetailsCubit>().shareDesign(widget.designId!);
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Design ID not available. Cannot share.'),
+                                    backgroundColor: Colors.red,
+                                    behavior: SnackBarBehavior.floating,
+                                  ),
+                                );
+                              }
+                            },
+                          ),
                     SizedBox(height: 24.h),
                   ],
                 ),
