@@ -96,6 +96,8 @@ class GenerationLoadingWrapper extends StatelessWidget {
                   context.read<HomeCubit>().fetchHomeData();
                   final showListView =
                       arguments?['showListView'] as bool? ?? false;
+                  final bool isFromStepper = arguments?['isMask'] == true;
+
                   Navigator.pushReplacementNamed(
                     context,
                     AppRoutes.generateResultView,
@@ -105,6 +107,7 @@ class GenerationLoadingWrapper extends StatelessWidget {
                       'designId': state.designId,
                       'designs': state.designs,
                       'originalImageUrl': arguments?['imageUrl'],
+                      'isFromStepper': isFromStepper,
                     },
                   );
                 } else if (state is GenerationFailed) {
