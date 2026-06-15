@@ -46,11 +46,17 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
     super.initState();
     _scrollController.addListener(_onScroll);
 
-    // Fetch first page with room and default style
-    context.read<StaticDesignsCubit>().fetchStaticDesigns(
-      room: widget.room,
-      style: _styleApiValue(_selectedFilter),
-    );
+    // Fetch first page with room and default style only if empty or room changed
+    final cubit = context.read<StaticDesignsCubit>();
+    if (cubit.currentDesigns.isEmpty || cubit.currentRoom != widget.room) {
+      cubit.fetchStaticDesigns(
+        room: widget.room,
+        style: _styleApiValue(_selectedFilter),
+      );
+    } else {
+      // Restore selected filter UI from cubit if possible
+      // (Simplified: we keep _selectedFilter as is, usually it matches)
+    }
   }
 
   @override
@@ -218,14 +224,6 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
               ? state.designs
               : context.read<StaticDesignsCubit>().currentDesigns;
 
-          // Sync isFavorited from backend into FavoriteCubit
-          for (final design in designs) {
-            context.read<FavoriteCubit>().syncFavoriteStatus(
-              design.id,
-              design.isFavorited,
-            );
-          }
-
           if (designs.isEmpty) {
             return Center(
               child: Column(
@@ -246,28 +244,22 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
 
           final isPaginationLoading = state is StaticDesignsPaginationLoading;
 
-          return GridView.builder(
+          return CustomScrollView(
             controller: _scrollController,
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 12.w,
-              mainAxisSpacing: 12.h,
-              childAspectRatio: 1.0,
-            ),
-            itemCount: designs.length + (isPaginationLoading ? 1 : 0),
-            itemBuilder: (context, index) {
-              // Pagination loader
-              if (index >= designs.length) {
-                return Center(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16.h),
-                    child: const CircularProgressIndicator(),
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              SliverPadding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                sliver: SliverGrid(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 12.w,
+                    mainAxisSpacing: 12.h,
+                    childAspectRatio: 1.0,
                   ),
-                );
-              }
-
-              final design = designs[index];
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final design = designs[index];
               return GestureDetector(
                 onTap: () {
                   Navigator.pushNamed(
@@ -293,6 +285,18 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
                 ),
               );
             },
+            childCount: designs.length,
+          ),
+                ),
+              ),
+              if (isPaginationLoading)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16.h),
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
+                ),
+            ],
           );
         }
 
