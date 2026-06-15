@@ -107,4 +107,5 @@ class AppImages {
   static const String removeImage = "assets/images/remove_image.png";
   static const String replaceRemoveIcon = "assets/images/replace_remove_icon.svg";
   static const String subscriptionBgPlaceholder = "assets/images/subscription_bg_placeholder.png";
+  static const String switchImageIcon = "assets/images/switch_image_icon.svg";
 }

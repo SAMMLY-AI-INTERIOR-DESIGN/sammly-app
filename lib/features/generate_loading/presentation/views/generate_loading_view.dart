@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-
 import 'package:sammly/core/constant/app_colors.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/constant/app_images.dart';
+import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/functions.dart';
-import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/routing/routes.dart';
+import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/features/generate/data/repo/generate_design_repo.dart';
 import 'package:sammly/features/generate_loading/presentation/cubits/loading_cubit.dart';
 import 'package:sammly/features/generate_loading/presentation/cubits/loading_states.dart';
@@ -50,7 +49,8 @@ class GenerationLoadingWrapper extends StatelessWidget {
         final isMask = arguments?['isMask'] as bool? ?? false;
 
         if (isMask) {
-          final operationMode = arguments?['operationMode'] as String? ?? 'replace';
+          final operationMode =
+              arguments?['operationMode'] as String? ?? 'replace';
           final maskUrl = arguments?['maskUrl'] as String? ?? '';
           cubit.startMaskWithApi(
             imageUrl: imageUrl ?? '',
@@ -96,6 +96,8 @@ class GenerationLoadingWrapper extends StatelessWidget {
                   context.read<HomeCubit>().fetchHomeData();
                   final showListView =
                       arguments?['showListView'] as bool? ?? false;
+                  final bool isFromStepper = arguments?['isMask'] == true;
+
                   Navigator.pushReplacementNamed(
                     context,
                     AppRoutes.generateResultView,
@@ -104,6 +106,8 @@ class GenerationLoadingWrapper extends StatelessWidget {
                       'imageUrl': state.imageUrl,
                       'designId': state.designId,
                       'designs': state.designs,
+                      'originalImageUrl': arguments?['imageUrl'],
+                      'isFromStepper': isFromStepper,
                     },
                   );
                 } else if (state is GenerationFailed) {
