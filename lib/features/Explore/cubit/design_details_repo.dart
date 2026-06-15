@@ -92,15 +92,23 @@ class DesignDetailsRepo {
       final token = SharedPref.getData(key: 'jwt');
       if (token == null) return left('Unauthorized: No token found.');
 
-      final response = await DioHelper.postData(
-        endPoint: ApiConstants.likeDesign(designId),
+      final endpoint = ApiConstants.likeDesign(designId);
+      log('Like design → endpoint: $endpoint, designId: $designId');
+
+      DioHelper.dio.options.headers['Authorization'] = 'Bearer $token';
+      final response = await DioHelper.dio.post(
+        endpoint,
         data: {},
-        token: token,
+        options: Options(
+          validateStatus: (status) => status != null && status < 500,
+        ),
       );
+
+      log('Like response: ${response.statusCode} → ${response.data}');
 
       if ((response.statusCode == 200 || response.statusCode == 201) &&
           response.data['status'] == 'success') {
-        final message = response.data['data']['message'] ?? 'Design liked successfully';
+        final message = response.data['data']?['message'] ?? 'Design liked successfully';
         return right(message);
       } else {
         return left(response.data['message'] ?? 'Failed to like design.');
@@ -119,13 +127,21 @@ class DesignDetailsRepo {
       final token = SharedPref.getData(key: 'jwt');
       if (token == null) return left('Unauthorized: No token found.');
 
-      final response = await DioHelper.deleteData(
-        endPoint: ApiConstants.likeDesign(designId),
-        token: token,
+      final endpoint = ApiConstants.likeDesign(designId);
+      log('Unlike design → endpoint: $endpoint, designId: $designId');
+
+      DioHelper.dio.options.headers['Authorization'] = 'Bearer $token';
+      final response = await DioHelper.dio.delete(
+        endpoint,
+        options: Options(
+          validateStatus: (status) => status != null && status < 500,
+        ),
       );
 
+      log('Unlike response: ${response.statusCode} → ${response.data}');
+
       if (response.statusCode == 200 && response.data['status'] == 'success') {
-        final message = response.data['data']['message'] ?? 'Design unliked successfully';
+        final message = response.data['data']?['message'] ?? 'Design unliked successfully';
         return right(message);
       } else {
         return left(response.data['message'] ?? 'Failed to unlike design.');

@@ -8,6 +8,8 @@ import 'package:sammly/core/widgets/generate_action_buttons_row.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_state.dart';
+import 'package:sammly/features/Explore/cubit/design_details_cubit.dart';
+import 'package:sammly/features/Explore/cubit/design_details_states.dart';
 import 'package:sammly/features/History/presentation/widgets/history_main_image_section.dart';
 import 'package:sammly/features/History/presentation/widgets/history_details_section.dart';
 import 'package:sammly/features/smart_lens/cubit/search_cubit.dart';
@@ -32,6 +34,7 @@ class HistoryDetailsView extends StatefulWidget {
 
 class _HistoryDetailsViewState extends State<HistoryDetailsView> {
   bool _isMaximized = false;
+  bool _isShareLoading = false;
   late final SearchCubit _searchCubit;
 
   @override
@@ -97,35 +100,86 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
         if (didPop) return;
         if (_isMaximized) _toggleMaximize();
       },
-      child: BlocListener<FavoriteCubit, FavoriteState>(
-        listener: (context, state) {
-          if (state is FavoriteToggleSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: AppColors.primaryColor),
-            );
-          } else if (state is FavoriteToggleError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: Colors.red),
-            );
-          }
-        },
-        child: Scaffold(
-          backgroundColor: AppColors.whiteColor,
-          appBar: _isMaximized
-              ? null
-              : CustomAppbar(title: widget.title, onBack: _handleBack),
-          body: SafeArea(
-            child: _isMaximized
-                ? _buildMaximizedView(screenHeight, screenWidth)
-                : _buildNormalView(),
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<FavoriteCubit, FavoriteState>(
+            listener: (context, state) {
+              if (state is FavoriteToggleSuccess) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.message), backgroundColor: AppColors.primaryColor),
+                );
+              } else if (state is FavoriteToggleError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+                );
+              }
+            },
           ),
+          BlocListener<DesignDetailsCubit, DesignDetailsState>(
+            listener: (context, state) {
+              if (state is DesignShareSuccess) {
+                setState(() => _isShareLoading = false);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.message), backgroundColor: AppColors.primaryColor),
+                );
+              } else if (state is DesignActionError) {
+                setState(() => _isShareLoading = false);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+                );
+              } else if (state is DesignActionLoading) {
+                setState(() => _isShareLoading = true);
+              }
+            },
+          ),
+        ],
+        child: BlocBuilder<DesignDetailsCubit, DesignDetailsState>(
+          builder: (context, designState) {
+            final isShared = context.read<DesignDetailsCubit>().isSharedLocal(widget.designId);
+            return Scaffold(
+              backgroundColor: AppColors.whiteColor,
+              appBar: _isMaximized
+                  ? null
+                  : CustomAppbar(
+                      title: widget.title,
+                      onBack: _handleBack,
+                      actions: [
+                        if (!isShared)
+                          _isShareLoading
+                              ? Padding(
+                                  padding: EdgeInsets.only(right: 16.w),
+                                  child: SizedBox(
+                                    width: 20.w,
+                                    height: 20.w,
+                                    child: const CircularProgressIndicator(strokeWidth: 2),
+                                  ),
+                                )
+                              : IconButton(
+                                  icon: Icon(
+                                    Icons.share_outlined,
+                                    color: AppColors.blackColor,
+                                    size: 24.sp,
+                                  ),
+                                  onPressed: () {
+                                    context.read<DesignDetailsCubit>().shareDesign(widget.designId);
+                                  },
+                                ),
+                      ],
+                    ),
+              body: SafeArea(
+                child: _isMaximized
+                    ? _buildMaximizedView(screenHeight, screenWidth)
+                    : _buildNormalView(isShared),
+              ),
+            );
+          },
         ),
       ),
     );
   }
 
   /// الوضع العادي: صورة + تفاصيل + أزرار
-  Widget _buildNormalView() {
+  Widget _buildNormalView(bool isShared) {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
@@ -155,7 +209,13 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
           SizedBox(height: 24.h),
           const HistoryDetailsSection(),
           SizedBox(height: 40.h),
-          GenerateActionButtonsRow(imageUrl: widget.imageUrl),
+          GenerateActionButtonsRow(
+            imageUrl: widget.imageUrl,
+            isShared: isShared,
+            onShare: () {
+              context.read<DesignDetailsCubit>().shareDesign(widget.designId);
+            },
+          ),
           SizedBox(height: 20.h),
         ],
       ),

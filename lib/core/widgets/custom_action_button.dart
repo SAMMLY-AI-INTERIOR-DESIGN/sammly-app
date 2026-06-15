@@ -13,6 +13,7 @@ class CustomActionButton extends StatelessWidget {
   final double iconSize;
   final double? width;
   final double? height;
+  final bool isDisabled;
 
   const CustomActionButton({
     super.key,
@@ -24,6 +25,7 @@ class CustomActionButton extends StatelessWidget {
     this.iconSize = 26.0,
     this.width,
     this.height,
+    this.isDisabled = false,
   });
 
   @override
@@ -31,58 +33,67 @@ class CustomActionButton extends StatelessWidget {
     final double buttonWidth = width ?? 117.w;
     final double buttonHeight = height ?? 95.h;
 
-    return GestureDetector(
-      onTap: onTap,
+    Widget buttonContent = Container(
+      width: buttonWidth,
+      height: buttonHeight,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(13.r),
+        gradient: const LinearGradient(
+          colors: [AppColors.primaryColor, AppColors.secondaryColor],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      padding: const EdgeInsets.all(1.0),
       child: Container(
-        width: buttonWidth,
-        height: buttonHeight,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(13.r),
+          borderRadius: BorderRadius.circular(12.r),
           gradient: const LinearGradient(
-            colors: [AppColors.primaryColor, AppColors.secondaryColor],
+            colors: [AppColors.bg1Color, AppColors.bg2Color],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
         ),
-        padding: const EdgeInsets.all(1.0),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12.r),
-            gradient: const LinearGradient(
-              colors: [AppColors.bg1Color, AppColors.bg2Color],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (iconData != null)
-                Icon(
-                  iconData,
-                  size: iconSize.sp,
-                  color: iconColor ?? AppColors.primaryColor,
-                )
-              else if (iconPath != null)
-                SvgPicture.asset(
-                  iconPath!,
-                  width: iconSize.sp,
-                  height: iconSize.sp,
-                ).withAppGradient(),
-              SizedBox(height: 8.h),
-              Text(
-                title,
-                style: TextStyle(
-                  color: const Color(0xFF46505D),
-                  fontSize: 18.65.sp,
-                  fontWeight: FontWeight.w500,
-                  fontFamily: AppTextStyles.primaryFont,
-                ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (iconData != null)
+              Icon(
+                iconData,
+                size: iconSize.sp,
+                color: iconColor ?? AppColors.primaryColor,
+              )
+            else if (iconPath != null)
+              SvgPicture.asset(
+                iconPath!,
+                width: iconSize.sp,
+                height: iconSize.sp,
+              ).withAppGradient(),
+            SizedBox(height: 8.h),
+            Text(
+              title,
+              style: TextStyle(
+                color: const Color(0xFF46505D),
+                fontSize: 18.65.sp,
+                fontWeight: FontWeight.w500,
+                fontFamily: AppTextStyles.primaryFont,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
+    );
+
+    if (isDisabled) {
+      buttonContent = Opacity(
+        opacity: 0.5,
+        child: buttonContent,
+      );
+    }
+
+    return GestureDetector(
+      onTap: isDisabled ? null : onTap,
+      child: buttonContent,
     );
   }
 }

@@ -73,8 +73,9 @@ class AppImages {
 
   static const String minimizeimage = "assets/images/minmizeimage.svg";
   static const String customizeIcon = "assets/images/customize.svg";
-  static const String downloadIcon = "assets/images/download.svg";
+  static const String downloadIcon = "assets/images/download2.svg";
   static const String shareIcon = "assets/images/share.svg";
+  static const String postIcon = "assets/images/post.svg";
 
   static const String generateLoading1 = "assets/images/generate_loading1.svg";
   static const String generateLoading2 = "assets/images/generate_loading2.svg";

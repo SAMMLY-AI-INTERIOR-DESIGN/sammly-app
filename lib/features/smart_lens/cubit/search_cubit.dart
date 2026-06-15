@@ -8,10 +8,12 @@ class SearchCubit extends Cubit<SearchState> {
   SearchCubit(this._repo) : super(SearchInitial());
 
   Future<void> searchDesign(String designId) async {
+    if (isClosed) return;
     emit(SearchLoading());
 
     final result = await _repo.searchDesign(designId);
 
+    if (isClosed) return;
     result.fold(
       (error) => emit(SearchError(error)),
       (response) => emit(SearchLoaded(response)),
