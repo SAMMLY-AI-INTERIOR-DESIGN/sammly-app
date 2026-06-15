@@ -13,6 +13,8 @@ import 'package:sammly/features/generate/data/model/generate_design_response_mod
 import 'package:sammly/features/smart_lens/cubit/search_cubit.dart';
 import 'package:sammly/features/smart_lens/data/repo/search_repo.dart';
 import 'package:sammly/features/smart_lens/presentation/widgets/smart_lens_bottom_sheet.dart';
+import 'package:sammly/features/Explore/cubit/design_details_cubit.dart';
+import 'package:sammly/features/Explore/cubit/design_details_states.dart';
 
 class GenerateResultView extends StatefulWidget {
   final bool showListView;
@@ -107,108 +109,149 @@ class _GenerateResultViewState extends State<GenerateResultView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.whiteColor,
-      appBar: GenerateResultsAppBar(
-        title: widget.showListView
-            ? AppStrings.yourGeneratedDesign
-            : AppStrings.modernLivingRoom,
-        subtitle: AppStrings.generatedBySammly,
-        onBack: () {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            AppRoutes.layoutView,
-            (route) => false,
+    return BlocListener<DesignDetailsCubit, DesignDetailsState>(
+      listener: (context, state) {
+        if (state is DesignShareSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              backgroundColor: AppColors.primaryColor,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        } else if (state is DesignActionError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+      },
+      child: BlocBuilder<DesignDetailsCubit, DesignDetailsState>(
+        builder: (context, designState) {
+          final isShared = widget.designId != null
+              ? context.read<DesignDetailsCubit>().isSharedLocal(widget.designId!)
+              : false;
+          return Scaffold(
+            backgroundColor: AppColors.whiteColor,
+            appBar: GenerateResultsAppBar(
+              title: widget.showListView
+                  ? AppStrings.yourGeneratedDesign
+                  : AppStrings.modernLivingRoom,
+              subtitle: AppStrings.generatedBySammly,
+              onBack: () {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  AppRoutes.layoutView,
+                  (route) => false,
+                );
+              },
+            ),
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+                child: Column(
+                  children: [
+                    ResultImageWidget(
+                      imagePath: _selectedImage,
+                      isNetworkImage: _isNetworkImage,
+                      onSmartLensTap: () => _openSmartLens(context),
+                    ),
+                    SizedBox(height: 16.h),
+                    if (widget.showListView) ...[
+                      SizedBox(
+                        height: 100.h,
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: _listImages.length,
+                          separatorBuilder: (context, index) => SizedBox(width: 10.w),
+                          itemBuilder: (context, index) {
+                            final image = _listImages[index];
+                            final isSelected = _selectedIndex == index;
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _selectedIndex = index;
+                                  _selectedImage = image;
+                                  _isNetworkImage = widget.designs != null && widget.designs!.isNotEmpty;
+                                  if (widget.designs != null && widget.designs!.isNotEmpty) {
+                                    _currentDesignId = (widget.designs![index] as GenerateDesignResponseModel).id;
+                                  }
+                                });
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                  gradient: isSelected
+                                      ? AppColors.primaryGradient3
+                                      : null,
+                                  color: isSelected ? null : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(10.r),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(alpha: 0.05),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child: Container(
+                                  width: 100.w,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.r),
+                                    image: DecorationImage(
+                                      image: (widget.designs != null && widget.designs!.isNotEmpty)
+                                          ? NetworkImage(image) as ImageProvider
+                                          : AssetImage(image),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                    widget.showListView
+                        ? SizedBox(height: 17.h)
+                        : SizedBox(height: 56.h),
+                    GenerateActionButtonsRow(
+                      imageUrl: _isNetworkImage ? _selectedImage : null,
+                      isShared: isShared,
+                      onEdit: () {
+                        Navigator.pushNamed(
+                          context,
+                          AppRoutes.imageGenerationStepperView,
+                          arguments: {
+                            'initialImageUrl': _selectedImage,
+                            'isEditMode': true,
+                          },
+                        );
+                      },
+                      onShare: () {
+                        if (widget.designId != null && widget.designId!.isNotEmpty) {
+                          context.read<DesignDetailsCubit>().shareDesign(widget.designId!);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Design ID not available. Cannot share.'),
+                              backgroundColor: Colors.red,
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                    SizedBox(height: 24.h),
+                  ],
+                ),
+              ),
+            ),
           );
         },
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
-          child: Column(
-            children: [
-              ResultImageWidget(
-                imagePath: _selectedImage,
-                isNetworkImage: _isNetworkImage,
-                onSmartLensTap: () => _openSmartLens(context),
-              ),
-              SizedBox(height: 16.h),
-              if (widget.showListView) ...[
-                SizedBox(
-                  height: 100.h,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _listImages.length,
-                    separatorBuilder: (context, index) => SizedBox(width: 10.w),
-                    itemBuilder: (context, index) {
-                      final image = _listImages[index];
-                      final isSelected = _selectedIndex == index;
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _selectedIndex = index;
-                            _selectedImage = image;
-                            _isNetworkImage = widget.designs != null && widget.designs!.isNotEmpty;
-                            if (widget.designs != null && widget.designs!.isNotEmpty) {
-                              _currentDesignId = (widget.designs![index] as GenerateDesignResponseModel).id;
-                            }
-                          });
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(2),
-                          decoration: BoxDecoration(
-                            gradient: isSelected
-                                ? AppColors.primaryGradient3
-                                : null,
-                            color: isSelected ? null : Colors.transparent,
-                            borderRadius: BorderRadius.circular(10.r),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.05),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Container(
-                            width: 100.w,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.r),
-                              image: DecorationImage(
-                                image: (widget.designs != null && widget.designs!.isNotEmpty)
-                                    ? NetworkImage(image) as ImageProvider
-                                    : AssetImage(image),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-              widget.showListView
-                  ? SizedBox(height: 17.h)
-                  : SizedBox(height: 56.h),
-              GenerateActionButtonsRow(
-                imageUrl: _isNetworkImage ? _selectedImage : null,
-                onEdit: () {
-                  Navigator.pushNamed(
-                    context,
-                    AppRoutes.imageGenerationStepperView,
-                    arguments: {
-                      'initialImageUrl': _selectedImage,
-                      'isEditMode': true,
-                    },
-                  );
-                },
-                onShare: () {},
-              ),
-              SizedBox(height: 24.h),
-            ],
-          ),
-        ),
       ),
     );
   }

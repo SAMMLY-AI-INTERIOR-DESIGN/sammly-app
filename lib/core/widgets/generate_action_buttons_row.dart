@@ -9,6 +9,7 @@ class GenerateActionButtonsRow extends StatelessWidget {
   final VoidCallback? onShare;
   final VoidCallback? onDownload;
   final String? imageUrl;
+  final bool isShared;
 
   const GenerateActionButtonsRow({
     super.key,
@@ -16,6 +17,7 @@ class GenerateActionButtonsRow extends StatelessWidget {
     this.onShare,
     this.onDownload,
     this.imageUrl,
+    this.isShared = false,
   });
 
   @override
@@ -33,9 +35,10 @@ class GenerateActionButtonsRow extends StatelessWidget {
         SizedBox(width: 8.w),
         Expanded(
           child: CustomActionButton(
-            title: 'Share',
-            iconPath: AppImages.shareIcon,
+            title: isShared ? 'Shared' : 'Share',
+            iconPath: AppImages.postIcon,
             onTap: onShare ?? () {},
+            isDisabled: isShared,
           ),
         ),
         SizedBox(width: 8.w),

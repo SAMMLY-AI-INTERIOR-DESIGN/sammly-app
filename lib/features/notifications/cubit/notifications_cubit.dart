@@ -15,6 +15,7 @@ class NotificationsCubit extends Cubit<NotificationsState> {
 
   Future<void> getNotifications({bool loadMore = false}) async {
     if (!loadMore) {
+      if (isClosed) return;
       emit(GetNotificationsLoading());
       _currentPage = 1;
       notifications.clear();
@@ -24,6 +25,7 @@ class NotificationsCubit extends Cubit<NotificationsState> {
     }
 
     final result = await _repo.getNotifications(page: _currentPage);
+    if (isClosed) return;
     result.fold(
       (error) => emit(GetNotificationsFailure(error)),
       (response) {
@@ -34,6 +36,7 @@ class NotificationsCubit extends Cubit<NotificationsState> {
         }
         _currentPage++;
         _hasMore = response.hasMore;
+        if (isClosed) return;
         emit(GetNotificationsSuccess(response));
       },
     );

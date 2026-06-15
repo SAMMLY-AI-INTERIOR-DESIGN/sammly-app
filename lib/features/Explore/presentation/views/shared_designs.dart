@@ -46,8 +46,11 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
     );
     _scrollController.addListener(_onScroll);
 
-    // Fetch initial data
-    context.read<ExploreCubit>().fetchExplore(sort: _sortApiValue(_selectedSort));
+    // Fetch initial data only if empty
+    final cubit = context.read<ExploreCubit>();
+    if (cubit.currentDesigns.isEmpty) {
+      cubit.fetchExplore(sort: _sortApiValue(_selectedSort));
+    }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _gridAnimController.forward();
@@ -161,7 +164,11 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
             ),
             suffixIcon: _searchController.text.isNotEmpty
                 ? IconButton(
-                    icon: Icon(Icons.clear, size: 18.sp, color: AppColors.greyColor),
+                    icon: Icon(
+                      Icons.clear,
+                      size: 18.sp,
+                      color: AppColors.greyColor,
+                    ),
                     onPressed: () {
                       _searchController.clear();
                       context.read<ExploreCubit>().searchDesigns(null);
@@ -197,7 +204,9 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
                   setState(() {
                     _selectedSort = option;
                   });
-                  context.read<ExploreCubit>().changeSort(_sortApiValue(option));
+                  context.read<ExploreCubit>().changeSort(
+                    _sortApiValue(option),
+                  );
                   _gridAnimController.reset();
                   _gridAnimController.forward();
                 },
@@ -272,7 +281,11 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.error_outline, size: 48.sp, color: AppColors.greyColor),
+                Icon(
+                  Icons.error_outline,
+                  size: 48.sp,
+                  color: AppColors.greyColor,
+                ),
                 SizedBox(height: 12.h),
                 Text(
                   state.message,
@@ -286,8 +299,8 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
                 SizedBox(height: 12.h),
                 TextButton(
                   onPressed: () => context.read<ExploreCubit>().fetchExplore(
-                        sort: _sortApiValue(_selectedSort),
-                      ),
+                    sort: _sortApiValue(_selectedSort),
+                  ),
                   child: Text(
                     'Retry',
                     style: TextStyle(
@@ -328,66 +341,39 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
 
           final isPaginationLoading = state is ExplorePaginationLoading;
 
-          return ScrollConfiguration(
-            behavior: const ScrollBehavior().copyWith(overscroll: false),
-            child: MasonryGridView.builder(
-              controller: _scrollController,
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-              gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-              ),
-              mainAxisSpacing: 12.h,
-              crossAxisSpacing: 12.w,
-              itemCount: designs.length + (isPaginationLoading ? 1 : 0),
-              itemBuilder: (context, index) {
-                // Pagination loader
-                if (index >= designs.length) {
-                  return Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 16.h),
-                      child: const CircularProgressIndicator(),
-                    ),
-                  );
-                }
+          return CustomScrollView(
+            controller: _scrollController,
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              SliverPadding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                sliver: SliverMasonryGrid.count(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 12.h,
+                  crossAxisSpacing: 12.w,
+                  childCount: designs.length,
+                  itemBuilder: (context, index) {
+                    final design = designs[index];
 
-                final design = designs[index];
+                    // Staggered height
+                    final List<double> itemHeights = [1.2, 0.85, 1.4, 0.9, 1.0, 1.3, 0.8, 1.1];
+                    final baseWidth = (MediaQuery.of(context).size.width - 44.w) / 2;
+                    final itemHeight = baseWidth * itemHeights[index % itemHeights.length];
 
-                // Staggered height
-                final List<double> itemHeights = [1.2, 0.85, 1.4, 0.9, 1.0, 1.3, 0.8, 1.1];
-                final baseWidth = (MediaQuery.of(context).size.width - 44.w) / 2;
-                final itemHeight = baseWidth * itemHeights[index % itemHeights.length];
-
-                // Entry animation
-                final delay = index * 0.12;
-                final animation = Tween<double>(begin: 0.0, end: 1.0).animate(
-                  CurvedAnimation(
-                    parent: _gridAnimController,
-                    curve: Interval(
-                      delay.clamp(0.0, 0.8),
-                      (delay + 0.4).clamp(0.0, 1.0),
-                      curve: Curves.easeOutCubic,
-                    ),
-                  ),
-                );
-
-                return AnimatedBuilder(
-                  animation: animation,
-                  builder: (context, child) {
-                    return Opacity(
-                      opacity: animation.value,
-                      child: Transform.translate(
-                        offset: Offset(0, 30 * (1 - animation.value)),
-                        child: child,
-                      ),
-                    );
-                  },
-                    child: GestureDetector(
+                    final gridItem = GestureDetector(
                       onTap: () {
                         Navigator.pushNamed(
                           context,
                           AppRoutes.sharedDesignDetailsView,
                           arguments: design.id,
-                        );
+                        ).then((_) {
+                          // Refresh explore data when returning from details
+                          if (mounted) {
+                            context.read<ExploreCubit>().fetchExplore(
+                              sort: _sortApiValue(_selectedSort),
+                            );
+                          }
+                        });
                       },
                       child: SizedBox(
                         height: itemHeight,
@@ -398,16 +384,57 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
                               imageUrl: design.imageUrl,
                               initialIsLiked: isFav,
                               onFavoriteToggled: (isLiked) {
-                                context.read<FavoriteCubit>().toggleFavorite(design.id, !isLiked);
+                                context.read<FavoriteCubit>().toggleFavorite(
+                                  design.id,
+                                  !isLiked,
+                                );
                               },
                             );
                           },
                         ),
                       ),
+                    );
+
+                    // Only animate the first 8 items for performance
+                    if (index < 8) {
+                      final delay = index * 0.12;
+                      final animation = Tween<double>(begin: 0.0, end: 1.0).animate(
+                        CurvedAnimation(
+                          parent: _gridAnimController,
+                          curve: Interval(
+                            delay.clamp(0.0, 0.8),
+                            (delay + 0.4).clamp(0.0, 1.0),
+                            curve: Curves.easeOutCubic,
+                          ),
+                        ),
+                      );
+                      return AnimatedBuilder(
+                        animation: animation,
+                        builder: (context, child) {
+                          return Opacity(
+                            opacity: animation.value,
+                            child: Transform.translate(
+                              offset: Offset(0, 30 * (1 - animation.value)),
+                              child: child,
+                            ),
+                          );
+                        },
+                        child: gridItem,
+                      );
+                    }
+
+                    return gridItem;
+                  },
+                ),
+              ),
+              if (isPaginationLoading)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16.h),
+                    child: const Center(child: CircularProgressIndicator()),
                   ),
-                );
-              },
-            ),
+                ),
+            ],
           );
         }
 
