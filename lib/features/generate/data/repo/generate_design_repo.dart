@@ -104,4 +104,173 @@ class GenerateDesignRepo {
         return 'Error: ${e.message ?? e.error ?? 'Something went wrong.'}';
     }
   }
+
+  Future<Either<String, GenerateDesignResponseModel>> restyleDesign({
+    required String style,
+    required String imageUrl,
+  }) async {
+    try {
+      final token = SharedPref.getData(key: 'jwt');
+
+      final Map<String, dynamic> requestData = {
+        'style': style,
+        'imageUrl': imageUrl,
+      };
+
+      final response = await DioHelper.postData(
+        endPoint: ApiConstants.restyleDesign,
+        data: requestData,
+        token: token,
+      );
+      log(response.statusCode.toString());
+      if (response.statusCode == 201 ||
+          response.data['status'] == 'success') {
+        
+        final dataMap = response.data['data'] as Map<String, dynamic>?;
+        final designJson = dataMap?['design'];
+        
+        if (designJson != null && designJson is Map<String, dynamic>) {
+          final extractedId = designJson['_id']?.toString()
+              ?? designJson['id']?.toString()
+              ?? designJson['designId']?.toString()
+              ?? designJson['design_id']?.toString()
+              ?? dataMap?['_id']?.toString()
+              ?? dataMap?['id']?.toString()
+              ?? dataMap?['designId']?.toString()
+              ?? dataMap?['design_id']?.toString()
+              ?? response.data['_id']?.toString()
+              ?? response.data['id']?.toString()
+              ?? response.data['designId']?.toString()
+              ?? response.data['design_id']?.toString()
+              ?? '';
+              
+          if (extractedId.isEmpty) {
+            log('WARNING: Could not find any ID field in generation response! Data: ${response.data}');
+          }
+              
+          designJson['_id'] = extractedId;
+          
+          final model = GenerateDesignResponseModel.fromJson(designJson);
+          return right(model);
+        }
+        return left('Unexpected response format.');
+      } else {
+        final msg = response.data['message']?.toString() ?? 'Restyle failed.';
+        return left(msg);
+      }
+    } on DioException catch (e) {
+      return left(_handleDioError(e));
+    } catch (e) {
+      return left('An unexpected error occurred.');
+    }
+  }
+
+  Future<Either<String, List<GenerateDesignResponseModel>>> generateFullHomeDesign({
+    required String style,
+    required List<String> roomTypes,
+    String? styleImageUrl,
+  }) async {
+    try {
+      final token = SharedPref.getData(key: 'jwt');
+
+      final Map<String, dynamic> requestData = {
+        'style': style,
+        'room_types': roomTypes,
+      };
+
+      if (styleImageUrl != null && styleImageUrl.isNotEmpty) {
+        requestData['style_image_url'] = styleImageUrl;
+      }
+
+      final response = await DioHelper.postData(
+        endPoint: ApiConstants.fullHomeDesign,
+        data: requestData,
+        token: token,
+      );
+      
+      log(response.data.toString());
+      if (response.statusCode == 201 || response.data['status'] == 'success') {
+        final dataMap = response.data['data'] as Map<String, dynamic>?;
+        final designsList = dataMap?['designs'] as List<dynamic>?;
+
+        if (designsList != null) {
+          List<GenerateDesignResponseModel> models = [];
+          for (var designJson in designsList) {
+            if (designJson is Map<String, dynamic>) {
+              final extractedId = designJson['_id']?.toString()
+                  ?? designJson['id']?.toString()
+                  ?? designJson['designId']?.toString()
+                  ?? designJson['design_id']?.toString()
+                  ?? '';
+              
+              designJson['_id'] = extractedId;
+              models.add(GenerateDesignResponseModel.fromJson(designJson));
+            }
+          }
+          return right(models);
+        }
+        return left('Unexpected response format.');
+      } else {
+        final msg = response.data['message']?.toString() ?? 'Full home generation failed.';
+        return left(msg);
+      }
+    } on DioException catch (e) {
+      return left(_handleDioError(e));
+    } catch (e) {
+      return left('An unexpected error occurred.');
+    }
+  }
+
+  Future<Either<String, GenerateDesignResponseModel>> generateMaskDesign({
+    required String imageUrl,
+    required String maskUrl,
+    String? prompt,
+    required String operationMode,
+  }) async {
+    try {
+      final token = SharedPref.getData(key: 'jwt');
+
+      final Map<String, dynamic> requestData = {
+        'image_url': imageUrl,
+        'mask_url': maskUrl,
+        'operation_mode': operationMode,
+      };
+
+      if (prompt != null && prompt.isNotEmpty) {
+        requestData['prompt'] = prompt;
+      }
+
+      final response = await DioHelper.postData(
+        endPoint: ApiConstants.maskDesign,
+        data: requestData,
+        token: token,
+      );
+      
+      log(response.data.toString());
+      if (response.statusCode == 201 || response.data['status'] == 'success') {
+        final dataMap = response.data['data'] as Map<String, dynamic>?;
+        final designJson = dataMap?['design'] as Map<String, dynamic>?;
+
+        if (designJson != null) {
+          final extractedId = designJson['_id']?.toString()
+              ?? designJson['id']?.toString()
+              ?? designJson['designId']?.toString()
+              ?? designJson['design_id']?.toString()
+              ?? '';
+              
+          designJson['_id'] = extractedId;
+          final model = GenerateDesignResponseModel.fromJson(designJson);
+          return right(model);
+        }
+        return left('Unexpected response format.');
+      } else {
+        final msg = response.data['message']?.toString() ?? 'Mask design failed.';
+        return left(msg);
+      }
+    } on DioException catch (e) {
+      return left(_handleDioError(e));
+    } catch (e) {
+      return left('An unexpected error occurred.');
+    }
+  }
 }

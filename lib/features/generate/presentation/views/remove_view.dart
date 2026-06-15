@@ -81,7 +81,13 @@ class _RemoveViewState extends State<RemoveView> {
                       Navigator.pushNamed(
                         context,
                         AppRoutes.generateLoadingView,
-                        arguments: {'showListView': false},
+                        arguments: {
+                          'showListView': false,
+                          'isMask': true,
+                          'operationMode': 'remove',
+                          'imageUrl': _selectedImage?.path,
+                          'maskUrl': mask.path,
+                        },
                       );
                     },
                   ),

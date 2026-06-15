@@ -5,9 +5,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/constant/app_strings.dart';
+import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/widgets/generate_action_buttons_row.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/generate_results_app_bar.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/result_image_widget.dart';
+import 'package:sammly/features/generate/data/model/generate_design_response_model.dart';
 import 'package:sammly/features/smart_lens/cubit/search_cubit.dart';
 import 'package:sammly/features/smart_lens/data/repo/search_repo.dart';
 import 'package:sammly/features/smart_lens/presentation/widgets/smart_lens_bottom_sheet.dart';
@@ -18,12 +20,14 @@ class GenerateResultView extends StatefulWidget {
   final bool showListView;
   final String? networkImageUrl;
   final String? designId;
+  final List<dynamic>? designs;
 
   const GenerateResultView({
     super.key,
     this.showListView = false,
     this.networkImageUrl,
     this.designId,
+    this.designs,
   });
 
   @override
@@ -41,7 +45,7 @@ class _GenerateResultViewState extends State<GenerateResultView> {
   late final SearchCubit _searchCubit;
 
   void _openSmartLens(BuildContext context) {
-    if (widget.designId == null || widget.designId!.isEmpty) {
+    if (_currentDesignId == null || _currentDesignId!.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Design ID not available. Please try generating again."),
@@ -59,7 +63,7 @@ class _GenerateResultViewState extends State<GenerateResultView> {
       builder: (context) {
         return BlocProvider.value(
           value: _searchCubit,
-          child: SmartLensBottomSheet(designId: widget.designId!),
+          child: SmartLensBottomSheet(designId: _currentDesignId!),
         );
       },
     );
@@ -67,17 +71,33 @@ class _GenerateResultViewState extends State<GenerateResultView> {
 
   late String _selectedImage;
   late bool _isNetworkImage;
+  late int _selectedIndex;
+  String? _currentDesignId;
+  List<String> _listImages = [];
 
   @override
   void initState() {
     super.initState();
     _searchCubit = SearchCubit(SearchRepo());
+    _currentDesignId = widget.designId;
+    
+    if (widget.designs != null && widget.designs!.isNotEmpty) {
+      _listImages = widget.designs!.map((d) => (d as GenerateDesignResponseModel).imageUrl).toList();
+    } else {
+      _listImages = _fallbackImages;
+    }
+
+    _selectedIndex = 0;
+
     if (widget.networkImageUrl != null && widget.networkImageUrl!.isNotEmpty) {
       _selectedImage = widget.networkImageUrl!;
       _isNetworkImage = true;
+      // If networkImageUrl matches one in the list, set index
+      final index = _listImages.indexOf(widget.networkImageUrl!);
+      if (index != -1) _selectedIndex = index;
     } else {
-      _selectedImage = _fallbackImages[0];
-      _isNetworkImage = false;
+      _selectedImage = _listImages[0];
+      _isNetworkImage = widget.designs != null && widget.designs!.isNotEmpty;
     }
   }
 
@@ -121,6 +141,13 @@ class _GenerateResultViewState extends State<GenerateResultView> {
                   ? AppStrings.yourGeneratedDesign
                   : AppStrings.modernLivingRoom,
               subtitle: AppStrings.generatedBySammly,
+              onBack: () {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  AppRoutes.layoutView,
+                  (route) => false,
+                );
+              },
             ),
             body: SingleChildScrollView(
               child: Padding(
@@ -133,21 +160,25 @@ class _GenerateResultViewState extends State<GenerateResultView> {
                       onSmartLensTap: () => _openSmartLens(context),
                     ),
                     SizedBox(height: 16.h),
-                    if (widget.showListView && !_isNetworkImage) ...[
+                    if (widget.showListView) ...[
                       SizedBox(
                         height: 100.h,
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
-                          itemCount: _fallbackImages.length,
+                          itemCount: _listImages.length,
                           separatorBuilder: (context, index) => SizedBox(width: 10.w),
                           itemBuilder: (context, index) {
-                            final image = _fallbackImages[index];
-                            final isSelected = _selectedImage == image;
+                            final image = _listImages[index];
+                            final isSelected = _selectedIndex == index;
                             return GestureDetector(
                               onTap: () {
                                 setState(() {
+                                  _selectedIndex = index;
                                   _selectedImage = image;
-                                  _isNetworkImage = false;
+                                  _isNetworkImage = widget.designs != null && widget.designs!.isNotEmpty;
+                                  if (widget.designs != null && widget.designs!.isNotEmpty) {
+                                    _currentDesignId = (widget.designs![index] as GenerateDesignResponseModel).id;
+                                  }
                                 });
                               },
                               child: Container(
@@ -171,7 +202,9 @@ class _GenerateResultViewState extends State<GenerateResultView> {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10.r),
                                     image: DecorationImage(
-                                      image: AssetImage(image),
+                                      image: (widget.designs != null && widget.designs!.isNotEmpty)
+                                          ? NetworkImage(image) as ImageProvider
+                                          : AssetImage(image),
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -188,7 +221,16 @@ class _GenerateResultViewState extends State<GenerateResultView> {
                     GenerateActionButtonsRow(
                       imageUrl: _isNetworkImage ? _selectedImage : null,
                       isShared: isShared,
-                      onEdit: () {},
+                      onEdit: () {
+                        Navigator.pushNamed(
+                          context,
+                          AppRoutes.imageGenerationStepperView,
+                          arguments: {
+                            'initialImageUrl': _selectedImage,
+                            'isEditMode': true,
+                          },
+                        );
+                      },
                       onShare: () {
                         if (widget.designId != null && widget.designId!.isNotEmpty) {
                           context.read<DesignDetailsCubit>().shareDesign(widget.designId!);
