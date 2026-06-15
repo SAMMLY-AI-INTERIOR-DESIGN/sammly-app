@@ -262,6 +262,7 @@ abstract class AppRouter {
         final imageUrl = args?['imageUrl'] as String?;
         final designId = args?['designId'] as String?;
         final designs = args?['designs']; // Add this
+        final originalImageUrl = args?['originalImageUrl'] as String?; // Add this
         return MaterialPageRoute(
           builder: (context) {
             return GenerateResultView(
@@ -269,6 +270,7 @@ abstract class AppRouter {
               networkImageUrl: imageUrl,
               designId: designId,
               designs: designs, // Pass to view
+              originalImageUrl: originalImageUrl, // Add this
             );
           },
         );
