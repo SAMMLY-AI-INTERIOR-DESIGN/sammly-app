@@ -7,7 +7,7 @@ class FollowingModel {
 
   factory FollowingModel.fromJson(Map<String, dynamic> json) {
     return FollowingModel(
-      id: json['_id'] ?? '',
+      id: json['userId'] ?? '',
       name: json['name'] ?? '',
       avatar: json['avatar'],
     );

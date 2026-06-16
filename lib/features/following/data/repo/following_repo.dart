@@ -53,7 +53,7 @@ class FollowingRepo {
         data: {},
         token: token,
       );
-
+      log('${response.data.toString()} userId $userId');
       if (response.statusCode == 201 && response.data['status'] == 'success') {
         return right(
           response.data['data']['message'] ?? 'Followed successfully',
