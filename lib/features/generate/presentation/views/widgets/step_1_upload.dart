@@ -7,10 +7,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/functions.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/custombutton.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class Step1Upload extends StatefulWidget {
   final XFile? initialImage;
@@ -19,8 +19,8 @@ class Step1Upload extends StatefulWidget {
   final VoidCallback onNext;
   final String title;
   final String subtitle;
-  final String? titleIcon; 
-  final bool isButtonInsideCard; 
+  final String? titleIcon;
+  final bool isButtonInsideCard;
   final bool isImageOptional;
 
   const Step1Upload({
@@ -73,7 +73,6 @@ class _Step1UploadState extends State<Step1Upload> {
 
   @override
   Widget build(BuildContext context) {
-    
     Widget imageUploadArea = _selectedImage != null
         ? Stack(
             children: [
@@ -92,9 +91,9 @@ class _Step1UploadState extends State<Step1Upload> {
                   ),
                 ),
               ),
-              Positioned(
+              PositionedDirectional(
                 top: 10.h,
-                right: 10.w,
+                end: 10.w,
                 child: GestureDetector(
                   onTap: _removeImage,
                   child: Container(
@@ -104,11 +103,7 @@ class _Step1UploadState extends State<Step1Upload> {
                       color: Colors.black.withValues(alpha: 0.5),
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(
-                      Icons.close,
-                      color: Colors.white,
-                      size: 18.sp,
-                    ),
+                    child: Icon(Icons.close, color: Colors.white, size: 18.sp),
                   ),
                 ),
               ),
@@ -138,7 +133,11 @@ class _Step1UploadState extends State<Step1Upload> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SvgPicture.asset(AppImages.uploadImage, width: 24.w, height: 24.h),
+                      SvgPicture.asset(
+                        AppImages.uploadImage,
+                        width: 24.w,
+                        height: 24.h,
+                      ),
                       SizedBox(height: 8.h),
                       Text(
                         widget.subtitle,
@@ -153,15 +152,15 @@ class _Step1UploadState extends State<Step1Upload> {
             ),
           );
 
-   Widget nextButton = CustomButton(
-      text: AppStrings.next,
+    Widget nextButton = CustomButton(
+      text: S.of(context).next,
       suffixIcon: AppImages.arrowRight,
       onPressed: (_selectedImage != null || widget.isImageOptional)
           ? widget.onNext
           : () {
               showCustomSnackBar(
                 context: context,
-                message: AppStrings.pleaseUploadImage,
+                message: S.of(context).pleaseUploadImage,
                 isError: true,
               );
             },
@@ -215,7 +214,7 @@ class _Step1UploadState extends State<Step1Upload> {
             const Spacer(),
             nextButton,
           ],
-          
+
           SizedBox(height: 24.h),
         ],
       ),

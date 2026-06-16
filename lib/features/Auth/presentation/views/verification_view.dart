@@ -11,6 +11,7 @@ import 'package:sammly/features/Auth/cubit/auth_states.dart';
 import 'package:sammly/features/Auth/presentation/views/new_password_view.dart';
 import 'package:sammly/features/Auth/presentation/widgets/signlogin.dart';
 import 'package:pinput/pinput.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class VerificationView extends StatefulWidget {
   final String email;
@@ -73,19 +74,19 @@ class _VerificationViewState extends State<VerificationView> {
               MaterialPageRoute(
                 builder: (_) => BlocProvider.value(
                   value: authCubit,
-                  child: CreateNewPasswordView(
-                    email: widget.email,
-                  ),
+                  child: CreateNewPasswordView(email: widget.email),
                 ),
               ),
             );
           } else if (state is VerifyResetCodeFailedState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.errorMsg),
-                backgroundColor: Colors.red,
-              ),
-            );
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text(state.errorMsg),
+                  backgroundColor: Colors.red,
+                ),
+              );
           }
         },
         child: Scaffold(
@@ -95,10 +96,7 @@ class _VerificationViewState extends State<VerificationView> {
             elevation: 0,
             scrolledUnderElevation: 0,
             leading: IconButton(
-              icon: const Icon(
-                Icons.arrow_back_ios_new,
-                color: AppColors.blackColor,
-              ),
+              icon: Icon(Icons.arrow_back_ios_new, color: AppColors.blackColor),
               onPressed: () => Navigator.pop(context),
             ),
           ),
@@ -133,10 +131,13 @@ class _VerificationViewState extends State<VerificationView> {
                 SizedBox(height: 40.h),
 
                 // 3. العناوين
-                Text('Verification', style: AppTextStyles.heading28ExtraBold),
+                Text(
+                  S.of(context).verification,
+                  style: AppTextStyles.heading28ExtraBold,
+                ),
                 SizedBox(height: 8.h),
                 Text(
-                  'Enter the code sent to\n${widget.email}',
+                  '${S.of(context).enterCodeSentTo}\n${widget.email}',
                   textAlign: TextAlign.center,
                   style: AppTextStyles.body14Regular.copyWith(
                     color: AppColors.blackColor,
@@ -149,7 +150,8 @@ class _VerificationViewState extends State<VerificationView> {
                   length: 6,
                   controller: _pinController,
                   defaultPinTheme: defaultPinTheme,
-                  focusedPinTheme: activePinTheme, // الإطار بيزرق وإنت واقف عليه
+                  focusedPinTheme:
+                      activePinTheme, // الإطار بيزرق وإنت واقف عليه
                   submittedPinTheme:
                       activePinTheme, // الإطار بيفضل أزرق بعد ما تكتب الرقم (زي صورة فيجما بالظبط)
                   keyboardType: TextInputType.number,
@@ -166,21 +168,25 @@ class _VerificationViewState extends State<VerificationView> {
                       return const Center(child: CircularProgressIndicator());
                     }
                     return CustomButton(
-                      text: 'Verify',
+                      text: S.of(context).verify,
                       onPressed: () {
                         final code = _pinController.text.trim();
                         if (code.length == 6) {
                           context.read<AuthCubit>().verifyPasswordResetCode(
-                                email: widget.email,
-                                code: code,
-                              );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Please enter the 6-digit code'),
-                              backgroundColor: Colors.red,
-                            ),
+                            email: widget.email,
+                            code: code,
                           );
+                        } else {
+                          ScaffoldMessenger.of(context)
+                            ..hideCurrentSnackBar()
+                            ..showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  S.of(context).pleaseEnter6DigitCode,
+                                ),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
                         }
                       },
                     );
@@ -190,17 +196,19 @@ class _VerificationViewState extends State<VerificationView> {
 
                 // 6. إعادة إرسال الكود
                 SignLogin(
-                  text1: "Didn't receive the Code?",
-                  text2: "Resend",
+                  text1: S.of(context).didntReceiveCode,
+                  text2: S.of(context).resendCode,
                   ontap: () {
                     context.read<AuthCubit>().sendPasswordResetCode(
-                          email: widget.email,
-                        );
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Verification code resent to your email'),
-                      ),
+                      email: widget.email,
                     );
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          content: Text(S.of(context).verificationCodeResent),
+                        ),
+                      );
                   },
                 ),
               ],

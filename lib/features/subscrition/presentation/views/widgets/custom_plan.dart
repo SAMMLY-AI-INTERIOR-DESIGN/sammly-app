@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class CustomPlan extends StatelessWidget {
   final String iconPath;
@@ -42,7 +43,7 @@ class CustomPlan extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        margin: EdgeInsets.only(bottom: 14.h),
+        margin: EdgeInsetsDirectional.only(bottom: 8.h),
         padding: EdgeInsets.all(14.w), // زيادة مسافة الأمان الداخلية للكارد
         decoration: BoxDecoration(
           color: bgColor,
@@ -134,7 +135,7 @@ class CustomPlan extends StatelessWidget {
                       ),
                       SizedBox(height: 2.h),
                       Text(
-                        'Tokens',
+                        S.of(context).tokens,
                         style: TextStyle(
                           color: const Color(0xFF5B5B5B),
                           fontSize: 12.sp,

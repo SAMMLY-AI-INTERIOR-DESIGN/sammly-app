@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -18,7 +18,7 @@ class CustomBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+      margin: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 24),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         gradient: AppColors.navBgGradient,
@@ -35,10 +35,10 @@ class CustomBottomNavBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildNavItem(0, AppImages.homeIcon, AppStrings.home),
-          _buildNavItem(1, AppImages.exploreIcon, AppStrings.explore),
-          _buildNavItem(2, AppImages.historyIcon, AppStrings.history),
-          _buildNavItem(3, AppImages.profileNavBarIcon, AppStrings.profile),
+          _buildNavItem(0, AppImages.homeIcon, S.of(context).home),
+          _buildNavItem(1, AppImages.exploreIcon, S.of(context).explore),
+          _buildNavItem(2, AppImages.historyIcon, S.of(context).history),
+          _buildNavItem(3, AppImages.profileNavBarIcon, S.of(context).profile),
         ],
       ),
     );

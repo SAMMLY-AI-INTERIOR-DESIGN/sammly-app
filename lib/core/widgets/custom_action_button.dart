@@ -40,8 +40,8 @@ class CustomActionButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(13.r),
         gradient: const LinearGradient(
           colors: [AppColors.primaryColor, AppColors.secondaryColor],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+          begin: AlignmentDirectional.topStart,
+          end: AlignmentDirectional.bottomEnd,
         ),
       ),
       padding: const EdgeInsets.all(1.0),
@@ -50,8 +50,8 @@ class CustomActionButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(12.r),
           gradient: const LinearGradient(
             colors: [AppColors.bg1Color, AppColors.bg2Color],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+            begin: AlignmentDirectional.topStart,
+            end: AlignmentDirectional.bottomEnd,
           ),
         ),
         child: Column(
@@ -85,10 +85,7 @@ class CustomActionButton extends StatelessWidget {
     );
 
     if (isDisabled) {
-      buttonContent = Opacity(
-        opacity: 0.5,
-        child: buttonContent,
-      );
+      buttonContent = Opacity(opacity: 0.5, child: buttonContent);
     }
 
     return GestureDetector(

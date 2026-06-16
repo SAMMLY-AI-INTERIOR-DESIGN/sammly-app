@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class SearchBarWidget extends StatelessWidget {
   const SearchBarWidget({super.key});
@@ -27,18 +27,13 @@ class SearchBarWidget extends StatelessWidget {
           ],
         ),
         child: TextField(
-          textAlignVertical: TextAlignVertical
-              .center, 
+          textAlignVertical: TextAlignVertical.center,
           decoration: InputDecoration(
-            isDense:
-                true, 
-            hintText: AppStrings.searchHint,
+            isDense: true,
+            hintText: S.of(context).searchHint,
             hintStyle: AppTextStyles.body16Regular,
             prefixIcon: Padding(
-              padding: const EdgeInsets.only(
-                left: 12.0,
-                right: 8.0,
-              ), 
+              padding: const EdgeInsetsDirectional.only(start: 12.0, end: 8.0),
               child: SvgPicture.asset(
                 AppImages.searchIcon,
                 width: 18,
@@ -50,9 +45,7 @@ class SearchBarWidget extends StatelessWidget {
               minHeight: 0,
             ),
             border: InputBorder.none,
-            contentPadding: const EdgeInsets.symmetric(
-              vertical: 12,
-            ),
+            contentPadding: const EdgeInsets.symmetric(vertical: 12),
           ),
         ),
       ),

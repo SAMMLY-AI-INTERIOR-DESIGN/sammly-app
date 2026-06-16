@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_colors.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class GradientFollowButton extends StatefulWidget {
   final VoidCallback onFollow;
@@ -26,12 +26,16 @@ class _GradientFollowButtonState extends State<GradientFollowButton> {
 
   void _showUnfollowMenu(BuildContext context) async {
     final RenderBox button = context.findRenderObject() as RenderBox;
-    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
-    
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+
     final RelativeRect position = RelativeRect.fromRect(
       Rect.fromPoints(
         button.localToGlobal(Offset(0, button.size.height), ancestor: overlay),
-        button.localToGlobal(button.size.bottomRight(Offset(0, button.size.height)), ancestor: overlay),
+        button.localToGlobal(
+          button.size.bottomRight(Offset(0, button.size.height)),
+          ancestor: overlay,
+        ),
       ),
       Offset.zero & overlay.size,
     );
@@ -48,14 +52,11 @@ class _GradientFollowButtonState extends State<GradientFollowButton> {
       position: position,
       color: AppColors.whiteColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
-      constraints: BoxConstraints(
-        minWidth: buttonWidth,
-        maxWidth: buttonWidth,
-      ),
+      constraints: BoxConstraints(minWidth: buttonWidth, maxWidth: buttonWidth),
       items: [
         PopupMenuItem(
           // 2. قللنا ارتفاع المنيو هنا (تقدر تصغر الرقم لو عايزها أرفع)
-          height: 35.h, 
+          height: 35.h,
           value: 'unfollow',
           padding: EdgeInsets.zero,
           child: Row(
@@ -64,8 +65,10 @@ class _GradientFollowButtonState extends State<GradientFollowButton> {
               Icon(Icons.person_remove, color: AppColors.redColor, size: 18.sp),
               SizedBox(width: 8.w),
               Text(
-                AppStrings.unfollow, 
-                style: AppTextStyles.body14Regular.copyWith(color: AppColors.redColor),
+                S.of(context).unfollow,
+                style: AppTextStyles.body14Regular.copyWith(
+                  color: AppColors.redColor,
+                ),
               ),
             ],
           ),
@@ -101,13 +104,15 @@ class _GradientFollowButtonState extends State<GradientFollowButton> {
             shadowColor: Colors.transparent,
             elevation: 0,
             padding: EdgeInsets.symmetric(horizontal: 16.w),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.r),
+            ),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                AppStrings.following,
+                S.of(context).following,
                 style: AppTextStyles.body16Medium.copyWith(
                   color: AppColors.whiteColor,
                   letterSpacing: 0.5,
@@ -116,8 +121,10 @@ class _GradientFollowButtonState extends State<GradientFollowButton> {
               SizedBox(width: 6.w),
               // 4. تغيير الأيقونة بناءً على حالة المنيو
               Icon(
-                _isMenuOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, 
-                color: AppColors.whiteColor, 
+                _isMenuOpen
+                    ? Icons.keyboard_arrow_up
+                    : Icons.keyboard_arrow_down,
+                color: AppColors.whiteColor,
                 size: 20.sp,
               ),
             ],
@@ -161,7 +168,7 @@ class _GradientFollowButtonState extends State<GradientFollowButton> {
             ),
             SizedBox(width: 8.w),
             Text(
-              AppStrings.follow,
+              S.of(context).follow,
               style: AppTextStyles.body16Medium.copyWith(
                 color: Colors.white,
                 fontSize: 15.sp,

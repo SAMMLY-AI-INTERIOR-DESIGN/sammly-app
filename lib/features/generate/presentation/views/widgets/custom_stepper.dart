@@ -8,7 +8,7 @@ class CustomStepper extends StatelessWidget {
   final List<String> stepTitles;
 
   const CustomStepper({
-    super.key, 
+    super.key,
     required this.currentStep,
     required this.stepTitles,
   });
@@ -19,16 +19,13 @@ class CustomStepper extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: List.generate(
-          stepTitles.length * 2 - 1,
-          (index) {
-            if (index.isEven) {
-              return _buildStep(index ~/ 2, stepTitles[index ~/ 2]);
-            } else {
-              return _buildLine(index ~/ 2);
-            }
-          },
-        ),
+        children: List.generate(stepTitles.length * 2 - 1, (index) {
+          if (index.isEven) {
+            return _buildStep(index ~/ 2, stepTitles[index ~/ 2]);
+          } else {
+            return _buildLine(index ~/ 2);
+          }
+        }),
       ),
     );
   }
@@ -100,11 +97,13 @@ class CustomStepper extends StatelessWidget {
     return Expanded(
       child: Container(
         height: 1.5,
-        margin: EdgeInsets.only(
+        margin: EdgeInsetsDirectional.only(
           bottom: 24.h,
         ), // offset to align with circle center
         decoration: BoxDecoration(
-          color: isActive ? null : AppColors.primaryColor.withValues(alpha: 0.3),
+          color: isActive
+              ? null
+              : AppColors.primaryColor.withValues(alpha: 0.3),
           gradient: isActive ? AppColors.iconGradient : null,
         ),
       ),

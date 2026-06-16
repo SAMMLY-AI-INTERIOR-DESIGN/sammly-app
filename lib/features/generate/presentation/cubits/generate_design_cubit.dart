@@ -72,7 +72,9 @@ class GenerateDesignCubit extends Cubit<GenerateDesignState> {
     emit(GenerateDesignLoading());
 
     final apiStyle = GenerateMappers.styleToApi(uiStyle);
-    final apiRoomTypes = uiRoomTypes.map((room) => GenerateMappers.roomToApi(room)).toList();
+    final apiRoomTypes = uiRoomTypes
+        .map((room) => GenerateMappers.roomToApi(room))
+        .toList();
 
     final result = await generateDesignRepo.generateFullHomeDesign(
       style: apiStyle,

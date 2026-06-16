@@ -49,9 +49,9 @@
 //             ),
 //           ),
 
-//           Positioned(
+//           PositionedDirectional(
 //             top: 16.h,
-//             right: 12.w,
+//             end: 12.w,
 //             child: GestureDetector(
 //               onTap: onFavoriteTap,
 //               child: ShaderMask(
@@ -105,7 +105,7 @@ class _FavoriteHeartItemState extends State<FavoriteHeartItem> {
     super.initState();
     _isLiked = widget.initialIsLiked;
   }
-  
+
   @override
   void didUpdateWidget(FavoriteHeartItem oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -123,11 +123,11 @@ class _FavoriteHeartItemState extends State<FavoriteHeartItem> {
         children: [
           widget.imageUrl.isEmpty
               ? Container(
-                  color: AppColors.greyColor.withOpacity(0.2),
+                  color: AppColors.greyColor.withValues(alpha: 0.2),
                   child: Center(
                     child: Icon(
                       Icons.broken_image,
-                      color: AppColors.greyColor.withOpacity(0.5),
+                      color: AppColors.greyColor.withValues(alpha: 0.5),
                       size: 30.sp,
                     ),
                   ),
@@ -137,10 +137,10 @@ class _FavoriteHeartItemState extends State<FavoriteHeartItem> {
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
-                      color: AppColors.greyColor.withOpacity(0.2),
+                      color: AppColors.greyColor.withValues(alpha: 0.2),
                       child: Icon(
                         Icons.broken_image,
-                        color: AppColors.greyColor.withOpacity(0.5),
+                        color: AppColors.greyColor.withValues(alpha: 0.5),
                         size: 30.sp,
                       ),
                     );
@@ -161,9 +161,9 @@ class _FavoriteHeartItemState extends State<FavoriteHeartItem> {
             ),
           ),
 
-          Positioned(
+          PositionedDirectional(
             top: 12.h,
-            right: 6.w,
+            end: 6.w,
             child: GestureDetector(
               onTap: () {
                 setState(() {

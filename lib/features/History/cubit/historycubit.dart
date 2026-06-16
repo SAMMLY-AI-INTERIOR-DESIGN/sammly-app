@@ -40,22 +40,21 @@ class HistoryCubit extends Cubit<HistoryState> {
       limit: limit,
     );
 
-    result.fold(
-      (error) => emit(HistoryError(error)),
-      (response) {
-        _allDesigns.addAll(response.designs);
-        _currentPage = response.page;
-        _totalDesigns = response.totalDesigns;
-        _hasMore = response.hasMore;
+    result.fold((error) => emit(HistoryError(error)), (response) {
+      _allDesigns.addAll(response.designs);
+      _currentPage = response.page;
+      _totalDesigns = response.totalDesigns;
+      _hasMore = response.hasMore;
 
-        emit(HistoryLoaded(
+      emit(
+        HistoryLoaded(
           designs: List.unmodifiable(_allDesigns),
           currentPage: _currentPage,
           totalDesigns: _totalDesigns,
           hasMore: _hasMore,
-        ));
-      },
-    );
+        ),
+      );
+    });
   }
 
   /// Load the next page and append results.
@@ -66,26 +65,22 @@ class HistoryCubit extends Cubit<HistoryState> {
 
     final nextPage = _currentPage + 1;
 
-    final result = await _repository.getHistory(
-      page: nextPage,
-      limit: limit,
-    );
+    final result = await _repository.getHistory(page: nextPage, limit: limit);
 
-    result.fold(
-      (error) => emit(HistoryError(error)),
-      (response) {
-        _allDesigns.addAll(response.designs);
-        _currentPage = response.page;
-        _totalDesigns = response.totalDesigns;
-        _hasMore = response.hasMore;
+    result.fold((error) => emit(HistoryError(error)), (response) {
+      _allDesigns.addAll(response.designs);
+      _currentPage = response.page;
+      _totalDesigns = response.totalDesigns;
+      _hasMore = response.hasMore;
 
-        emit(HistoryLoaded(
+      emit(
+        HistoryLoaded(
           designs: List.unmodifiable(_allDesigns),
           currentPage: _currentPage,
           totalDesigns: _totalDesigns,
           hasMore: _hasMore,
-        ));
-      },
-    );
+        ),
+      );
+    });
   }
 }

@@ -16,8 +16,11 @@ class HistoryResponse {
       page: json['page'] ?? 1,
       totalDesigns: json['totalDesigns'] ?? 0,
       hasMore: json['hasMore'] ?? false,
-      designs: (json['designs'] as List<dynamic>?)
-              ?.map((e) => HistoryDesignModel.fromJson(e as Map<String, dynamic>))
+      designs:
+          (json['designs'] as List<dynamic>?)
+              ?.map(
+                (e) => HistoryDesignModel.fromJson(e as Map<String, dynamic>),
+              )
               .toList() ??
           [],
     );

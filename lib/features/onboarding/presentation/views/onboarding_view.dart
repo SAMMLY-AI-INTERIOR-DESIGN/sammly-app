@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/features/onboarding/data/model/inboarding_model.dart';
 import 'package:sammly/features/onboarding/presentation/views/widgets/onboarding_item_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class OnboardingView extends StatefulWidget {
   const OnboardingView({super.key});
@@ -32,26 +32,26 @@ class _OnboardingViewState extends State<OnboardingView> {
     super.dispose();
   }
 
-  final List<OnboardingModel> _onboardingItems = [
-    const OnboardingModel(
-      title: AppStrings.onboarding1Title,
-      subtitle: AppStrings.onboarding1Subtitle,
-      imagePath: AppImages.onboarding1,
-    ),
-    const OnboardingModel(
-      title: AppStrings.onboarding2Title,
-      subtitle: AppStrings.onboarding2Subtitle,
-      imagePath: AppImages.onboarding2,
-    ),
-    const OnboardingModel(
-      title: AppStrings.onboarding3Title,
-      subtitle: AppStrings.onboarding3Subtitle,
-      imagePath: AppImages.onboarding3,
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final List<OnboardingModel> onboardingItems = [
+      OnboardingModel(
+        title: S.of(context).onboarding1Title,
+        subtitle: S.of(context).onboarding1Subtitle,
+        imagePath: AppImages.onboarding1,
+      ),
+      OnboardingModel(
+        title: S.of(context).onboarding2Title,
+        subtitle: S.of(context).onboarding2Subtitle,
+        imagePath: AppImages.onboarding2,
+      ),
+      OnboardingModel(
+        title: S.of(context).onboarding3Title,
+        subtitle: S.of(context).onboarding3Subtitle,
+        imagePath: AppImages.onboarding3,
+      ),
+    ];
+
     final double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
@@ -65,22 +65,22 @@ class _OnboardingViewState extends State<OnboardingView> {
             Positioned.fill(
               child: PageView.builder(
                 controller: _pageController,
-                itemCount: _onboardingItems.length,
+                itemCount: onboardingItems.length,
                 onPageChanged: (index) {
                   setState(() {
                     _currentPageIndex = index;
                   });
                 },
                 itemBuilder: (context, index) {
-                  return OnboardingItemWidget(data: _onboardingItems[index]);
+                  return OnboardingItemWidget(data: onboardingItems[index]);
                 },
               ),
             ),
 
-            Positioned(
+            PositionedDirectional(
               top: screenHeight * 0.06,
-              left: 24,
-              right: 24,
+              start: 24,
+              end: 24,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -102,7 +102,7 @@ class _OnboardingViewState extends State<OnboardingView> {
                           return AppColors.primaryGradient.createShader(bounds);
                         },
                         child: Text(
-                          AppStrings.back,
+                          S.of(context).back,
                           style: AppTextStyles.hint12Light.copyWith(
                             color: AppColors.whiteColor,
                           ),
@@ -113,7 +113,10 @@ class _OnboardingViewState extends State<OnboardingView> {
 
                   TextButton.icon(
                     onPressed: () {
-                      Navigator.pushReplacementNamed(context, AppRoutes.layoutView);
+                      Navigator.pushReplacementNamed(
+                        context,
+                        AppRoutes.layoutView,
+                      );
                     },
                     icon: SvgPicture.asset(AppImages.onboardingForward),
                     label: ShaderMask(
@@ -121,7 +124,7 @@ class _OnboardingViewState extends State<OnboardingView> {
                         return AppColors.primaryGradient.createShader(bounds);
                       },
                       child: Text(
-                        AppStrings.skip,
+                        S.of(context).skip,
                         style: AppTextStyles.hint12Light.copyWith(
                           color: AppColors.whiteColor,
                         ),
@@ -132,16 +135,16 @@ class _OnboardingViewState extends State<OnboardingView> {
               ),
             ),
 
-            Positioned(
+            PositionedDirectional(
               bottom: 0,
-              left: 24,
-              right: 0,
+              start: 24,
+              end: 0,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SmoothPageIndicator(
                     controller: _pageController,
-                    count: _onboardingItems.length,
+                    count: onboardingItems.length,
                     effect: WormEffect(
                       dotHeight: 4,
                       dotWidth: 20,
@@ -153,22 +156,25 @@ class _OnboardingViewState extends State<OnboardingView> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      if (_currentPageIndex < _onboardingItems.length - 1) {
+                      if (_currentPageIndex < onboardingItems.length - 1) {
                         _pageController.nextPage(
                           duration: const Duration(milliseconds: 400),
                           curve: Curves.easeInOut,
                         );
                       } else {
-                        Navigator.pushReplacementNamed(context, AppRoutes.layoutView);
+                        Navigator.pushReplacementNamed(
+                          context,
+                          AppRoutes.layoutView,
+                        );
                       }
                     },
                     child: Stack(
                       children: [
                         SvgPicture.asset(AppImages.onboardingContainer),
 
-                        Positioned(
+                        PositionedDirectional(
                           bottom: 55,
-                          right: 30,
+                          end: 30,
                           child: SvgPicture.asset(AppImages.arrowBack),
                         ),
                       ],

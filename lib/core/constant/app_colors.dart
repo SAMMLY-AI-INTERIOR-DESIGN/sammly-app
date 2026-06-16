@@ -19,7 +19,6 @@ class AppColors {
   static const Color secondaryText = Color(0xFF5B5B5B);
   static const Color transparentBorder = Color(0xFF464645);
 
-
   static const LinearGradient primaryGradient = LinearGradient(
     colors: [primaryColor, primaryColor, secondaryColor, secondaryColor],
     stops: [0.0, 0.45, 0.55, 1.0],
@@ -41,14 +40,14 @@ class AppColors {
 
   static const LinearGradient navBgGradient = LinearGradient(
     colors: [bg2Color, bg1Color],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
+    begin: AlignmentDirectional.topStart,
+    end: AlignmentDirectional.bottomEnd,
   );
 
   static const LinearGradient scafoldBgGradient = LinearGradient(
     colors: [bg1Color, bg2Color],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
+    begin: AlignmentDirectional.topStart,
+    end: AlignmentDirectional.bottomEnd,
   );
 
   static const LinearGradient scafoldBg1Gradient = LinearGradient(
@@ -62,7 +61,6 @@ class AppColors {
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
   );
-
 }
 
 extension GradientWidgetExtension on Widget {

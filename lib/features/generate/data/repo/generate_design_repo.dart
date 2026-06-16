@@ -37,41 +37,43 @@ class GenerateDesignRepo {
         token: token,
       );
       log(response.statusCode.toString());
-      if (response.statusCode == 201 ||
-          response.data['status'] == 'success') {
-        
+      if (response.statusCode == 201 || response.data['status'] == 'success') {
         final dataMap = response.data['data'] as Map<String, dynamic>?;
         final designJson = dataMap?['design'];
-        
+
         if (designJson != null && designJson is Map<String, dynamic>) {
           // Aggressively extract the ID from various possible locations in the response
-          final extractedId = designJson['_id']?.toString()
-              ?? designJson['id']?.toString()
-              ?? designJson['designId']?.toString()
-              ?? designJson['design_id']?.toString()
-              ?? dataMap?['_id']?.toString()
-              ?? dataMap?['id']?.toString()
-              ?? dataMap?['designId']?.toString()
-              ?? dataMap?['design_id']?.toString()
-              ?? response.data['_id']?.toString()
-              ?? response.data['id']?.toString()
-              ?? response.data['designId']?.toString()
-              ?? response.data['design_id']?.toString()
-              ?? '';
-              
+          final extractedId =
+              designJson['_id']?.toString() ??
+              designJson['id']?.toString() ??
+              designJson['designId']?.toString() ??
+              designJson['design_id']?.toString() ??
+              dataMap?['_id']?.toString() ??
+              dataMap?['id']?.toString() ??
+              dataMap?['designId']?.toString() ??
+              dataMap?['design_id']?.toString() ??
+              response.data['_id']?.toString() ??
+              response.data['id']?.toString() ??
+              response.data['designId']?.toString() ??
+              response.data['design_id']?.toString() ??
+              '';
+
           if (extractedId.isEmpty) {
-            log('WARNING: Could not find any ID field in generation response! Data: ${response.data}');
+            log(
+              'WARNING: Could not find any ID field in generation response! Data: ${response.data}',
+            );
           }
-              
+
           // Inject the extracted ID into designJson so the model parses it
           designJson['_id'] = extractedId;
-          
+
           final model = GenerateDesignResponseModel.fromJson(designJson);
           return right(model);
         }
         return left('Unexpected response format.');
       } else {
-        final msg = response.data['message']?.toString() ?? 'Generation failed.';
+        final msg =
+            response.data['message']?.toString() ?? 'Generation failed.';
         return left(msg);
       }
     } on DioException catch (e) {
@@ -123,33 +125,34 @@ class GenerateDesignRepo {
         token: token,
       );
       log(response.statusCode.toString());
-      if (response.statusCode == 201 ||
-          response.data['status'] == 'success') {
-        
+      if (response.statusCode == 201 || response.data['status'] == 'success') {
         final dataMap = response.data['data'] as Map<String, dynamic>?;
         final designJson = dataMap?['design'];
-        
+
         if (designJson != null && designJson is Map<String, dynamic>) {
-          final extractedId = designJson['_id']?.toString()
-              ?? designJson['id']?.toString()
-              ?? designJson['designId']?.toString()
-              ?? designJson['design_id']?.toString()
-              ?? dataMap?['_id']?.toString()
-              ?? dataMap?['id']?.toString()
-              ?? dataMap?['designId']?.toString()
-              ?? dataMap?['design_id']?.toString()
-              ?? response.data['_id']?.toString()
-              ?? response.data['id']?.toString()
-              ?? response.data['designId']?.toString()
-              ?? response.data['design_id']?.toString()
-              ?? '';
-              
+          final extractedId =
+              designJson['_id']?.toString() ??
+              designJson['id']?.toString() ??
+              designJson['designId']?.toString() ??
+              designJson['design_id']?.toString() ??
+              dataMap?['_id']?.toString() ??
+              dataMap?['id']?.toString() ??
+              dataMap?['designId']?.toString() ??
+              dataMap?['design_id']?.toString() ??
+              response.data['_id']?.toString() ??
+              response.data['id']?.toString() ??
+              response.data['designId']?.toString() ??
+              response.data['design_id']?.toString() ??
+              '';
+
           if (extractedId.isEmpty) {
-            log('WARNING: Could not find any ID field in generation response! Data: ${response.data}');
+            log(
+              'WARNING: Could not find any ID field in generation response! Data: ${response.data}',
+            );
           }
-              
+
           designJson['_id'] = extractedId;
-          
+
           final model = GenerateDesignResponseModel.fromJson(designJson);
           return right(model);
         }
@@ -165,7 +168,8 @@ class GenerateDesignRepo {
     }
   }
 
-  Future<Either<String, List<GenerateDesignResponseModel>>> generateFullHomeDesign({
+  Future<Either<String, List<GenerateDesignResponseModel>>>
+  generateFullHomeDesign({
     required String style,
     required List<String> roomTypes,
     String? styleImageUrl,
@@ -187,7 +191,7 @@ class GenerateDesignRepo {
         data: requestData,
         token: token,
       );
-      
+
       log(response.data.toString());
       if (response.statusCode == 201 || response.data['status'] == 'success') {
         final dataMap = response.data['data'] as Map<String, dynamic>?;
@@ -197,12 +201,13 @@ class GenerateDesignRepo {
           List<GenerateDesignResponseModel> models = [];
           for (var designJson in designsList) {
             if (designJson is Map<String, dynamic>) {
-              final extractedId = designJson['_id']?.toString()
-                  ?? designJson['id']?.toString()
-                  ?? designJson['designId']?.toString()
-                  ?? designJson['design_id']?.toString()
-                  ?? '';
-              
+              final extractedId =
+                  designJson['_id']?.toString() ??
+                  designJson['id']?.toString() ??
+                  designJson['designId']?.toString() ??
+                  designJson['design_id']?.toString() ??
+                  '';
+
               designJson['_id'] = extractedId;
               models.add(GenerateDesignResponseModel.fromJson(designJson));
             }
@@ -211,7 +216,9 @@ class GenerateDesignRepo {
         }
         return left('Unexpected response format.');
       } else {
-        final msg = response.data['message']?.toString() ?? 'Full home generation failed.';
+        final msg =
+            response.data['message']?.toString() ??
+            'Full home generation failed.';
         return left(msg);
       }
     } on DioException catch (e) {
@@ -245,26 +252,28 @@ class GenerateDesignRepo {
         data: requestData,
         token: token,
       );
-      
+
       log(response.data.toString());
       if (response.statusCode == 201 || response.data['status'] == 'success') {
         final dataMap = response.data['data'] as Map<String, dynamic>?;
         final designJson = dataMap?['design'] as Map<String, dynamic>?;
 
         if (designJson != null) {
-          final extractedId = designJson['_id']?.toString()
-              ?? designJson['id']?.toString()
-              ?? designJson['designId']?.toString()
-              ?? designJson['design_id']?.toString()
-              ?? '';
-              
+          final extractedId =
+              designJson['_id']?.toString() ??
+              designJson['id']?.toString() ??
+              designJson['designId']?.toString() ??
+              designJson['design_id']?.toString() ??
+              '';
+
           designJson['_id'] = extractedId;
           final model = GenerateDesignResponseModel.fromJson(designJson);
           return right(model);
         }
         return left('Unexpected response format.');
       } else {
-        final msg = response.data['message']?.toString() ?? 'Mask design failed.';
+        final msg =
+            response.data['message']?.toString() ?? 'Mask design failed.';
         return left(msg);
       }
     } on DioException catch (e) {

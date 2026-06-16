@@ -26,19 +26,16 @@ class NotificationsCubit extends Cubit<NotificationsState> {
 
     final result = await _repo.getNotifications(page: _currentPage);
     if (isClosed) return;
-    result.fold(
-      (error) => emit(GetNotificationsFailure(error)),
-      (response) {
-        if (!loadMore) {
-          notifications = response.notifications;
-        } else {
-          notifications.addAll(response.notifications);
-        }
-        _currentPage++;
-        _hasMore = response.hasMore;
-        if (isClosed) return;
-        emit(GetNotificationsSuccess(response));
-      },
-    );
+    result.fold((error) => emit(GetNotificationsFailure(error)), (response) {
+      if (!loadMore) {
+        notifications = response.notifications;
+      } else {
+        notifications.addAll(response.notifications);
+      }
+      _currentPage++;
+      _hasMore = response.hasMore;
+      if (isClosed) return;
+      emit(GetNotificationsSuccess(response));
+    });
   }
 }

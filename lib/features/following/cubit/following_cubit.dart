@@ -26,20 +26,17 @@ class FollowingCubit extends Cubit<FollowingState> {
 
     final result = await _repo.getFollowings(page: _currentPage);
     if (isClosed) return;
-    result.fold(
-      (error) => emit(GetFollowingsFailure(error)),
-      (response) {
-        if (!loadMore) {
-          followings = response.profiles;
-        } else {
-          followings.addAll(response.profiles);
-        }
-        _currentPage++;
-        _hasMore = response.hasMore;
-        if (isClosed) return;
-        emit(GetFollowingsSuccess(response));
-      },
-    );
+    result.fold((error) => emit(GetFollowingsFailure(error)), (response) {
+      if (!loadMore) {
+        followings = response.profiles;
+      } else {
+        followings.addAll(response.profiles);
+      }
+      _currentPage++;
+      _hasMore = response.hasMore;
+      if (isClosed) return;
+      emit(GetFollowingsSuccess(response));
+    });
   }
 
   Future<void> followUser(String userId) async {
@@ -47,12 +44,9 @@ class FollowingCubit extends Cubit<FollowingState> {
     emit(FollowLoading(userId));
     final result = await _repo.followUser(userId);
     if (isClosed) return;
-    result.fold(
-      (error) => emit(FollowFailure(error, userId)),
-      (message) {
-        emit(FollowSuccess(message, userId));
-      },
-    );
+    result.fold((error) => emit(FollowFailure(error, userId)), (message) {
+      emit(FollowSuccess(message, userId));
+    });
   }
 
   Future<void> unfollowUser(String userId) async {
@@ -60,11 +54,8 @@ class FollowingCubit extends Cubit<FollowingState> {
     emit(UnfollowLoading(userId));
     final result = await _repo.unfollowUser(userId);
     if (isClosed) return;
-    result.fold(
-      (error) => emit(UnfollowFailure(error, userId)),
-      (message) {
-        emit(UnfollowSuccess(message, userId));
-      },
-    );
+    result.fold((error) => emit(UnfollowFailure(error, userId)), (message) {
+      emit(UnfollowSuccess(message, userId));
+    });
   }
 }

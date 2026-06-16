@@ -41,11 +41,11 @@ class _MyProfileViewState extends State<MyProfileView> {
                       Stack(
                         children: [
                           Container(
-                            margin: EdgeInsets.only(top: 50.h),
-                            padding: EdgeInsets.only(
+                            margin: EdgeInsetsDirectional.only(top: 50.h),
+                            padding: EdgeInsetsDirectional.only(
                               top: 60.h,
-                              left: 16.w,
-                              right: 16.w,
+                              start: 16.w,
+                              end: 16.w,
                               bottom: 20.h,
                             ),
                             decoration: BoxDecoration(
@@ -67,12 +67,13 @@ class _MyProfileViewState extends State<MyProfileView> {
 
                                 SharedImagesListView(
                                   onDataCalculated: (posts, likes) {
-                                    if (_postsCount != posts || _likesCount != likes) {
+                                    if (_postsCount != posts ||
+                                        _likesCount != likes) {
                                       setState(() {
                                         _postsCount = posts;
                                         _likesCount = likes;
                                       });
-                                    }                    
+                                    }
                                   },
                                 ),
                               ],

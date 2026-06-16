@@ -7,9 +7,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/custombutton.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class TextToImageStep3Describe extends StatefulWidget {
   final TextEditingController promptController;
@@ -55,12 +55,10 @@ class _TextToImageStep3DescribeState extends State<TextToImageStep3Describe> {
         children: [
           Expanded(
             child: Container(
-              padding: EdgeInsets.all(20.w), 
+              padding: EdgeInsets.all(20.w),
               decoration: BoxDecoration(
-                gradient: AppColors.scafoldBg1Gradient, 
-                borderRadius: BorderRadius.circular(
-                  20.r,
-                ), 
+                gradient: AppColors.scafoldBg1Gradient,
+                borderRadius: BorderRadius.circular(20.r),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -74,7 +72,7 @@ class _TextToImageStep3DescribeState extends State<TextToImageStep3Describe> {
                       ),
                       SizedBox(width: 8.w),
                       Text(
-                        AppStrings.visualizeYourSpace,
+                        S.of(context).visualizeYourSpace,
                         style: AppTextStyles.title20SemiBold.copyWith(
                           color: AppColors.blackColor,
                         ),
@@ -86,8 +84,7 @@ class _TextToImageStep3DescribeState extends State<TextToImageStep3Describe> {
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
-                        color: AppColors
-                            .whiteColor, 
+                        color: AppColors.whiteColor,
                         borderRadius: BorderRadius.circular(16.r),
                         border: Border.all(color: Colors.grey.shade300),
                       ),
@@ -102,7 +99,7 @@ class _TextToImageStep3DescribeState extends State<TextToImageStep3Describe> {
                           color: AppColors.blackColor2,
                         ),
                         decoration: InputDecoration(
-                          hintText: AppStrings.describeDreamRoomHint,
+                          hintText: S.of(context).describeDreamRoomHint,
                           hintStyle: AppTextStyles.body16Medium.copyWith(
                             color: Colors.grey.shade400,
                           ),
@@ -136,9 +133,9 @@ class _TextToImageStep3DescribeState extends State<TextToImageStep3Describe> {
                                   ),
                                 ),
                               ),
-                              Positioned(
+                              PositionedDirectional(
                                 top: 10.h,
-                                right: 10.w,
+                                end: 10.w,
                                 child: GestureDetector(
                                   onTap: widget.onImageRemoved,
                                   child: Container(
@@ -164,8 +161,7 @@ class _TextToImageStep3DescribeState extends State<TextToImageStep3Describe> {
                             onTap: _pickImage,
                             child: Container(
                               decoration: BoxDecoration(
-                                color:
-                                    AppColors.whiteColor,
+                                color: AppColors.whiteColor,
                                 borderRadius: BorderRadius.circular(16.r),
                               ),
                               child: DottedBorder(
@@ -185,7 +181,7 @@ class _TextToImageStep3DescribeState extends State<TextToImageStep3Describe> {
                                       ),
                                       SizedBox(height: 8.h),
                                       Text(
-                                        AppStrings.addReferenceImage,
+                                        S.of(context).addReferenceImage,
                                         style: AppTextStyles.body16Medium
                                             .copyWith(
                                               color: Colors.grey.shade500,
@@ -205,11 +201,11 @@ class _TextToImageStep3DescribeState extends State<TextToImageStep3Describe> {
 
           SizedBox(height: 40.h),
           CustomButton(
-            text: AppStrings.generateDesign,
+            text: S.of(context).generateDesign,
             onPressed: widget.onGenerate,
             prefixIcon: AppImages.startGenerateIcon,
           ),
-          SizedBox(height: 24.h), 
+          SizedBox(height: 24.h),
         ],
       ),
     );

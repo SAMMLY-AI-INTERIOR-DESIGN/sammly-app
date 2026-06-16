@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/custombutton.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class Step3Describe extends StatelessWidget {
   final TextEditingController promptController;
@@ -30,7 +31,7 @@ class Step3Describe extends StatelessWidget {
               ),
               SizedBox(width: 8.w),
               Text(
-                "Describe The Changes",
+                S.of(context).describeYourChanges,
                 style: AppTextStyles.title20SemiBold.copyWith(
                   color: AppColors.blackColor,
                 ),
@@ -55,17 +56,23 @@ class Step3Describe extends StatelessWidget {
                   color: AppColors.blackColor2,
                 ),
                 decoration: InputDecoration(
-                  hintText: "Describe the changes you want.......",
+                  hintText: S.of(context).describeChangesHint,
                   hintStyle: AppTextStyles.body14Regular.copyWith(
                     color: Colors.grey.shade500,
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
-                    borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+                    borderSide: BorderSide(
+                      color: Colors.grey.shade300,
+                      width: 1,
+                    ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
-                    borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+                    borderSide: BorderSide(
+                      color: Colors.grey.shade300,
+                      width: 1,
+                    ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
@@ -83,7 +90,7 @@ class Step3Describe extends StatelessWidget {
           ),
 
           SizedBox(height: 16.h),
-          CustomButton(text: "Generate Design", onPressed: onGenerate),
+          CustomButton(text: S.of(context).generateDesignBtn, onPressed: onGenerate),
           SizedBox(height: 24.h),
         ],
       ),

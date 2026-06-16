@@ -28,11 +28,22 @@ class AuthRepo {
       );
 
       // 201 or success:true → account created, verification code sent
-      if (response.data['success'] == true || response.data['status'] == 'success' || response.statusCode == 201) {
-        final successMsg = response.data['message'] ?? response.data['msg'] ?? (response.data['data'] is Map ? (response.data['data']['msg'] ?? response.data['data']['message']) : null);
+      if (response.data['success'] == true ||
+          response.data['status'] == 'success' ||
+          response.statusCode == 201) {
+        final successMsg =
+            response.data['message'] ??
+            response.data['msg'] ??
+            (response.data['data'] is Map
+                ? (response.data['data']['msg'] ??
+                      response.data['data']['message'])
+                : null);
         return right(successMsg?.toString() ?? 'Account created successfully.');
       } else {
-        final msg = response.data['message']?.toString() ?? response.data['msg']?.toString() ?? '';
+        final msg =
+            response.data['message']?.toString() ??
+            response.data['msg']?.toString() ??
+            '';
         if (_isVerificationError(msg)) {
           return left('EMAIL_NOT_VERIFIED');
         }
@@ -41,7 +52,9 @@ class AuthRepo {
     } on DioException catch (e) {
       final statusCode = e.response?.statusCode;
       final msg = _extractErrorMessage(e);
-      print('❌ Register DioException: statusCode=$statusCode, msg=$msg, data=${e.response?.data}');
+      print(
+        '❌ Register DioException: statusCode=$statusCode, msg=$msg, data=${e.response?.data}',
+      );
       if (statusCode == 409) {
         if (_isVerificationError(msg)) {
           return left('EMAIL_NOT_VERIFIED:$msg');
@@ -49,12 +62,16 @@ class AuthRepo {
           return left(msg.isNotEmpty ? msg : 'Email already exists.');
         }
       } else if (statusCode == 403) {
-        return left(msg.isNotEmpty ? msg : 'Your account has been deactivated.');
+        return left(
+          msg.isNotEmpty ? msg : 'Your account has been deactivated.',
+        );
       } else if (statusCode == 429) {
         // Always route to verification screen on 429, but pass the wait message
-        return left('EMAIL_NOT_VERIFIED:${msg.isNotEmpty ? msg : 'Too many requests. Please wait.'}');
+        return left(
+          'EMAIL_NOT_VERIFIED:${msg.isNotEmpty ? msg : 'Too many requests. Please wait.'}',
+        );
       }
-      
+
       if (_isVerificationError(msg)) {
         return left('EMAIL_NOT_VERIFIED:$msg');
       }
@@ -74,18 +91,24 @@ class AuthRepo {
     try {
       final response = await DioHelper.postData(
         endPoint: ApiConstants.verifyEmail,
-        data: {
-          'email': email,
-          'code': code,
-        },
+        data: {'email': email, 'code': code},
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201 || response.data['success'] == true || response.data['status']?.toString().toLowerCase() == 'success') {
+      if (response.statusCode == 200 ||
+          response.statusCode == 201 ||
+          response.data['success'] == true ||
+          response.data['status']?.toString().toLowerCase() == 'success') {
         final token = response.data['data']?['token'];
         if (token != null) {
           await SharedPref.saveData(key: 'jwt', value: token);
         }
-        final successMsg = response.data['message'] ?? response.data['msg'] ?? (response.data['data'] is Map ? (response.data['data']['msg'] ?? response.data['data']['message']) : null);
+        final successMsg =
+            response.data['message'] ??
+            response.data['msg'] ??
+            (response.data['data'] is Map
+                ? (response.data['data']['msg'] ??
+                      response.data['data']['message'])
+                : null);
         return right(successMsg?.toString() ?? 'Email verified.');
       } else {
         return left('Verification failed.');
@@ -105,14 +128,23 @@ class AuthRepo {
     try {
       final response = await DioHelper.postData(
         endPoint: ApiConstants.resendVerificationCode,
-        data: {
-          'email': email,
-        },
+        data: {'email': email},
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201 || response.data['success'] == true || response.data['status']?.toString().toLowerCase() == 'success') {
-        final successMsg = response.data['message'] ?? response.data['msg'] ?? (response.data['data'] is Map ? (response.data['data']['msg'] ?? response.data['data']['message']) : null);
-        return right(successMsg?.toString() ?? 'Verification code resent successfully.');
+      if (response.statusCode == 200 ||
+          response.statusCode == 201 ||
+          response.data['success'] == true ||
+          response.data['status']?.toString().toLowerCase() == 'success') {
+        final successMsg =
+            response.data['message'] ??
+            response.data['msg'] ??
+            (response.data['data'] is Map
+                ? (response.data['data']['msg'] ??
+                      response.data['data']['message'])
+                : null);
+        return right(
+          successMsg?.toString() ?? 'Verification code resent successfully.',
+        );
       } else {
         return left('Failed to resend verification code.');
       }
@@ -132,21 +164,23 @@ class AuthRepo {
     try {
       final response = await DioHelper.postData(
         endPoint: ApiConstants.login,
-        data: {
-          'email': email,
-          'password': password,
-        },
+        data: {'email': email, 'password': password},
       );
 
-      print('📋 Login response: statusCode=${response.statusCode}, data=${response.data}');
-      if (response.data['success'] == true || response.data['status'] == 'success') {
+      print(
+        '📋 Login response: statusCode=${response.statusCode}, data=${response.data}',
+      );
+      if (response.data['success'] == true ||
+          response.data['status'] == 'success') {
         final token = response.data['data']?['token'] ?? response.data['token'];
         if (token != null) {
           // Decode JWT to check for 'pending' status
           try {
             final parts = token.split('.');
             if (parts.length == 3) {
-              final payloadStr = utf8.decode(base64Url.decode(base64Url.normalize(parts[1])));
+              final payloadStr = utf8.decode(
+                base64Url.decode(base64Url.normalize(parts[1])),
+              );
               final payload = jsonDecode(payloadStr);
               if (payload['status'] == 'pending') {
                 return left('EMAIL_NOT_VERIFIED');
@@ -156,10 +190,19 @@ class AuthRepo {
 
           await SharedPref.saveData(key: 'jwt', value: token);
         }
-        final successMsg = response.data['message'] ?? response.data['msg'] ?? (response.data['data'] is Map ? (response.data['data']['msg'] ?? response.data['data']['message']) : null);
+        final successMsg =
+            response.data['message'] ??
+            response.data['msg'] ??
+            (response.data['data'] is Map
+                ? (response.data['data']['msg'] ??
+                      response.data['data']['message'])
+                : null);
         return right(successMsg?.toString() ?? 'Logged in.');
       } else {
-        final msg = response.data['message']?.toString() ?? response.data['msg']?.toString() ?? '';
+        final msg =
+            response.data['message']?.toString() ??
+            response.data['msg']?.toString() ??
+            '';
         if (_isVerificationError(msg)) {
           return left('EMAIL_NOT_VERIFIED');
         }
@@ -168,7 +211,9 @@ class AuthRepo {
     } on DioException catch (e) {
       final statusCode = e.response?.statusCode;
       final msg = _extractErrorMessage(e);
-      print('❌ Login DioException: statusCode=$statusCode, msg=$msg, data=${e.response?.data}');
+      print(
+        '❌ Login DioException: statusCode=$statusCode, msg=$msg, data=${e.response?.data}',
+      );
       if (statusCode == 409) {
         if (_isVerificationError(msg)) {
           return left('EMAIL_NOT_VERIFIED:$msg');
@@ -179,11 +224,15 @@ class AuthRepo {
         if (_isVerificationError(msg)) {
           return left('EMAIL_NOT_VERIFIED:$msg');
         } else {
-          return left(msg.isNotEmpty ? msg : 'Your account has been deactivated.');
+          return left(
+            msg.isNotEmpty ? msg : 'Your account has been deactivated.',
+          );
         }
       } else if (statusCode == 429) {
         // Always route to verification screen on 429, but pass the wait message
-        return left('EMAIL_NOT_VERIFIED:${msg.isNotEmpty ? msg : 'Too many requests. Please wait.'}');
+        return left(
+          'EMAIL_NOT_VERIFIED:${msg.isNotEmpty ? msg : 'Too many requests. Please wait.'}',
+        );
       }
 
       if (_isVerificationError(msg)) {
@@ -204,13 +253,20 @@ class AuthRepo {
     try {
       final response = await DioHelper.postData(
         endPoint: ApiConstants.forgotPassword,
-        data: {
-          'email': email,
-        },
+        data: {'email': email},
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201 || response.data['success'] == true || response.data['status']?.toString().toLowerCase() == 'success') {
-        final successMsg = response.data['message'] ?? response.data['msg'] ?? (response.data['data'] is Map ? (response.data['data']['msg'] ?? response.data['data']['message']) : null);
+      if (response.statusCode == 200 ||
+          response.statusCode == 201 ||
+          response.data['success'] == true ||
+          response.data['status']?.toString().toLowerCase() == 'success') {
+        final successMsg =
+            response.data['message'] ??
+            response.data['msg'] ??
+            (response.data['data'] is Map
+                ? (response.data['data']['msg'] ??
+                      response.data['data']['message'])
+                : null);
         return right(successMsg?.toString() ?? 'Reset code sent.');
       } else {
         return left('Failed to send reset code.');
@@ -230,14 +286,23 @@ class AuthRepo {
     try {
       final response = await DioHelper.postData(
         endPoint: ApiConstants.resendResetCode,
-        data: {
-          'email': email,
-        },
+        data: {'email': email},
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201 || response.data['success'] == true || response.data['status']?.toString().toLowerCase() == 'success') {
-        final successMsg = response.data['message'] ?? response.data['msg'] ?? (response.data['data'] is Map ? (response.data['data']['msg'] ?? response.data['data']['message']) : null);
-        return right(successMsg?.toString() ?? 'Reset code resent successfully.');
+      if (response.statusCode == 200 ||
+          response.statusCode == 201 ||
+          response.data['success'] == true ||
+          response.data['status']?.toString().toLowerCase() == 'success') {
+        final successMsg =
+            response.data['message'] ??
+            response.data['msg'] ??
+            (response.data['data'] is Map
+                ? (response.data['data']['msg'] ??
+                      response.data['data']['message'])
+                : null);
+        return right(
+          successMsg?.toString() ?? 'Reset code resent successfully.',
+        );
       } else {
         return left('Failed to resend reset code.');
       }
@@ -257,14 +322,20 @@ class AuthRepo {
     try {
       final response = await DioHelper.postData(
         endPoint: ApiConstants.verifyPasswordReset,
-        data: {
-          'email': email,
-          'code': code,
-        },
+        data: {'email': email, 'code': code},
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201 || response.data['success'] == true || response.data['status']?.toString().toLowerCase() == 'success') {
-        final successMsg = response.data['message'] ?? response.data['msg'] ?? (response.data['data'] is Map ? (response.data['data']['msg'] ?? response.data['data']['message']) : null);
+      if (response.statusCode == 200 ||
+          response.statusCode == 201 ||
+          response.data['success'] == true ||
+          response.data['status']?.toString().toLowerCase() == 'success') {
+        final successMsg =
+            response.data['message'] ??
+            response.data['msg'] ??
+            (response.data['data'] is Map
+                ? (response.data['data']['msg'] ??
+                      response.data['data']['message'])
+                : null);
         return right(successMsg?.toString() ?? 'Code verified.');
       } else {
         return left('Invalid or expired code.');
@@ -285,14 +356,20 @@ class AuthRepo {
     try {
       final response = await DioHelper.patchData(
         endPoint: ApiConstants.resetPassword,
-        data: {
-          'email': email,
-          'newPassword': newPassword,
-        },
+        data: {'email': email, 'newPassword': newPassword},
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201 || response.data['success'] == true || response.data['status']?.toString().toLowerCase() == 'success') {
-        final successMsg = response.data['message'] ?? response.data['msg'] ?? (response.data['data'] is Map ? (response.data['data']['msg'] ?? response.data['data']['message']) : null);
+      if (response.statusCode == 200 ||
+          response.statusCode == 201 ||
+          response.data['success'] == true ||
+          response.data['status']?.toString().toLowerCase() == 'success') {
+        final successMsg =
+            response.data['message'] ??
+            response.data['msg'] ??
+            (response.data['data'] is Map
+                ? (response.data['data']['msg'] ??
+                      response.data['data']['message'])
+                : null);
         return right(successMsg?.toString() ?? 'Password reset successfully.');
       } else {
         return left('Failed to reset password.');
@@ -314,20 +391,26 @@ class AuthRepo {
       final token = SharedPref.getData(key: 'jwt');
       final response = await DioHelper.patchData(
         endPoint: ApiConstants.changePassword,
-        data: {
-          'oldPassword': oldPassword,
-          'newPassword': newPassword,
-        },
+        data: {'oldPassword': oldPassword, 'newPassword': newPassword},
         token: token,
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201 || response.data['success'] == true || response.data['status']?.toString().toLowerCase() == 'success') {
+      if (response.statusCode == 200 ||
+          response.statusCode == 201 ||
+          response.data['success'] == true ||
+          response.data['status']?.toString().toLowerCase() == 'success') {
         // Save the new JWT if returned
         final newToken = response.data['data']?['token'];
         if (newToken != null) {
           await SharedPref.saveData(key: 'jwt', value: newToken);
         }
-        final successMsg = response.data['message'] ?? response.data['msg'] ?? (response.data['data'] is Map ? (response.data['data']['msg'] ?? response.data['data']['message']) : null);
+        final successMsg =
+            response.data['message'] ??
+            response.data['msg'] ??
+            (response.data['data'] is Map
+                ? (response.data['data']['msg'] ??
+                      response.data['data']['message'])
+                : null);
         return right(successMsg?.toString() ?? 'Password changed.');
       } else {
         return left('Failed to change password.');
@@ -345,7 +428,12 @@ class AuthRepo {
       try {
         final data = e.response!.data;
         if (data is Map) {
-          final msg = data['message'] ?? data['msg'] ?? (data['data'] is Map ? (data['data']['msg'] ?? data['data']['message']) : null);
+          final msg =
+              data['message'] ??
+              data['msg'] ??
+              (data['data'] is Map
+                  ? (data['data']['msg'] ?? data['data']['message'])
+                  : null);
           if (msg != null) return msg.toString();
         }
       } catch (_) {}
@@ -369,7 +457,13 @@ class AuthRepo {
     try {
       final data = e.response?.data;
       if (data is Map) {
-        return (data['message'] ?? data['msg'] ?? (data['data'] is Map ? (data['data']['msg'] ?? data['data']['message']) : null) ?? '').toString();
+        return (data['message'] ??
+                data['msg'] ??
+                (data['data'] is Map
+                    ? (data['data']['msg'] ?? data['data']['message'])
+                    : null) ??
+                '')
+            .toString();
       }
     } catch (_) {}
     return '';

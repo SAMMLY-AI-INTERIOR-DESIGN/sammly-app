@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:sammly/core/constant/app_colors.dart';
+import 'package:sammly/generated/l10n.dart';
 
 /// Helper class for downloading images to device gallery
 class ImageDownloadHelper {
@@ -13,26 +14,28 @@ class ImageDownloadHelper {
   ) async {
     try {
       // Show loading snackbar
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Row(
-            children: [
-              SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: Colors.white,
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-              SizedBox(width: 12),
-              Text('Downloading image...'),
-            ],
+                const SizedBox(width: 12),
+                Text(S.of(context).downloadingImage),
+              ],
+            ),
+            duration: const Duration(seconds: 10),
+            backgroundColor: AppColors.primaryColor,
           ),
-          duration: Duration(seconds: 10),
-          backgroundColor: AppColors.primaryColor,
-        ),
-      );
+        );
 
       // Download image bytes
       final response = await http.get(Uri.parse(imageUrl));
@@ -48,27 +51,28 @@ class ImageDownloadHelper {
       );
 
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-
       if (result != null && result['isSuccess'] == true) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Image saved to gallery successfully!'),
-            backgroundColor: Colors.green,
-          ),
-        );
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              content: Text(S.of(context).imageSavedSuccess),
+              backgroundColor: Colors.green,
+            ),
+          );
       } else {
         throw Exception('Failed to save image');
       }
     } catch (e) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error saving image: $e'),
-          backgroundColor: AppColors.redColor,
-        ),
-      );
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(S.of(context).errorSavingImage(e.toString())),
+            backgroundColor: AppColors.redColor,
+          ),
+        );
     }
   }
 
@@ -83,23 +87,27 @@ class ImageDownloadHelper {
       if (!context.mounted) return;
 
       if (result != null && result['isSuccess'] == true) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Image saved to gallery successfully!'),
-            backgroundColor: Colors.green,
-          ),
-        );
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              content: Text(S.of(context).imageSavedSuccess),
+              backgroundColor: Colors.green,
+            ),
+          );
       } else {
         throw Exception('Failed to save image');
       }
     } catch (e) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error saving image: $e'),
-          backgroundColor: AppColors.redColor,
-        ),
-      );
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(S.of(context).errorSavingImage(e.toString())),
+            backgroundColor: AppColors.redColor,
+          ),
+        );
     }
   }
 
@@ -118,23 +126,27 @@ class ImageDownloadHelper {
       if (!context.mounted) return;
 
       if (result != null && result['isSuccess'] == true) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Image saved to gallery successfully!'),
-            backgroundColor: Colors.green,
-          ),
-        );
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              content: Text(S.of(context).imageSavedSuccess),
+              backgroundColor: Colors.green,
+            ),
+          );
       } else {
         throw Exception('Failed to save image');
       }
     } catch (e) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error saving image: $e'),
-          backgroundColor: AppColors.redColor,
-        ),
-      );
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(S.of(context).errorSavingImage(e.toString())),
+            backgroundColor: AppColors.redColor,
+          ),
+        );
     }
   }
 }

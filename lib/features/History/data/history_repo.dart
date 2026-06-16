@@ -24,10 +24,7 @@ class HistoryRepo {
 
       final response = await DioHelper.getData(
         endPoint: ApiConstants.designHistory,
-        queryParameters: {
-          'page': page,
-          'limit': limit,
-        },
+        queryParameters: {'page': page, 'limit': limit},
         token: token,
       );
 
@@ -36,7 +33,9 @@ class HistoryRepo {
         return right(HistoryResponse.fromJson(data));
       } else {
         log(response.data.toString());
-        return left(response.data['message'] ?? 'Failed to load design history.');
+        return left(
+          response.data['message'] ?? 'Failed to load design history.',
+        );
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
@@ -52,10 +51,13 @@ class HistoryRepo {
         final data = e.response!.data;
         log('API Error Response: $data');
         if (data is Map) {
-          final msg = data['message']
-              ?? data['msg']
-              ?? data['error']
-              ?? (data['errors'] is List ? (data['errors'] as List).join(', ') : null);
+          final msg =
+              data['message'] ??
+              data['msg'] ??
+              data['error'] ??
+              (data['errors'] is List
+                  ? (data['errors'] as List).join(', ')
+                  : null);
           if (msg != null) return msg.toString();
         }
       } catch (_) {}

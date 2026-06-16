@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/custom_stepper.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/step_1_upload.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/step_2_mask.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class RemoveView extends StatefulWidget {
   const RemoveView({super.key});
@@ -42,8 +42,8 @@ class _RemoveViewState extends State<RemoveView> {
     return Scaffold(
       appBar: CustomAppbar(
         title: _currentStep == 0
-            ? AppStrings.uploadRoom
-            : AppStrings.removeObject,
+            ? S.of(context).uploadRoom
+            : S.of(context).removeObject,
         onBack: _previousStep,
       ),
       body: Column(
@@ -53,14 +53,14 @@ class _RemoveViewState extends State<RemoveView> {
             padding: EdgeInsets.symmetric(horizontal: 80.w),
             child: CustomStepper(
               currentStep: _currentStep,
-              stepTitles: const [AppStrings.upload, AppStrings.mask],
+              stepTitles: [S.of(context).upload, S.of(context).mask],
             ),
           ),
           Expanded(
             child: _currentStep == 0
                 ? Step1Upload(
-                  title: AppStrings.uploadReferenceImage,
-                    subtitle: AppStrings.addReferenceImageOnly,
+                    title: S.of(context).uploadReferenceImage,
+                    subtitle: S.of(context).addReferenceImageOnly,
                     initialImage: _selectedImage,
                     onImageSelected: (image) {
                       setState(() {
@@ -76,7 +76,7 @@ class _RemoveViewState extends State<RemoveView> {
                   )
                 : Step2Mask(
                     uploadedImage: _selectedImage!,
-                    buttonText: AppStrings.remove,
+                    buttonText: S.of(context).remove,
                     onNext: (mask) {
                       Navigator.pushNamed(
                         context,

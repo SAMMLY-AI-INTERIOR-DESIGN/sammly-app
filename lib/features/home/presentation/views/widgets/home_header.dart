@@ -1,15 +1,14 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:sammly/core/constant/app_colors.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/avatar_widget.dart';
 import 'package:sammly/features/home/logic/home_cubit.dart';
 import 'package:sammly/features/home/logic/home_state.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:sammly/features/layout/presentation/cubit/layout_cubit/layout_cubit.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
@@ -27,10 +26,7 @@ class HomeHeader extends StatelessWidget {
         final displayName = home?.name ?? profile?.name;
 
         return Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 24.0,
-            vertical: 16.0,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -57,10 +53,12 @@ class HomeHeader extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     RichText(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       text: TextSpan(
                         style: AppTextStyles.title18SemiBold,
                         children: [
-                          TextSpan(text: '${AppStrings.greetingPrefix} '),
+                          TextSpan(text: '${S.of(context).greetingPrefix} '),
                           TextSpan(
                             text: displayName ?? '...',
                             style: AppTextStyles.title18SemiBold,
@@ -70,7 +68,7 @@ class HomeHeader extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      AppStrings.subtitle,
+                      S.of(context).subtitle,
                       style: AppTextStyles.badge14SemiBold.copyWith(
                         color: const Color.fromARGB(255, 122, 145, 154),
                       ),

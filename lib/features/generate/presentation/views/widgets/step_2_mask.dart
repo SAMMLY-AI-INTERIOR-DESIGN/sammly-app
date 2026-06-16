@@ -7,19 +7,20 @@ import 'package:flutter_mask_painter/mask_painter_controller.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sammly/core/utils/image_download_helper.dart';
 import 'package:sammly/core/constant/app_colors.dart';
+import 'package:sammly/generated/l10n.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/custombutton.dart';
 
 class Step2Mask extends StatefulWidget {
   final XFile uploadedImage;
   final Function(XFile) onNext;
-  final String buttonText;
+  final String? buttonText;
 
   const Step2Mask({
     super.key,
     required this.uploadedImage,
     required this.onNext,
-    this.buttonText = "Next",
+    this.buttonText,
   });
 
   @override
@@ -50,26 +51,28 @@ class _Step2MaskState extends State<Step2Mask> {
       if (!mounted) return;
 
       // Show loading snackbar
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Row(
-            children: [
-              SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: Colors.white,
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-              SizedBox(width: 12),
-              Text('Saving image to gallery...'),
-            ],
+                SizedBox(width: 12),
+                Text(S.of(context).savingImage),
+              ],
+            ),
+            duration: Duration(seconds: 10),
+            backgroundColor: AppColors.primaryColor,
           ),
-          duration: Duration(seconds: 10),
-          backgroundColor: AppColors.primaryColor,
-        ),
-      );
+        );
 
       // 1. Save mask to get the mask file matching original resolution/aspect ratio
       final XFile? maskFile = await _controller.saveMask();
@@ -149,17 +152,17 @@ class _Step2MaskState extends State<Step2Mask> {
       final Uint8List pngBytes = byteData.buffer.asUint8List();
 
       if (!mounted) return;
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
       await ImageDownloadHelper.saveBytesToGallery(context, pngBytes);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error saving image: $e'),
-          backgroundColor: AppColors.redColor,
-        ),
-      );
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(S.of(context).errorSavingImage(e.toString())),
+            backgroundColor: Colors.red,
+          ),
+        );
     }
   }
 
@@ -174,12 +177,14 @@ class _Step2MaskState extends State<Step2Mask> {
         widget.onNext(maskFile);
       } else {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to extract mask. Please try again.'),
-            backgroundColor: AppColors.redColor,
-          ),
-        );
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              content: Text(S.of(context).failedToExtractMask),
+              backgroundColor: Colors.red,
+            ),
+          );
       }
     } catch (e) {
       debugPrint("Error extracting mask: $e");
@@ -200,7 +205,7 @@ class _Step2MaskState extends State<Step2Mask> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8.r),
-          border: Border.all(color: Colors.blue.withOpacity(0.3)),
+          border: Border.all(color: Colors.blue.withValues(alpha: 0.3)),
           boxShadow: const [
             BoxShadow(
               color: Colors.black12,
@@ -222,7 +227,7 @@ class _Step2MaskState extends State<Step2Mask> {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.w),
           child: Text(
-            "Draw the Mask",
+            S.of(context).drawMaskTitle,
             style: AppTextStyles.title20SemiBold.copyWith(
               color: AppColors.blackColor,
             ),
@@ -277,7 +282,7 @@ class _Step2MaskState extends State<Step2Mask> {
                     min: 5.0,
                     max: 50.0,
                     activeColor: Colors.blue,
-                    inactiveColor: Colors.blue.withOpacity(0.3),
+                    inactiveColor: Colors.blue.withValues(alpha: 0.3),
                     onChanged: (val) {
                       setState(() {
                         _brushSize = val;
@@ -334,7 +339,10 @@ class _Step2MaskState extends State<Step2Mask> {
                     color: AppColors.secondaryColor,
                   ),
                 )
-              : CustomButton(text: widget.buttonText, onPressed: _extractAndProceed),
+              : CustomButton(
+                  text: widget.buttonText ?? S.of(context).next,
+                  onPressed: _extractAndProceed,
+                ),
         ),
         SizedBox(height: 16.h),
       ],

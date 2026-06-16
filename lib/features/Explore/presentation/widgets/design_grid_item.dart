@@ -79,7 +79,7 @@ class _DesignGridItemState extends State<DesignGridItem> {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Colors.black.withOpacity(0.3), Colors.transparent],
+                colors: [Colors.black.withValues(alpha: 0.3), Colors.transparent],
                 stops: const [0.0, 0.3],
               ),
             ),
@@ -87,9 +87,9 @@ class _DesignGridItemState extends State<DesignGridItem> {
 
           // أيقونة القلب
           if (widget.showLikeButton)
-            Positioned(
+            PositionedDirectional(
               top: 8.h,
-              right: 8.w,
+              end: 8.w,
               child: GestureDetector(
                 onTap: () {
                   setState(() {

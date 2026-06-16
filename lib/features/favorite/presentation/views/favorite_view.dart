@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_colors.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
 import 'package:sammly/features/favorite/presentation/views/widgets/favorite_grid_view.dart';
 import 'package:sammly/features/favorite/presentation/views/widgets/filter_bar.dart';
-
+import 'package:sammly/generated/l10n.dart';
 
 class FavoriteView extends StatefulWidget {
   const FavoriteView({super.key});
@@ -27,7 +26,7 @@ class _FavoriteViewState extends State<FavoriteView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CustomAppbar(title: AppStrings.favorite),
+      appBar: CustomAppbar(title: S.of(context).favorite),
       body: SafeArea(
         child: Column(
           children: [

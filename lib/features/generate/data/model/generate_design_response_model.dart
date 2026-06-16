@@ -8,7 +8,6 @@ class GenerateDesignResponseModel {
   final String prompt;
   final String? aspectRatio;
 
-
   GenerateDesignResponseModel({
     required this.id,
     required this.style,

@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/functions.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/theme/text_styles.dart';
@@ -12,6 +11,7 @@ import 'package:sammly/features/generate/data/repo/generate_design_repo.dart';
 import 'package:sammly/features/generate_loading/presentation/cubits/loading_cubit.dart';
 import 'package:sammly/features/generate_loading/presentation/cubits/loading_states.dart';
 import 'package:sammly/features/home/logic/home_cubit.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class GenerationLoadingWrapper extends StatelessWidget {
   final Map<String, dynamic>? arguments;
@@ -23,13 +23,6 @@ class GenerationLoadingWrapper extends StatelessWidget {
     AppImages.generateLoading2,
     AppImages.generateLoading3,
     AppImages.generateLoading4,
-  ];
-
-  final List<String> titles = const [
-    AppStrings.yourRoomIsComingSoon,
-    AppStrings.yourRoomIsComingSoon,
-    AppStrings.addingDetails,
-    AppStrings.addingDetails,
   ];
 
   @override
@@ -125,6 +118,13 @@ class GenerationLoadingWrapper extends StatelessWidget {
                   currentStep = state.stepIndex;
                 }
 
+                final List<String> titles = [
+                  S.of(context).yourRoomIsComingSoon,
+                  S.of(context).yourRoomIsComingSoon,
+                  S.of(context).addingDetails,
+                  S.of(context).addingDetails,
+                ];
+
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -160,7 +160,7 @@ class GenerationLoadingWrapper extends StatelessWidget {
 
                     // Disclaimer text
                     Text(
-                      AppStrings.loadingDisclaimer,
+                      S.of(context).loadingDisclaimer,
                       textAlign: TextAlign.center,
                       style: AppTextStyles.body14Regular.copyWith(
                         color: Colors.grey.shade500,

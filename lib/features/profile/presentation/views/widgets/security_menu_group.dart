@@ -10,13 +10,14 @@ class SecurityMenuGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 16.h),
+      margin: EdgeInsetsDirectional.only(bottom: 16.h),
       decoration: BoxDecoration(
         color: AppColors.textFieldBodyColor,
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min, // 💡 دي اللي هتلم خلفية شاشة الـ Security
+        mainAxisSize:
+            MainAxisSize.min, // 💡 دي اللي هتلم خلفية شاشة الـ Security
         children: List.generate(children.length, (index) {
           return Column(
             mainAxisSize: MainAxisSize.min,

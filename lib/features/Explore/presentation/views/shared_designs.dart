@@ -11,6 +11,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/core/theme/text_styles.dart';
+import 'package:sammly/generated/l10n.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_state.dart';
 
@@ -24,17 +25,16 @@ class SharedDesignsView extends StatefulWidget {
 class _SharedDesignsViewState extends State<SharedDesignsView>
     with TickerProviderStateMixin {
   // Sort options
-  final List<String> _sortOptions = ['Most liked', 'Most recent'];
-  String _selectedSort = 'Most liked';
+  final List<String> _sortOptions = ['likes', 'latest'];
+  String _selectedSort = 'likes';
 
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
 
   late final AnimationController _gridAnimController;
 
-  // Map UI sort labels to API sort values
-  String _sortApiValue(String uiLabel) {
-    return uiLabel == 'Most liked' ? 'likes' : 'latest';
+  String _getSortLabel(BuildContext context, String sort) {
+    return sort == 'likes' ? S.of(context).mostLiked : S.of(context).mostRecent;
   }
 
   @override
@@ -49,7 +49,7 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
     // Fetch initial data only if empty
     final cubit = context.read<ExploreCubit>();
     if (cubit.currentDesigns.isEmpty) {
-      cubit.fetchExplore(sort: _sortApiValue(_selectedSort));
+      cubit.fetchExplore(sort: _selectedSort);
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -79,33 +79,36 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(gradient: AppColors.scafoldBgGradient),
-        child: BlocListener<FavoriteCubit, FavoriteState>(
+      backgroundColor: AppColors.whiteColor,
+      body: BlocListener<FavoriteCubit, FavoriteState>(
           listener: (context, state) {
             if (state is FavoriteToggleSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: AppColors.primaryColor,
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                    backgroundColor: AppColors.primaryColor,
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
             } else if (state is FavoriteToggleError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.red,
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                    backgroundColor: Colors.red,
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
             }
           },
           child: SafeArea(
             child: Column(
               children: [
-                const CustomAppbar(
-                  title: 'Shared Designs',
+                CustomAppbar(
+                  title: S.of(context).sharedDesigns,
                   backgroundColor: Colors.transparent,
                 ),
                 SizedBox(height: 4.h),
@@ -118,7 +121,6 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
             ),
           ),
         ),
-      ),
     );
   }
 
@@ -128,15 +130,15 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
       child: Container(
         height: 50.h,
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.85),
+          color: AppColors.bg1Color,
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
-            color: AppColors.secondaryColor.withOpacity(0.15),
+            color: AppColors.secondaryColor.withValues(alpha: 0.15),
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: AppColors.primaryColor.withOpacity(0.06),
+              color: AppColors.primaryColor.withValues(alpha: 0.06),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -153,7 +155,7 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
           decoration: InputDecoration(
             hintText: 'Search designs...',
             hintStyle: TextStyle(
-              color: AppColors.greyColor.withOpacity(0.6),
+              color: AppColors.greyColor.withValues(alpha: 0.6),
               fontSize: 14.sp,
               fontFamily: 'Manrope',
               fontWeight: FontWeight.w400,
@@ -189,7 +191,7 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
 
   Widget _buildSortBar() {
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: AlignmentDirectional.centerStart,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -197,16 +199,14 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
           children: _sortOptions.map((option) {
             final isSelected = option == _selectedSort;
             return Padding(
-              padding: EdgeInsets.only(right: 8.w),
+              padding: EdgeInsetsDirectional.only(end: 8.w),
               child: GestureDetector(
                 onTap: () {
                   if (_selectedSort == option) return;
                   setState(() {
                     _selectedSort = option;
                   });
-                  context.read<ExploreCubit>().changeSort(
-                    _sortApiValue(option),
-                  );
+                  context.read<ExploreCubit>().changeSort(_selectedSort);
                   _gridAnimController.reset();
                   _gridAnimController.forward();
                 },
@@ -234,7 +234,7 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        option == 'Most liked'
+                        option == 'likes'
                             ? Icons.favorite_rounded
                             : Icons.access_time_rounded,
                         color: isSelected
@@ -244,7 +244,7 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
                       ),
                       SizedBox(width: 6.w),
                       Text(
-                        option,
+                        _getSortLabel(context, option),
                         style: TextStyle(
                           color: isSelected
                               ? Colors.white
@@ -299,10 +299,10 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
                 SizedBox(height: 12.h),
                 TextButton(
                   onPressed: () => context.read<ExploreCubit>().fetchExplore(
-                    sort: _sortApiValue(_selectedSort),
+                    sort: _selectedSort,
                   ),
                   child: Text(
-                    'Retry',
+                    S.of(context).retry,
                     style: TextStyle(
                       color: AppColors.primaryColor,
                       fontSize: 14.sp,
@@ -327,9 +327,12 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(AppImages.noImage),
-                  Text('No Shared Designs', style: AppTextStyles.title20Bold),
                   Text(
-                    'No shared designs found',
+                    S.of(context).noSharedDesigns,
+                    style: AppTextStyles.title20Bold,
+                  ),
+                  Text(
+                    S.of(context).noSharedDesignsFound,
                     style: AppTextStyles.body16Regular.copyWith(
                       color: AppColors.greyColor.withValues(alpha: 0.6),
                     ),
@@ -356,30 +359,40 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
                     final design = designs[index];
 
                     // Staggered height
-                    final List<double> itemHeights = [1.2, 0.85, 1.4, 0.9, 1.0, 1.3, 0.8, 1.1];
-                    final baseWidth = (MediaQuery.of(context).size.width - 44.w) / 2;
-                    final itemHeight = baseWidth * itemHeights[index % itemHeights.length];
+                    final List<double> itemHeights = [
+                      1.2,
+                      0.85,
+                      1.4,
+                      0.9,
+                      1.0,
+                      1.3,
+                      0.8,
+                      1.1,
+                    ];
+                    final baseWidth =
+                        (MediaQuery.of(context).size.width - 44.w) / 2;
+                    final itemHeight =
+                        baseWidth * itemHeights[index % itemHeights.length];
 
                     final gridItem = GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(
+                      onTap: () async {
+                        await Navigator.pushNamed(
                           context,
                           AppRoutes.sharedDesignDetailsView,
                           arguments: design.id,
-                        ).then((_) {
-                          // Refresh explore data when returning from details
-                          if (mounted) {
-                            context.read<ExploreCubit>().fetchExplore(
-                              sort: _sortApiValue(_selectedSort),
-                            );
-                          }
-                        });
+                        );
+                        if (!context.mounted) return;
+                        context.read<ExploreCubit>().fetchExplore(
+                          sort: _selectedSort,
+                        );
                       },
                       child: SizedBox(
                         height: itemHeight,
                         child: BlocBuilder<FavoriteCubit, FavoriteState>(
                           builder: (context, favState) {
-                            final isFav = context.read<FavoriteCubit>().isFavorite(design.id);
+                            final isFav = context
+                                .read<FavoriteCubit>()
+                                .isFavorite(design.id);
                             return DesignGridItem(
                               imageUrl: design.imageUrl,
                               initialIsLiked: isFav,
@@ -398,16 +411,17 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
                     // Only animate the first 8 items for performance
                     if (index < 8) {
                       final delay = index * 0.12;
-                      final animation = Tween<double>(begin: 0.0, end: 1.0).animate(
-                        CurvedAnimation(
-                          parent: _gridAnimController,
-                          curve: Interval(
-                            delay.clamp(0.0, 0.8),
-                            (delay + 0.4).clamp(0.0, 1.0),
-                            curve: Curves.easeOutCubic,
-                          ),
-                        ),
-                      );
+                      final animation = Tween<double>(begin: 0.0, end: 1.0)
+                          .animate(
+                            CurvedAnimation(
+                              parent: _gridAnimController,
+                              curve: Interval(
+                                delay.clamp(0.0, 0.8),
+                                (delay + 0.4).clamp(0.0, 1.0),
+                                curve: Curves.easeOutCubic,
+                              ),
+                            ),
+                          );
                       return AnimatedBuilder(
                         animation: animation,
                         builder: (context, child) {

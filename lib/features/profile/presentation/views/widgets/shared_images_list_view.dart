@@ -61,15 +61,17 @@ class _SharedImagesListViewState extends State<SharedImagesListView> {
         final designId = _sharedIds[index];
 
         return BlocProvider(
-          create: (context) => DesignDetailsCubit(DesignDetailsRepo())..fetchDesignDetails(designId),
+          create: (context) =>
+              DesignDetailsCubit(DesignDetailsRepo())
+                ..fetchDesignDetails(designId),
           child: BlocBuilder<DesignDetailsCubit, DesignDetailsState>(
             builder: (context, state) {
               if (state is DesignDetailsLoaded) {
                 final design = state.design;
                 final title = '${design.style} design'.trim();
-                
+
                 _updateLikes(design.id, design.likesCount);
-                
+
                 final item = SharedImageModel(
                   title: title.isEmpty ? 'Unknown Design' : title,
                   description: design.prompt,

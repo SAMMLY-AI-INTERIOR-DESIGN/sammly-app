@@ -34,7 +34,8 @@ import 'package:sammly/features/Explore/presentation/views/browse_design_details
 import 'package:sammly/features/Explore/presentation/views/shared_design_details_view.dart';
 import 'package:sammly/features/Explore/presentation/views/user_profile_view.dart';
 import 'package:sammly/features/subscrition/presentation/views/subscription_view.dart';
-import 'package:sammly/features/Explore/presentation/views/choose_room.dart' as choose_room;
+import 'package:sammly/features/Explore/presentation/views/choose_room.dart'
+    as choose_room;
 
 abstract class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -207,10 +208,10 @@ abstract class AppRouter {
         );
 
       case AppRoutes.generateLoadingView:
-      final args = settings.arguments as Map<String, dynamic>?;
+        final args = settings.arguments as Map<String, dynamic>?;
         return MaterialPageRoute(
           builder: (context) {
-            return GenerationLoadingWrapper(arguments: args,);
+            return GenerationLoadingWrapper(arguments: args);
           },
         );
 
@@ -262,7 +263,8 @@ abstract class AppRouter {
         final imageUrl = args?['imageUrl'] as String?;
         final designId = args?['designId'] as String?;
         final designs = args?['designs']; // Add this
-        final originalImageUrl = args?['originalImageUrl'] as String?; // Add this
+        final originalImageUrl =
+            args?['originalImageUrl'] as String?; // Add this
         final isFromStepper = args?['isFromStepper'] as bool? ?? false;
         return MaterialPageRoute(
           builder: (context) {
@@ -287,7 +289,7 @@ abstract class AppRouter {
       case AppRoutes.chooseRoom:
         return MaterialPageRoute(
           builder: (context) {
-            return const choose_room.ExploreView(); 
+            return const choose_room.ExploreView();
           },
         );
 

@@ -83,8 +83,8 @@ class SimilarItemCard extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 12.w),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+                  begin: AlignmentDirectional.topStart,
+                  end: AlignmentDirectional.bottomEnd,
                   colors: [Color(0xFFE5F6F2), Color(0xFFEBF2FB)],
                 ),
                 borderRadius: BorderRadius.only(

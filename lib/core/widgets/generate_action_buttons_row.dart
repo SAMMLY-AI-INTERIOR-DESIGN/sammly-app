@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/utils/image_download_helper.dart';
 import 'package:sammly/core/widgets/custom_action_button.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class GenerateActionButtonsRow extends StatelessWidget {
   final VoidCallback? onEdit;
@@ -27,7 +28,7 @@ class GenerateActionButtonsRow extends StatelessWidget {
       children: [
         Expanded(
           child: CustomActionButton(
-            title: 'Edit',
+            title: S.of(context).editBtn,
             iconPath: AppImages.edit,
             onTap: onEdit ?? () {},
           ),
@@ -35,7 +36,7 @@ class GenerateActionButtonsRow extends StatelessWidget {
         SizedBox(width: 8.w),
         Expanded(
           child: CustomActionButton(
-            title: isShared ? 'Shared' : 'Share',
+            title: isShared ? S.of(context).shared : S.of(context).share,
             iconPath: AppImages.postIcon,
             onTap: onShare ?? () {},
             isDisabled: isShared,
@@ -44,13 +45,18 @@ class GenerateActionButtonsRow extends StatelessWidget {
         SizedBox(width: 8.w),
         Expanded(
           child: CustomActionButton(
-            title: 'Download',
+            title: S.of(context).downloadBtn,
             iconPath: AppImages.downloadIcon,
-            onTap: onDownload ?? () {
-              if (imageUrl != null && imageUrl!.isNotEmpty) {
-                ImageDownloadHelper.downloadNetworkImage(context, imageUrl!);
-              }
-            },
+            onTap:
+                onDownload ??
+                () {
+                  if (imageUrl != null && imageUrl!.isNotEmpty) {
+                    ImageDownloadHelper.downloadNetworkImage(
+                      context,
+                      imageUrl!,
+                    );
+                  }
+                },
           ),
         ),
       ],

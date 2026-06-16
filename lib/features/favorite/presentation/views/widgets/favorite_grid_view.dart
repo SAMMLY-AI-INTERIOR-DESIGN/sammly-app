@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:sammly/core/constant/app_images.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/widgets/no_data_widget.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_state.dart';
 import 'package:sammly/features/favorite/presentation/views/widgets/favorite_heart_item.dart';
 import 'package:sammly/core/routing/routes.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class FavoriteGridView extends StatefulWidget {
   const FavoriteGridView({super.key});
@@ -22,14 +22,14 @@ class _FavoriteGridViewState extends State<FavoriteGridView> {
 
   // Heights to simulate staggered look
   final List<double> _itemHeights = [
-    1.2,  // tall
+    1.2, // tall
     0.85, // short
-    1.4,  // taller
-    0.9,  // short
-    1.0,  // medium
-    1.3,  // tall
-    0.8,  // short
-    1.1,  // medium
+    1.4, // taller
+    0.9, // short
+    1.0, // medium
+    1.3, // tall
+    0.8, // short
+    1.1, // medium
   ];
 
   @override
@@ -73,8 +73,9 @@ class _FavoriteGridViewState extends State<FavoriteGridView> {
                 children: [
                   Text(state.message),
                   TextButton(
-                    onPressed: () => context.read<FavoriteCubit>().fetchFavorites(),
-                    child: const Text('Retry'),
+                    onPressed: () =>
+                        context.read<FavoriteCubit>().fetchFavorites(),
+                    child: Text(S.of(context).retry),
                   ),
                 ],
               ),
@@ -85,10 +86,10 @@ class _FavoriteGridViewState extends State<FavoriteGridView> {
           final designs = cubit.currentDesigns;
 
           if (designs.isEmpty && state is! FavoritePaginationLoading) {
-            return const NoDataWidget(
+            return NoDataWidget(
               image: AppImages.noFavorite,
-              title: AppStrings.noFavorites,
-              description: AppStrings.noFavoritesDesc,
+              title: S.of(context).noFavorites,
+              description: S.of(context).noFavoritesDesc,
             );
           }
 
@@ -100,7 +101,8 @@ class _FavoriteGridViewState extends State<FavoriteGridView> {
             ),
             mainAxisSpacing: 12.h,
             crossAxisSpacing: 12.w,
-            itemCount: designs.length + (state is FavoritePaginationLoading ? 1 : 0),
+            itemCount:
+                designs.length + (state is FavoritePaginationLoading ? 1 : 0),
             itemBuilder: (context, index) {
               if (index >= designs.length) {
                 return Center(
@@ -111,7 +113,8 @@ class _FavoriteGridViewState extends State<FavoriteGridView> {
                 );
               }
 
-              final itemHeight = baseWidth * _itemHeights[index % _itemHeights.length];
+              final itemHeight =
+                  baseWidth * _itemHeights[index % _itemHeights.length];
               final design = designs[index];
 
               return GestureDetector(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sammly/core/constant/app_colors.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/functions.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
@@ -11,6 +10,7 @@ import 'package:sammly/features/generate/presentation/views/widgets/logo_widget.
 import 'package:sammly/features/generate/presentation/views/widgets/text_to_image_step_1_room.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/text_to_image_step_2_style.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/text_to_image_step_3_describe.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class TextToImageGenerateView extends StatefulWidget {
   const TextToImageGenerateView({super.key});
@@ -69,7 +69,7 @@ class _TextToImageGenerateViewState extends State<TextToImageGenerateView> {
     if (prompt.isEmpty) {
       showCustomSnackBar(
         context: context,
-        message: AppStrings.pleaseDescribeYourDreamRoom,
+        message: S.of(context).pleaseDescribeYourDreamRoom,
         isError: true,
       );
       return;
@@ -90,9 +90,9 @@ class _TextToImageGenerateViewState extends State<TextToImageGenerateView> {
   String _getAppBarTitle() {
     switch (_currentStep) {
       case 0:
-        return AppStrings.selectRoom;
+        return S.of(context).selectRoom;
       case 1:
-        return AppStrings.selectStyle;
+        return S.of(context).selectStyle;
       case 2:
         return ""; // The logo will be shown in the body instead of app bar title
       default:
@@ -102,7 +102,8 @@ class _TextToImageGenerateViewState extends State<TextToImageGenerateView> {
 
   @override
   Widget build(BuildContext context) {
-    final availableHeight = MediaQuery.of(context).size.height -
+    final availableHeight =
+        MediaQuery.of(context).size.height -
         MediaQuery.of(context).padding.top -
         MediaQuery.of(context).padding.bottom;
 
@@ -110,32 +111,29 @@ class _TextToImageGenerateViewState extends State<TextToImageGenerateView> {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         backgroundColor: AppColors.whiteColor,
-        
+
         body: SafeArea(
           child: SingleChildScrollView(
             child: SizedBox(
               height: availableHeight,
               child: Column(
                 children: [
-                  CustomAppbar(
-                    title: _getAppBarTitle(), 
-                    onBack: _previousStep,
-                  ),
-                  
+                  CustomAppbar(title: _getAppBarTitle(), onBack: _previousStep),
+
                   if (_currentStep == 2) ...[
                     LogoWidget(),
                     SizedBox(height: 10.h),
                   ],
-                  
+
                   CustomStepper(
                     currentStep: _currentStep,
-                    stepTitles: const [
-                      AppStrings.type,
-                      AppStrings.style,
-                      AppStrings.describe,
+                    stepTitles: [
+                      S.of(context).type,
+                      S.of(context).style,
+                      S.of(context).describe,
                     ],
                   ),
-                  
+
                   Expanded(
                     child: PageView(
                       controller: _pageController,

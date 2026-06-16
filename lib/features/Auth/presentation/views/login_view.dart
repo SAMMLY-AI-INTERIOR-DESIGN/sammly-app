@@ -21,6 +21,8 @@ import 'package:sammly/features/Auth/presentation/widgets/loginwith.dart';
 import 'package:sammly/features/Auth/presentation/widgets/signlogin.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:sammly/features/home/logic/home_cubit.dart';
+import 'package:sammly/generated/l10n.dart';
+import 'package:sammly/core/localization/locale_cubit.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -58,14 +60,16 @@ class _LoginScreenState extends State<LoginScreen> {
             context.read<HomeCubit>().fetchHomeData();
             Navigator.pushReplacementNamed(context, AppRoutes.layoutView);
           } else if (state is AuthNeedsVerificationState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  state.message ?? 'Please verify your email to continue.',
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text(
+                    state.message ?? S.of(context).pleaseVerifyEmail,
+                  ),
+                  backgroundColor: Colors.orange,
                 ),
-                backgroundColor: Colors.orange,
-              ),
-            );
+              );
 
             Navigator.push(
               context,
@@ -80,12 +84,14 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             );
           } else if (state is LoginFailedState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.errorMsg),
-                backgroundColor: Colors.red,
-              ),
-            );
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text(state.errorMsg),
+                  backgroundColor: Colors.red,
+                ),
+              );
           }
         },
         child: PopScope(
@@ -111,11 +117,50 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
 
-                // 2. Logo
+                // Language Switcher
                 Positioned(
+                  top: 24.h,
+                  right: 24.w,
+                  child: SafeArea(
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () {
+                        context.read<LocaleCubit>().toggleLanguage();
+                      },
+                      child: Directionality(
+                        textDirection: TextDirection.ltr,
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                              AppImages.languageIcon,
+                              colorFilter: const ColorFilter.mode(
+                                Colors.white,
+                                BlendMode.srcIn,
+                              ),
+                              width: 24.w,
+                            ),
+                            SizedBox(width: 8.w),
+                            Text(
+                              context.watch<LocaleCubit>().state.languageCode ==
+                                      'en'
+                                  ? 'العربية'
+                                  : 'English',
+                              style: AppTextStyles.body16SemiBold.copyWith(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                // 2. Logo
+                PositionedDirectional(
                   top: 0,
-                  left: 0,
-                  right: 0,
+                  start: 0,
+                  end: 0,
                   height: 309.h,
                   child: SafeArea(
                     bottom: false,
@@ -134,10 +179,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
 
                 // 3. Form card
-                Positioned(
+                PositionedDirectional(
                   top: 280.h,
-                  left: 0,
-                  right: 0,
+                  start: 0,
+                  end: 0,
                   bottom: 0,
                   child: Container(
                     decoration: BoxDecoration(
@@ -153,9 +198,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     child: SingleChildScrollView(
                       physics: const BouncingScrollPhysics(),
-                      padding: EdgeInsets.only(
-                        left: 24.w,
-                        right: 24.w,
+                      padding: EdgeInsetsDirectional.only(
+                        start: 24.w,
+                        end: 24.w,
                         top: 32.h,
                         bottom: 24.h + MediaQuery.of(context).viewInsets.bottom,
                       ),
@@ -165,28 +210,28 @@ class _LoginScreenState extends State<LoginScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              'Welcome Back',
+                              S.of(context).welcomeBack,
                               style: AppTextStyles.heading28ExtraBold,
                             ),
                             SizedBox(height: 8.h),
                             Text(
-                              'Login in to your account',
+                              S.of(context).loginToAccount,
                               style: AppTextStyles.body16Regular,
                             ),
                             SizedBox(height: 32.h),
 
                             CustomTextField(
                               controller: _emailController,
-                              thing: 'Enter your email',
+                              thing: S.of(context).enterYourEmailHint,
                               preffixicon: Icons.email_outlined,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Please enter your email';
+                                  return S.of(context).pleaseEnterYourEmail;
                                 }
 
                                 if (!value.contains('@') ||
                                     !value.contains('.')) {
-                                  return 'Please enter a valid email address';
+                                  return S.of(context).pleaseEnterValidEmail;
                                 }
                                 return null;
                               },
@@ -194,12 +239,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
                             CustomTextField(
                               controller: _passwordController,
-                              thing: 'Enter your password',
+                              thing: S.of(context).enterYourPasswordHint,
                               preffixicon: Icons.lock_outline,
                               ispassword: true,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Please enter your password';
+                                  return S.of(context).pleaseEnterYourPassword;
                                 }
                                 return null;
                               },
@@ -207,7 +252,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             SizedBox(height: 2.h),
 
                             Align(
-                              alignment: Alignment.centerRight,
+                              alignment: AlignmentDirectional.centerEnd,
                               child: TextButton(
                                 onPressed: () {
                                   final authCubit = context.read<AuthCubit>();
@@ -228,7 +273,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 child: Text(
-                                  'Forgot Password?',
+                                  S.of(context).forgotPassword,
                                   style: AppTextStyles.body14Regular,
                                 ),
                               ),
@@ -243,7 +288,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   );
                                 }
                                 return CustomButton(
-                                  text: 'Log In',
+                                  text: S.of(context).logIn,
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
                                       context.read<AuthCubit>().login(
@@ -257,7 +302,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             SizedBox(height: 24.h),
 
-                            const Customline(text: 'Or login with'),
+                            Customline(text: S.of(context).orLoginWith),
                             SizedBox(height: 24.h),
 
                             Loginwith(
@@ -268,8 +313,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             SizedBox(height: 32.h),
 
                             SignLogin(
-                              text1: "Don't have an account?",
-                              text2: "Sign up",
+                              text1: S.of(context).dontHaveAccount,
+                              text2: S.of(context).signUp,
                               ontap: () {
                                 final authCubit = context.read<AuthCubit>();
                                 Navigator.push(
@@ -303,8 +348,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               ),
                               child: Text(
-                                'Have an issue?',
-                                style: AppTextStyles.body14Regular,
+                                S.of(context).supportQuestion,
+                                style: AppTextStyles.body14Regular.copyWith(
+                                  color: AppColors.blackColor,
+                                ),
+                                textAlign: TextAlign.center,
                               ),
                             ),
                           ],

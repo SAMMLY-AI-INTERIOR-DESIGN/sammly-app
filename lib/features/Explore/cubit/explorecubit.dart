@@ -52,20 +52,19 @@ class ExploreCubit extends Cubit<ExploreState> {
       search: _currentSearch,
     );
 
-    result.fold(
-      (error) => emit(ExploreError(error)),
-      (response) {
-        _allDesigns.addAll(response.designs);
-        _currentPage = response.page;
-        _hasMore = response.hasMore;
+    result.fold((error) => emit(ExploreError(error)), (response) {
+      _allDesigns.addAll(response.designs);
+      _currentPage = response.page;
+      _hasMore = response.hasMore;
 
-        emit(ExploreLoaded(
+      emit(
+        ExploreLoaded(
           designs: List.unmodifiable(_allDesigns),
           currentPage: _currentPage,
           hasMore: _hasMore,
-        ));
-      },
-    );
+        ),
+      );
+    });
   }
 
   /// Load the next page and append results.
@@ -83,20 +82,19 @@ class ExploreCubit extends Cubit<ExploreState> {
       search: _currentSearch,
     );
 
-    result.fold(
-      (error) => emit(ExploreError(error)),
-      (response) {
-        _allDesigns.addAll(response.designs);
-        _currentPage = response.page;
-        _hasMore = response.hasMore;
+    result.fold((error) => emit(ExploreError(error)), (response) {
+      _allDesigns.addAll(response.designs);
+      _currentPage = response.page;
+      _hasMore = response.hasMore;
 
-        emit(ExploreLoaded(
+      emit(
+        ExploreLoaded(
           designs: List.unmodifiable(_allDesigns),
           currentPage: _currentPage,
           hasMore: _hasMore,
-        ));
-      },
-    );
+        ),
+      );
+    });
   }
 
   /// Change sort and re-fetch from page 1.
@@ -122,10 +120,12 @@ class ExploreCubit extends Cubit<ExploreState> {
           : design.likesCount + 1,
     );
 
-    emit(ExploreLoaded(
-      designs: List.unmodifiable(_allDesigns),
-      currentPage: _currentPage,
-      hasMore: _hasMore,
-    ));
+    emit(
+      ExploreLoaded(
+        designs: List.unmodifiable(_allDesigns),
+        currentPage: _currentPage,
+        hasMore: _hasMore,
+      ),
+    );
   }
 }

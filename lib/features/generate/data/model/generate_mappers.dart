@@ -1,4 +1,4 @@
-import 'package:sammly/core/constant/app_strings.dart';
+import 'package:sammly/generated/l10n.dart';
 
 /// Maps UI display values to API-accepted values and vice versa.
 ///
@@ -7,21 +7,21 @@ import 'package:sammly/core/constant/app_strings.dart';
 abstract class GenerateMappers {
   // ── Style Mapping ──
 
-  static const Map<String, String> _styleUiToApi = {
-    AppStrings.traditional: 'traditional',
-    AppStrings.coastal: 'coastal',
-    AppStrings.rustic: 'rustic',
-    AppStrings.midCenturyModern: 'mid century modern',
-    AppStrings.boho: 'bohemian',
+  static Map<String, String> get _styleUiToApi => {
+    S.current.traditional: 'traditional',
+    S.current.coastal: 'coastal',
+    S.current.rustic: 'rustic',
+    S.current.midCenturyModern: 'mid century modern',
+    S.current.boho: 'bohemian',
   };
 
-  static const Map<String, String> _styleApiToUi = {
-    'traditional': AppStrings.traditional,
-    'coastal': AppStrings.coastal,
-    'rustic': AppStrings.rustic,
-    'mid century modern': AppStrings.midCenturyModern,
-    'bohemian': AppStrings.boho,
-    'modern': AppStrings.midCenturyModern,
+  static Map<String, String> get _styleApiToUi => {
+    'traditional': S.current.traditional,
+    'coastal': S.current.coastal,
+    'rustic': S.current.rustic,
+    'mid century modern': S.current.midCenturyModern,
+    'bohemian': S.current.boho,
+    'modern': S.current.midCenturyModern,
   };
 
   /// Converts a UI style display value to its API equivalent.
@@ -38,20 +38,20 @@ abstract class GenerateMappers {
 
   // ── Room Mapping ──
 
-  static const Map<String, String> _roomUiToApi = {
-    AppStrings.bathroom: 'bathroom',
-    AppStrings.bedroom: 'bedroom',
-    AppStrings.diningRoom: 'diningroom',
-    AppStrings.kitchen: 'kitchen',
-    AppStrings.livingRoom: 'livingroom',
+  static Map<String, String> get _roomUiToApi => {
+    S.current.bathroom: 'bathroom',
+    S.current.bedroom: 'bedroom',
+    S.current.diningRoom: 'diningroom',
+    S.current.kitchen: 'kitchen',
+    S.current.livingRoom: 'livingroom',
   };
 
-  static const Map<String, String> _roomApiToUi = {
-    'bathroom': AppStrings.bathroom,
-    'bedroom': AppStrings.bedroom,
-    'diningroom': AppStrings.diningRoom,
-    'kitchen': AppStrings.kitchen,
-    'livingroom': AppStrings.livingRoom,
+  static Map<String, String> get _roomApiToUi => {
+    'bathroom': S.current.bathroom,
+    'bedroom': S.current.bedroom,
+    'diningroom': S.current.diningRoom,
+    'kitchen': S.current.kitchen,
+    'livingroom': S.current.livingRoom,
   };
 
   /// Converts a UI room display value to its API equivalent.

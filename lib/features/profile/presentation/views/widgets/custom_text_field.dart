@@ -28,8 +28,8 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 16.h),
-      padding: const EdgeInsets.all(1.5), 
+      margin: EdgeInsetsDirectional.only(bottom: 16.h),
+      padding: const EdgeInsets.all(1.5),
       decoration: BoxDecoration(
         gradient: AppColors.primaryGradient3,
         borderRadius: BorderRadius.circular(8.r),
@@ -37,27 +37,21 @@ class CustomTextField extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         decoration: BoxDecoration(
-          color: AppColors.textFieldBodyColor, 
+          color: AppColors.textFieldBodyColor,
           borderRadius: BorderRadius.circular(7.r),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            if (prefix != null) ...[
-              prefix!,
-              SizedBox(width: 8.w),
-            ],
-            
+            if (prefix != null) ...[prefix!, SizedBox(width: 8.w)],
+
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min, 
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    label,
-                    style: AppTextStyles.body14Regular,
-                  ),
-                  
+                  Text(label, style: AppTextStyles.body14Regular),
+
                   TextFormField(
                     controller: controller,
                     initialValue: controller == null ? initialValue : null,
@@ -67,7 +61,7 @@ class CustomTextField extends StatelessWidget {
                     style: AppTextStyles.body14Regular,
                     decoration: const InputDecoration(
                       isDense: true,
-                      contentPadding: EdgeInsets.zero, 
+                      contentPadding: EdgeInsets.zero,
                       border: InputBorder.none,
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
@@ -76,11 +70,8 @@ class CustomTextField extends StatelessWidget {
                 ],
               ),
             ),
-            
-            if (suffixIcon != null) ...[
-              SizedBox(width: 8.w),
-              suffixIcon!,
-            ],
+
+            if (suffixIcon != null) ...[SizedBox(width: 8.w), suffixIcon!],
           ],
         ),
       ),

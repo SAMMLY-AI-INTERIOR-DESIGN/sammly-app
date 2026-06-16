@@ -6,17 +6,13 @@ class StyleCard extends StatelessWidget {
   final String title;
   final String imageUrl;
 
-  const StyleCard({
-    super.key,
-    required this.title,
-    required this.imageUrl,
-  });
+  const StyleCard({super.key, required this.title, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 140,
-      margin: const EdgeInsets.only(right: 16),
+      margin: const EdgeInsetsDirectional.only(end: 16),
       decoration: BoxDecoration(
         color: AppColors.bg1Color,
         borderRadius: BorderRadius.circular(16),
@@ -26,7 +22,9 @@ class StyleCard extends StatelessWidget {
         children: [
           Expanded(
             child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
+              ),
               child: imageUrl.isEmpty
                   ? Container(
                       color: Colors.grey[200],

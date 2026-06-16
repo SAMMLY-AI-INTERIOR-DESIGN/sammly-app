@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:image_picker/image_picker.dart'; // لاستخدام XFile
 import 'package:sammly/core/constant/app_colors.dart';
+import 'package:sammly/generated/l10n.dart';
 import 'package:sammly/core/widgets/custombutton.dart';
 
 class MaskInpaintingView extends StatefulWidget {
@@ -35,18 +36,18 @@ class _MaskInpaintingViewState extends State<MaskInpaintingView> {
     try {
       final response = await http.get(Uri.parse(widget.imageUrl));
       final documentDirectory = await getTemporaryDirectory();
-      
+
       // بنعمل ملف مؤقت في الجهاز
       final file = File('${documentDirectory.path}/temp_mask_bg.png');
       await file.writeAsBytes(response.bodyBytes);
-      
+
       setState(() {
         _backgroundImage = XFile(file.path);
         _isLoadingImage = false;
       });
-      
+
       // تحديد حجم الفرشة الافتراضي
-      _controller.setBrushSize(30.0); 
+      _controller.setBrushSize(30.0);
     } catch (e) {
       debugPrint("Error loading image: $e");
       setState(() => _isLoadingImage = false);
@@ -56,23 +57,26 @@ class _MaskInpaintingViewState extends State<MaskInpaintingView> {
   // دالة إرسال الماسك للباك إند
   Future<void> _submitMask() async {
     setState(() => _isSending = true);
-    
+
     try {
       // بنخلي الكنترولر يطلع الصورة الأبيض والأسود النهائية
       final XFile? maskFile = await _controller.saveMask();
-      
+
       if (maskFile != null) {
         // هنا بتجهز الريكويست بتاعك للـ API بـ Dio
         // MultipartFile.fromFileSync(maskFile.path)
-        
-        print("Mask saved at: ${maskFile.path}");
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Wait...'),
-            backgroundColor: AppColors.secondaryColor,
-          ),
-        );
-        
+
+        debugPrint("Mask saved at: ${maskFile.path}");
+        if (!mounted) return;
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              content: Text(S.of(context).waitText),
+              backgroundColor: AppColors.secondaryColor,
+            ),
+          );
+
         // محاكاة إرسال للباك إند
         await Future.delayed(const Duration(seconds: 2));
       }
@@ -92,11 +96,14 @@ class _MaskInpaintingViewState extends State<MaskInpaintingView> {
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.blackColor),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: AppColors.blackColor,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Draw Mask',
+          S.of(context).drawMaskTitle,
           style: TextStyle(
             color: AppColors.blackColor,
             fontSize: 20.sp,
@@ -125,9 +132,12 @@ class _MaskInpaintingViewState extends State<MaskInpaintingView> {
               children: [
                 // تعليمات لليوزر
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 8.h,
+                  ),
                   child: Text(
-                    "Draw on the areas you want to remove or change.",
+                    S.of(context).drawMaskInstruction,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: AppColors.greyColor,
@@ -135,7 +145,7 @@ class _MaskInpaintingViewState extends State<MaskInpaintingView> {
                     ),
                   ),
                 ),
-                
+
                 // مساحة الرسم (الباكدج)
                 Expanded(
                   child: Container(
@@ -155,14 +165,14 @@ class _MaskInpaintingViewState extends State<MaskInpaintingView> {
                     ),
                   ),
                 ),
-                
+
                 // زرار التأكيد
                 Padding(
                   padding: EdgeInsets.all(20.w),
                   child: _isSending
                       ? const Center(child: CircularProgressIndicator())
                       : CustomButton(
-                          text: 'Generate Mask',
+                          text: S.of(context).generateMaskBtn,
                           onPressed: _submitMask,
                         ),
                 ),

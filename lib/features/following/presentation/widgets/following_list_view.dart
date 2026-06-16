@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_images.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/functions.dart';
 import 'package:sammly/core/widgets/no_data_widget.dart';
 import 'package:sammly/features/following/cubit/following_cubit.dart';
 import 'package:sammly/features/following/cubit/following_states.dart';
 import 'package:sammly/features/following/presentation/widgets/following_item_widget.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class FollowingListView extends StatefulWidget {
   const FollowingListView({super.key});
@@ -69,16 +69,16 @@ class _FollowingListViewState extends State<FollowingListView> {
         }
 
         if (cubit.followings.isEmpty) {
-          return const NoDataWidget(
+          return NoDataWidget(
             image: AppImages.noFollowing,
-            title: AppStrings.noFollowings,
-            description: AppStrings.noFollowingsDesc,
+            title: S.of(context).noFollowings,
+            description: S.of(context).noFollowingsDesc,
           );
         }
 
         return ListView.builder(
           controller: _scrollController,
-          padding: EdgeInsets.only(top: 8.h, bottom: 20.h),
+          padding: EdgeInsetsDirectional.only(top: 8.h, bottom: 20.h),
           itemCount:
               cubit.followings.length + (state is GetFollowingsLoading ? 1 : 0),
           itemBuilder: (context, index) {

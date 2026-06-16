@@ -52,20 +52,19 @@ class StaticDesignsCubit extends Cubit<StaticDesignsState> {
       style: _currentStyle,
     );
 
-    result.fold(
-      (error) => emit(StaticDesignsError(error)),
-      (response) {
-        _allDesigns.addAll(response.designs);
-        _currentPage = response.page;
-        _hasMore = response.hasMore;
+    result.fold((error) => emit(StaticDesignsError(error)), (response) {
+      _allDesigns.addAll(response.designs);
+      _currentPage = response.page;
+      _hasMore = response.hasMore;
 
-        emit(StaticDesignsLoaded(
+      emit(
+        StaticDesignsLoaded(
           designs: List.unmodifiable(_allDesigns),
           currentPage: _currentPage,
           hasMore: _hasMore,
-        ));
-      },
-    );
+        ),
+      );
+    });
   }
 
   /// Load the next page and append results.
@@ -83,20 +82,19 @@ class StaticDesignsCubit extends Cubit<StaticDesignsState> {
       style: _currentStyle,
     );
 
-    result.fold(
-      (error) => emit(StaticDesignsError(error)),
-      (response) {
-        _allDesigns.addAll(response.designs);
-        _currentPage = response.page;
-        _hasMore = response.hasMore;
+    result.fold((error) => emit(StaticDesignsError(error)), (response) {
+      _allDesigns.addAll(response.designs);
+      _currentPage = response.page;
+      _hasMore = response.hasMore;
 
-        emit(StaticDesignsLoaded(
+      emit(
+        StaticDesignsLoaded(
           designs: List.unmodifiable(_allDesigns),
           currentPage: _currentPage,
           hasMore: _hasMore,
-        ));
-      },
-    );
+        ),
+      );
+    });
   }
 
   /// Change room filter and re-fetch from page 1.
@@ -124,14 +122,14 @@ class StaticDesignsCubit extends Cubit<StaticDesignsState> {
     if (index == -1) return;
 
     final design = _allDesigns[index];
-    _allDesigns[index] = design.copyWith(
-      isFavorited: !design.isFavorited,
-    );
+    _allDesigns[index] = design.copyWith(isFavorited: !design.isFavorited);
 
-    emit(StaticDesignsLoaded(
-      designs: List.unmodifiable(_allDesigns),
-      currentPage: _currentPage,
-      hasMore: _hasMore,
-    ));
+    emit(
+      StaticDesignsLoaded(
+        designs: List.unmodifiable(_allDesigns),
+        currentPage: _currentPage,
+        hasMore: _hasMore,
+      ),
+    );
   }
 }

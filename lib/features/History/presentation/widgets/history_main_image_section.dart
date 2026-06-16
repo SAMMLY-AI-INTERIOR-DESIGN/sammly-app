@@ -4,8 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class HistoryMainImageSection extends StatelessWidget {
   final String imageUrl;
@@ -33,9 +33,9 @@ class HistoryMainImageSection extends StatelessWidget {
         children: [
           // Smart Lens Badge (Top Left)
           if (!isMaximized)
-            Positioned(
+            PositionedDirectional(
               top: 12.h,
-              left: 12.w,
+              start: 12.w,
               child: GestureDetector(
                 onTap: onSmartLensTap,
                 child: ClipRRect(
@@ -60,7 +60,7 @@ class HistoryMainImageSection extends StatelessWidget {
                           SvgPicture.asset(AppImages.smartLensIcon),
                           SizedBox(width: 8.w),
                           Text(
-                            AppStrings.smartLens,
+                            S.of(context).smartLens,
                             style: AppTextStyles.badge14SemiBold.copyWith(
                               color: Colors.white,
                               fontSize: 16.sp,
@@ -100,24 +100,22 @@ class HistoryMainImageSection extends StatelessWidget {
 
           // Bookmark Save Icon (Top Right)
           if (!isMaximized)
-            Positioned(
+            PositionedDirectional(
               top: 12.h,
-              right: 12.w,
+              end: 12.w,
               child: GestureDetector(
                 onTap: onSaveTap,
                 child: SvgPicture.asset(
-                  isSaved
-                      ? AppImages.withsaving
-                      : AppImages.withoutsaving,
+                  isSaved ? AppImages.withsaving : AppImages.withoutsaving,
                   width: 24.w,
                 ),
               ),
             ),
 
           // زرار التحكم (تعديل الـ Padding عشان وقت اللاندسكيب ميزنوقش في الحافة)
-          Positioned(
+          PositionedDirectional(
             bottom: isMaximized ? 24.h : 12.h,
-            right: isMaximized ? 24.w : 12.w,
+            end: isMaximized ? 24.w : 12.w,
             child: GestureDetector(
               onTap: onToggleMaximize,
               child: Container(
@@ -131,7 +129,7 @@ class HistoryMainImageSection extends StatelessWidget {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: Colors.black.withValues(alpha: 0.1),
                       blurRadius: 6,
                     ),
                   ],

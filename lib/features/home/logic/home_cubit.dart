@@ -21,12 +21,9 @@ class HomeCubit extends Cubit<HomeState> {
 
     final result = await _repository.getHomeData();
 
-    result.fold(
-      (error) => emit(HomeError(error)),
-      (homeData) {
-        currentHome = homeData;
-        emit(HomeLoaded(homeData));
-      },
-    );
+    result.fold((error) => emit(HomeError(error)), (homeData) {
+      currentHome = homeData;
+      emit(HomeLoaded(homeData));
+    });
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart'; 
+import 'package:flutter_svg/svg.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/constant/app_colors.dart';
@@ -13,8 +13,8 @@ class HomeCardWidget extends StatelessWidget {
   final String tagText;
   final String tagIcon;
   final VoidCallback onTap;
-  
-  final bool showCenterIcon; 
+
+  final bool showCenterIcon;
 
   const HomeCardWidget({
     super.key,
@@ -24,7 +24,7 @@ class HomeCardWidget extends StatelessWidget {
     required this.tagText,
     required this.tagIcon,
     required this.onTap,
-    this.showCenterIcon = false, 
+    this.showCenterIcon = false,
   });
 
   @override
@@ -32,13 +32,13 @@ class HomeCardWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.only(bottom: 20.h),
+        margin: EdgeInsetsDirectional.only(bottom: 20.h),
         decoration: BoxDecoration(
           color: AppColors.bg1Color,
           borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2), 
+              color: Colors.black.withValues(alpha: 0.2),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -48,10 +48,12 @@ class HomeCardWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Stack(
-              alignment: Alignment.center, 
+              alignment: Alignment.center,
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(16.r),
+                  ),
                   child: Image.asset(
                     imagePath,
                     height: 160.h,
@@ -59,25 +61,22 @@ class HomeCardWidget extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
-                
-                Positioned(
+
+                PositionedDirectional(
                   top: 12.h,
-                  left: 12.w,
-                  child: HomeTagWidget(
-                    text: tagText,
-                    iconPath: tagIcon,
-                  ),
+                  start: 12.w,
+                  child: HomeTagWidget(text: tagText, iconPath: tagIcon),
                 ),
 
                 if (showCenterIcon)
                   SvgPicture.asset(
                     AppImages.replaceRemoveIcon,
-                    width: 24.w, 
+                    width: 24.w,
                     height: 24.h,
                   ),
               ],
             ),
-            
+
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
               child: Column(

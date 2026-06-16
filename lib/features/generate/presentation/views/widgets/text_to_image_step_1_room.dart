@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/functions.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/custombutton.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class TextToImageStep1Room extends StatelessWidget {
   final String? selectedRoom;
@@ -22,12 +22,12 @@ class TextToImageStep1Room extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Map<String, String>> rooms = [
-      {'name': AppStrings.bathroom, 'image': AppImages.roomBathroom},
-      {'name': AppStrings.bedroom, 'image': AppImages.roomBedroom},
-      {'name': AppStrings.diningRoom, 'image': AppImages.roomDining},
-      {'name': AppStrings.kitchen, 'image': AppImages.roomKitchen},
+      {'name': S.of(context).bathroom, 'image': AppImages.roomBathroom},
+      {'name': S.of(context).bedroom, 'image': AppImages.roomBedroom},
+      {'name': S.of(context).diningRoom, 'image': AppImages.roomDining},
+      {'name': S.of(context).kitchen, 'image': AppImages.roomKitchen},
       {
-        'name': AppStrings.livingRoom,
+        'name': S.of(context).livingRoom,
         'image': AppImages.roomLivingBohoTraditional,
       },
     ];
@@ -39,21 +39,23 @@ class TextToImageStep1Room extends StatelessWidget {
         children: [
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(bottom: 16.h),
+              padding: EdgeInsetsDirectional.only(bottom: 16.h),
               child: ListView.separated(
-                padding: EdgeInsets.only(top: 16.h, bottom: 16.h),
+                padding: EdgeInsetsDirectional.only(top: 16.h, bottom: 16.h),
                 itemCount: rooms.length,
                 separatorBuilder: (context, index) => SizedBox(height: 16.h),
                 itemBuilder: (context, index) {
                   final room = rooms[index];
                   final isSelected = selectedRoom == room['name'];
-              
+
                   return GestureDetector(
                     onTap: () => onRoomSelected(room['name']!),
                     child: Container(
                       padding: const EdgeInsets.all(2),
                       decoration: BoxDecoration(
-                        gradient: isSelected ? AppColors.primaryGradient3 : null,
+                        gradient: isSelected
+                            ? AppColors.primaryGradient3
+                            : null,
                         color: isSelected ? null : Colors.transparent,
                         borderRadius: BorderRadius.circular(16.r),
                         boxShadow: [
@@ -104,7 +106,9 @@ class TextToImageStep1Room extends StatelessWidget {
                               padding: EdgeInsets.symmetric(vertical: 12.h),
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
-                                color: AppColors.bg1Color.withValues(alpha: 0.3),
+                                color: AppColors.bg1Color.withValues(
+                                  alpha: 0.3,
+                                ),
                                 borderRadius: BorderRadius.vertical(
                                   bottom: Radius.circular(14.r),
                                 ),
@@ -124,14 +128,14 @@ class TextToImageStep1Room extends StatelessWidget {
             ),
           ),
           CustomButton(
-            text: AppStrings.next,
+            text: S.of(context).next,
             suffixIcon: AppImages.arrowRight,
             onPressed: selectedRoom != null
                 ? onNext
                 : () {
                     showCustomSnackBar(
                       context: context,
-                      message: AppStrings.pleaseSelectARoom,
+                      message: S.of(context).pleaseSelectARoom,
                       isError: true,
                     );
                   },

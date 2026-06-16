@@ -24,7 +24,9 @@ class DesignDetailsRepo {
         final data = response.data['data'] as Map<String, dynamic>;
         return right(DesignDetailsResponse.fromJson(data));
       } else {
-        return left(response.data['message'] ?? 'Failed to load design details.');
+        return left(
+          response.data['message'] ?? 'Failed to load design details.',
+        );
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
@@ -47,7 +49,8 @@ class DesignDetailsRepo {
       );
 
       if (response.statusCode == 200 && response.data['status'] == 'success') {
-        final message = response.data['data']['message'] ?? 'Design shared successfully';
+        final message =
+            response.data['data']['message'] ?? 'Design shared successfully';
         return right(message);
       } else {
         return left(response.data['message'] ?? 'Failed to share design.');
@@ -73,7 +76,8 @@ class DesignDetailsRepo {
       );
 
       if (response.statusCode == 200 && response.data['status'] == 'success') {
-        final message = response.data['data']['message'] ?? 'Sharing canceled successfully';
+        final message =
+            response.data['data']['message'] ?? 'Sharing canceled successfully';
         return right(message);
       } else {
         return left(response.data['message'] ?? 'Failed to cancel sharing.');
@@ -108,7 +112,8 @@ class DesignDetailsRepo {
 
       if ((response.statusCode == 200 || response.statusCode == 201) &&
           response.data['status'] == 'success') {
-        final message = response.data['data']?['message'] ?? 'Design liked successfully';
+        final message =
+            response.data['data']?['message'] ?? 'Design liked successfully';
         return right(message);
       } else {
         return left(response.data['message'] ?? 'Failed to like design.');
@@ -141,7 +146,8 @@ class DesignDetailsRepo {
       log('Unlike response: ${response.statusCode} → ${response.data}');
 
       if (response.statusCode == 200 && response.data['status'] == 'success') {
-        final message = response.data['data']?['message'] ?? 'Design unliked successfully';
+        final message =
+            response.data['data']?['message'] ?? 'Design unliked successfully';
         return right(message);
       } else {
         return left(response.data['message'] ?? 'Failed to unlike design.');
@@ -160,10 +166,11 @@ class DesignDetailsRepo {
         final data = e.response!.data;
         log('API Error Response: $data');
         if (data is Map) {
-          final msg = data['message']
-              ?? data['msg']
-              ?? data['error']
-              ?? (data['errors'] is List
+          final msg =
+              data['message'] ??
+              data['msg'] ??
+              data['error'] ??
+              (data['errors'] is List
                   ? (data['errors'] as List).join(', ')
                   : null);
           if (msg != null) return msg.toString();

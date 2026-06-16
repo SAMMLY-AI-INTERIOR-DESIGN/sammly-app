@@ -35,8 +35,10 @@ class AppImages {
   static const String heartFilled = "assets/images/heartFilled.svg";
   static const String heartOutline = "assets/images/heartOutline.svg";
   static const String defaultprofile = "assets/images/default_profile.png";
-  static const String maleProfilePlaceholder ="assets/images/male_profile_placeholder.svg";
-  static const String femaleProfilePlaceholder ="assets/images/female_profile_placeholder.svg";
+  static const String maleProfilePlaceholder =
+      "assets/images/male_profile_placeholder.svg";
+  static const String femaleProfilePlaceholder =
+      "assets/images/female_profile_placeholder.svg";
   static const String goArrow = "assets/images/go_arrow.svg";
   static const String sharedImagesPlaceholder =
       "assets/images/shared_images_placeholder.svg";
@@ -101,11 +103,15 @@ class AppImages {
   static const String withoutsaving = "assets/images/withouts.svg";
   static const String favoriteprofileicon = "assets/images/withouts.svg";
   static const String noFollowing = "assets/images/no_following.png";
+  static const String languageIcon = "assets/images/change_language.svg";
   static const String removeObjectIcon = "assets/images/remove_object_icon.svg";
-  static const String replaceObjectIcon = "assets/images/replace_object_icon.svg";
+  static const String replaceObjectIcon =
+      "assets/images/replace_object_icon.svg";
   static const String replaceImage = "assets/images/replace_image.png";
   static const String removeImage = "assets/images/remove_image.png";
-  static const String replaceRemoveIcon = "assets/images/replace_remove_icon.svg";
-  static const String subscriptionBgPlaceholder = "assets/images/subscription_bg_placeholder.png";
+  static const String replaceRemoveIcon =
+      "assets/images/replace_remove_icon.svg";
+  static const String subscriptionBgPlaceholder =
+      "assets/images/subscription_bg_placeholder.png";
   static const String switchImageIcon = "assets/images/switch_image_icon.svg";
 }

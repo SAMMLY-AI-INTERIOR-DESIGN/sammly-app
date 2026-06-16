@@ -36,10 +36,7 @@ class AvatarWidget extends StatelessWidget {
 
     // لو مفيش avatar أو فاضي → placeholder
     if (avatarPath == null || avatarPath!.isEmpty) {
-      return ClipRRect(
-        borderRadius: br,
-        child: _placeholder(),
-      );
+      return ClipRRect(borderRadius: br, child: _placeholder());
     }
 
     // 1. لو الـ avatar هو data URI (base64)
@@ -63,7 +60,8 @@ class AvatarWidget extends StatelessWidget {
     }
 
     // 2. لو الـ avatar هو full URL
-    if (avatarPath!.startsWith('http://') || avatarPath!.startsWith('https://')) {
+    if (avatarPath!.startsWith('http://') ||
+        avatarPath!.startsWith('https://')) {
       return ClipRRect(
         borderRadius: br,
         child: Image.network(

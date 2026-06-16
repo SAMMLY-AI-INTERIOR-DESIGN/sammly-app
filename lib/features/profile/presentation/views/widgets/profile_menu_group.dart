@@ -10,7 +10,7 @@ class ProfileMenuGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 16.h),
+      margin: EdgeInsetsDirectional.only(bottom: 16.h),
       decoration: BoxDecoration(
         color: AppColors.textFieldBodyColor,
         borderRadius: BorderRadius.circular(16.r),

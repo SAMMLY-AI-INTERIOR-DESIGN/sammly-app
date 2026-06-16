@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/features/History/cubit/historycubit.dart';
@@ -11,6 +10,7 @@ import 'package:sammly/features/History/cubit/history_state.dart';
 import 'package:sammly/features/History/presentation/widgets/customhistory.dart';
 import 'package:sammly/features/History/presentation/views/historydetails.dart';
 import 'package:sammly/features/layout/presentation/cubit/layout_cubit/layout_cubit.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class HistoryView extends StatefulWidget {
   const HistoryView({super.key});
@@ -51,7 +51,7 @@ class _HistoryViewState extends State<HistoryView> {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
       appBar: CustomAppbar(
-        title: 'History',
+        title: S.of(context).history,
         onBack: () => context.read<LayoutCubit>().changeIndex(0),
       ),
       body: SafeArea(
@@ -59,9 +59,7 @@ class _HistoryViewState extends State<HistoryView> {
           builder: (context, state) {
             // Initial loading
             if (state is HistoryLoading) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return const Center(child: CircularProgressIndicator());
             }
 
             // Error state
@@ -84,7 +82,7 @@ class _HistoryViewState extends State<HistoryView> {
                       onPressed: () =>
                           context.read<HistoryCubit>().fetchHistory(),
                       child: Text(
-                        'Retry',
+                        S.of(context).retry,
                         style: AppTextStyles.body16Regular.copyWith(
                           color: AppColors.primaryColor,
                         ),
@@ -108,11 +106,11 @@ class _HistoryViewState extends State<HistoryView> {
                     children: [
                       Image.asset(AppImages.noImage),
                       Text(
-                        AppStrings.noHistory,
+                        S.of(context).noHistory,
                         style: AppTextStyles.title20Bold,
                       ),
                       Text(
-                        AppStrings.noHistoryDesc,
+                        S.of(context).noHistoryDesc,
                         style: AppTextStyles.body16Regular.copyWith(
                           color: AppColors.greyColor.withValues(alpha: 0.6),
                         ),
@@ -124,9 +122,9 @@ class _HistoryViewState extends State<HistoryView> {
 
               return ListView.separated(
                 controller: _scrollController,
-                padding:
-                    EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-                itemCount: displayDesigns.length +
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+                itemCount:
+                    displayDesigns.length +
                     (state is HistoryPaginationLoading ? 1 : 0),
                 separatorBuilder: (context, index) => SizedBox(height: 12.h),
                 itemBuilder: (context, index) {

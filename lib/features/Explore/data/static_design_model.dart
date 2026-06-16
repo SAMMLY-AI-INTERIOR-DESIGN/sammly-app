@@ -13,8 +13,11 @@ class StaticDesignsResponse {
     return StaticDesignsResponse(
       page: json['page'] ?? 1,
       hasMore: json['hasMore'] ?? false,
-      designs: (json['designs'] as List<dynamic>?)
-              ?.map((e) => StaticDesignModel.fromJson(e as Map<String, dynamic>))
+      designs:
+          (json['designs'] as List<dynamic>?)
+              ?.map(
+                (e) => StaticDesignModel.fromJson(e as Map<String, dynamic>),
+              )
               .toList() ??
           [],
     );
@@ -40,9 +43,7 @@ class StaticDesignModel {
     );
   }
 
-  StaticDesignModel copyWith({
-    bool? isFavorited,
-  }) {
+  StaticDesignModel copyWith({bool? isFavorited}) {
     return StaticDesignModel(
       id: id,
       imageUrl: imageUrl,

@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/functions.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/theme/text_styles.dart';
@@ -14,6 +13,7 @@ import 'package:sammly/features/generate/presentation/views/widgets/logo_widget.
 import 'package:sammly/features/generate/presentation/views/widgets/room_filter_widget.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/step_1_upload.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/text_to_image_step_2_style.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class FullHomeView extends StatefulWidget {
   const FullHomeView({super.key});
@@ -28,11 +28,11 @@ class _FullHomeViewState extends State<FullHomeView> {
   String? _selectedStyle;
 
   final List<String> _allRooms = [
-    AppStrings.bedroom,
-    AppStrings.diningRoom,
-    AppStrings.kitchen,
-    AppStrings.bathroom,
-    AppStrings.livingRoom,
+    S.current.bedroom,
+    S.current.diningRoom,
+    S.current.kitchen,
+    S.current.bathroom,
+    S.current.livingRoom,
   ];
   late List<String> _selectedRooms;
 
@@ -92,14 +92,18 @@ class _FullHomeViewState extends State<FullHomeView> {
           SizedBox(height: 16.h),
           CustomStepper(
             currentStep: _currentStep,
-            stepTitles: const [AppStrings.upload, AppStrings.style, AppStrings.select],
+            stepTitles: [
+              S.of(context).upload,
+              S.of(context).style,
+              S.of(context).select,
+            ],
           ),
           Expanded(
             child: _currentStep == 0
                 ? _buildUploadStep()
                 : _currentStep == 1
-                    ? _buildStyleStep()
-                    : _buildSelectStep(),
+                ? _buildStyleStep()
+                : _buildSelectStep(),
           ),
         ],
       ),
@@ -108,8 +112,8 @@ class _FullHomeViewState extends State<FullHomeView> {
 
   Widget _buildUploadStep() {
     return Step1Upload(
-      title: AppStrings.uploadReferenceImage,
-      subtitle: AppStrings.addReferenceImage,
+      title: S.of(context).uploadReferenceImage,
+      subtitle: S.of(context).addReferenceImage,
       titleIcon: AppImages.aiPoweredIcon,
       isButtonInsideCard: true,
       initialImage: _selectedImage,
@@ -148,7 +152,7 @@ class _FullHomeViewState extends State<FullHomeView> {
         children: [
           SizedBox(height: 32.h),
           Text(
-            AppStrings.buildYourRoom,
+            S.of(context).buildYourRoom,
             style: AppTextStyles.title18SemiBold.copyWith(
               color: AppColors.blackColor,
             ),
@@ -162,13 +166,13 @@ class _FullHomeViewState extends State<FullHomeView> {
           ),
           const Spacer(),
           CustomButton(
-            text: AppStrings.generateDesign,
+            text: S.of(context).generateDesign,
             prefixIcon: AppImages.startGenerateIcon,
             onPressed: () {
               if (_selectedRooms.isEmpty) {
                 showCustomSnackBar(
                   context: context,
-                  message: AppStrings.pleaseSelectAtLeastOneRoom,
+                  message: S.of(context).pleaseSelectAtLeastOneRoom,
                   isError: true,
                 );
               } else {
