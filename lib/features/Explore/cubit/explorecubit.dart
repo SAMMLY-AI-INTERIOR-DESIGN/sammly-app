@@ -128,4 +128,23 @@ class ExploreCubit extends Cubit<ExploreState> {
       ),
     );
   }
+
+  /// Toggle favorite locally (optimistic update).
+  void toggleFavoriteLocal(String designId) {
+    final index = _allDesigns.indexWhere((d) => d.id == designId);
+    if (index == -1) return;
+
+    final design = _allDesigns[index];
+    _allDesigns[index] = design.copyWith(
+      isFavorited: !design.isFavorited,
+    );
+
+    emit(
+      ExploreLoaded(
+        designs: List.unmodifiable(_allDesigns),
+        currentPage: _currentPage,
+        hasMore: _hasMore,
+      ),
+    );
+  }
 }

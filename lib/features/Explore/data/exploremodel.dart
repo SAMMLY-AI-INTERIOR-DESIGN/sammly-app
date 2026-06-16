@@ -33,6 +33,7 @@ class ExploreDesignModel {
   final String imageUrl;
   final String sharedAt;
   final bool isLiked;
+  final bool isFavorited;
 
   ExploreDesignModel({
     required this.id,
@@ -43,11 +44,12 @@ class ExploreDesignModel {
     required this.imageUrl,
     required this.sharedAt,
     required this.isLiked,
+    required this.isFavorited,
   });
 
   factory ExploreDesignModel.fromJson(Map<String, dynamic> json) {
     return ExploreDesignModel(
-      id: json['_id'] ?? '',
+      id: json['designId'] ?? '',
       name: json['name'] ?? '',
       avatar: json['avatar'] ?? '',
       likesCount: json['likesCount'] ?? 0,
@@ -55,11 +57,12 @@ class ExploreDesignModel {
       imageUrl: json['imageUrl'] ?? '',
       sharedAt: json['sharedAt'] ?? '',
       isLiked: json['isLiked'] ?? false,
+      isFavorited: json['isFavorited'] ?? false,
     );
   }
 
   /// Returns a copy with updated like status and count.
-  ExploreDesignModel copyWith({bool? isLiked, int? likesCount}) {
+  ExploreDesignModel copyWith({bool? isLiked, int? likesCount, bool? isFavorited}) {
     return ExploreDesignModel(
       id: id,
       name: name,
@@ -69,6 +72,7 @@ class ExploreDesignModel {
       imageUrl: imageUrl,
       sharedAt: sharedAt,
       isLiked: isLiked ?? this.isLiked,
+      isFavorited: isFavorited ?? this.isFavorited,
     );
   }
 }
