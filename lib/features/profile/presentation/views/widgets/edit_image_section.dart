@@ -9,8 +9,8 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class EditImageSection extends StatefulWidget {
   final ValueChanged<File?> onImagePicked;
@@ -27,7 +27,6 @@ class EditImageSection extends StatefulWidget {
 }
 
 class _EditImageSectionState extends State<EditImageSection> {
-
   File? _selectedImage;
   final ImagePicker _picker = ImagePicker();
 
@@ -38,7 +37,7 @@ class _EditImageSectionState extends State<EditImageSection> {
       maxHeight: 800,
       maxWidth: 800,
     );
-    
+
     if (pickedFile != null) {
       final CroppedFile? croppedFile = await _cropImage(pickedFile.path);
       if (croppedFile != null) {
@@ -65,7 +64,7 @@ class _EditImageSectionState extends State<EditImageSection> {
           aspectRatioPresets: [CropAspectRatioPreset.square],
         ),
         IOSUiSettings(
-          title: 'Crop Image',
+          title: S.of(context).cropImage,
           aspectRatioLockEnabled: true,
           resetAspectRatioEnabled: false,
           cropStyle: CropStyle.circle,
@@ -79,12 +78,18 @@ class _EditImageSectionState extends State<EditImageSection> {
     // 1. User picked a new image
     if (_selectedImage != null) {
       return ClipOval(
-        child: Image.file(_selectedImage!, fit: BoxFit.cover, width: 140.w, height: 140.h),
+        child: Image.file(
+          _selectedImage!,
+          fit: BoxFit.cover,
+          width: 140.w,
+          height: 140.h,
+        ),
       );
     }
 
     // 2. Current avatar from API
-    if (widget.currentAvatarUrl != null && widget.currentAvatarUrl!.isNotEmpty) {
+    if (widget.currentAvatarUrl != null &&
+        widget.currentAvatarUrl!.isNotEmpty) {
       return AvatarWidget(
         avatarPath: widget.currentAvatarUrl,
         width: 140.w,
@@ -108,24 +113,22 @@ class _EditImageSectionState extends State<EditImageSection> {
           FittedBox(
             fit: BoxFit.scaleDown,
             child: Text(
-              AppStrings.uploadImage,
-              style: AppTextStyles.body16Medium.copyWith(
-                color: Colors.grey,
-              ),
+              S.of(context).uploadImage,
+              style: AppTextStyles.body16Medium.copyWith(color: Colors.grey),
             ),
           ),
         ],
       ),
     );
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(1),
       decoration: BoxDecoration(
         gradient: AppColors.primaryGradient3,
-        borderRadius: BorderRadius.circular(12.r)
+        borderRadius: BorderRadius.circular(12.r),
       ),
       child: Container(
         width: double.infinity,
@@ -137,7 +140,12 @@ class _EditImageSectionState extends State<EditImageSection> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(AppStrings.changeImage, style: AppTextStyles.body14Regular.copyWith(color: AppColors.blackColor2)),
+            Text(
+              S.of(context).changeImage,
+              style: AppTextStyles.body14Regular.copyWith(
+                color: AppColors.blackColor2,
+              ),
+            ),
             SizedBox(height: 16.h),
             Center(
               child: GestureDetector(
@@ -156,22 +164,33 @@ class _EditImageSectionState extends State<EditImageSection> {
                         child: Container(
                           width: 140.w,
                           height: 140.h,
-                          decoration: const BoxDecoration(shape: BoxShape.circle),
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                          ),
                           child: _buildImageContent(),
                         ),
                       ),
-                      if (_selectedImage != null || (widget.currentAvatarUrl != null && widget.currentAvatarUrl!.isNotEmpty))
-                        Positioned(
+                      if (_selectedImage != null ||
+                          (widget.currentAvatarUrl != null &&
+                              widget.currentAvatarUrl!.isNotEmpty))
+                        PositionedDirectional(
                           bottom: 4.h,
-                          right: 8.w,
+                          end: 8.w,
                           child: Container(
                             padding: EdgeInsets.all(6.r),
                             decoration: BoxDecoration(
                               gradient: AppColors.primaryGradient3,
                               shape: BoxShape.circle,
-                              border: Border.all(color: AppColors.whiteColor, width: 2.5),
+                              border: Border.all(
+                                color: AppColors.whiteColor,
+                                width: 2.5,
+                              ),
                             ),
-                            child: Icon(Icons.edit, color: AppColors.whiteColor, size: 18.sp),
+                            child: Icon(
+                              Icons.edit,
+                              color: AppColors.whiteColor,
+                              size: 18.sp,
+                            ),
                           ),
                         ),
                     ],
@@ -185,4 +204,3 @@ class _EditImageSectionState extends State<EditImageSection> {
     );
   }
 }
-

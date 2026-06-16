@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_colors.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class RoomFilterWidget extends StatelessWidget {
   final List<String> allRooms;
@@ -28,7 +28,7 @@ class RoomFilterWidget extends StatelessWidget {
       runSpacing: 7.h,
       children: [
         _buildChip(
-          text: AppStrings.all,
+          text: S.of(context).all,
           isActive: isAllSelected,
           onTap: onAllToggled,
         ),

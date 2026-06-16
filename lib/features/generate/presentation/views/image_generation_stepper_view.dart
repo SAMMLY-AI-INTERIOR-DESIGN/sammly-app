@@ -5,12 +5,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sammly/core/constant/app_colors.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/custom_stepper.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/step_1_upload.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/step_2_mask.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/step_3_describe.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class ImageGenerationStepperView extends StatefulWidget {
   final String? initialImageUrl;
@@ -55,9 +55,11 @@ class _ImageGenerationStepperViewState
         url,
         options: Options(responseType: ResponseType.bytes),
       );
-      
+
       final tempDir = await getTemporaryDirectory();
-      final file = File('${tempDir.path}/initial_image_${DateTime.now().millisecondsSinceEpoch}.jpg');
+      final file = File(
+        '${tempDir.path}/initial_image_${DateTime.now().millisecondsSinceEpoch}.jpg',
+      );
       await file.writeAsBytes(response.data!);
 
       if (!mounted) return;
@@ -67,14 +69,13 @@ class _ImageGenerationStepperViewState
         _currentStep = 1; // Move directly to mask step
         _isDownloadingImage = false;
       });
-      
+
       // Delay jumping the page controller to allow layout to build
       Future.delayed(const Duration(milliseconds: 100), () {
         if (mounted) {
           _pageController.jumpToPage(1);
         }
       });
-      
     } catch (e) {
       debugPrint("Failed to download image: $e");
       if (mounted) {
@@ -136,12 +137,14 @@ class _ImageGenerationStepperViewState
   void _generateDesign() {
     final prompt = _promptController.text;
     if (prompt.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Please enter a description."),
-          backgroundColor: AppColors.redColor,
-        ),
-      );
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(S.of(context).pleaseEnterDescription),
+            backgroundColor: AppColors.redColor,
+          ),
+        );
       return;
     }
 
@@ -151,7 +154,7 @@ class _ImageGenerationStepperViewState
     debugPrint("Prompt: $prompt");
 
     Navigator.pushNamed(
-      context, 
+      context,
       AppRoutes.generateLoadingView,
       arguments: {
         'showListView': false,
@@ -180,7 +183,7 @@ class _ImageGenerationStepperViewState
           onPressed: _previousStep,
         ),
         title: Text(
-          AppStrings.describeYourChanges,
+          S.of(context).describeYourChanges,
           style: TextStyle(
             color: AppColors.blackColor,
             fontSize: 20.sp,
@@ -188,48 +191,56 @@ class _ImageGenerationStepperViewState
           ),
         ),
       ),
-      body: _isDownloadingImage 
-          ? const Center(child: CircularProgressIndicator(color: AppColors.primaryColor))
+      body: _isDownloadingImage
+          ? const Center(
+              child: CircularProgressIndicator(color: AppColors.primaryColor),
+            )
           : Column(
               children: [
-          CustomStepper(
-            currentStep: _currentStep,
-            stepTitles: const ['Upload', 'Mask', 'Describe'],
-          ),
-          Expanded(
-            child: PageView(
-              controller: _pageController,
-              physics: const NeverScrollableScrollPhysics(),
-              children: [
-                Step1Upload(
-                  title: AppStrings.uploadYourImage,
-                  subtitle: AppStrings.addYourImage,
-                  initialImage: _uploadedImage,
-                  onImageSelected: _handleImageSelected,
-                  onImageRemoved: () {
-                    setState(() {
-                      _uploadedImage = null;
-                      _maskImage = null;
-                    });
-                  },
-                  onNext: _nextStep,
+                CustomStepper(
+                  currentStep: _currentStep,
+                  stepTitles: [
+                    S.of(context).upload,
+                    S.of(context).mask,
+                    S.of(context).describe,
+                  ],
                 ),
-                if (_uploadedImage != null)
-                  Step2Mask(
-                    uploadedImage: _uploadedImage!,
-                    onNext: _handleMaskExtracted,
-                  )
-                else
-                  const Center(child: Text("Please upload an image first")),
-                Step3Describe(
-                  promptController: _promptController,
-                  onGenerate: _generateDesign,
+                Expanded(
+                  child: PageView(
+                    controller: _pageController,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: [
+                      Step1Upload(
+                        title: S.of(context).uploadYourImage,
+                        subtitle: S.of(context).addYourImage,
+                        initialImage: _uploadedImage,
+                        onImageSelected: _handleImageSelected,
+                        onImageRemoved: () {
+                          setState(() {
+                            _uploadedImage = null;
+                            _maskImage = null;
+                          });
+                        },
+                        onNext: _nextStep,
+                      ),
+                      if (_uploadedImage != null)
+                        Step2Mask(
+                          uploadedImage: _uploadedImage!,
+                          onNext: _handleMaskExtracted,
+                        )
+                      else
+                        Center(
+                          child: Text(S.of(context).pleaseUploadImageFirst),
+                        ),
+                      Step3Describe(
+                        promptController: _promptController,
+                        onGenerate: _generateDesign,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }

@@ -45,7 +45,9 @@ class ExploreRepo {
         return right(ExploreResponse.fromJson(data));
       } else {
         log(response.data.toString());
-        return left(response.data['message'] ?? 'Failed to load shared designs.');
+        return left(
+          response.data['message'] ?? 'Failed to load shared designs.',
+        );
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
@@ -61,10 +63,13 @@ class ExploreRepo {
         final data = e.response!.data;
         log('API Error Response: $data');
         if (data is Map) {
-          final msg = data['message']
-              ?? data['msg']
-              ?? data['error']
-              ?? (data['errors'] is List ? (data['errors'] as List).join(', ') : null);
+          final msg =
+              data['message'] ??
+              data['msg'] ??
+              data['error'] ??
+              (data['errors'] is List
+                  ? (data['errors'] as List).join(', ')
+                  : null);
           if (msg != null) return msg.toString();
         }
       } catch (_) {}

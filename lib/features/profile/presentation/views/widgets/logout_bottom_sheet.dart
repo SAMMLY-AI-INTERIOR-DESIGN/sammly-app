@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/shared_pref/shared_pref.dart';
@@ -14,7 +13,7 @@ import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart'
 import 'package:sammly/features/History/cubit/historycubit.dart';
 import 'package:sammly/features/Explore/cubit/explorecubit.dart';
 import 'package:sammly/features/Explore/cubit/static_designs_cubit.dart';
-
+import 'package:sammly/generated/l10n.dart';
 
 class LogoutBottomSheet extends StatelessWidget {
   const LogoutBottomSheet({super.key});
@@ -34,18 +33,18 @@ class LogoutBottomSheet extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(height: 16.h),
-          SvgPicture.asset(AppImages.logOut, width: 30.w, height: 30.h,),
-          
+          SvgPicture.asset(AppImages.logOut, width: 30.w, height: 30.h),
+
           SizedBox(height: 24.h),
-          
+
           Text(
-            AppStrings.logoutConfirmMsg,
+            S.of(context).logoutConfirmMsg,
             textAlign: TextAlign.center,
             style: AppTextStyles.title18SemiBold,
           ),
-          
+
           SizedBox(height: 32.h),
-          
+
           Row(
             children: [
               Expanded(
@@ -59,7 +58,7 @@ class LogoutBottomSheet extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    AppStrings.cancel,
+                    S.of(context).cancel,
                     style: AppTextStyles.body16Regular.copyWith(
                       color: AppColors.primaryColor,
                       fontWeight: FontWeight.w600,
@@ -67,9 +66,9 @@ class LogoutBottomSheet extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               SizedBox(width: 16.w),
-              
+
               Expanded(
                 child: ElevatedButton(
                   onPressed: () async {
@@ -103,7 +102,7 @@ class LogoutBottomSheet extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    AppStrings.logOut,
+                    S.of(context).logOut,
                     style: AppTextStyles.body16Regular.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,

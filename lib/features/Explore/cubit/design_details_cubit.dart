@@ -31,7 +31,10 @@ class DesignDetailsCubit extends Cubit<DesignDetailsState> {
 
   void _saveSharedDesignId(String id) {
     _sharedDesignIds.add(id);
-    SharedPref.saveData(key: 'shared_design_ids', value: _sharedDesignIds.join(','));
+    SharedPref.saveData(
+      key: 'shared_design_ids',
+      value: _sharedDesignIds.join(','),
+    );
   }
 
   bool isSharedLocal(String designId) {
@@ -44,21 +47,17 @@ class DesignDetailsCubit extends Cubit<DesignDetailsState> {
 
     final result = await _repository.getDesignDetails(designId);
 
-    result.fold(
-      (error) => emit(DesignDetailsError(error)),
-      (response) {
-        _currentDesign = response.design;
-        _currentCreator = response.creator;
-        if (_currentDesign!.isShared) {
-          _saveSharedDesignId(_currentDesign!.id);
-        }
+    result.fold((error) => emit(DesignDetailsError(error)), (response) {
+      _currentDesign = response.design;
+      _currentCreator = response.creator;
+      if (_currentDesign!.isShared) {
+        _saveSharedDesignId(_currentDesign!.id);
+      }
 
-        emit(DesignDetailsLoaded(
-          design: _currentDesign!,
-          creator: _currentCreator,
-        ));
-      },
-    );
+      emit(
+        DesignDetailsLoaded(design: _currentDesign!, creator: _currentCreator),
+      );
+    });
   }
 
   /// Share design to explore.
@@ -71,12 +70,12 @@ class DesignDetailsCubit extends Cubit<DesignDetailsState> {
       (error) {
         // Even if error is "already shared", we can mark it locally
         if (error.toLowerCase().contains('already shared')) {
-           _saveSharedDesignId(designId);
-           emit(DesignShareSuccess("Design already shared"));
-           _emitLoadedIfAvailable();
+          _saveSharedDesignId(designId);
+          emit(DesignShareSuccess("Design already shared"));
+          _emitLoadedIfAvailable();
         } else {
-           emit(DesignActionError(error));
-           _emitLoadedIfAvailable();
+          emit(DesignActionError(error));
+          _emitLoadedIfAvailable();
         }
       },
       (message) {
@@ -172,10 +171,9 @@ class DesignDetailsCubit extends Cubit<DesignDetailsState> {
   /// Helper to re-emit the loaded state after an action.
   void _emitLoadedIfAvailable() {
     if (_currentDesign != null) {
-      emit(DesignDetailsLoaded(
-        design: _currentDesign!,
-        creator: _currentCreator,
-      ));
+      emit(
+        DesignDetailsLoaded(design: _currentDesign!, creator: _currentCreator),
+      );
     }
   }
 

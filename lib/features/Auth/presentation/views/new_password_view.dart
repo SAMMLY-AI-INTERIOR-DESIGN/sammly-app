@@ -10,6 +10,7 @@ import 'package:sammly/features/Auth/cubit/auth_cubit.dart';
 import 'package:sammly/features/Auth/cubit/auth_states.dart';
 import 'package:sammly/features/Auth/presentation/views/password_changed_view.dart';
 import 'package:sammly/features/Auth/presentation/widgets/custom_text_field.dart';
+import 'package:sammly/generated/l10n.dart';
 // استدعي شاشة النجاح اللي عملناها قبل كدا
 // import 'package:sammly/features/Auth/presentation/views/password_changed_view.dart';
 
@@ -49,12 +50,14 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
               ),
             );
           } else if (state is ResetPasswordFailedState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.errorMsg),
-                backgroundColor: Colors.red,
-              ),
-            );
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text(state.errorMsg),
+                  backgroundColor: Colors.red,
+                ),
+              );
           }
         },
         child: Scaffold(
@@ -65,10 +68,7 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
 
             scrolledUnderElevation: 0,
             leading: IconButton(
-              icon: const Icon(
-                Icons.arrow_back_ios_new,
-                color: AppColors.blackColor,
-              ),
+              icon: Icon(Icons.arrow_back_ios_new, color: AppColors.blackColor),
               onPressed: () => Navigator.pop(context),
             ),
           ),
@@ -82,7 +82,11 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
                   SizedBox(height: 20.h),
 
                   // 1. اللوجو الملون
-               SvgPicture.asset(AppImages.splash, width: 160.w, height: 147.h),
+                  SvgPicture.asset(
+                    AppImages.splash,
+                    width: 160.w,
+                    height: 147.h,
+                  ),
                   SizedBox(height: 32.h),
 
                   // 2. مؤشر الخطوات (الخطوة الثالثة والأخيرة هي اللي منورة)
@@ -106,12 +110,12 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
 
                   // 3. العناوين
                   Text(
-                    'Create new password',
+                    S.of(context).createNewPassword,
                     style: AppTextStyles.heading28ExtraBold,
                   ),
                   SizedBox(height: 8.h),
                   Text(
-                    'Your new password must be unique from those previously used.',
+                    S.of(context).createNewPasswordDesc,
                     textAlign: TextAlign.center,
                     style: AppTextStyles.body14Regular.copyWith(
                       color: Colors.grey[600],
@@ -122,14 +126,14 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
                   // 4. الباسورد الجديد
                   CustomTextField(
                     controller: _passwordController,
-                    thing: 'Enter new password',
+                    thing: S.of(context).newPassword,
                     preffixicon: Icons.lock_outline,
                     ispassword: true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter a new password';
+                        return S.of(context).pleaseEnterYourPassword;
                       } else if (value.length < 8) {
-                        return 'Password must be at least 8 characters';
+                        return S.of(context).passwordAtLeast8Chars;
                       }
                       return null;
                     },
@@ -138,14 +142,14 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
                   // 5. تأكيد الباسورد
                   CustomTextField(
                     controller: _confirmPasswordController,
-                    thing: 'Confirm your password',
+                    thing: S.of(context).confirmNewPassword,
                     preffixicon: Icons.lock_outline,
                     ispassword: true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please confirm your password';
+                        return S.of(context).pleaseConfirmYourPassword;
                       } else if (value != _passwordController.text) {
-                        return 'Passwords do not match';
+                        return S.of(context).passwordsDoNotMatch;
                       }
                       return null;
                     },
@@ -159,13 +163,13 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
                         return const Center(child: CircularProgressIndicator());
                       }
                       return CustomButton(
-                        text: 'Submit',
+                        text: S.of(context).submit,
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             context.read<AuthCubit>().resetPassword(
-                                  email: widget.email,
-                                  newPassword: _passwordController.text,
-                                );
+                              email: widget.email,
+                              newPassword: _passwordController.text,
+                            );
                           }
                         },
                       );

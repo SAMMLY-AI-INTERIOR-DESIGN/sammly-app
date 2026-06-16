@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sammly/features/Auth/cubit/auth_cubit.dart';
 import 'package:sammly/features/Auth/cubit/auth_states.dart';
 import 'package:sammly/features/Auth/presentation/widgets/custom_text_field.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class ChangePasswordView extends StatefulWidget {
   const ChangePasswordView({super.key});
@@ -33,7 +34,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: const CustomAppbar(title: 'Change Password'),
+      appBar: CustomAppbar(title: S.of(context).changePassword),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 24.w),
         child: Form(
@@ -44,12 +45,12 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
               SizedBox(height: 32.h),
               CustomTextField(
                 controller: _oldPasswordController,
-                thing: 'Enter your old password',
+                thing: S.of(context).currentPassword,
                 preffixicon: Icons.lock,
                 ispassword: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your old password';
+                    return S.of(context).pleaseEnterYourOldPassword;
                   }
                   return null;
                 },
@@ -57,14 +58,14 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
               SizedBox(height: 24.h),
               CustomTextField(
                 controller: _newPasswordController,
-                thing: 'Enter your new password',
+                thing: S.of(context).newPassword,
                 preffixicon: Icons.lock,
                 ispassword: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your new password';
+                    return S.of(context).pleaseEnterYourNewPassword;
                   } else if (value.length < 8) {
-                    return 'Password must be at least 8 characters';
+                    return S.of(context).passwordAtLeast8Chars;
                   }
                   return null;
                 },
@@ -72,14 +73,14 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
               SizedBox(height: 24.h),
               CustomTextField(
                 controller: _confirmPasswordController,
-                thing: 'Confirm your new password',
+                thing: S.of(context).confirmNewPassword,
                 preffixicon: Icons.lock,
                 ispassword: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please confirm your new password';
+                    return S.of(context).pleaseConfirmYourNewPassword;
                   } else if (value != _newPasswordController.text) {
-                    return 'Passwords do not match';
+                    return S.of(context).passwordsDoNotMatch;
                   }
                   return null;
                 },
@@ -88,20 +89,24 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
               BlocConsumer<AuthCubit, AuthState>(
                 listener: (context, state) {
                   if (state is ChangePasswordSuccessState) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Password changed successfully'),
-                        backgroundColor: Colors.green,
-                      ),
-                    );
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          content: Text(S.of(context).passwordChangedSuccess),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
                     Navigator.pop(context);
                   } else if (state is ChangePasswordFailedState) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(state.errorMsg),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          content: Text(state.errorMsg),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
                   }
                 },
                 builder: (context, state) {
@@ -109,7 +114,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   return CustomButton(
-                    text: 'Submit',
+                    text: S.of(context).submit,
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         context.read<AuthCubit>().changePassword(

@@ -11,6 +11,7 @@ import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/widgets/avatar_widget.dart';
 import 'package:sammly/features/Explore/cubit/design_details_cubit.dart';
 import 'package:sammly/features/Explore/cubit/design_details_states.dart';
+import 'package:sammly/generated/l10n.dart';
 import 'package:sammly/features/Explore/data/design_details_model.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_state.dart';
@@ -49,18 +50,27 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
   }
 
   void _showSnackbar(String message, {bool isError = false}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: isError ? Colors.red : AppColors.primaryColor,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: isError ? Colors.red : AppColors.primaryColor,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
   }
 
   String _formatText(String text) {
     if (text.isEmpty) return '';
-    return text.split('-').map((str) => str.isNotEmpty ? '${str[0].toUpperCase()}${str.substring(1)}' : '').join(' ');
+    return text
+        .split('-')
+        .map(
+          (str) => str.isNotEmpty
+              ? '${str[0].toUpperCase()}${str.substring(1)}'
+              : '',
+        )
+        .join(' ');
   }
 
   @override
@@ -94,7 +104,7 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
           if (state is DesignDetailsLoading) {
             return const Scaffold(
               backgroundColor: AppColors.whiteColor,
-              body: Center(child: CircularProgressIndicator())
+              body: Center(child: CircularProgressIndicator()),
             );
           }
 
@@ -113,8 +123,11 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.error_outline,
-                        size: 48.sp, color: AppColors.greyColor),
+                    Icon(
+                      Icons.error_outline,
+                      size: 48.sp,
+                      color: AppColors.greyColor,
+                    ),
                     SizedBox(height: 12.h),
                     Text(
                       state.message,
@@ -147,9 +160,9 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
 
           final cubit = context.read<DesignDetailsCubit>();
           if (cubit.currentDesign == null) {
-            return const Scaffold(
+            return Scaffold(
               backgroundColor: AppColors.whiteColor,
-              body: Center(child: Text('No design details found'))
+              body: Center(child: Text(S.of(context).noDesignDetailsFound)),
             );
           }
 
@@ -185,7 +198,9 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                             return [
                               PopupMenuItem(
                                 value: isShared ? 'cancel_share' : 'share',
-                                child: Text(isShared ? 'Cancel Share' : 'Share Design'),
+                                child: Text(
+                                  isShared ? 'Cancel Share' : 'Share Design',
+                                ),
                               ),
                             ];
                           },
@@ -201,7 +216,9 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                     _showSnackbar(favState.message, isError: true);
                   }
                 },
-                child: _isMaximized ? _buildMaximizedView(design) : _buildNormalView(design, cubit),
+                child: _isMaximized
+                    ? _buildMaximizedView(design)
+                    : _buildNormalView(design, cubit),
               ),
             ),
           );
@@ -280,7 +297,7 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                 Text(
                   'Prompt : ${design.prompt}',
                   style: TextStyle(
-                    color: AppColors.blackColor.withOpacity(0.8),
+                    color: AppColors.blackColor.withValues(alpha: 0.8),
                     fontSize: 14.sp,
                     height: 1.5,
                     fontWeight: FontWeight.w400,
@@ -300,7 +317,10 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                               height: 350.h,
                               color: Colors.grey[200],
                               child: const Center(
-                                child: Icon(Icons.broken_image, color: Colors.grey),
+                                child: Icon(
+                                  Icons.broken_image,
+                                  color: Colors.grey,
+                                ),
                               ),
                             )
                           : Image.network(
@@ -314,7 +334,10 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                                   height: 350.h,
                                   color: Colors.grey[200],
                                   child: const Center(
-                                    child: Icon(Icons.broken_image, color: Colors.grey),
+                                    child: Icon(
+                                      Icons.broken_image,
+                                      color: Colors.grey,
+                                    ),
                                   ),
                                 );
                               },
@@ -328,7 +351,7 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: [
-                              Colors.black.withOpacity(0.3),
+                              Colors.black.withValues(alpha: 0.3),
                               Colors.transparent,
                             ],
                           ),
@@ -336,10 +359,10 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                       ),
 
                       // Gradient overlay at bottom for icons
-                      Positioned(
+                      PositionedDirectional(
                         bottom: 0,
-                        left: 0,
-                        right: 0,
+                        start: 0,
+                        end: 0,
                         height: 80.h,
                         child: Container(
                           decoration: BoxDecoration(
@@ -347,7 +370,7 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                               begin: Alignment.bottomCenter,
                               end: Alignment.topCenter,
                               colors: [
-                                Colors.black.withOpacity(0.3),
+                                Colors.black.withValues(alpha: 0.3),
                                 Colors.transparent,
                               ],
                             ),
@@ -356,19 +379,28 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                       ),
 
                       // Bookmark Icon (Favorite)
-                      Positioned(
+                      PositionedDirectional(
                         top: 12.h,
-                        right: 12.w,
+                        end: 12.w,
                         child: BlocBuilder<FavoriteCubit, FavoriteState>(
                           builder: (context, favState) {
-                            final isFav = context.read<FavoriteCubit>().isFavorite(design.id);
+                            final isFav = context
+                                .read<FavoriteCubit>()
+                                .isFavorite(design.id);
                             return GestureDetector(
                               onTap: () {
-                                context.read<FavoriteCubit>().toggleFavorite(design.id, isFav);
-                                context.read<DesignDetailsCubit>().updateFavoriteStatus(!isFav);
+                                context.read<FavoriteCubit>().toggleFavorite(
+                                  design.id,
+                                  isFav,
+                                );
+                                context
+                                    .read<DesignDetailsCubit>()
+                                    .updateFavoriteStatus(!isFav);
                               },
                               child: SvgPicture.asset(
-                                isFav ? AppImages.withsaving : AppImages.withoutsaving,
+                                isFav
+                                    ? AppImages.withsaving
+                                    : AppImages.withoutsaving,
                                 width: 24.w,
                               ),
                             );
@@ -377,23 +409,26 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                       ),
 
                       // Download Icon (Bottom Left)
-                      Positioned(
+                      PositionedDirectional(
                         bottom: 12.h,
-                        left: 12.w,
+                        start: 12.w,
                         child: GestureDetector(
                           onTap: () {
                             if (design.imageUrl.isNotEmpty) {
-                              ImageDownloadHelper.downloadNetworkImage(context, design.imageUrl);
+                              ImageDownloadHelper.downloadNetworkImage(
+                                context,
+                                design.imageUrl,
+                              );
                             }
                           },
                           child: Container(
                             padding: EdgeInsets.all(8.w),
                             decoration: BoxDecoration(
-                              color: AppColors.whiteColor.withOpacity(0.85),
+                              color: AppColors.whiteColor.withValues(alpha: 0.85),
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
+                                  color: Colors.black.withValues(alpha: 0.2),
                                   blurRadius: 8,
                                   offset: const Offset(0, 2),
                                 ),
@@ -408,19 +443,19 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                       ),
 
                       // Maximize Icon (Bottom Right)
-                      Positioned(
+                      PositionedDirectional(
                         bottom: 12.h,
-                        right: 12.w,
+                        end: 12.w,
                         child: GestureDetector(
                           onTap: _toggleMaximize,
                           child: Container(
                             padding: EdgeInsets.all(8.w),
                             decoration: BoxDecoration(
-                              color: AppColors.whiteColor.withOpacity(0.85),
+                              color: AppColors.whiteColor.withValues(alpha: 0.85),
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
+                                  color: Colors.black.withValues(alpha: 0.2),
                                   blurRadius: 8,
                                   offset: const Offset(0, 2),
                                 ),
@@ -440,7 +475,7 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
 
                 // 4. Likes Row
                 Align(
-                  alignment: Alignment.centerRight,
+                  alignment: AlignmentDirectional.centerEnd,
                   child: GestureDetector(
                     onTap: () {
                       cubit.toggleLike(design.id);
@@ -451,7 +486,7 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                         Container(
                           padding: EdgeInsets.all(6.w),
                           decoration: BoxDecoration(
-                            color: AppColors.primaryColor.withOpacity(0.1),
+                            color: AppColors.primaryColor.withValues(alpha: 0.1),
                             shape: BoxShape.circle,
                           ),
                           child: SvgPicture.asset(
@@ -484,18 +519,21 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
 
         // Pinned Bottom Button
         Padding(
-          padding: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 20.h, top: 8.h),
+          padding: EdgeInsetsDirectional.only(
+            start: 20.w,
+            end: 20.w,
+            bottom: 20.h,
+            top: 8.h,
+          ),
           child: CustomButton(
-            text: 'Try this Style',
+            text: S.of(context).restyleThisDesign,
             prefixIcon: AppImages.startGenerateIcon,
             onPressed: () {
               if (design.imageUrl.isNotEmpty) {
                 Navigator.pushNamed(
                   context,
                   AppRoutes.restyleView,
-                  arguments: {
-                    'initialImageUrl': design.imageUrl,
-                  },
+                  arguments: {'initialImageUrl': design.imageUrl},
                 );
               }
             },
@@ -529,19 +567,19 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                   },
                 ),
         ),
-        Positioned(
+        PositionedDirectional(
           top: 12.h,
-          left: 12.w,
+          start: 12.w,
           child: GestureDetector(
             onTap: _toggleMaximize,
             child: Container(
               padding: EdgeInsets.all(8.w),
               decoration: BoxDecoration(
-                color: AppColors.whiteColor.withOpacity(0.85),
+                color: AppColors.whiteColor.withValues(alpha: 0.85),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
+                    color: Colors.black.withValues(alpha: 0.2),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -555,19 +593,19 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
             ),
           ),
         ),
-        Positioned(
+        PositionedDirectional(
           bottom: 24.h,
-          right: 24.w,
+          end: 24.w,
           child: GestureDetector(
             onTap: _toggleMaximize,
             child: Container(
               padding: EdgeInsets.all(8.w),
               decoration: BoxDecoration(
-                color: AppColors.whiteColor.withOpacity(0.85),
+                color: AppColors.whiteColor.withValues(alpha: 0.85),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
+                    color: Colors.black.withValues(alpha: 0.2),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -585,8 +623,18 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
     try {
       final date = DateTime.parse(isoDate);
       final months = [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
       ];
       return '${date.day} ${months[date.month - 1]} ${date.year}';
     } catch (_) {

@@ -3,10 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/avatar_widget.dart';
+import 'package:sammly/core/localization/locale_cubit.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/invite_friends_widget.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/logout_bottom_sheet.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/profile_menu_group.dart';
@@ -15,6 +15,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_state.dart';
 import 'package:sammly/features/layout/presentation/cubit/layout_cubit/layout_cubit.dart';
+import 'package:sammly/generated/l10n.dart';
+
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
 
@@ -36,10 +38,10 @@ class _ProfileViewState extends State<ProfileView> {
       backgroundColor: AppColors.whiteColor,
       body: Stack(
         children: [
-          Positioned(
+          PositionedDirectional(
             top: 0,
-            left: 0,
-            right: 0,
+            start: 0,
+            end: 0,
             height: 350.h,
             child: Image.asset(
               AppImages.profileBgPlaceholder,
@@ -66,7 +68,7 @@ class _ProfileViewState extends State<ProfileView> {
                         },
                       ),
                       Text(
-                        AppStrings.profile,
+                        S.of(context).profile,
                         style: AppTextStyles.title20Bold.copyWith(
                           color: AppColors.blackColor2,
                         ),
@@ -112,7 +114,8 @@ class _ProfileViewState extends State<ProfileView> {
                         final gender = profile?.gender;
 
                         // Use settingInfo first, fall back to profile data
-                        final displayAvatar = settingInfo?.avatar ?? profile?.avatar;
+                        final displayAvatar =
+                            settingInfo?.avatar ?? profile?.avatar;
                         final displayName = settingInfo?.name ?? profile?.name;
 
                         return Column(
@@ -143,7 +146,8 @@ class _ProfileViewState extends State<ProfileView> {
                                       children: [
                                         Text(
                                           displayName ??
-                                              (state is SettingInfoLoading || state is ProfileLoading
+                                              (state is SettingInfoLoading ||
+                                                      state is ProfileLoading
                                                   ? "..."
                                                   : "User"),
                                           style: AppTextStyles.title18SemiBold,
@@ -183,7 +187,7 @@ class _ProfileViewState extends State<ProfileView> {
                             ),
                             SizedBox(height: 12.h),
                             Align(
-                              alignment: Alignment.centerRight,
+                              alignment: AlignmentDirectional.centerEnd,
                               child: GestureDetector(
                                 onTap: () {
                                   Navigator.pushNamed(
@@ -222,7 +226,7 @@ class _ProfileViewState extends State<ProfileView> {
                                                 .createShader(bounds);
                                           },
                                           child: Text(
-                                            AppStrings.upgradePro,
+                                            S.of(context).upgradePro,
                                             style: AppTextStyles.body14Regular
                                                 .copyWith(
                                                   color: AppColors.whiteColor,
@@ -244,21 +248,21 @@ class _ProfileViewState extends State<ProfileView> {
                   ProfileMenuGroup(
                     children: [
                       ProfileMenuItem(
-                        title: AppStrings.viewMyPosts,
+                        title: S.of(context).viewMyPosts,
                         svgIcon: AppImages.profileIcon,
                         onTap: () {
                           Navigator.pushNamed(context, AppRoutes.myProfileView);
                         },
                       ),
                       ProfileMenuItem(
-                        title: AppStrings.favorites,
+                        title: S.of(context).favorites,
                         svgIcon: AppImages.favoriteprofileicon,
                         onTap: () {
                           Navigator.pushNamed(context, AppRoutes.favoriteView);
                         },
                       ),
                       ProfileMenuItem(
-                        title: AppStrings.following,
+                        title: S.of(context).following,
                         svgIcon: AppImages.following,
                         onTap: () {
                           Navigator.pushNamed(context, AppRoutes.followingView);
@@ -269,10 +273,10 @@ class _ProfileViewState extends State<ProfileView> {
                   ProfileMenuGroup(
                     children: [
                       ProfileMenuItem(
-                        title: AppStrings.freeGenerations,
+                        title: S.of(context).freeGenerations,
                         svgIcon: AppImages.aiPoweredIcon,
                         trailing: Padding(
-                          padding: EdgeInsets.only(right: 8.w),
+                          padding: EdgeInsetsDirectional.only(end: 8.w),
                           child: Text(
                             "5",
                             style: AppTextStyles.badge14SemiBold,
@@ -281,7 +285,7 @@ class _ProfileViewState extends State<ProfileView> {
                         onTap: () {},
                       ),
                       ProfileMenuItem(
-                        title: AppStrings.manageSubscription,
+                        title: S.of(context).manageSubscription,
                         svgIcon: AppImages.manageSubscriptions,
                         onTap: () {
                           Navigator.pushNamed(
@@ -295,10 +299,21 @@ class _ProfileViewState extends State<ProfileView> {
                   ProfileMenuGroup(
                     children: [
                       ProfileMenuItem(
-                        title: AppStrings.support,
+                        title: S.of(context).support,
                         svgIcon: AppImages.support,
                         onTap: () {
                           Navigator.pushNamed(context, AppRoutes.supportView);
+                        },
+                      ),
+                      ProfileMenuItem(
+                        title:
+                            context.watch<LocaleCubit>().state.languageCode ==
+                                'en'
+                            ? 'العربية'
+                            : 'English',
+                        svgIcon: AppImages.languageIcon,
+                        onTap: () {
+                          context.read<LocaleCubit>().toggleLanguage();
                         },
                       ),
                       ProfileMenuItem(
@@ -308,7 +323,7 @@ class _ProfileViewState extends State<ProfileView> {
                             AppRoutes.notificationsView,
                           );
                         },
-                        title: AppStrings.notification,
+                        title: S.of(context).notification,
                         svgIcon: AppImages.notifications,
                       ),
                     ],
@@ -316,21 +331,21 @@ class _ProfileViewState extends State<ProfileView> {
                   ProfileMenuGroup(
                     children: [
                       ProfileMenuItem(
-                        title: AppStrings.termsConditions,
+                        title: S.of(context).termsConditions,
                         svgIcon: AppImages.terms,
                         onTap: () {
                           Navigator.pushNamed(context, AppRoutes.termsView);
                         },
                       ),
                       ProfileMenuItem(
-                        title: AppStrings.privacyPolicy,
+                        title: S.of(context).privacyPolicy,
                         svgIcon: AppImages.privacy,
                         onTap: () {
                           Navigator.pushNamed(context, AppRoutes.privacyView);
                         },
                       ),
                       ProfileMenuItem(
-                        title: AppStrings.security,
+                        title: S.of(context).security,
                         svgIcon: AppImages.security,
                         onTap: () {
                           Navigator.pushNamed(context, AppRoutes.securityView);
@@ -341,7 +356,7 @@ class _ProfileViewState extends State<ProfileView> {
                   ProfileMenuGroup(
                     children: [
                       ProfileMenuItem(
-                        title: AppStrings.share,
+                        title: S.of(context).share,
                         svgIcon: AppImages.share,
                         onTap: () {
                           showDialog(
@@ -358,7 +373,7 @@ class _ProfileViewState extends State<ProfileView> {
                   ProfileMenuGroup(
                     children: [
                       ProfileMenuItem(
-                        title: AppStrings.logOut,
+                        title: S.of(context).logOut,
                         svgIcon: AppImages.logOut,
                         textColor: Colors.red.shade400,
                         trailing: Icon(

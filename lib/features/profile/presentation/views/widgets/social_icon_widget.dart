@@ -5,7 +5,11 @@ import 'package:flutter_svg/svg.dart';
 class SocialIconWidget extends StatelessWidget {
   final String iconPath;
   final VoidCallback onTap;
-  const SocialIconWidget({super.key, required this.iconPath, required this.onTap});
+  const SocialIconWidget({
+    super.key,
+    required this.iconPath,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {

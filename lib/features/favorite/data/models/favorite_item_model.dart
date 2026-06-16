@@ -2,10 +2,7 @@ class FavoriteModel {
   final String id;
   final String imageUrl;
 
-  FavoriteModel({
-    required this.id,
-    required this.imageUrl,
-  });
+  FavoriteModel({required this.id, required this.imageUrl});
 
   factory FavoriteModel.fromJson(Map<String, dynamic> json) {
     return FavoriteModel(
@@ -34,7 +31,8 @@ class FavoriteResponse {
       page: pagination['page'] ?? 1,
       limit: pagination['limit'] ?? 20,
       hasMore: pagination['hasMore'] ?? false,
-      designs: (json['designs'] as List<dynamic>?)
+      designs:
+          (json['designs'] as List<dynamic>?)
               ?.map((e) => FavoriteModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],

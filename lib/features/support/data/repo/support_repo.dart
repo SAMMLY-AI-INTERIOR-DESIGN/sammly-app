@@ -14,11 +14,7 @@ class SupportRepo {
     try {
       final response = await DioHelper.postData(
         endPoint: ApiConstants.support,
-        data: {
-          'guestEmail': email,
-          'subject': subject,
-          'message': message,
-        },
+        data: {'guestEmail': email, 'subject': subject, 'message': message},
       );
 
       if (response.statusCode == 201) {
@@ -39,7 +35,12 @@ class SupportRepo {
       try {
         final data = e.response!.data;
         if (data is Map) {
-          final msg = data['message'] ?? data['msg'] ?? (data['data'] is Map ? (data['data']['msg'] ?? data['data']['message']) : null);
+          final msg =
+              data['message'] ??
+              data['msg'] ??
+              (data['data'] is Map
+                  ? (data['data']['msg'] ?? data['data']['message'])
+                  : null);
           if (msg != null) return msg.toString();
         }
       } catch (_) {}

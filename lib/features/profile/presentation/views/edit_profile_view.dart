@@ -6,7 +6,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/core/widgets/custombutton.dart';
 import 'package:sammly/features/home/logic/home_cubit.dart';
@@ -15,6 +14,7 @@ import 'package:sammly/features/profile/presentation/views/widgets/custom_text_f
 import 'package:sammly/features/profile/presentation/views/widgets/edit_image_section.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_state.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class EditProfileView extends StatefulWidget {
   const EditProfileView({super.key});
@@ -103,153 +103,160 @@ class _EditProfileViewState extends State<EditProfileView> {
       },
       child: Scaffold(
         backgroundColor: AppColors.whiteColor,
-        appBar: const CustomAppbar(title: AppStrings.editProfile),
+        appBar: CustomAppbar(title: S.of(context).editProfile),
         body: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
           child: Column(
             children: [
-            EditImageSection(
-              currentAvatarUrl: context.read<ProfileCubit>().currentProfile?.avatar,
-              onImagePicked: (file) {
-                _selectedImageFile = file;
-              },
-            ),
-
-            SizedBox(height: 20.h),
-
-            CustomTextField(
-              label: AppStrings.fullName,
-              controller: nameController,
-            ),
-            CustomTextField(
-              label: AppStrings.userName,
-              controller: usernameController,
-            ),
-
-            CustomTextField(
-              label: AppStrings.dateOfBirth,
-              controller: dobController,
-              readOnly: true,
-              onTap: () async {
-                final DateTime? picked = await showDatePicker(
-                  context: context,
-                  initialDate: selectedDobDate ?? DateTime(2000),
-                  firstDate: DateTime(1900),
-                  lastDate: DateTime.now(),
-                );
-                if (picked != null) {
-                  setState(() {
-                    selectedDobDate = picked;
-                    dobController.text =
-                        "${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year}";
-                  });
-                }
-              },
-              suffixIcon: SvgPicture.asset(
-                AppImages.caledar,
-                width: 20.w,
-                height: 20.h,
+              EditImageSection(
+                currentAvatarUrl: context
+                    .read<ProfileCubit>()
+                    .currentProfile
+                    ?.avatar,
+                onImagePicked: (file) {
+                  _selectedImageFile = file;
+                },
               ),
-            ),
 
-            // التعديل الأساسي هنا
-            Row(
-              children: [
-                Expanded(
-                  child: CustomDropdown(
-                    label: AppStrings.country,
-                    value: selectedCountry,
-                    items: countriesList,
-                    onChanged: (val) {
-                      if (val != null) {
-                        setState(() {
-                          selectedCountry = val;
-                        });
-                      }
-                    },
-                  ),
-                ),
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: CustomDropdown(
-                    label: AppStrings.gender,
-                    value: selectedGender,
-                    items: gendersList,
-                    onChanged: (val) {
-                      if (val != null) {
-                        setState(() {
-                          selectedGender = val;
-                        });
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
+              SizedBox(height: 20.h),
 
-            SizedBox(height: 30.h),
+              CustomTextField(
+                label: S.of(context).fullName,
+                controller: nameController,
+              ),
+              CustomTextField(
+                label: S.of(context).userName,
+                controller: usernameController,
+              ),
 
-            BlocConsumer<ProfileCubit, ProfileState>(
-              listener: (context, state) {
-                if (state is EditProfileSuccess) {
-                  // نعمل refresh من الـ API عشان نجيب الـ avatar URL الجديد من السيرفر
-                  context.read<ProfileCubit>().fetchProfile(forceRefresh: true);
-                  context.read<ProfileCubit>().fetchSettingInfo();
-                  context.read<HomeCubit>().fetchHomeData();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Profile updated successfully!'),
-                    ),
+              CustomTextField(
+                label: S.of(context).dateOfBirth,
+                controller: dobController,
+                readOnly: true,
+                onTap: () async {
+                  final DateTime? picked = await showDatePicker(
+                    context: context,
+                    initialDate: selectedDobDate ?? DateTime(2000),
+                    firstDate: DateTime(1900),
+                    lastDate: DateTime.now(),
                   );
-                  Navigator.pop(context);
-                } else if (state is EditProfileError) {
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text(state.message)));
-                }
-              },
-              builder: (context, state) {
-                if (state is EditProfileLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                return CustomButton(
-                  text: AppStrings.update,
-                  onPressed: () {
-                    String? apiDob;
-                    if (selectedDobDate != null) {
-                      apiDob =
-                          "${selectedDobDate!.year}-${selectedDobDate!.month.toString().padLeft(2, '0')}-${selectedDobDate!.day.toString().padLeft(2, '0')}";
-                    } else if (dobController.text.isNotEmpty) {
-                      final parts = dobController.text.split('/');
-                      if (parts.length == 3) {
-                        final d = int.tryParse(parts[0]);
-                        final m = int.tryParse(parts[1]);
-                        final y = int.tryParse(parts[2]);
-                        if (d != null && m != null && y != null) {
-                          apiDob =
-                              "$y-${m.toString().padLeft(2, '0')}-${d.toString().padLeft(2, '0')}";
-                        }
-                      }
-                      apiDob ??= dobController.text;
-                    }
+                  if (picked != null) {
+                    setState(() {
+                      selectedDobDate = picked;
+                      dobController.text =
+                          "${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year}";
+                    });
+                  }
+                },
+                suffixIcon: SvgPicture.asset(
+                  AppImages.caledar,
+                  width: 20.w,
+                  height: 20.h,
+                ),
+              ),
 
-                    context.read<ProfileCubit>().editProfile({
-                      "name": nameController.text,
-                      "username": usernameController.text,
-                      "country": selectedCountry == "🇪🇬 Egypt"
-                          ? "egypt"
-                          : "international",
-                      "gender": selectedGender,
-                      "dateOfBirth": apiDob,
-                    }, imageFile: _selectedImageFile);
-                  },
-                );
-              },
-            ),
-            SizedBox(height: 20.h),
-          ],
+              // التعديل الأساسي هنا
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomDropdown(
+                      label: S.of(context).country,
+                      value: selectedCountry,
+                      items: countriesList,
+                      onChanged: (val) {
+                        if (val != null) {
+                          setState(() {
+                            selectedCountry = val;
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: CustomDropdown(
+                      label: S.of(context).gender,
+                      value: selectedGender,
+                      items: gendersList,
+                      onChanged: (val) {
+                        if (val != null) {
+                          setState(() {
+                            selectedGender = val;
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+
+              SizedBox(height: 30.h),
+
+              BlocConsumer<ProfileCubit, ProfileState>(
+                listener: (context, state) {
+                  if (state is EditProfileSuccess) {
+                    // نعمل refresh من الـ API عشان نجيب الـ avatar URL الجديد من السيرفر
+                    context.read<ProfileCubit>().fetchProfile(
+                      forceRefresh: true,
+                    );
+                    context.read<ProfileCubit>().fetchSettingInfo();
+                    context.read<HomeCubit>().fetchHomeData();
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          content: Text(S.of(context).profileUpdatedSuccess),
+                        ),
+                      );
+                    Navigator.pop(context);
+                  } else if (state is EditProfileError) {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(state.message)));
+                  }
+                },
+                builder: (context, state) {
+                  if (state is EditProfileLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  return CustomButton(
+                    text: S.of(context).update,
+                    onPressed: () {
+                      String? apiDob;
+                      if (selectedDobDate != null) {
+                        apiDob =
+                            "${selectedDobDate!.year}-${selectedDobDate!.month.toString().padLeft(2, '0')}-${selectedDobDate!.day.toString().padLeft(2, '0')}";
+                      } else if (dobController.text.isNotEmpty) {
+                        final parts = dobController.text.split('/');
+                        if (parts.length == 3) {
+                          final d = int.tryParse(parts[0]);
+                          final m = int.tryParse(parts[1]);
+                          final y = int.tryParse(parts[2]);
+                          if (d != null && m != null && y != null) {
+                            apiDob =
+                                "$y-${m.toString().padLeft(2, '0')}-${d.toString().padLeft(2, '0')}";
+                          }
+                        }
+                        apiDob ??= dobController.text;
+                      }
+
+                      context.read<ProfileCubit>().editProfile({
+                        "name": nameController.text,
+                        "username": usernameController.text,
+                        "country": selectedCountry == "🇪🇬 Egypt"
+                            ? "egypt"
+                            : "international",
+                        "gender": selectedGender,
+                        "dateOfBirth": apiDob,
+                      }, imageFile: _selectedImageFile);
+                    },
+                  );
+                },
+              ),
+              SizedBox(height: 20.h),
+            ],
+          ),
         ),
-      ),
       ),
     );
   }

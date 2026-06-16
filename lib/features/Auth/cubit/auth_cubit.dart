@@ -15,24 +15,18 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   // ── Login ──
-  Future<void> login({
-    required String email,
-    required String password,
-  }) async {
+  Future<void> login({required String email, required String password}) async {
     emit(LoginLoadingState());
     final result = await authRepo.login(email: email, password: password);
-    result.fold(
-      (error) {
-        if (error.startsWith('EMAIL_NOT_VERIFIED')) {
-          final parts = error.split(':');
-          final message = parts.length > 1 ? parts.sublist(1).join(':') : null;
-          emit(AuthNeedsVerificationState(email: email, message: message));
-        } else {
-          emit(LoginFailedState(errorMsg: error));
-        }
-      },
-      (success) => emit(LoginSuccessState()),
-    );
+    result.fold((error) {
+      if (error.startsWith('EMAIL_NOT_VERIFIED')) {
+        final parts = error.split(':');
+        final message = parts.length > 1 ? parts.sublist(1).join(':') : null;
+        emit(AuthNeedsVerificationState(email: email, message: message));
+      } else {
+        emit(LoginFailedState(errorMsg: error));
+      }
+    }, (success) => emit(LoginSuccessState()));
   }
 
   // ── Register ──
@@ -51,18 +45,15 @@ class AuthCubit extends Cubit<AuthState> {
       termsAccepted: termsAccepted,
       privacyAccepted: privacyAccepted,
     );
-    result.fold(
-      (error) {
-        if (error.startsWith('EMAIL_NOT_VERIFIED')) {
-          final parts = error.split(':');
-          final message = parts.length > 1 ? parts.sublist(1).join(':') : null;
-          emit(AuthNeedsVerificationState(email: email, message: message));
-        } else {
-          emit(RegisterFailedState(errorMsg: error));
-        }
-      },
-      (success) => emit(RegisterSuccessState()),
-    );
+    result.fold((error) {
+      if (error.startsWith('EMAIL_NOT_VERIFIED')) {
+        final parts = error.split(':');
+        final message = parts.length > 1 ? parts.sublist(1).join(':') : null;
+        emit(AuthNeedsVerificationState(email: email, message: message));
+      } else {
+        emit(RegisterFailedState(errorMsg: error));
+      }
+    }, (success) => emit(RegisterSuccessState()));
   }
 
   // ── Verify Register Code ──
@@ -135,5 +126,4 @@ class AuthCubit extends Cubit<AuthState> {
       (success) => emit(ChangePasswordSuccessState()),
     );
   }
-
 }

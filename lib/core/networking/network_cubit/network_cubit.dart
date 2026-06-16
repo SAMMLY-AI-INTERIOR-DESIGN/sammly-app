@@ -21,7 +21,9 @@ class NetworkCubit extends Cubit<NetworkState> {
     }
 
     // Listen for continuous changes
-    _internetSubscription = _internetConnection.onStatusChange.listen((InternetStatus status) {
+    _internetSubscription = _internetConnection.onStatusChange.listen((
+      InternetStatus status,
+    ) {
       if (status == InternetStatus.connected) {
         emit(NetworkConnected());
       } else {

@@ -3,11 +3,7 @@ class FollowingModel {
   final String name;
   final String? avatar;
 
-  FollowingModel({
-    required this.id,
-    required this.name,
-    this.avatar,
-  });
+  FollowingModel({required this.id, required this.name, this.avatar});
 
   factory FollowingModel.fromJson(Map<String, dynamic> json) {
     return FollowingModel(

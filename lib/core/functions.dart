@@ -6,7 +6,7 @@ import 'package:sammly/core/theme/text_styles.dart';
 void showCustomSnackBar({
   required BuildContext context,
   required String message,
-  bool isError = false, 
+  bool isError = false,
 }) {
   ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
@@ -20,18 +20,16 @@ void showCustomSnackBar({
         ),
       ),
       backgroundColor: isError ? Colors.red.shade400 : AppColors.secondaryColor,
-      
-      behavior: SnackBarBehavior.floating, 
-      
-      margin: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h), 
-      
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.r),
-      ),
-      
+
+      behavior: SnackBarBehavior.floating,
+
+      margin: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
+
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+
       duration: const Duration(seconds: 3),
-      
-      elevation: 0, 
+
+      elevation: 0,
     ),
   );
 }

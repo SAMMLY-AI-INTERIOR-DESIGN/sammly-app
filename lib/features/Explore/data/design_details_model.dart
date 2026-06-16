@@ -2,10 +2,7 @@ class DesignDetailsResponse {
   final DesignDetailsModel design;
   final DesignCreatorModel? creator;
 
-  DesignDetailsResponse({
-    required this.design,
-    this.creator,
-  });
+  DesignDetailsResponse({required this.design, this.creator});
 
   factory DesignDetailsResponse.fromJson(Map<String, dynamic> json) {
     return DesignDetailsResponse(
@@ -13,9 +10,7 @@ class DesignDetailsResponse {
         json['design'] as Map<String, dynamic>,
       ),
       creator: json['creator'] != null
-          ? DesignCreatorModel.fromJson(
-              json['creator'] as Map<String, dynamic>,
-            )
+          ? DesignCreatorModel.fromJson(json['creator'] as Map<String, dynamic>)
           : null,
     );
   }
@@ -85,10 +80,7 @@ class DesignCreatorModel {
   final String name;
   final String avatar;
 
-  DesignCreatorModel({
-    required this.name,
-    required this.avatar,
-  });
+  DesignCreatorModel({required this.name, required this.avatar});
 
   factory DesignCreatorModel.fromJson(Map<String, dynamic> json) {
     return DesignCreatorModel(

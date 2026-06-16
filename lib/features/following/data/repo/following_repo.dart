@@ -55,7 +55,9 @@ class FollowingRepo {
       );
 
       if (response.statusCode == 201 && response.data['status'] == 'success') {
-        return right(response.data['data']['message'] ?? 'Followed successfully');
+        return right(
+          response.data['data']['message'] ?? 'Followed successfully',
+        );
       } else {
         return left(response.data['message'] ?? 'Failed to follow.');
       }
@@ -80,7 +82,9 @@ class FollowingRepo {
       );
 
       if (response.statusCode == 200 && response.data['status'] == 'success') {
-        return right(response.data['data']['message'] ?? 'Unfollowed successfully');
+        return right(
+          response.data['data']['message'] ?? 'Unfollowed successfully',
+        );
       } else {
         return left(response.data['message'] ?? 'Failed to unfollow.');
       }

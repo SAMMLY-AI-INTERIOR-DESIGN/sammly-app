@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_colors.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/custom_heart_item.dart';
 import 'package:sammly/core/widgets/avatar_widget.dart';
 import 'package:sammly/features/notifications/data/model/notifications_model.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class NotificationItemWidget extends StatelessWidget {
   final NotificationItemModel item;
@@ -33,27 +33,24 @@ class NotificationItemWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(26.r),
                 ),
               ),
-              Positioned(
+              PositionedDirectional(
                 bottom: 0,
-                right: -8.w,
+                end: -8.w,
                 child: CustomHeartItem(),
               ),
             ],
           ),
-          
+
           SizedBox(width: 16.w),
-          
+
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  item.title,
-                  style: AppTextStyles.body16Medium
-                ),
+                Text(item.title, style: AppTextStyles.body16Medium),
                 SizedBox(height: 4.h),
                 Text(
-                  AppStrings.likeYourSharedDesign,
+                  S.of(context).likeYourSharedDesign,
                   style: AppTextStyles.body14Regular.copyWith(
                     color: AppColors.greyColor.withValues(alpha: 0.7),
                   ),
@@ -61,7 +58,7 @@ class NotificationItemWidget extends StatelessWidget {
               ],
             ),
           ),
-          
+
           Text(
             item.createdAt,
             style: AppTextStyles.body14Regular.copyWith(

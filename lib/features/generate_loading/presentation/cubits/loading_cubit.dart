@@ -18,11 +18,11 @@ class GenerationCubit extends Cubit<GenerationState> {
     required GenerateDesignRepo repo,
   }) {
     _currentStep = 0;
-    
+
     emit(GenerationLoadingStep(_currentStep));
 
     _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
-      _currentStep = (_currentStep + 1) % 4; 
+      _currentStep = (_currentStep + 1) % 4;
       emit(GenerationLoadingStep(_currentStep));
     });
 
@@ -59,7 +59,9 @@ class GenerationCubit extends Cubit<GenerationState> {
         emit(GenerationFailed(errorMsg: error));
       },
       (design) {
-        emit(GenerationFinished(imageUrl: design.imageUrl, designId: design.id));
+        emit(
+          GenerationFinished(imageUrl: design.imageUrl, designId: design.id),
+        );
       },
     );
   }
@@ -70,19 +72,15 @@ class GenerationCubit extends Cubit<GenerationState> {
     required GenerateDesignRepo repo,
   }) {
     _currentStep = 0;
-    
+
     emit(GenerationLoadingStep(_currentStep));
 
     _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
-      _currentStep = (_currentStep + 1) % 4; 
+      _currentStep = (_currentStep + 1) % 4;
       emit(GenerationLoadingStep(_currentStep));
     });
 
-    _callRestyleApi(
-      uiStyle: uiStyle,
-      imageUrl: imageUrl,
-      repo: repo,
-    );
+    _callRestyleApi(uiStyle: uiStyle, imageUrl: imageUrl, repo: repo);
   }
 
   Future<void> _callRestyleApi({
@@ -104,7 +102,9 @@ class GenerationCubit extends Cubit<GenerationState> {
         emit(GenerationFailed(errorMsg: error));
       },
       (design) {
-        emit(GenerationFinished(imageUrl: design.imageUrl, designId: design.id));
+        emit(
+          GenerationFinished(imageUrl: design.imageUrl, designId: design.id),
+        );
       },
     );
   }
@@ -116,11 +116,11 @@ class GenerationCubit extends Cubit<GenerationState> {
     required GenerateDesignRepo repo,
   }) {
     _currentStep = 0;
-    
+
     emit(GenerationLoadingStep(_currentStep));
 
     _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
-      _currentStep = (_currentStep + 1) % 4; 
+      _currentStep = (_currentStep + 1) % 4;
       emit(GenerationLoadingStep(_currentStep));
     });
 
@@ -139,7 +139,9 @@ class GenerationCubit extends Cubit<GenerationState> {
     required GenerateDesignRepo repo,
   }) async {
     final apiStyle = GenerateMappers.styleToApi(uiStyle);
-    final apiRoomTypes = uiRoomTypes.map((room) => GenerateMappers.roomToApi(room)).toList();
+    final apiRoomTypes = uiRoomTypes
+        .map((room) => GenerateMappers.roomToApi(room))
+        .toList();
 
     final result = await repo.generateFullHomeDesign(
       style: apiStyle,
@@ -155,11 +157,13 @@ class GenerationCubit extends Cubit<GenerationState> {
       },
       (designs) {
         if (designs.isNotEmpty) {
-          emit(GenerationFinished(
-            imageUrl: designs.first.imageUrl, 
-            designId: designs.first.id,
-            designs: designs,
-          ));
+          emit(
+            GenerationFinished(
+              imageUrl: designs.first.imageUrl,
+              designId: designs.first.id,
+              designs: designs,
+            ),
+          );
         } else {
           emit(GenerationFailed(errorMsg: 'No designs returned.'));
         }
@@ -175,11 +179,11 @@ class GenerationCubit extends Cubit<GenerationState> {
     required GenerateDesignRepo repo,
   }) {
     _currentStep = 0;
-    
+
     emit(GenerationLoadingStep(_currentStep));
 
     _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
-      _currentStep = (_currentStep + 1) % 4; 
+      _currentStep = (_currentStep + 1) % 4;
       emit(GenerationLoadingStep(_currentStep));
     });
 
@@ -213,11 +217,13 @@ class GenerationCubit extends Cubit<GenerationState> {
         emit(GenerationFailed(errorMsg: error));
       },
       (design) {
-        emit(GenerationFinished(
-          imageUrl: design.imageUrl, 
-          designId: design.id,
-          designs: [design],
-        ));
+        emit(
+          GenerationFinished(
+            imageUrl: design.imageUrl,
+            designId: design.id,
+            designs: [design],
+          ),
+        );
       },
     );
   }

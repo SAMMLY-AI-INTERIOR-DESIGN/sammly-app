@@ -24,54 +24,72 @@ abstract class DioHelper {
       ),
     );
 
-    dio.interceptors.add(InterceptorsWrapper(
-      onError: (DioException e, handler) async {
-        // If the request fails, only show No Internet View if we ACTUALLY have no signal.
-        if (e.type == DioExceptionType.connectionTimeout ||
-            e.type == DioExceptionType.sendTimeout ||
-            e.type == DioExceptionType.receiveTimeout ||
-            e.type == DioExceptionType.connectionError) {
-          
-          // Double check internet access
-          bool hasInternet = await InternetConnection().hasInternetAccess;
-          
-          if (!hasInternet) {
-            final BuildContext? context = navigatorKey.currentContext;
-            if (context != null) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const NoInternetView()),
-              );
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onError: (DioException e, handler) async {
+          // If the request fails, only show No Internet View if we ACTUALLY have no signal.
+          if (e.type == DioExceptionType.connectionTimeout ||
+              e.type == DioExceptionType.sendTimeout ||
+              e.type == DioExceptionType.receiveTimeout ||
+              e.type == DioExceptionType.connectionError) {
+            // Double check internet access
+            bool hasInternet = await InternetConnection().hasInternetAccess;
+
+            if (!hasInternet) {
+              final BuildContext? context = navigatorKey.currentContext;
+              if (context != null && context.mounted) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const NoInternetView(),
+                  ),
+                );
+              }
             }
           }
-        }
 
-        // Handle 401 Unauthorized (Session Expired)
-        if (e.response?.statusCode == 401) {
-          final BuildContext? context = navigatorKey.currentContext;
-          if (context != null) {
-            // Clear user data
-            await SharedPref.clearAll();
-            
-            // Show message
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text("You logged in with another device. Please log in again."),
-                backgroundColor: Colors.red,
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
+          // Handle 401 Unauthorized (Session Expired)
+          if (e.response?.statusCode == 401) {
+            final path = e.requestOptions.path;
+            // Ignore 401s from auth endpoints (like OTP verify, login) because they don't mean the session expired.
+            // (Exception: change password uses a token, so we let it be handled if needed, or we just exclude it).
+            final isAuthPath =
+                path.contains('/api/auth/') &&
+                !path.contains('/password/change');
 
-            // Redirect to login
-            Navigator.of(context).pushNamedAndRemoveUntil(
-              AppRoutes.loginView,
-              (route) => false,
-            );
+            if (!isAuthPath) {
+              final BuildContext? context = navigatorKey.currentContext;
+              
+              // Clear user data
+              await SharedPref.clearAll();
+              
+              if (context != null && context.mounted) {
+
+                // Show message
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        "You logged in with another device. Please log in again.",
+                      ),
+                      backgroundColor: Colors.red,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+
+                // Redirect to login
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  AppRoutes.loginView,
+                  (route) => false,
+                );
+              }
+            }
           }
-        }
-        return handler.next(e);
-      },
-    ));
+          return handler.next(e);
+        },
+      ),
+    );
   }
 
   static bool _shouldRetry(DioException e) {
@@ -87,14 +105,11 @@ abstract class DioHelper {
     String? token,
   }) async {
     dio.options.headers['Authorization'] = token != null ? 'Bearer $token' : '';
-    
+
     int retries = 2; // Check again and again (retry twice)
     while (true) {
       try {
-        return await dio.get(
-          endPoint,
-          queryParameters: queryParameters,
-        );
+        return await dio.get(endPoint, queryParameters: queryParameters);
       } catch (e) {
         if (retries == 0) rethrow;
         if (e is DioException && _shouldRetry(e)) {
@@ -173,10 +188,7 @@ abstract class DioHelper {
     int retries = 2;
     while (true) {
       try {
-        return await dio.delete(
-          endPoint,
-          queryParameters: queryParameters,
-        );
+        return await dio.delete(endPoint, queryParameters: queryParameters);
       } catch (e) {
         if (retries == 0) rethrow;
         if (e is DioException && _shouldRetry(e)) {
@@ -188,4 +200,4 @@ abstract class DioHelper {
       }
     }
   }
-}
+}

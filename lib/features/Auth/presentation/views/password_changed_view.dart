@@ -6,6 +6,7 @@ import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/custombutton.dart';
 import 'package:sammly/core/routing/routes.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class PasswordChangedScreen extends StatelessWidget {
   const PasswordChangedScreen({super.key});
@@ -29,11 +30,12 @@ class PasswordChangedScreen extends StatelessWidget {
                   children: [
                     // الطبقة الخلفية: الصورة الشفافة
                     SvgPicture.asset(
-                      AppImages.successBackground, // مسار الصورة الجديدة في app_images.dart
+                      AppImages
+                          .successBackground, // مسار الصورة الجديدة في app_images.dart
                       width: double.infinity,
                       fit: BoxFit.contain, // عشان الصورة تحتفظ بنسبتها
                     ),
-                    
+
                     // الطبقة الأمامية: الدائرة المتدرجة بالكود
                     Container(
                       width: 100.r,
@@ -46,13 +48,15 @@ class PasswordChangedScreen extends StatelessWidget {
                             Color.fromARGB(255, 27, 176, 127), // الأخضر
                             AppColors.primaryColor, // الأزرق
                           ],
-                          begin: Alignment.bottomLeft,
-                          end: Alignment.topRight,
+                          begin: AlignmentDirectional.bottomStart,
+                          end: AlignmentDirectional.topEnd,
                         ),
                         // الظل اللي بيدي عمق
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.primaryColor.withValues(alpha: 0.3),
+                            color: AppColors.primaryColor.withValues(
+                              alpha: 0.3,
+                            ),
                             blurRadius: 15,
                             offset: const Offset(0, 8),
                           ),
@@ -60,29 +64,29 @@ class PasswordChangedScreen extends StatelessWidget {
                       ),
                       child: Icon(
                         Icons.check_rounded, // علامة الصح ناعمة
-                        color: Colors.white, 
+                        color: Colors.white,
                         size: 60.r,
                       ),
                     ),
                   ],
                 ),
               ),
-              
+
               SizedBox(height: 32.h),
-              
+
               // 2. النص
               Text(
-                'Your password successfully changed',
+                S.of(context).passwordChangedDesc,
                 textAlign: TextAlign.center,
                 style: AppTextStyles.heading28ExtraBold.copyWith(
                   fontSize: 24.sp,
                 ),
               ),
               SizedBox(height: 40.h),
-              
+
               // 3. زرار الرجوع للوجين
               CustomButton(
-                text: 'Log In',
+                text: S.of(context).logIn,
                 onPressed: () {
                   Navigator.pushNamedAndRemoveUntil(
                     context,

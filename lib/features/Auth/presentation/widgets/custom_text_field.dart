@@ -118,25 +118,33 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
           // الإطارات
           border: widget.hasBorder ? null : InputBorder.none,
-          enabledBorder: widget.hasBorder ? OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.r),
-            borderSide: BorderSide(width: 1.w, color: getBorderColor()),
-          ) : InputBorder.none,
-          focusedBorder: widget.hasBorder ? OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.r),
-            borderSide: BorderSide(
-              width: 1.5.w,
-              color: AppColors.primaryColor,
-            ), // الأزرق في الفوكس
-          ) : InputBorder.none,
-          errorBorder: widget.hasBorder ? OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.r),
-            borderSide: BorderSide(width: 1.w, color: Colors.red),
-          ) : InputBorder.none,
-          focusedErrorBorder: widget.hasBorder ? OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.r),
-            borderSide: BorderSide(width: 1.5.w, color: Colors.red),
-          ) : InputBorder.none,
+          enabledBorder: widget.hasBorder
+              ? OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15.r),
+                  borderSide: BorderSide(width: 1.w, color: getBorderColor()),
+                )
+              : InputBorder.none,
+          focusedBorder: widget.hasBorder
+              ? OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15.r),
+                  borderSide: BorderSide(
+                    width: 1.5.w,
+                    color: AppColors.primaryColor,
+                  ), // الأزرق في الفوكس
+                )
+              : InputBorder.none,
+          errorBorder: widget.hasBorder
+              ? OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15.r),
+                  borderSide: BorderSide(width: 1.w, color: Colors.red),
+                )
+              : InputBorder.none,
+          focusedErrorBorder: widget.hasBorder
+              ? OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15.r),
+                  borderSide: BorderSide(width: 1.5.w, color: Colors.red),
+                )
+              : InputBorder.none,
 
           hintText: widget.thing,
           hintStyle: AppTextStyles.hint12Light.copyWith(fontSize: 14.sp),

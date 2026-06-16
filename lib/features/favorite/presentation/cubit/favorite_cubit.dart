@@ -10,7 +10,7 @@ class FavoriteCubit extends Cubit<FavoriteState> {
 
   final List<FavoriteModel> _allDesigns = [];
   final Set<String> _favoriteIds = {};
-  
+
   int _currentPage = 1;
   bool _hasMore = true;
   String _selectedRoom = 'all';
@@ -73,27 +73,26 @@ class FavoriteCubit extends Cubit<FavoriteState> {
       room: _selectedRoom,
     );
 
-    result.fold(
-      (error) => emit(FavoriteError(error)),
-      (response) {
-        _allDesigns.addAll(response.designs);
-        
-        // Update local favorite IDs set
-        for (var design in response.designs) {
-          _favoriteIds.add(design.id);
-        }
+    result.fold((error) => emit(FavoriteError(error)), (response) {
+      _allDesigns.addAll(response.designs);
 
-        _currentPage = response.page;
-        _hasMore = response.hasMore;
+      // Update local favorite IDs set
+      for (var design in response.designs) {
+        _favoriteIds.add(design.id);
+      }
 
-        emit(FavoriteLoaded(
+      _currentPage = response.page;
+      _hasMore = response.hasMore;
+
+      emit(
+        FavoriteLoaded(
           favorites: List.unmodifiable(_allDesigns),
           selectedRoom: _selectedRoom,
           currentPage: _currentPage,
           hasMore: _hasMore,
-        ));
-      },
-    );
+        ),
+      );
+    });
   }
 
   Future<void> loadMore({int limit = 20}) async {
@@ -109,26 +108,25 @@ class FavoriteCubit extends Cubit<FavoriteState> {
       room: _selectedRoom,
     );
 
-    result.fold(
-      (error) => emit(FavoriteError(error)),
-      (response) {
-        _allDesigns.addAll(response.designs);
-        
-        for (var design in response.designs) {
-          _favoriteIds.add(design.id);
-        }
+    result.fold((error) => emit(FavoriteError(error)), (response) {
+      _allDesigns.addAll(response.designs);
 
-        _currentPage = response.page;
-        _hasMore = response.hasMore;
+      for (var design in response.designs) {
+        _favoriteIds.add(design.id);
+      }
 
-        emit(FavoriteLoaded(
+      _currentPage = response.page;
+      _hasMore = response.hasMore;
+
+      emit(
+        FavoriteLoaded(
           favorites: List.unmodifiable(_allDesigns),
           selectedRoom: _selectedRoom,
           currentPage: _currentPage,
           hasMore: _hasMore,
-        ));
-      },
-    );
+        ),
+      );
+    });
   }
 
   Future<void> changeRoom(String room) async {
@@ -144,7 +142,9 @@ class FavoriteCubit extends Cubit<FavoriteState> {
     // Optimistic UI update
     if (isCurrentlyFavorite) {
       _favoriteIds.remove(designId);
-      removedIndex = _allDesigns.indexWhere((element) => element.id == designId);
+      removedIndex = _allDesigns.indexWhere(
+        (element) => element.id == designId,
+      );
       if (removedIndex != -1) {
         removedItem = _allDesigns.removeAt(removedIndex);
       }
@@ -153,14 +153,16 @@ class FavoriteCubit extends Cubit<FavoriteState> {
     }
 
     // Emit loaded state to update UI immediately
-    emit(FavoriteLoaded(
-      favorites: List.unmodifiable(_allDesigns),
-      selectedRoom: _selectedRoom,
-      currentPage: _currentPage,
-      hasMore: _hasMore,
-    ));
+    emit(
+      FavoriteLoaded(
+        favorites: List.unmodifiable(_allDesigns),
+        selectedRoom: _selectedRoom,
+        currentPage: _currentPage,
+        hasMore: _hasMore,
+      ),
+    );
 
-    final result = isCurrentlyFavorite 
+    final result = isCurrentlyFavorite
         ? await _repository.removeFromFavorite(designId)
         : await _repository.addToFavorite(designId);
 
@@ -180,24 +182,28 @@ class FavoriteCubit extends Cubit<FavoriteState> {
         } else {
           _favoriteIds.remove(designId);
         }
-        
+
         emit(FavoriteToggleError(error));
-        emit(FavoriteLoaded(
-          favorites: List.unmodifiable(_allDesigns),
-          selectedRoom: _selectedRoom,
-          currentPage: _currentPage,
-          hasMore: _hasMore,
-        ));
+        emit(
+          FavoriteLoaded(
+            favorites: List.unmodifiable(_allDesigns),
+            selectedRoom: _selectedRoom,
+            currentPage: _currentPage,
+            hasMore: _hasMore,
+          ),
+        );
       },
       (message) {
         emit(FavoriteToggleSuccess(message));
         // Re-emit loaded state so all BlocBuilders get a consistent state
-        emit(FavoriteLoaded(
-          favorites: List.unmodifiable(_allDesigns),
-          selectedRoom: _selectedRoom,
-          currentPage: _currentPage,
-          hasMore: _hasMore,
-        ));
+        emit(
+          FavoriteLoaded(
+            favorites: List.unmodifiable(_allDesigns),
+            selectedRoom: _selectedRoom,
+            currentPage: _currentPage,
+            hasMore: _hasMore,
+          ),
+        );
       },
     );
   }

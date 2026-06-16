@@ -1,4 +1,3 @@
-
 // --- States ---
 import 'package:sammly/features/generate/data/model/generate_design_response_model.dart';
 

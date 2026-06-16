@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_colors.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/security_menu_group.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class SecurityView extends StatelessWidget {
   const SecurityView({super.key});
@@ -19,7 +19,7 @@ class SecurityView extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: const CustomAppbar(title: AppStrings.security),
+      appBar: CustomAppbar(title: S.of(context).security),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
         // 💡 استخدم الودجت الجديدة هنا
@@ -44,7 +44,7 @@ class SecurityView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            AppStrings.email,
+                            S.of(context).email,
                             style: AppTextStyles.body16Medium,
                           ),
                           SizedBox(height: 2.h),
@@ -84,7 +84,7 @@ class SecurityView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            AppStrings.changePassword,
+                            S.of(context).changePassword,
                             style: AppTextStyles.body16Medium,
                           ),
                           SizedBox(height: 2.h),

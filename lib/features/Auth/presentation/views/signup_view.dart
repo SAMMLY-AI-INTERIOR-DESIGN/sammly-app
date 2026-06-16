@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
+import 'package:sammly/core/routing/routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_colors.dart';
@@ -14,6 +16,10 @@ import 'package:sammly/features/Auth/presentation/widgets/custom_line.dart';
 import 'package:sammly/features/Auth/presentation/widgets/custom_text_field.dart';
 import 'package:sammly/features/Auth/presentation/widgets/loginwith.dart';
 import 'package:sammly/features/Auth/presentation/widgets/signlogin.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sammly/core/constant/app_images.dart';
+import 'package:sammly/generated/l10n.dart';
+import 'package:sammly/core/localization/locale_cubit.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -54,7 +60,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is RegisterSuccessState) {
-            // Navigate to sign-up verification screen with the email
             final authCubit = context.read<AuthCubit>();
             Navigator.push(
               context,
@@ -67,15 +72,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
             );
-          } else if (state is AuthNeedsVerificationState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  state.message ?? 'Please verify your email to continue.',
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text(S.of(context).registrationSuccessVerifyEmail),
+                  backgroundColor: Colors.green,
                 ),
-                backgroundColor: Colors.orange,
-              ),
-            );
+              );
+          } else if (state is AuthNeedsVerificationState) {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text(
+                    state.message ?? 'Please verify your email to continue.',
+                  ),
+                  backgroundColor: Colors.orange,
+                ),
+              );
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -86,12 +101,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             );
           } else if (state is RegisterFailedState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.errorMsg),
-                backgroundColor: Colors.red,
-              ),
-            );
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text(state.errorMsg),
+                  backgroundColor: Colors.red,
+                ),
+              );
           }
         },
         child: Scaffold(
@@ -112,11 +129,50 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
 
-              // 2. Form card
+              // Language Switcher
               Positioned(
+                top: 50.h,
+                right: 24.w,
+                child: SafeArea(
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      context.read<LocaleCubit>().toggleLanguage();
+                    },
+                    child: Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: Row(
+                        children: [
+                          SvgPicture.asset(
+                            AppImages.languageIcon,
+                            colorFilter: const ColorFilter.mode(
+                              Colors.white,
+                              BlendMode.srcIn,
+                            ),
+                            width: 24.w,
+                          ),
+                          SizedBox(width: 8.w),
+                          Text(
+                            context.watch<LocaleCubit>().state.languageCode ==
+                                    'en'
+                                ? 'العربية'
+                                : 'English',
+                            style: AppTextStyles.body16SemiBold.copyWith(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              // 2. Form card
+              PositionedDirectional(
                 top: 134.h,
-                left: 0,
-                right: 0,
+                start: 0,
+                end: 0,
                 bottom: 0,
                 child: Container(
                   decoration: BoxDecoration(
@@ -132,9 +188,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   child: SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
-                    padding: EdgeInsets.only(
-                      left: 24.w,
-                      right: 24.w,
+                    padding: EdgeInsetsDirectional.only(
+                      start: 24.w,
+                      end: 24.w,
                       top: 32.h,
                       bottom: 24.h + MediaQuery.of(context).viewInsets.bottom,
                     ),
@@ -144,12 +200,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'Sign UP',
+                            S.of(context).signUpTitle,
                             style: AppTextStyles.heading28ExtraBold,
                           ),
                           SizedBox(height: 8.h),
                           Text(
-                            'Create your new account',
+                            S.of(context).createNewAccount,
                             style: AppTextStyles.body16Regular,
                           ),
                           SizedBox(height: 32.h),
@@ -157,11 +213,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           // حقل الاسم
                           CustomTextField(
                             controller: _nameController,
-                            thing: 'Enter your name',
+                            thing: S.of(context).enterYourName,
                             preffixicon: Icons.person_outline,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your name';
+                                return S.of(context).pleaseEnterYourName;
                               }
                               return null;
                             },
@@ -170,15 +226,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           // حقل الإيميل
                           CustomTextField(
                             controller: _emailController,
-                            thing: 'Enter your email',
+                            thing: S.of(context).enterYourEmailHint,
                             preffixicon: Icons.email_outlined,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your email';
+                                return S.of(context).pleaseEnterYourEmail;
                               }
                               if (!value.contains('@') ||
                                   !value.contains('.')) {
-                                return 'Please enter a valid email address';
+                                return S.of(context).pleaseEnterValidEmail;
                               }
                               return null;
                             },
@@ -187,15 +243,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           // حقل الباسورد
                           CustomTextField(
                             controller: _passwordController,
-                            thing: 'Enter your password',
+                            thing: S.of(context).enterYourPasswordHint,
                             preffixicon: Icons.lock_outline,
                             ispassword: true,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your password';
+                                return S.of(context).pleaseEnterYourPassword;
                               }
                               if (value.length < 8) {
-                                return 'Password must be at least 8 characters';
+                                return S.of(context).passwordAtLeast8Chars;
                               }
                               return null;
                             },
@@ -204,15 +260,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           // حقل تأكيد الباسورد
                           CustomTextField(
                             controller: _confirmPasswordController,
-                            thing: 'Confirm Password',
+                            thing: S.of(context).confirmPassword,
                             preffixicon: Icons.lock_outline,
                             ispassword: true,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please confirm your password';
+                                return S.of(context).pleaseConfirmYourPassword;
                               }
                               if (value != _passwordController.text) {
-                                return 'Passwords do not match';
+                                return S.of(context).passwordsDoNotMatch;
                               }
                               return null;
                             },
@@ -241,13 +297,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     fontSize: 12.sp,
                                   ),
                                   children: [
-                                    const TextSpan(text: 'I agree to all the '),
+                                    TextSpan(text: S.of(context).iAgreeToAll),
                                     TextSpan(
-                                      text: 'Terms & Conditions',
+                                      text: S.of(context).termsConditions,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: AppColors.blackColor,
                                       ),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          Navigator.pushNamed(
+                                            context,
+                                            AppRoutes.termsView,
+                                          );
+                                        },
                                     ),
                                   ],
                                 ),
@@ -264,16 +327,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 );
                               }
                               return CustomButton(
-                                text: 'Sign up',
+                                text: S.of(context).signUp,
                                 onPressed: () {
                                   if (_formKey.currentState!.validate()) {
                                     if (!_isTermsAccepted) {
                                       ScaffoldMessenger.of(
                                         context,
                                       ).showSnackBar(
-                                        const SnackBar(
+                                        SnackBar(
                                           content: Text(
-                                            'Please accept the Terms & Conditions',
+                                            S.of(context).pleaseAcceptTerms,
                                           ),
                                           backgroundColor: Colors.red,
                                         ),
@@ -294,7 +357,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                           SizedBox(height: 24.h),
 
-                          const Customline(text: 'Or Signup with'),
+                          Customline(text: S.of(context).orSignupWith),
                           SizedBox(height: 24.h),
 
                           Loginwith(
@@ -305,8 +368,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           SizedBox(height: 32.h),
 
                           SignLogin(
-                            text1: "Already have an account?",
-                            text2: "Log in",
+                            text1: S.of(context).alreadyHaveAccount,
+                            text2: S.of(context).logIn,
                             ontap: () {
                               // الرجوع لشاشة اللوجين
                               Navigator.pop(context);
@@ -332,8 +395,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
                             child: Text(
-                              'Have an issue?',
-                              style: AppTextStyles.body14Regular,
+                              S.of(context).supportQuestion,
+                              style: AppTextStyles.body14Regular.copyWith(
+                                color: AppColors.blackColor,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
                           ),
                         ],

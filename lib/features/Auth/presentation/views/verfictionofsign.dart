@@ -13,13 +13,14 @@ import 'package:sammly/features/Auth/presentation/widgets/signlogin.dart';
 import 'package:pinput/pinput.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:sammly/features/home/logic/home_cubit.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class SignUpVerificationView extends StatefulWidget {
   final String email;
   final bool isFromLogin;
 
   const SignUpVerificationView({
-    super.key, 
+    super.key,
     required this.email,
     this.isFromLogin = false,
   });
@@ -82,16 +83,20 @@ class _SignUpVerificationViewState extends State<SignUpVerificationView> {
             // JWT is saved, navigate to onboarding/home
             Navigator.pushNamedAndRemoveUntil(
               context,
-              widget.isFromLogin ? AppRoutes.layoutView : AppRoutes.onboardingView,
+              widget.isFromLogin
+                  ? AppRoutes.layoutView
+                  : AppRoutes.onboardingView,
               (route) => false,
             );
           } else if (state is VerifyRegisterCodeFailedState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.errorMsg),
-                backgroundColor: Colors.red,
-              ),
-            );
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text(state.errorMsg),
+                  backgroundColor: Colors.red,
+                ),
+              );
           }
         },
         child: Scaffold(
@@ -101,10 +106,7 @@ class _SignUpVerificationViewState extends State<SignUpVerificationView> {
             elevation: 0,
             scrolledUnderElevation: 0,
             leading: IconButton(
-              icon: const Icon(
-                Icons.arrow_back_ios_new,
-                color: AppColors.blackColor,
-              ),
+              icon: Icon(Icons.arrow_back_ios_new, color: AppColors.blackColor),
               onPressed: () => Navigator.pop(context),
             ),
           ),
@@ -139,10 +141,13 @@ class _SignUpVerificationViewState extends State<SignUpVerificationView> {
                 SizedBox(height: 40.h),
 
                 // 3. العناوين
-                Text('Verification', style: AppTextStyles.heading28ExtraBold),
+                Text(
+                  S.of(context).verification,
+                  style: AppTextStyles.heading28ExtraBold,
+                ),
                 SizedBox(height: 8.h),
                 Text(
-                  'Enter the code sent to\n${widget.email}',
+                  '${S.of(context).enterCodeSentTo}\n${widget.email}',
                   textAlign: TextAlign.center,
                   style: AppTextStyles.body14Regular.copyWith(
                     color: AppColors.blackColor,
@@ -155,7 +160,8 @@ class _SignUpVerificationViewState extends State<SignUpVerificationView> {
                   length: 6,
                   controller: _pinController,
                   defaultPinTheme: defaultPinTheme,
-                  focusedPinTheme: activePinTheme, // الإطار بيزرق وإنت واقف عليه
+                  focusedPinTheme:
+                      activePinTheme, // الإطار بيزرق وإنت واقف عليه
                   submittedPinTheme:
                       activePinTheme, // الإطار بيفضل أزرق بعد ما تكتب الرقم (زي صورة فيجما بالظبط)
                   keyboardType: TextInputType.number,
@@ -172,21 +178,25 @@ class _SignUpVerificationViewState extends State<SignUpVerificationView> {
                       return const Center(child: CircularProgressIndicator());
                     }
                     return CustomButton(
-                      text: 'Verify',
+                      text: S.of(context).verify,
                       onPressed: () {
                         final code = _pinController.text.trim();
                         if (code.length == 6) {
                           context.read<AuthCubit>().verifyRegisterCode(
-                                email: widget.email,
-                                code: code,
-                              );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Please enter the 6-digit code'),
-                              backgroundColor: Colors.red,
-                            ),
+                            email: widget.email,
+                            code: code,
                           );
+                        } else {
+                          ScaffoldMessenger.of(context)
+                            ..hideCurrentSnackBar()
+                            ..showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  S.of(context).pleaseEnter6DigitCode,
+                                ),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
                         }
                       },
                     );
@@ -196,15 +206,17 @@ class _SignUpVerificationViewState extends State<SignUpVerificationView> {
 
                 // 6. إعادة إرسال الكود
                 SignLogin(
-                  text1: "Didn't receive the Code?",
-                  text2: "Resend",
+                  text1: S.of(context).didntReceiveCode,
+                  text2: S.of(context).resendCode,
                   ontap: () {
                     // Re-trigger registration to resend the code
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Verification code resent to your email'),
-                      ),
-                    );
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          content: Text(S.of(context).verificationCodeResent),
+                        ),
+                      );
                   },
                 ),
               ],

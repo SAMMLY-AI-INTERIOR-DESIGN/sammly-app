@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class AIBannerWidget extends StatelessWidget {
   const AIBannerWidget({super.key});
@@ -22,13 +22,12 @@ class AIBannerWidget extends StatelessWidget {
               Positioned.fill(
                 child: Image.asset(
                   AppImages.placeholderRoomAI,
-                  fit: BoxFit.cover,                
+                  fit: BoxFit.cover,
                 ),
               ),
 
               Container(
-                decoration: BoxDecoration(
-                ),
+                decoration: BoxDecoration(),
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,7 +52,7 @@ class AIBannerWidget extends StatelessWidget {
                               SvgPicture.asset(AppImages.aiPoweredIcon),
                               const SizedBox(width: 6),
                               Text(
-                                AppStrings.aiTag,
+                                S.of(context).aiTag,
                                 style: AppTextStyles.badge14SemiBold,
                               ),
                             ],
@@ -63,13 +62,17 @@ class AIBannerWidget extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      AppStrings.aiBannerTitle,
-                      style: AppTextStyles.title20SemiBold.copyWith(color: Colors.white),
+                      S.of(context).aiBannerTitle,
+                      style: AppTextStyles.title20SemiBold.copyWith(
+                        color: Colors.white,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      AppStrings.aiBannerSubtitle,
-                      style: AppTextStyles.hint12Light.copyWith(color: AppColors.whiteColor),
+                      S.of(context).aiBannerSubtitle,
+                      style: AppTextStyles.hint12Light.copyWith(
+                        color: AppColors.whiteColor,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     Container(
@@ -86,7 +89,7 @@ class AIBannerWidget extends StatelessWidget {
                             SvgPicture.asset(AppImages.startGenerateIcon),
                             const SizedBox(width: 8),
                             Text(
-                              AppStrings.startGenerateBtn,
+                              S.of(context).startGenerateBtn,
                               style: AppTextStyles.button20Medium,
                             ),
                           ],

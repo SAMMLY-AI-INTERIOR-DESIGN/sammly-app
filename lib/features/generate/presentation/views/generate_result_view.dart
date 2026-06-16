@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/utils/image_download_helper.dart';
 import 'package:sammly/core/widgets/generate_action_buttons_row.dart';
@@ -17,6 +16,7 @@ import 'package:sammly/features/smart_lens/data/repo/search_repo.dart';
 import 'package:sammly/features/smart_lens/presentation/widgets/smart_lens_bottom_sheet.dart';
 import 'package:sammly/features/Explore/cubit/design_details_cubit.dart';
 import 'package:sammly/features/Explore/cubit/design_details_states.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class GenerateResultView extends StatefulWidget {
   final bool showListView;
@@ -52,12 +52,16 @@ class _GenerateResultViewState extends State<GenerateResultView> {
 
   void _openSmartLens(BuildContext context) {
     if (_currentDesignId == null || _currentDesignId!.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Design ID not available. Please try generating again."),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(
+            content: Text(
+              "Design ID not available. Please try generating again.",
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
       return;
     }
 
@@ -86,9 +90,11 @@ class _GenerateResultViewState extends State<GenerateResultView> {
     super.initState();
     _searchCubit = SearchCubit(SearchRepo());
     _currentDesignId = widget.designId;
-    
+
     if (widget.designs != null && widget.designs!.isNotEmpty) {
-      _listImages = widget.designs!.map((d) => (d as GenerateDesignResponseModel).imageUrl).toList();
+      _listImages = widget.designs!
+          .map((d) => (d as GenerateDesignResponseModel).imageUrl)
+          .toList();
     } else {
       _listImages = _fallbackImages;
     }
@@ -118,35 +124,41 @@ class _GenerateResultViewState extends State<GenerateResultView> {
     return BlocListener<DesignDetailsCubit, DesignDetailsState>(
       listener: (context, state) {
         if (state is DesignShareSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: AppColors.primaryColor,
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: AppColors.primaryColor,
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
         } else if (state is DesignActionError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: Colors.red,
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red,
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
         }
       },
       child: BlocBuilder<DesignDetailsCubit, DesignDetailsState>(
         builder: (context, designState) {
           final isShared = widget.designId != null
-              ? context.read<DesignDetailsCubit>().isSharedLocal(widget.designId!)
+              ? context.read<DesignDetailsCubit>().isSharedLocal(
+                  widget.designId!,
+                )
               : false;
           return Scaffold(
             backgroundColor: AppColors.whiteColor,
             appBar: GenerateResultsAppBar(
               title: widget.showListView
-                  ? AppStrings.yourGeneratedDesign
-                  : AppStrings.modernLivingRoom,
-              subtitle: AppStrings.generatedBySammly,
+                  ? S.of(context).yourGeneratedDesign
+                  : S.of(context).modernLivingRoom,
+              subtitle: S.of(context).generatedBySammly,
               onBack: () {
                 Navigator.pushNamedAndRemoveUntil(
                   context,
@@ -173,7 +185,8 @@ class _GenerateResultViewState extends State<GenerateResultView> {
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
                           itemCount: _listImages.length,
-                          separatorBuilder: (context, index) => SizedBox(width: 10.w),
+                          separatorBuilder: (context, index) =>
+                              SizedBox(width: 10.w),
                           itemBuilder: (context, index) {
                             final image = _listImages[index];
                             final isSelected = _selectedIndex == index;
@@ -182,9 +195,15 @@ class _GenerateResultViewState extends State<GenerateResultView> {
                                 setState(() {
                                   _selectedIndex = index;
                                   _selectedImage = image;
-                                  _isNetworkImage = widget.designs != null && widget.designs!.isNotEmpty;
-                                  if (widget.designs != null && widget.designs!.isNotEmpty) {
-                                    _currentDesignId = (widget.designs![index] as GenerateDesignResponseModel).id;
+                                  _isNetworkImage =
+                                      widget.designs != null &&
+                                      widget.designs!.isNotEmpty;
+                                  if (widget.designs != null &&
+                                      widget.designs!.isNotEmpty) {
+                                    _currentDesignId =
+                                        (widget.designs![index]
+                                                as GenerateDesignResponseModel)
+                                            .id;
                                   }
                                 });
                               },
@@ -198,7 +217,9 @@ class _GenerateResultViewState extends State<GenerateResultView> {
                                   borderRadius: BorderRadius.circular(10.r),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withValues(alpha: 0.05),
+                                      color: Colors.black.withValues(
+                                        alpha: 0.05,
+                                      ),
                                       blurRadius: 10,
                                       offset: const Offset(0, 4),
                                     ),
@@ -209,7 +230,9 @@ class _GenerateResultViewState extends State<GenerateResultView> {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10.r),
                                     image: DecorationImage(
-                                      image: (widget.designs != null && widget.designs!.isNotEmpty)
+                                      image:
+                                          (widget.designs != null &&
+                                              widget.designs!.isNotEmpty)
                                           ? NetworkImage(image) as ImageProvider
                                           : AssetImage(image),
                                       fit: BoxFit.cover,
@@ -240,7 +263,10 @@ class _GenerateResultViewState extends State<GenerateResultView> {
                             },
                             onDownload: () {
                               if (_isNetworkImage) {
-                                ImageDownloadHelper.downloadNetworkImage(context, _selectedImage);
+                                ImageDownloadHelper.downloadNetworkImage(
+                                  context,
+                                  _selectedImage,
+                                );
                               }
                             },
                           )
@@ -258,16 +284,23 @@ class _GenerateResultViewState extends State<GenerateResultView> {
                               );
                             },
                             onShare: () {
-                              if (widget.designId != null && widget.designId!.isNotEmpty) {
-                                context.read<DesignDetailsCubit>().shareDesign(widget.designId!);
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Design ID not available. Cannot share.'),
-                                    backgroundColor: Colors.red,
-                                    behavior: SnackBarBehavior.floating,
-                                  ),
+                              if (widget.designId != null &&
+                                  widget.designId!.isNotEmpty) {
+                                context.read<DesignDetailsCubit>().shareDesign(
+                                  widget.designId!,
                                 );
+                              } else {
+                                ScaffoldMessenger.of(context)
+                                  ..hideCurrentSnackBar()
+                                  ..showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'Design ID not available. Cannot share.',
+                                      ),
+                                      backgroundColor: Colors.red,
+                                      behavior: SnackBarBehavior.floating,
+                                    ),
+                                  );
                               }
                             },
                           ),

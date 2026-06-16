@@ -47,7 +47,9 @@ class NotificationsResponse {
       page: pagination['page'] ?? 1,
       limit: pagination['limit'] ?? 20,
       hasMore: pagination['hasMore'] ?? false,
-      notifications: notifsList.map((e) => NotificationItemModel.fromJson(e)).toList(),
+      notifications: notifsList
+          .map((e) => NotificationItemModel.fromJson(e))
+          .toList(),
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
+import 'package:sammly/generated/l10n.dart';
 import 'package:sammly/features/Explore/cubit/static_designs_cubit.dart';
 import 'package:sammly/features/Explore/cubit/static_designs_states.dart';
 import 'package:sammly/features/explore/presentation/widgets/design_grid_item.dart';
@@ -11,6 +12,7 @@ import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_state.dart';
+
 const Color kTextDark = Color(0xFF2E2E2E);
 
 class BrowseDesigns extends StatefulWidget {
@@ -80,26 +82,30 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bg1Color,
-      appBar: const CustomAppbar(title: 'Browse Categories'),
+      appBar: CustomAppbar(title: S.of(context).browseCategories),
       body: SafeArea(
         child: BlocListener<FavoriteCubit, FavoriteState>(
           listener: (context, state) {
             if (state is FavoriteToggleError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.red,
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                    backgroundColor: Colors.red,
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
             } else if (state is FavoriteToggleSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: AppColors.primaryColor,
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                    backgroundColor: AppColors.primaryColor,
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
             }
           },
           child: Column(
@@ -122,7 +128,7 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
         children: _filters.map((filter) {
           final isSelected = filter == _selectedFilter;
           return Padding(
-            padding: EdgeInsets.only(right: 8.w),
+            padding: EdgeInsetsDirectional.only(end: 8.w),
             child: GestureDetector(
               onTap: () {
                 if (_selectedFilter == filter) return;
@@ -168,7 +174,13 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
   }
 
   Widget _buildDesignGrid() {
-    return BlocBuilder<StaticDesignsCubit, StaticDesignsState>(
+    return BlocConsumer<StaticDesignsCubit, StaticDesignsState>(
+      listener: (context, state) {
+        if (state is StaticDesignsLoaded) {
+          final statuses = {for (var d in state.designs) d.id: d.isFavorited};
+          context.read<FavoriteCubit>().syncFavoriteStatuses(statuses);
+        }
+      },
       builder: (context, state) {
         // Initial loading
         if (state is StaticDesignsLoading) {
@@ -230,9 +242,9 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(AppImages.noImage),
-                  Text('No Designs', style: AppTextStyles.title20Bold),
+                  Text(S.of(context).noDesigns, style: AppTextStyles.title20Bold),
                   Text(
-                    'No designs found',
+                    S.of(context).noDesignsFound,
                     style: AppTextStyles.body16Regular.copyWith(
                       color: AppColors.greyColor.withValues(alpha: 0.6),
                     ),
@@ -257,36 +269,38 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
                     mainAxisSpacing: 12.h,
                     childAspectRatio: 1.0,
                   ),
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final design = designs[index];
-              return GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(
-                    context,
-                    AppRoutes.browseDesignDetailsView,
-                    arguments: design.id,
-                  );
-                },
-                child: BlocBuilder<FavoriteCubit, FavoriteState>(
-                  builder: (context, favState) {
-                    final isFav = context.read<FavoriteCubit>().isFavorite(design.id);
-                    return DesignGridItem(
-                      imageUrl: design.imageUrl,
-                      initialIsLiked: isFav,
-                      onFavoriteToggled: (isLiked) {
-                        context.read<FavoriteCubit>().toggleFavorite(design.id, !isLiked);
-                        context.read<StaticDesignsCubit>().toggleFavoriteLocal(
-                          design.id,
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final design = designs[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          AppRoutes.browseDesignDetailsView,
+                          arguments: design.id,
                         );
                       },
+                      child: BlocBuilder<FavoriteCubit, FavoriteState>(
+                        builder: (context, favState) {
+                          final isFav = context
+                              .read<FavoriteCubit>()
+                              .isFavorite(design.id);
+                          return DesignGridItem(
+                            imageUrl: design.imageUrl,
+                            initialIsLiked: isFav,
+                            onFavoriteToggled: (isLiked) {
+                              context.read<FavoriteCubit>().toggleFavorite(
+                                design.id,
+                                !isLiked,
+                              );
+                              context
+                                  .read<StaticDesignsCubit>()
+                                  .toggleFavoriteLocal(design.id);
+                            },
+                          );
+                        },
+                      ),
                     );
-                  },
-                ),
-              );
-            },
-            childCount: designs.length,
-          ),
+                  }, childCount: designs.length),
                 ),
               ),
               if (isPaginationLoading)

@@ -6,6 +6,7 @@ import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/features/Explore/presentation/views/shared_designs.dart';
 import 'package:sammly/features/layout/presentation/cubit/layout_cubit/layout_cubit.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class ExploreView extends StatelessWidget {
   const ExploreView({super.key});
@@ -15,7 +16,7 @@ class ExploreView extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CustomAppbar(
-        title: 'Explore',
+        title: S.of(context).explore,
         onBack: () {
           context.read<LayoutCubit>().changeIndex(0);
         },
@@ -26,10 +27,10 @@ class ExploreView extends StatelessWidget {
         child: Column(
           children: [
             _buildExploreCard(
+              context: context,
               imageUrl: AppImages.explore1,
-              title: 'Browse design categories',
-              subtitle:
-                  'Explore ready-made styles and rooms organized by category.',
+              title: S.of(context).exploreBrowseCategories,
+              subtitle: S.of(context).exploreBrowseCategoriesDesc,
               onTap: () {
                 // النقل للشاشة الأولى (التصنيفات)
                 Navigator.pushNamed(context, AppRoutes.chooseRoom);
@@ -41,11 +42,12 @@ class ExploreView extends StatelessWidget {
             ),
             SizedBox(height: 20.h),
             _buildExploreCard(
+              context: context,
               imageUrl: AppImages.explore2,
-              title: 'Explore shared designs',
-              subtitle: 'Browse rooms created by other users and get inspired.',
+              title: S.of(context).exploreSharedDesigns,
+              subtitle: S.of(context).exploreSharedDesignsDesc,
               onTap: () {
-                // النقل للشاشة التانية (التصميمات المشتركة اللي فيها الـ Grid)
+                // النقل للشاشة التانية (التصميمات المُشارَكة اللي فيها الـ Grid)
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -67,6 +69,7 @@ class ExploreView extends StatelessWidget {
 
   // ضفنا نوع المتغير (VoidCallback) عشان الكود يبقى Clean
   Widget _buildExploreCard({
+    required BuildContext context,
     required String imageUrl,
     required String title,
     required String subtitle,
@@ -82,7 +85,7 @@ class ExploreView extends StatelessWidget {
           borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -136,7 +139,9 @@ class ExploreView extends StatelessWidget {
                   ),
                   SizedBox(width: 12.w),
                   Icon(
-                    Icons.arrow_circle_right_outlined,
+                    Directionality.of(context) == TextDirection.rtl
+                        ? Icons.arrow_circle_left_outlined
+                        : Icons.arrow_circle_right_outlined,
                     color: const Color(0xFF196868),
                     size: 28.sp,
                   ),

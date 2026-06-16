@@ -3,11 +3,7 @@ class HomeModel {
   final String? avatar;
   final int? tokens;
 
-  HomeModel({
-    this.name,
-    this.avatar,
-    this.tokens,
-  });
+  HomeModel({this.name, this.avatar, this.tokens});
 
   factory HomeModel.fromJson(Map<String, dynamic> json) {
     return HomeModel(

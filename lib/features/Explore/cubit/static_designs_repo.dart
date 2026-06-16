@@ -61,10 +61,13 @@ class StaticDesignsRepo {
         final data = e.response!.data;
         log('API Error Response: $data');
         if (data is Map) {
-          final msg = data['message']
-              ?? data['msg']
-              ?? data['error']
-              ?? (data['errors'] is List ? (data['errors'] as List).join(', ') : null);
+          final msg =
+              data['message'] ??
+              data['msg'] ??
+              data['error'] ??
+              (data['errors'] is List
+                  ? (data['errors'] as List).join(', ')
+                  : null);
           if (msg != null) return msg.toString();
         }
       } catch (_) {}

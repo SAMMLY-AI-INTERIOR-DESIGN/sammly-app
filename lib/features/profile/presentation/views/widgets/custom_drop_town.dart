@@ -20,7 +20,7 @@ class CustomDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 16.h),
+      margin: EdgeInsetsDirectional.only(bottom: 16.h),
       padding: const EdgeInsets.all(1.5),
       decoration: BoxDecoration(
         gradient: AppColors.primaryGradient3,
@@ -29,7 +29,7 @@ class CustomDropdown extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         decoration: BoxDecoration(
-          color: AppColors.textFieldBodyColor, 
+          color: AppColors.textFieldBodyColor,
           borderRadius: BorderRadius.circular(7.r),
         ),
         child: Column(
@@ -43,11 +43,11 @@ class CustomDropdown extends StatelessWidget {
                 fontSize: 12.sp,
               ),
             ),
-            
+
             DropdownButtonFormField<String>(
               initialValue: value,
               icon: Icon(Icons.arrow_drop_down, color: Colors.teal.shade400),
-              isExpanded: true, 
+              isExpanded: true,
               decoration: const InputDecoration(
                 isDense: true,
                 contentPadding: EdgeInsets.zero,
@@ -59,10 +59,7 @@ class CustomDropdown extends StatelessWidget {
               items: items.map((String item) {
                 return DropdownMenuItem<String>(
                   value: item,
-                  child: Text(
-                    item,
-                    style: AppTextStyles.body14Regular,
-                  ),
+                  child: Text(item, style: AppTextStyles.body14Regular),
                 );
               }).toList(),
               onChanged: onChanged, // 4. ربط دالة التغيير

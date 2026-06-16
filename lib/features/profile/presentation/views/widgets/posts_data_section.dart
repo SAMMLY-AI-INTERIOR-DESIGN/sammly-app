@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/custom_heart_item.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class PostsDataSection extends StatelessWidget {
-  const PostsDataSection({super.key, required this.postsCount, required this.likesCount});
+  const PostsDataSection({
+    super.key,
+    required this.postsCount,
+    required this.likesCount,
+  });
   final String postsCount;
   final String likesCount;
 
@@ -14,11 +18,11 @@ class PostsDataSection extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(AppStrings.sharedImages, style: AppTextStyles.title18SemiBold),
+        Text(S.of(context).sharedImages, style: AppTextStyles.title18SemiBold),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text("$postsCount post", style: AppTextStyles.body14Regular),
+            Text(S.of(context).postsCountLabel(int.tryParse(postsCount) ?? 0), style: AppTextStyles.body14Regular),
             SizedBox(width: 24.w),
             Row(
               children: [

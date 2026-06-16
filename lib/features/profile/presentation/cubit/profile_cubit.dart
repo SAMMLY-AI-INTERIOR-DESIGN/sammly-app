@@ -28,13 +28,10 @@ class ProfileCubit extends Cubit<ProfileState> {
 
     final result = await _repository.getProfile(forceRefresh: forceRefresh);
 
-    result.fold(
-      (error) => emit(ProfileError(error)),
-      (profile) {
-        currentProfile = profile;
-        emit(ProfileLoaded(profile));
-      },
-    );
+    result.fold((error) => emit(ProfileError(error)), (profile) {
+      currentProfile = profile;
+      emit(ProfileLoaded(profile));
+    });
   }
 
   Future<void> fetchSettingInfo() async {
@@ -42,13 +39,10 @@ class ProfileCubit extends Cubit<ProfileState> {
 
     final result = await _repository.getSettingInfo();
 
-    result.fold(
-      (error) => emit(SettingInfoError(error)),
-      (settingInfo) {
-        currentSettingInfo = settingInfo;
-        emit(SettingInfoLoaded(settingInfo));
-      },
-    );
+    result.fold((error) => emit(SettingInfoError(error)), (settingInfo) {
+      currentSettingInfo = settingInfo;
+      emit(SettingInfoLoaded(settingInfo));
+    });
   }
 
   Future<void> editProfile(Map<String, dynamic> data, {File? imageFile}) async {
@@ -56,13 +50,10 @@ class ProfileCubit extends Cubit<ProfileState> {
 
     final result = await _repository.editProfile(data, imageFile: imageFile);
 
-    result.fold(
-      (error) => emit(EditProfileError(error)),
-      (profile) {
-        currentProfile = profile;
-        emit(EditProfileSuccess(profile));
-        emit(ProfileLoaded(profile));
-      },
-    );
+    result.fold((error) => emit(EditProfileError(error)), (profile) {
+      currentProfile = profile;
+      emit(EditProfileSuccess(profile));
+      emit(ProfileLoaded(profile));
+    });
   }
 }

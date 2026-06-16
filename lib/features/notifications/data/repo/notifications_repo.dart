@@ -31,7 +31,9 @@ class NotificationsRepo {
         final data = response.data['data'] as Map<String, dynamic>;
         return right(NotificationsResponse.fromJson(data));
       } else {
-        return left(response.data['message'] ?? 'Failed to load notifications.');
+        return left(
+          response.data['message'] ?? 'Failed to load notifications.',
+        );
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));

@@ -7,8 +7,8 @@ import 'package:flutter_svg/svg.dart';
 
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class ResultImageWidget extends StatefulWidget {
   final String imagePath;
@@ -40,9 +40,7 @@ class _ResultImageWidgetState extends State<ResultImageWidget> {
     return Container(
       width: double.infinity,
       height: 400.h,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16.r),
-      ),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(16.r)),
       child: Stack(
         fit: StackFit.expand,
         children: [
@@ -52,10 +50,7 @@ class _ResultImageWidgetState extends State<ResultImageWidget> {
                 ? Stack(
                     fit: StackFit.expand,
                     children: [
-                      Image(
-                        image: imageProvider,
-                        fit: BoxFit.fill,
-                      ),
+                      Image(image: imageProvider, fit: BoxFit.fill),
                       AnimatedOpacity(
                         opacity: _showOriginal ? 1.0 : 0.0,
                         duration: const Duration(milliseconds: 300),
@@ -66,14 +61,11 @@ class _ResultImageWidgetState extends State<ResultImageWidget> {
                       ),
                     ],
                   )
-                : Image(
-                    image: imageProvider,
-                    fit: BoxFit.fill,
-                  ),
+                : Image(image: imageProvider, fit: BoxFit.fill),
           ),
-          Positioned(
+          PositionedDirectional(
             top: 16.h,
-            left: 16.w,
+            start: 16.w,
             child: GestureDetector(
               onTap: widget.onSmartLensTap,
               child: ClipRRect(
@@ -81,7 +73,10 @@ class _ResultImageWidgetState extends State<ResultImageWidget> {
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 6.h,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(20.r),
@@ -95,7 +90,7 @@ class _ResultImageWidgetState extends State<ResultImageWidget> {
                         SvgPicture.asset(AppImages.smartLensIcon),
                         SizedBox(width: 8.w),
                         Text(
-                          AppStrings.smartLens,
+                          S.of(context).smartLens,
                           style: AppTextStyles.badge14SemiBold.copyWith(
                             color: Colors.white,
                             fontSize: 16.sp,
@@ -108,9 +103,9 @@ class _ResultImageWidgetState extends State<ResultImageWidget> {
               ),
             ),
           ),
-          Positioned(
+          PositionedDirectional(
             bottom: 16.h,
-            left: 16.w,
+            start: 16.w,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20.r),
               child: BackdropFilter(
@@ -141,10 +136,10 @@ class _ResultImageWidgetState extends State<ResultImageWidget> {
                       ),
                       SizedBox(width: 4.w),
                       Text(
-                        AppStrings.generatedBySammly,
+                        S.of(context).generatedBySammly,
                         style: AppTextStyles.body16Medium.copyWith(
                           color: AppColors.whiteColor,
-                          fontSize: 14,
+                          fontSize: 14.sp,
                         ),
                       ),
                     ],
@@ -154,9 +149,9 @@ class _ResultImageWidgetState extends State<ResultImageWidget> {
             ),
           ),
           if (widget.originalImagePath != null)
-            Positioned(
+            PositionedDirectional(
               bottom: 16.h,
-              right: 16.w,
+              end: 16.w,
               child: GestureDetector(
                 onTapDown: (_) => setState(() => _showOriginal = true),
                 onTapUp: (_) => setState(() => _showOriginal = false),

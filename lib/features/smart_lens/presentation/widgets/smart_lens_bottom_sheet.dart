@@ -18,7 +18,6 @@ class SmartLensBottomSheet extends StatefulWidget {
 }
 
 class _SmartLensBottomSheetState extends State<SmartLensBottomSheet> {
-
   @override
   void initState() {
     super.initState();
@@ -69,7 +68,7 @@ class _SmartLensBottomSheetState extends State<SmartLensBottomSheet> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24.w),
                 child: Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: AlignmentDirectional.centerStart,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -84,9 +83,12 @@ class _SmartLensBottomSheetState extends State<SmartLensBottomSheet> {
                       ),
                       BlocBuilder<SearchCubit, SearchState>(
                         builder: (context, state) {
-                          if (state is SearchLoaded && state.response.data.any((r) => r.productMatches.isNotEmpty)) {
+                          if (state is SearchLoaded &&
+                              state.response.data.any(
+                                (r) => r.productMatches.isNotEmpty,
+                              )) {
                             return Padding(
-                              padding: EdgeInsets.only(top: 6.h),
+                              padding: EdgeInsetsDirectional.only(top: 6.h),
                               child: Text(
                                 'We found similar items for your design.',
                                 style: TextStyle(
@@ -150,7 +152,9 @@ class _SmartLensBottomSheetState extends State<SmartLensBottomSheet> {
     ScrollController scrollController,
   ) {
     // Filter out results that have no products
-    final nonEmptyResults = results.where((r) => r.productMatches.isNotEmpty).toList();
+    final nonEmptyResults = results
+        .where((r) => r.productMatches.isNotEmpty)
+        .toList();
 
     if (nonEmptyResults.isEmpty) {
       return Center(
@@ -174,7 +178,9 @@ class _SmartLensBottomSheetState extends State<SmartLensBottomSheet> {
       itemBuilder: (context, index) {
         final result = nonEmptyResults[index];
         // Use label if available, otherwise fallback to detected category
-        final title = result.label.isNotEmpty ? result.label : result.detectedCategory;
+        final title = result.label.isNotEmpty
+            ? result.label
+            : result.detectedCategory;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,7 +197,7 @@ class _SmartLensBottomSheetState extends State<SmartLensBottomSheet> {
             SizedBox(height: 8.h),
             const Divider(color: Color(0xFFC0C0C0), thickness: 1),
             SizedBox(height: 16.h),
-            
+
             // Grid of products
             GridView.builder(
               shrinkWrap: true,

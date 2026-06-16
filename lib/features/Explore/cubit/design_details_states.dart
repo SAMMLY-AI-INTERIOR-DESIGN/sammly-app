@@ -10,10 +10,7 @@ class DesignDetailsLoaded extends DesignDetailsState {
   final DesignDetailsModel design;
   final DesignCreatorModel? creator;
 
-  DesignDetailsLoaded({
-    required this.design,
-    this.creator,
-  });
+  DesignDetailsLoaded({required this.design, this.creator});
 }
 
 class DesignDetailsError extends DesignDetailsState {

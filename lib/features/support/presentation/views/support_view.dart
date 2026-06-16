@@ -6,6 +6,7 @@ import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/custombutton.dart';
 import 'package:sammly/features/support/cubit/support_cubit.dart';
 import 'package:sammly/features/support/cubit/support_states.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class SupportScreen extends StatefulWidget {
   const SupportScreen({super.key});
@@ -20,17 +21,17 @@ class _SupportScreenState extends State<SupportScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String? _selectedSubject;
-  final List<String> _subjects = [
-    'Account Problem',
-    'Bug Report',
-    'Feature Request',
-    'Login Issue',
-    'Report User',
-    'Registration Problem',
-    'Verification Code',
-    'Password Reset',
-    'Technical Support',
-    'Other',
+  List<String> get _subjects => [
+    S.of(context).subjectAccountProblem,
+    S.of(context).subjectBugReport,
+    S.of(context).subjectFeatureRequest,
+    S.of(context).subjectLoginIssue,
+    S.of(context).subjectReportUser,
+    S.of(context).subjectRegistrationProblem,
+    S.of(context).subjectVerificationCode,
+    S.of(context).subjectPasswordReset,
+    S.of(context).subjectTechnicalSupport,
+    S.of(context).subjectOther,
   ];
 
   @override
@@ -49,20 +50,24 @@ class _SupportScreenState extends State<SupportScreen> {
       child: BlocListener<SupportCubit, SupportState>(
         listener: (context, state) {
           if (state is SendSupportSuccessState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Support request sent successfully!'),
-                backgroundColor: AppColors.secondaryColor,
-              ),
-            );
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text(S.of(context).supportRequestSuccess),
+                  backgroundColor: AppColors.secondaryColor,
+                ),
+              );
             Navigator.pop(context);
           } else if (state is SendSupportFailedState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.errorMsg),
-                backgroundColor: Colors.red,
-              ),
-            );
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text(state.errorMsg),
+                  backgroundColor: Colors.red,
+                ),
+              );
           }
         },
         child: Scaffold(
@@ -72,16 +77,13 @@ class _SupportScreenState extends State<SupportScreen> {
             elevation: 0,
             scrolledUnderElevation: 0,
             leading: IconButton(
-              icon: const Icon(
-                Icons.arrow_back_ios_new,
-                color: AppColors.blackColor,
-              ),
+              icon: Icon(Icons.arrow_back_ios_new, color: AppColors.blackColor),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
             title: Text(
-              'Support',
+              S.of(context).support,
               style: AppTextStyles.title20Bold.copyWith(
                 color: AppColors.blackColor,
               ),
@@ -99,7 +101,7 @@ class _SupportScreenState extends State<SupportScreen> {
 
                   // العناوين
                   Text(
-                    'Have a question or need assistance?',
+                    S.of(context).supportQuestion,
                     style: AppTextStyles.body16Regular.copyWith(
                       color: AppColors.blackColor,
                       fontWeight: FontWeight.bold,
@@ -107,14 +109,14 @@ class _SupportScreenState extends State<SupportScreen> {
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    'Reach out to us via email.',
+                    S.of(context).supportReachOut,
                     style: AppTextStyles.body14Regular.copyWith(
                       color: Colors.grey[700],
                     ),
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    "We're eager to assist you.",
+                    S.of(context).supportEagerToAssist,
                     style: AppTextStyles.body14Regular.copyWith(
                       color: AppColors.primaryColor,
                     ),
@@ -123,7 +125,7 @@ class _SupportScreenState extends State<SupportScreen> {
 
                   // حقل الإيميل
                   Text(
-                    'Email',
+                    S.of(context).email,
                     style: AppTextStyles.body14Regular.copyWith(
                       color: AppColors.blackColor,
                     ),
@@ -157,17 +159,17 @@ class _SupportScreenState extends State<SupportScreen> {
                           enabledBorder: InputBorder.none,
                           focusedBorder: InputBorder.none,
                           errorBorder: InputBorder.none,
-                          hintText: 'Enter your email',
+                          hintText: S.of(context).enterYourEmail,
                           hintStyle: AppTextStyles.hint12Light.copyWith(
                             fontSize: 14.sp,
                           ),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
+                            return S.of(context).pleaseEnterYourEmail;
                           }
                           if (!value.contains('@') || !value.contains('.')) {
-                            return 'Please enter a valid email address';
+                            return S.of(context).pleaseEnterValidEmail;
                           }
                           return null;
                         },
@@ -178,7 +180,7 @@ class _SupportScreenState extends State<SupportScreen> {
 
                   // حقل الموضوع (Dropdown)
                   Text(
-                    'Subject',
+                    S.of(context).subject,
                     style: AppTextStyles.body14Regular.copyWith(
                       color: AppColors.blackColor,
                     ),
@@ -192,8 +194,8 @@ class _SupportScreenState extends State<SupportScreen> {
                           AppColors.primaryColor,
                           AppColors.secondaryColor,
                         ],
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
+                        begin: AlignmentDirectional.centerStart,
+                        end: AlignmentDirectional.centerEnd,
                       ),
                     ),
                     padding: EdgeInsets.all(1.w),
@@ -206,7 +208,7 @@ class _SupportScreenState extends State<SupportScreen> {
                         initialValue: _selectedSubject,
                         dropdownColor: AppColors.whiteColor,
                         hint: Text(
-                          'Select Subject',
+                          S.of(context).selectSubject,
                           style: AppTextStyles.hint12Light.copyWith(
                             fontSize: 14.sp,
                           ),
@@ -231,7 +233,7 @@ class _SupportScreenState extends State<SupportScreen> {
                         selectedItemBuilder: (BuildContext context) {
                           return _subjects.map((String subject) {
                             return Align(
-                              alignment: Alignment.centerLeft,
+                              alignment: AlignmentDirectional.centerStart,
                               child: Text(
                                 subject,
                                 style: AppTextStyles.body14Regular.copyWith(
@@ -285,7 +287,7 @@ class _SupportScreenState extends State<SupportScreen> {
                         },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please select a subject';
+                            return S.of(context).pleaseSelectSubject;
                           }
                           return null;
                         },
@@ -296,7 +298,7 @@ class _SupportScreenState extends State<SupportScreen> {
 
                   // حقل الرسالة
                   Text(
-                    'Message:',
+                    S.of(context).message,
                     style: AppTextStyles.body14Regular.copyWith(
                       color: AppColors.blackColor,
                     ),
@@ -310,8 +312,8 @@ class _SupportScreenState extends State<SupportScreen> {
                           AppColors.primaryColor,
                           AppColors.secondaryColor,
                         ],
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
+                        begin: AlignmentDirectional.centerStart,
+                        end: AlignmentDirectional.centerEnd,
                       ),
                     ),
                     padding: EdgeInsets.all(1.w),
@@ -337,14 +339,14 @@ class _SupportScreenState extends State<SupportScreen> {
                           enabledBorder: InputBorder.none,
                           focusedBorder: InputBorder.none,
                           errorBorder: InputBorder.none,
-                          hintText: 'Enter your message',
+                          hintText: S.of(context).enterYourMessage,
                           hintStyle: AppTextStyles.hint12Light.copyWith(
                             fontSize: 14.sp,
                           ),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your message';
+                            return S.of(context).pleaseEnterYourMessage;
                           }
                           return null;
                         },
@@ -360,12 +362,46 @@ class _SupportScreenState extends State<SupportScreen> {
                         return const Center(child: CircularProgressIndicator());
                       }
                       return CustomButton(
-                        text: 'Submit',
+                        text: S.of(context).submit,
                         onPressed: () {
+                          String getApiSubject(String localizedSubject) {
+                            if (localizedSubject == S.of(context).subjectAccountProblem) {
+                              return 'account problem';
+                            }
+                            if (localizedSubject == S.of(context).subjectBugReport) {
+                              return 'bug report';
+                            }
+                            if (localizedSubject == S.of(context).subjectFeatureRequest) {
+                              return 'feature request';
+                            }
+                            if (localizedSubject == S.of(context).subjectLoginIssue) {
+                              return 'login issue';
+                            }
+                            if (localizedSubject == S.of(context).subjectReportUser) {
+                              return 'report user';
+                            }
+                            if (localizedSubject == S.of(context).subjectRegistrationProblem) {
+                              return 'registration problem';
+                            }
+                            if (localizedSubject == S.of(context).subjectVerificationCode) {
+                              return 'verification code';
+                            }
+                            if (localizedSubject == S.of(context).subjectPasswordReset) {
+                              return 'password reset';
+                            }
+                            if (localizedSubject == S.of(context).subjectTechnicalSupport) {
+                              return 'technical support';
+                            }
+                            if (localizedSubject == S.of(context).subjectOther) {
+                              return 'other';
+                            }
+                            return 'other';
+                          }
+
                           if (_formKey.currentState!.validate()) {
                             context.read<SupportCubit>().sendSupportRequest(
                               email: _emailController.text.trim(),
-                              subject: _selectedSubject!.toLowerCase(),
+                              subject: getApiSubject(_selectedSubject!),
                               message: _messageController.text.trim(),
                             );
                           }

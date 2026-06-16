@@ -4,6 +4,7 @@ import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/utils/image_download_helper.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/widgets/custom_action_button.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class ExploreActionButtonsRow extends StatelessWidget {
   final VoidCallback? onTryStyle;
@@ -24,31 +25,36 @@ class ExploreActionButtonsRow extends StatelessWidget {
       children: [
         Expanded(
           child: CustomActionButton(
-            title: 'Try this Style',
+            title: S.of(context).restyleThisDesign,
             iconPath: AppImages.startGenerateIcon,
-            onTap: onTryStyle ?? () {
-              if (imageUrl != null && imageUrl!.isNotEmpty) {
-                Navigator.pushNamed(
-                  context,
-                  AppRoutes.restyleView,
-                  arguments: {
-                    'initialImageUrl': imageUrl,
-                  },
-                );
-              }
-            },
+            onTap:
+                onTryStyle ??
+                () {
+                  if (imageUrl != null && imageUrl!.isNotEmpty) {
+                    Navigator.pushNamed(
+                      context,
+                      AppRoutes.restyleView,
+                      arguments: {'initialImageUrl': imageUrl},
+                    );
+                  }
+                },
           ),
         ),
         SizedBox(width: 8.w),
         Expanded(
           child: CustomActionButton(
-            title: 'Download',
+            title: S.of(context).downloadBtn,
             iconPath: AppImages.downloadIcon,
-            onTap: onDownload ?? () {
-              if (imageUrl != null && imageUrl!.isNotEmpty) {
-                ImageDownloadHelper.downloadNetworkImage(context, imageUrl!);
-              }
-            },
+            onTap:
+                onDownload ??
+                () {
+                  if (imageUrl != null && imageUrl!.isNotEmpty) {
+                    ImageDownloadHelper.downloadNetworkImage(
+                      context,
+                      imageUrl!,
+                    );
+                  }
+                },
           ),
         ),
       ],

@@ -29,7 +29,7 @@ class _SharedImageCardState extends State<SharedImageCard> {
     return Container(
       width: 366.w,
       height: 135.h,
-      margin: EdgeInsets.only(bottom: 12.h),
+      margin: EdgeInsetsDirectional.only(bottom: 12.h),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.r),
         gradient: const LinearGradient(

@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
+import 'package:sammly/generated/l10n.dart';
 import 'package:sammly/core/widgets/generate_action_buttons_row.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
@@ -52,12 +53,14 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
 
   void _openSmartLens(BuildContext context) {
     if (widget.designId.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Design ID not available for this item."),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(S.of(context).designIdNotAvailable),
+            backgroundColor: Colors.red,
+          ),
+        );
       return;
     }
 
@@ -105,13 +108,23 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
           BlocListener<FavoriteCubit, FavoriteState>(
             listener: (context, state) {
               if (state is FavoriteToggleSuccess) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(state.message), backgroundColor: AppColors.primaryColor),
-                );
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(
+                      content: Text(state.message),
+                      backgroundColor: AppColors.primaryColor,
+                    ),
+                  );
               } else if (state is FavoriteToggleError) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(state.message), backgroundColor: Colors.red),
-                );
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(
+                      content: Text(state.message),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
               }
             },
           ),
@@ -119,14 +132,24 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
             listener: (context, state) {
               if (state is DesignShareSuccess) {
                 setState(() => _isShareLoading = false);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(state.message), backgroundColor: AppColors.primaryColor),
-                );
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(
+                      content: Text(state.message),
+                      backgroundColor: AppColors.primaryColor,
+                    ),
+                  );
               } else if (state is DesignActionError) {
                 setState(() => _isShareLoading = false);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(state.message), backgroundColor: Colors.red),
-                );
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(
+                      content: Text(state.message),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
               } else if (state is DesignActionLoading) {
                 setState(() => _isShareLoading = true);
               }
@@ -135,7 +158,9 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
         ],
         child: BlocBuilder<DesignDetailsCubit, DesignDetailsState>(
           builder: (context, designState) {
-            final isShared = context.read<DesignDetailsCubit>().isSharedLocal(widget.designId);
+            final isShared = context.read<DesignDetailsCubit>().isSharedLocal(
+              widget.designId,
+            );
             return Scaffold(
               backgroundColor: AppColors.whiteColor,
               appBar: _isMaximized
@@ -147,11 +172,15 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
                         if (!isShared)
                           _isShareLoading
                               ? Padding(
-                                  padding: EdgeInsets.only(right: 16.w),
+                                  padding: EdgeInsetsDirectional.only(
+                                    end: 16.w,
+                                  ),
                                   child: SizedBox(
                                     width: 20.w,
                                     height: 20.w,
-                                    child: const CircularProgressIndicator(strokeWidth: 2),
+                                    child: const CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
                                   ),
                                 )
                               : IconButton(
@@ -161,7 +190,9 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
                                     size: 24.sp,
                                   ),
                                   onPressed: () {
-                                    context.read<DesignDetailsCubit>().shareDesign(widget.designId);
+                                    context
+                                        .read<DesignDetailsCubit>()
+                                        .shareDesign(widget.designId);
                                   },
                                 ),
                       ],
@@ -192,7 +223,9 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
             width: double.infinity,
             child: BlocBuilder<FavoriteCubit, FavoriteState>(
               builder: (context, state) {
-                final isSaved = context.read<FavoriteCubit>().isFavorite(widget.designId);
+                final isSaved = context.read<FavoriteCubit>().isFavorite(
+                  widget.designId,
+                );
                 return HistoryMainImageSection(
                   imageUrl: widget.imageUrl,
                   isMaximized: false,
@@ -200,7 +233,10 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
                   onSmartLensTap: () => _openSmartLens(context),
                   isSaved: isSaved,
                   onSaveTap: () {
-                    context.read<FavoriteCubit>().toggleFavorite(widget.designId, isSaved);
+                    context.read<FavoriteCubit>().toggleFavorite(
+                      widget.designId,
+                      isSaved,
+                    );
                   },
                 );
               },
@@ -251,9 +287,9 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
                 ),
         ),
         // زرار الرجوع (أعلى يسار)
-        Positioned(
+        PositionedDirectional(
           top: 12.h,
-          left: 12.w,
+          start: 12.w,
           child: GestureDetector(
             onTap: _toggleMaximize,
             child: Container(
@@ -277,9 +313,9 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
           ),
         ),
         // زرار التصغير (ثابت في الزاوية اليمنى السفلية)
-        Positioned(
+        PositionedDirectional(
           bottom: 24.h,
-          right: 24.w,
+          end: 24.w,
           child: GestureDetector(
             onTap: _toggleMaximize,
             child: Container(

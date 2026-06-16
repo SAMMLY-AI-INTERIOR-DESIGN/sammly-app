@@ -10,6 +10,7 @@ import 'package:sammly/features/Auth/cubit/auth_cubit.dart';
 import 'package:sammly/features/Auth/cubit/auth_states.dart';
 import 'package:sammly/features/Auth/presentation/views/verification_view.dart';
 import 'package:sammly/features/Auth/presentation/widgets/custom_text_field.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -44,19 +45,19 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               MaterialPageRoute(
                 builder: (_) => BlocProvider.value(
                   value: authCubit,
-                  child: VerificationView(
-                    email: _emailController.text.trim(),
-                  ),
+                  child: VerificationView(email: _emailController.text.trim()),
                 ),
               ),
             );
           } else if (state is SendResetCodeFailedState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.errorMsg),
-                backgroundColor: Colors.red,
-              ),
-            );
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text(state.errorMsg),
+                  backgroundColor: Colors.red,
+                ),
+              );
           }
         },
         child: Scaffold(
@@ -66,10 +67,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             elevation: 0,
             scrolledUnderElevation: 0,
             leading: IconButton(
-              icon: const Icon(
-                Icons.arrow_back_ios_new,
-                color: AppColors.blackColor,
-              ),
+              icon: Icon(Icons.arrow_back_ios_new, color: AppColors.blackColor),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -87,7 +85,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   // 1. اللوجو
                   // 💡 ملحوظة: لو اللوجو بتاعك لونه أبيض، هتحتاج تجيب اللوجو الملون من فيجما
                   // وتحفظه باسم جديد مثلاً AppImages.logoColored عشان يظهر على الخلفية البيضاء
-                  SvgPicture.asset(AppImages.splash, width: 160.w, height: 147.h),
+                  SvgPicture.asset(
+                    AppImages.splash,
+                    width: 160.w,
+                    height: 147.h,
+                  ),
                   SizedBox(height: 32.h),
 
                   // 2. مؤشر الخطوات (Progress Indicator)
@@ -113,12 +115,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
                   // 3. العناوين
                   Text(
-                    'Forgot Password',
+                    S.of(context).forgotPasswordTitle,
                     style: AppTextStyles.heading28ExtraBold,
                   ),
                   SizedBox(height: 8.h),
                   Text(
-                    'We will Send you a verification code to your\nregistered email.',
+                    S.of(context).forgotPasswordDesc,
                     textAlign: TextAlign.center,
                     style: AppTextStyles.body14Regular.copyWith(
                       color: Colors.grey[600],
@@ -130,15 +132,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   // 4. حقل الإيميل
                   CustomTextField(
                     controller: _emailController,
-                    thing: 'Enter your email',
+                    thing: S.of(context).enterYourEmailHint,
                     preffixicon: Icons.email_outlined,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
+                        return S.of(context).pleaseEnterYourEmail;
                       }
 
                       if (!value.contains('@') || !value.contains('.')) {
-                        return 'Please enter a valid email address';
+                        return S.of(context).pleaseEnterValidEmail;
                       }
                       return null;
                     },
@@ -152,12 +154,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         return const Center(child: CircularProgressIndicator());
                       }
                       return CustomButton(
-                        text: 'Next',
+                        text: S.of(context).next,
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             context.read<AuthCubit>().sendPasswordResetCode(
-                                  email: _emailController.text.trim(),
-                                );
+                              email: _emailController.text.trim(),
+                            );
                           }
                         },
                       );

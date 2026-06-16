@@ -10,6 +10,7 @@ import 'package:sammly/core/utils/image_download_helper.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/features/Explore/cubit/design_details_cubit.dart';
 import 'package:sammly/features/Explore/cubit/design_details_states.dart';
+import 'package:sammly/generated/l10n.dart';
 import 'package:sammly/features/Explore/data/design_details_model.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_state.dart';
@@ -48,18 +49,27 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
   }
 
   void _showSnackbar(String message, {bool isError = false}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: isError ? Colors.red : AppColors.primaryColor,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: isError ? Colors.red : AppColors.primaryColor,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
   }
 
   String _formatText(String text) {
     if (text.isEmpty) return '';
-    return text.split('-').map((str) => str.isNotEmpty ? '${str[0].toUpperCase()}${str.substring(1)}' : '').join(' ');
+    return text
+        .split('-')
+        .map(
+          (str) => str.isNotEmpty
+              ? '${str[0].toUpperCase()}${str.substring(1)}'
+              : '',
+        )
+        .join(' ');
   }
 
   @override
@@ -93,7 +103,7 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
           if (state is DesignDetailsLoading) {
             return const Scaffold(
               backgroundColor: AppColors.whiteColor,
-              body: Center(child: CircularProgressIndicator())
+              body: Center(child: CircularProgressIndicator()),
             );
           }
 
@@ -112,8 +122,11 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.error_outline,
-                        size: 48.sp, color: AppColors.greyColor),
+                    Icon(
+                      Icons.error_outline,
+                      size: 48.sp,
+                      color: AppColors.greyColor,
+                    ),
                     SizedBox(height: 12.h),
                     Text(
                       state.message,
@@ -146,9 +159,9 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
 
           final cubit = context.read<DesignDetailsCubit>();
           if (cubit.currentDesign == null) {
-            return const Scaffold(
+            return Scaffold(
               backgroundColor: AppColors.whiteColor,
-              body: Center(child: Text('No design details found'))
+              body: Center(child: Text(S.of(context).noDesignDetailsFound)),
             );
           }
 
@@ -184,7 +197,9 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
                             return [
                               PopupMenuItem(
                                 value: isShared ? 'cancel_share' : 'share',
-                                child: Text(isShared ? 'Cancel Share' : 'Share Design'),
+                                child: Text(
+                                  isShared ? 'Cancel Share' : 'Share Design',
+                                ),
                               ),
                             ];
                           },
@@ -200,7 +215,9 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
                     _showSnackbar(favState.message, isError: true);
                   }
                 },
-                child: _isMaximized ? _buildMaximizedView(design) : _buildNormalView(design),
+                child: _isMaximized
+                    ? _buildMaximizedView(design)
+                    : _buildNormalView(design),
               ),
             ),
           );
@@ -230,7 +247,10 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
                               height: 350.h,
                               color: Colors.grey[200],
                               child: const Center(
-                                child: Icon(Icons.broken_image, color: Colors.grey),
+                                child: Icon(
+                                  Icons.broken_image,
+                                  color: Colors.grey,
+                                ),
                               ),
                             )
                           : Image.network(
@@ -244,7 +264,10 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
                                   height: 350.h,
                                   color: Colors.grey[200],
                                   child: const Center(
-                                    child: Icon(Icons.broken_image, color: Colors.grey),
+                                    child: Icon(
+                                      Icons.broken_image,
+                                      color: Colors.grey,
+                                    ),
                                   ),
                                 );
                               },
@@ -258,7 +281,7 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: [
-                              Colors.black.withOpacity(0.3),
+                              Colors.black.withValues(alpha: 0.3),
                               Colors.transparent,
                             ],
                           ),
@@ -266,10 +289,10 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
                       ),
 
                       // Gradient overlay at bottom for icons
-                      Positioned(
+                      PositionedDirectional(
                         bottom: 0,
-                        left: 0,
-                        right: 0,
+                        start: 0,
+                        end: 0,
                         height: 80.h,
                         child: Container(
                           decoration: BoxDecoration(
@@ -277,7 +300,7 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
                               begin: Alignment.bottomCenter,
                               end: Alignment.topCenter,
                               colors: [
-                                Colors.black.withOpacity(0.3),
+                                Colors.black.withValues(alpha: 0.3),
                                 Colors.transparent,
                               ],
                             ),
@@ -286,44 +309,56 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
                       ),
 
                       // Bookmark Icon (Favorite)
-                      Positioned(
+                      PositionedDirectional(
                         top: 12.h,
-                        right: 12.w,
+                        end: 12.w,
                         child: BlocBuilder<FavoriteCubit, FavoriteState>(
                           builder: (context, favState) {
-                            final isFav = context.read<FavoriteCubit>().isFavorite(design.id);
+                            final isFav = context
+                                .read<FavoriteCubit>()
+                                .isFavorite(design.id);
                             return GestureDetector(
                               onTap: () {
-                                context.read<FavoriteCubit>().toggleFavorite(design.id, isFav);
-                                context.read<DesignDetailsCubit>().updateFavoriteStatus(!isFav);
+                                context.read<FavoriteCubit>().toggleFavorite(
+                                  design.id,
+                                  isFav,
+                                );
+                                context
+                                    .read<DesignDetailsCubit>()
+                                    .updateFavoriteStatus(!isFav);
                               },
                               child: SvgPicture.asset(
-                                isFav ? AppImages.withsaving : AppImages.withoutsaving,
+                                isFav
+                                    ? AppImages.withsaving
+                                    : AppImages.withoutsaving,
                                 width: 24.w,
                               ),
                             );
                           },
                         ),
                       ),
-                      
+
                       // Download Icon
-                      Positioned(
+                      PositionedDirectional(
                         bottom: 12.h,
-                        left: 12.w,
+                        start: 12.w,
                         child: GestureDetector(
                           onTap: () {
                             if (design.imageUrl.isNotEmpty) {
-                              ImageDownloadHelper.downloadNetworkImage(context, design.imageUrl);
+                              ImageDownloadHelper.downloadNetworkImage(
+                                context,
+                                design.imageUrl,
+                              );
                             }
                           },
                           child: Container(
                             padding: EdgeInsets.all(8.w),
                             decoration: BoxDecoration(
-                              color: AppColors.whiteColor.withOpacity(0.85),
+                              color: AppColors.whiteColor.withValues(alpha: 0.85),
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
+                                  color: Colors.black.withValues(alpha: 0.2),
                                   blurRadius: 8,
                                   offset: const Offset(0, 2),
                                 ),
@@ -338,19 +373,19 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
                       ),
 
                       // Maximize Icon
-                      Positioned(
+                      PositionedDirectional(
                         bottom: 12.h,
-                        right: 12.w,
+                        end: 12.w,
                         child: GestureDetector(
                           onTap: _toggleMaximize,
                           child: Container(
                             padding: EdgeInsets.all(8.w),
                             decoration: BoxDecoration(
-                              color: AppColors.whiteColor.withOpacity(0.85),
+                              color: AppColors.whiteColor.withValues(alpha: 0.85),
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
+                                  color: Colors.black.withValues(alpha: 0.2),
                                   blurRadius: 8,
                                   offset: const Offset(0, 2),
                                 ),
@@ -367,7 +402,7 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
                   ),
                 ),
                 SizedBox(height: 20.h),
-                
+
                 Text(
                   'Room : ${_formatText(design.room)}',
                   style: TextStyle(
@@ -392,21 +427,24 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
             ),
           ),
         ),
-        
+
         // Pinned Bottom Button
         Padding(
-          padding: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 20.h, top: 8.h),
+          padding: EdgeInsetsDirectional.only(
+            start: 20.w,
+            end: 20.w,
+            bottom: 20.h,
+            top: 8.h,
+          ),
           child: CustomButton(
-            text: 'Try this Style',
+            text: S.of(context).restyleThisDesign,
             prefixIcon: AppImages.startGenerateIcon,
             onPressed: () {
               if (design.imageUrl.isNotEmpty) {
                 Navigator.pushNamed(
                   context,
                   AppRoutes.restyleView,
-                  arguments: {
-                    'initialImageUrl': design.imageUrl,
-                  },
+                  arguments: {'initialImageUrl': design.imageUrl},
                 );
               }
             },
@@ -440,19 +478,19 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
                   },
                 ),
         ),
-        Positioned(
+        PositionedDirectional(
           top: 12.h,
-          left: 12.w,
+          start: 12.w,
           child: GestureDetector(
             onTap: _toggleMaximize,
             child: Container(
               padding: EdgeInsets.all(8.w),
               decoration: BoxDecoration(
-                color: AppColors.whiteColor.withOpacity(0.85),
+                color: AppColors.whiteColor.withValues(alpha: 0.85),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
+                    color: Colors.black.withValues(alpha: 0.2),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -466,19 +504,19 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
             ),
           ),
         ),
-        Positioned(
+        PositionedDirectional(
           bottom: 24.h,
-          right: 24.w,
+          end: 24.w,
           child: GestureDetector(
             onTap: _toggleMaximize,
             child: Container(
               padding: EdgeInsets.all(8.w),
               decoration: BoxDecoration(
-                color: AppColors.whiteColor.withOpacity(0.85),
+                color: AppColors.whiteColor.withValues(alpha: 0.85),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
+                    color: Colors.black.withValues(alpha: 0.2),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),

@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
-import 'package:sammly/core/constant/app_strings.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/features/Explore/presentation/views/browse_designs.dart';
+import 'package:sammly/features/generate/data/model/generate_mappers.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class ExploreView extends StatelessWidget {
   const ExploreView({super.key});
@@ -14,12 +15,12 @@ class ExploreView extends StatelessWidget {
   Widget build(BuildContext context) {
     // قائمة الغرف المتاحة في الـ Explore
     final List<Map<String, String>> exploreRooms = [
-      {'name': AppStrings.bedroom, 'image': AppImages.roomBedroom},
-      {'name': AppStrings.diningRoom, 'image': AppImages.roomDining},
-      {'name': AppStrings.kitchen, 'image': AppImages.roomKitchen},
-      {'name': AppStrings.bathroom, 'image': AppImages.roomBathroom},
+      {'name': S.of(context).bedroom, 'image': AppImages.roomBedroom},
+      {'name': S.of(context).diningRoom, 'image': AppImages.roomDining},
+      {'name': S.of(context).kitchen, 'image': AppImages.roomKitchen},
+      {'name': S.of(context).bathroom, 'image': AppImages.roomBathroom},
       {
-        'name': AppStrings.livingRoom,
+        'name': S.of(context).livingRoom,
         'image': AppImages.roomLivingBohoTraditional,
       },
     ];
@@ -27,8 +28,8 @@ class ExploreView extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
       // الـ AppBar العلوي الموحد عندك في البروجكت
-      appBar: const CustomAppbar(
-        title: 'Select Room',
+      appBar: CustomAppbar(
+        title: S.of(context).selectRoom,
         // لو الشاشة دي رئيسية في الـ BottomNavBar شيل سهم الـ back لو مش عاوزه
       ),
       body: ListView.separated(
@@ -43,9 +44,7 @@ class ExploreView extends StatelessWidget {
           return GestureDetector(
             onTap: () {
               // Map display name to API room value
-              final roomApiValue = room['name']!
-                  .toLowerCase()
-                  .replaceAll(' ', '');
+              final roomApiValue = GenerateMappers.roomToApi(room['name']!);
               Navigator.push(
                 context,
                 MaterialPageRoute(

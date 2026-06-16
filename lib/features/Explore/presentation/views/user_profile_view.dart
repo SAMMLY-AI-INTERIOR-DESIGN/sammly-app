@@ -13,6 +13,7 @@ import 'package:sammly/features/following/data/repo/following_repo.dart';
 import 'package:sammly/features/following/presentation/widgets/gradient_follow_bottom.dart';
 import 'package:sammly/features/profile/data/models/shared_images_model.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/posts_data_section.dart';
+import 'package:sammly/generated/l10n.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/shared_image_card.dart';
 
 class UserProfileView extends StatefulWidget {
@@ -81,7 +82,6 @@ class _UserProfileViewState extends State<UserProfileView> {
                         }
                       },
                     ),
-                    
                   ),
                   SizedBox(height: 20.h),
                   Expanded(
@@ -91,11 +91,11 @@ class _UserProfileViewState extends State<UserProfileView> {
                         Stack(
                           children: [
                             Container(
-                              margin: EdgeInsets.only(top: 50.h),
-                              padding: EdgeInsets.only(
+                              margin: EdgeInsetsDirectional.only(top: 50.h),
+                              padding: EdgeInsetsDirectional.only(
                                 top: 60.h,
-                                left: 16.w,
-                                right: 16.w,
+                                start: 16.w,
+                                end: 16.w,
                                 bottom: 20.h,
                               ),
                               decoration: BoxDecoration(
@@ -122,7 +122,7 @@ class _UserProfileViewState extends State<UserProfileView> {
                                     itemBuilder: (context, index) {
                                       final design = userDesigns[index];
                                       final item = SharedImageModel(
-                                        title: 'Shared Design',
+                                        title: S.of(context).sharedDesign,
                                         description: design.prompt,
                                         imageUrl: design.imageUrl,
                                         likes: design.likesCount,

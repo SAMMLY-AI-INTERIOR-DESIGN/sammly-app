@@ -32,7 +32,7 @@ class ProfileImageNameWidget extends StatelessWidget {
                     (state is ProfileLoading ? "Loading..." : "User"),
                 style: AppTextStyles.title20Bold,
               ),
-              
+
               SizedBox(height: 14.h),
             ],
           ),

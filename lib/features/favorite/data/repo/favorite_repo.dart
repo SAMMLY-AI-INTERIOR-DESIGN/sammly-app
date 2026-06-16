@@ -24,10 +24,7 @@ class FavoriteRepo {
       if (limit < 1) limit = 20;
       if (limit > 50) limit = 50;
 
-      final Map<String, dynamic> queryParams = {
-        'page': page,
-        'limit': limit,
-      };
+      final Map<String, dynamic> queryParams = {'page': page, 'limit': limit};
       final cleanRoom = room.toLowerCase().replaceAll(' ', '');
       if (cleanRoom != 'all') {
         queryParams['room'] = cleanRoom;
@@ -45,7 +42,9 @@ class FavoriteRepo {
       } else {
         log(response.data.toString());
         final backendError = _extractErrorMessage(response.data);
-        return left(backendError.isNotEmpty ? backendError : 'Failed to load favorites.');
+        return left(
+          backendError.isNotEmpty ? backendError : 'Failed to load favorites.',
+        );
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
@@ -78,15 +77,22 @@ class FavoriteRepo {
 
       final isMap = response.data is Map;
 
-      if (response.statusCode == 201 && isMap && response.data['status'] == 'success') {
-        final msg = response.data['data']?['message']
-            ?? response.data['message']
-            ?? 'Added to favorites.';
+      if (response.statusCode == 201 &&
+          isMap &&
+          response.data['status'] == 'success') {
+        final msg =
+            response.data['data']?['message'] ??
+            response.data['message'] ??
+            'Added to favorites.';
         return right(msg);
       } else {
         // Handle 404 (Design not found) and 409 (Already in favorites)
         final backendError = _extractErrorMessage(response.data);
-        return left(backendError.isNotEmpty ? backendError : 'Failed to add to favorites.');
+        return left(
+          backendError.isNotEmpty
+              ? backendError
+              : 'Failed to add to favorites.',
+        );
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
@@ -114,14 +120,21 @@ class FavoriteRepo {
 
       final isMap = response.data is Map;
 
-      if (response.statusCode == 200 && isMap && response.data['status'] == 'success') {
-        final msg = response.data['data']?['message']
-            ?? response.data['message']
-            ?? 'Removed from favorites.';
+      if (response.statusCode == 200 &&
+          isMap &&
+          response.data['status'] == 'success') {
+        final msg =
+            response.data['data']?['message'] ??
+            response.data['message'] ??
+            'Removed from favorites.';
         return right(msg);
       } else {
         final backendError = _extractErrorMessage(response.data);
-        return left(backendError.isNotEmpty ? backendError : 'Failed to remove from favorites.');
+        return left(
+          backendError.isNotEmpty
+              ? backendError
+              : 'Failed to remove from favorites.',
+        );
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
@@ -140,11 +153,16 @@ class FavoriteRepo {
         } catch (_) {}
       }
       if (data is Map) {
-        final msg = data['message']
-            ?? data['msg']
-            ?? data['error']
-            ?? (data['data'] is Map ? (data['data']['msg'] ?? data['data']['message']) : null)
-            ?? (data['errors'] is List ? (data['errors'] as List).join(', ') : data['errors']);
+        final msg =
+            data['message'] ??
+            data['msg'] ??
+            data['error'] ??
+            (data['data'] is Map
+                ? (data['data']['msg'] ?? data['data']['message'])
+                : null) ??
+            (data['errors'] is List
+                ? (data['errors'] as List).join(', ')
+                : data['errors']);
         if (msg != null && msg.toString().isNotEmpty) {
           return msg.toString();
         }

@@ -27,9 +27,7 @@ class HomeRepo {
         return right(HomeModel.fromJson(dataMap));
       } else {
         log(response.data.toString());
-        return left(
-          response.data['message'] ?? 'Failed to get home data.',
-        );
+        return left(response.data['message'] ?? 'Failed to get home data.');
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
@@ -45,7 +43,8 @@ class HomeRepo {
         final data = e.response!.data;
         log('API Error Response: $data');
         if (data is Map) {
-          final msg = data['message'] ??
+          final msg =
+              data['message'] ??
               data['msg'] ??
               data['error'] ??
               (data['errors'] is List

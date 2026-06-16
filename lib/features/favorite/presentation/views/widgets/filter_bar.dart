@@ -2,50 +2,55 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_colors.dart';
-import 'package:sammly/core/constant/app_strings.dart';
+
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_state.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class FilterBar extends StatelessWidget {
-  FilterBar({super.key});
+  const FilterBar({super.key});
 
-  final List<String> _filters = [
-    AppStrings.all,
-    AppStrings.bathroom,
-    AppStrings.bedroom,
-    AppStrings.diningRoom,
-    AppStrings.kitchen,
-    AppStrings.livingRoom,
-  ];
-  
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FavoriteCubit, FavoriteState>(
       builder: (context, state) {
         final currentFilter = context.read<FavoriteCubit>().selectedRoom;
-        
+        final List<Map<String, String>> filters = [
+          {'key': 'all', 'label': S.of(context).all},
+          {'key': 'bathroom', 'label': S.of(context).bathroom},
+          {'key': 'bedroom', 'label': S.of(context).bedroom},
+          {'key': 'dining room', 'label': S.of(context).diningRoom},
+          {'key': 'kitchen', 'label': S.of(context).kitchen},
+          {'key': 'living room', 'label': S.of(context).livingRoom},
+        ];
+
         return SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Row(
-            children: _filters.map((filter) {
-              final isSelected = filter.toLowerCase() == currentFilter;
+            children: filters.map((filter) {
+              final key = filter['key']!;
+              final label = filter['label']!;
+              final isSelected = key == currentFilter;
               return Padding(
-                padding: EdgeInsets.only(right: 8.w),
+                padding: EdgeInsetsDirectional.only(end: 8.w),
                 child: GestureDetector(
                   onTap: () {
-                    context.read<FavoriteCubit>().changeRoom(filter);
+                    context.read<FavoriteCubit>().changeRoom(key);
                   },
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
-                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                      vertical: 8.h,
+                    ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20.r),
                       gradient: isSelected
                           ? const LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
+                              begin: AlignmentDirectional.topStart,
+                              end: AlignmentDirectional.bottomEnd,
                               colors: [
                                 AppColors.primaryColor,
                                 AppColors.secondaryColor,
@@ -55,9 +60,12 @@ class FilterBar extends StatelessWidget {
                       color: isSelected ? null : AppColors.bg1Color,
                     ),
                     child: Text(
-                      filter,
-                      style: isSelected ? AppTextStyles.body16Regular.copyWith(color: AppColors.whiteColor)
-                      : AppTextStyles.body16Regular
+                      label,
+                      style: isSelected
+                          ? AppTextStyles.body16Regular.copyWith(
+                              color: AppColors.whiteColor,
+                            )
+                          : AppTextStyles.body16Regular,
                     ),
                   ),
                 ),
@@ -68,4 +76,4 @@ class FilterBar extends StatelessWidget {
       },
     );
   }
-}
+}

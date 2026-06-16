@@ -12,7 +12,9 @@ import 'package:sammly/features/profile/data/models/setting_info_model.dart';
 class ProfileRepo {
   // static const String _profileCacheKey = 'cached_profile_data';
 
-  Future<Either<String, ProfileModel>> getProfile({bool forceRefresh = false}) async {
+  Future<Either<String, ProfileModel>> getProfile({
+    bool forceRefresh = false,
+  }) async {
     try {
       // 1. نجيب التوكن الأول عشان لو مش موجود نخرج بدري
       final token = SharedPref.getData(key: 'jwt');
@@ -22,10 +24,12 @@ class ProfileRepo {
 
       // 2. نجيب الـ userId بتاع اليوزر الحالي (لازم تكون مسيفه وقت الـ Login)
       // لو مش متسيف، بنعمل fallback بأي قيمة أو بالتوكن عشان الكاش ميتداخلش
-      final currentUserId = SharedPref.getData(key: 'userId') ?? token.hashCode.toString();
-      
+      final currentUserId =
+          SharedPref.getData(key: 'userId') ?? token.hashCode.toString();
+
       // 3. نعمل الـ Key ديناميك لكل يوزر
-      final String dynamicProfileCacheKey = 'cached_profile_data_$currentUserId';
+      final String dynamicProfileCacheKey =
+          'cached_profile_data_$currentUserId';
 
       // 4. نقرأ من الكاش المربوط باليوزر ده بس
       // if (!forceRefresh) {
@@ -43,7 +47,8 @@ class ProfileRepo {
       );
       log('Profile Data: ${response.data.toString()}');
       if (response.statusCode == 200 && response.data['status'] == 'success') {
-        final userMap = response.data['data']['profile'] as Map<String, dynamic>;
+        final userMap =
+            response.data['data']['profile'] as Map<String, dynamic>;
         // log(userMap.toString());
 
         // 6. نسيف الداتا في الكاش المخصص لليوزر ده
@@ -56,7 +61,10 @@ class ProfileRepo {
         if (SharedPref.getData(key: 'userId') == null) {
           final idToSave = userMap['userId'] ?? userMap['id'] ?? userMap['_id'];
           if (idToSave != null) {
-            await SharedPref.saveData(key: 'userId', value: idToSave.toString());
+            await SharedPref.saveData(
+              key: 'userId',
+              value: idToSave.toString(),
+            );
           }
         }
 
@@ -72,7 +80,10 @@ class ProfileRepo {
     }
   }
 
-  Future<Either<String, ProfileModel>> editProfile(Map<String, dynamic> data, {File? imageFile}) async {
+  Future<Either<String, ProfileModel>> editProfile(
+    Map<String, dynamic> data, {
+    File? imageFile,
+  }) async {
     try {
       final token = SharedPref.getData(key: 'jwt');
       if (token == null) {
@@ -96,13 +107,16 @@ class ProfileRepo {
       );
       log(response.data.toString());
       if (response.statusCode == 200 && response.data['status'] == 'success') {
-        final userMap = response.data['data']['profile'] as Map<String, dynamic>;
-        
+        final userMap =
+            response.data['data']['profile'] as Map<String, dynamic>;
+
         // 1. نجيب الـ userId بتاع اليوزر الحالي زي ما عملنا في getProfile
-        final currentUserId = SharedPref.getData(key: 'userId') ?? token.hashCode.toString();
-        
+        final currentUserId =
+            SharedPref.getData(key: 'userId') ?? token.hashCode.toString();
+
         // 2. نعمل الـ Key ديناميك الخاص باليوزر ده
-        final String dynamicProfileCacheKey = 'cached_profile_data_$currentUserId';
+        final String dynamicProfileCacheKey =
+            'cached_profile_data_$currentUserId';
 
         // 3. نحدث الكاش الخاص باليوزر ده بالداتا الجديدة بعد التعديل
         await SharedPref.saveData(
@@ -154,16 +168,21 @@ class ProfileRepo {
         log('API Error Response: $data');
         if (data is Map) {
           // الـ API ممكن يرجع الـ error message في أماكن مختلفة
-          final msg = data['message'] 
-              ?? data['msg'] 
-              ?? data['error']
-              ?? (data['errors'] is List ? (data['errors'] as List).join(', ') : null)
-              ?? (data['data'] is Map ? (data['data']['msg'] ?? data['data']['message']) : null);
+          final msg =
+              data['message'] ??
+              data['msg'] ??
+              data['error'] ??
+              (data['errors'] is List
+                  ? (data['errors'] as List).join(', ')
+                  : null) ??
+              (data['data'] is Map
+                  ? (data['data']['msg'] ?? data['data']['message'])
+                  : null);
           if (msg != null) return msg.toString();
         }
       } catch (_) {}
     }
-    
+
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
