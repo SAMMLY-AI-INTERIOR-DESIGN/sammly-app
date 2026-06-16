@@ -11,15 +11,17 @@ import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/widgets/avatar_widget.dart';
 import 'package:sammly/features/Explore/cubit/design_details_cubit.dart';
 import 'package:sammly/features/Explore/cubit/design_details_states.dart';
+import 'package:sammly/features/Explore/cubit/explorecubit.dart';
 import 'package:sammly/generated/l10n.dart';
 import 'package:sammly/features/Explore/data/design_details_model.dart';
+import 'package:sammly/features/Explore/data/exploremodel.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_state.dart';
 
 class SharedDesignDetailsView extends StatefulWidget {
-  final String designId;
+  final ExploreDesignModel exploreDesign;
 
-  const SharedDesignDetailsView({super.key, required this.designId});
+  const SharedDesignDetailsView({super.key, required this.exploreDesign});
 
   @override
   State<SharedDesignDetailsView> createState() =>
@@ -32,7 +34,13 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
   @override
   void initState() {
     super.initState();
-    context.read<DesignDetailsCubit>().fetchDesignDetails(widget.designId);
+    context.read<DesignDetailsCubit>().fetchDesignDetails(
+          widget.exploreDesign.id,
+          overrideId: widget.exploreDesign.id,
+          overrideIsLiked: widget.exploreDesign.isLiked,
+          overrideIsFavorited: widget.exploreDesign.isFavorited,
+          overrideLikesCount: widget.exploreDesign.likesCount,
+        );
   }
 
   void _toggleMaximize() {
@@ -142,7 +150,13 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                     TextButton(
                       onPressed: () => context
                           .read<DesignDetailsCubit>()
-                          .fetchDesignDetails(widget.designId),
+                          .fetchDesignDetails(
+                            widget.exploreDesign.id,
+                            overrideId: widget.exploreDesign.id,
+                            overrideIsLiked: widget.exploreDesign.isLiked,
+                            overrideIsFavorited: widget.exploreDesign.isFavorited,
+                            overrideLikesCount: widget.exploreDesign.likesCount,
+                          ),
                       child: Text(
                         'Retry',
                         style: TextStyle(
@@ -188,9 +202,9 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                           ),
                           onSelected: (value) {
                             if (value == 'share') {
-                              cubit.shareDesign(widget.designId);
+                              cubit.shareDesign(widget.exploreDesign.id);
                             } else if (value == 'cancel_share') {
-                              cubit.cancelShareDesign(widget.designId);
+                              cubit.cancelShareDesign(widget.exploreDesign.id);
                             }
                           },
                           itemBuilder: (context) {
@@ -396,13 +410,13 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                                 context
                                     .read<DesignDetailsCubit>()
                                     .updateFavoriteStatus(!isFav);
+                                context
+                                    .read<ExploreCubit>()
+                                    .toggleFavoriteLocal(widget.exploreDesign.id);
                               },
-                              child: SvgPicture.asset(
-                                isFav
-                                    ? AppImages.withsaving
-                                    : AppImages.withoutsaving,
-                                width: 24.w,
-                              ),
+                              child: isFav
+                                  ? SvgPicture.asset(AppImages.withsaving, width: 24.w).withAppGradient()
+                                  : SvgPicture.asset(AppImages.withoutsaving, width: 24.w),
                             );
                           },
                         ),

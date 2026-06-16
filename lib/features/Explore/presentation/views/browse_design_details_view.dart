@@ -14,6 +14,7 @@ import 'package:sammly/generated/l10n.dart';
 import 'package:sammly/features/Explore/data/design_details_model.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_state.dart';
+import 'package:sammly/features/Explore/cubit/static_designs_cubit.dart';
 
 class BrowseDesignDetailsView extends StatefulWidget {
   final String designId;
@@ -110,7 +111,7 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
           if (state is DesignDetailsLoaded) {
             final design = state.design;
             context.read<FavoriteCubit>().syncFavoriteStatus(
-              design.id,
+              widget.designId,
               design.isFavorited,
             );
           }
@@ -316,23 +317,23 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
                           builder: (context, favState) {
                             final isFav = context
                                 .read<FavoriteCubit>()
-                                .isFavorite(design.id);
+                                .isFavorite(widget.designId);
                             return GestureDetector(
                               onTap: () {
                                 context.read<FavoriteCubit>().toggleFavorite(
-                                  design.id,
+                                  widget.designId,
                                   isFav,
                                 );
                                 context
                                     .read<DesignDetailsCubit>()
                                     .updateFavoriteStatus(!isFav);
+                                context
+                                    .read<StaticDesignsCubit>()
+                                    .toggleFavoriteLocal(widget.designId);
                               },
-                              child: SvgPicture.asset(
-                                isFav
-                                    ? AppImages.withsaving
-                                    : AppImages.withoutsaving,
-                                width: 24.w,
-                              ),
+                              child: isFav
+                                  ? SvgPicture.asset(AppImages.withsaving, width: 24.w).withAppGradient()
+                                  : SvgPicture.asset(AppImages.withoutsaving, width: 24.w),
                             );
                           },
                         ),

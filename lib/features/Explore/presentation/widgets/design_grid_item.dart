@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
 
 class DesignGridItem extends StatefulWidget {
   final String imageUrl;
-  final bool initialIsLiked;
+  final bool initialIsFavorited;
   final bool showLikeButton;
-  // Callback مفيد جداً لشاشة المفضلات عشان تعرف لو اليوزر شال اللايك
-  final Function(bool isLiked)? onFavoriteToggled;
+  // Callback مفيد جداً لشاشة المفضلات عشان تعرف لو اليوزر شال الفيفوريت
+  final Function(bool isFavorited)? onFavoriteToggled;
 
   const DesignGridItem({
     super.key,
     required this.imageUrl,
-    this.initialIsLiked = false,
+    this.initialIsFavorited = false,
     this.showLikeButton = true,
     this.onFavoriteToggled,
   });
@@ -23,19 +24,19 @@ class DesignGridItem extends StatefulWidget {
 }
 
 class _DesignGridItemState extends State<DesignGridItem> {
-  late bool _isLiked;
+  late bool _isFavorited;
 
   @override
   void initState() {
     super.initState();
-    _isLiked = widget.initialIsLiked;
+    _isFavorited = widget.initialIsFavorited;
   }
 
   @override
   void didUpdateWidget(DesignGridItem oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.initialIsLiked != oldWidget.initialIsLiked) {
-      _isLiked = widget.initialIsLiked;
+    if (widget.initialIsFavorited != oldWidget.initialIsFavorited) {
+      _isFavorited = widget.initialIsFavorited;
     }
   }
 
@@ -93,17 +94,16 @@ class _DesignGridItemState extends State<DesignGridItem> {
               child: GestureDetector(
                 onTap: () {
                   setState(() {
-                    _isLiked = !_isLiked;
+                    _isFavorited = !_isFavorited;
                   });
                   // لو شاشة تانية مستنية تعرف النتيجة، نبعتلها الحالة الجديدة
                   if (widget.onFavoriteToggled != null) {
-                    widget.onFavoriteToggled!(_isLiked);
+                    widget.onFavoriteToggled!(_isFavorited);
                   }
                 },
-                child: SvgPicture.asset(
-                  _isLiked ? AppImages.withsaving : AppImages.withoutsaving,
-                  width: 24.w,
-                ),
+                child: _isFavorited
+                    ? SvgPicture.asset(AppImages.withsaving, width: 24.w).withAppGradient()
+                    : SvgPicture.asset(AppImages.withoutsaving, width: 24.w),
               ),
             ),
         ],

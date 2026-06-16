@@ -6,6 +6,7 @@ import 'package:sammly/features/Auth/data/repo/auth_repo.dart';
 import 'package:sammly/features/Auth/presentation/views/login_view.dart';
 import 'package:sammly/features/Auth/presentation/views/signup_view.dart';
 import 'package:sammly/features/Auth/presentation/views/verfictionofsign.dart';
+import 'package:sammly/features/Explore/presentation/views/user_profile_view.dart';
 import 'package:sammly/features/favorite/presentation/views/favorite_view.dart';
 import 'package:sammly/features/generate/data/repo/generate_design_repo.dart';
 import 'package:sammly/features/generate/presentation/cubits/generate_design_cubit.dart';
@@ -27,15 +28,15 @@ import 'package:sammly/features/profile/presentation/views/privacy_policy_view.d
 import 'package:sammly/features/profile/presentation/views/profile_view.dart';
 import 'package:sammly/features/profile/presentation/views/terms_conditions_view.dart';
 import 'package:sammly/features/splash/presentation/splash_view.dart';
+import 'package:sammly/features/subscrition/presentation/views/subscription_view.dart';
 import 'package:sammly/features/support/presentation/views/support_view.dart';
 import 'package:sammly/features/profile/presentation/views/security_view.dart';
 import 'package:sammly/features/Auth/presentation/views/change_password_view.dart';
 import 'package:sammly/features/Explore/presentation/views/browse_design_details_view.dart';
 import 'package:sammly/features/Explore/presentation/views/shared_design_details_view.dart';
-import 'package:sammly/features/Explore/presentation/views/user_profile_view.dart';
-import 'package:sammly/features/subscrition/presentation/views/subscription_view.dart';
 import 'package:sammly/features/Explore/presentation/views/choose_room.dart'
     as choose_room;
+import 'package:sammly/features/Explore/data/exploremodel.dart';
 
 abstract class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -125,10 +126,10 @@ abstract class AppRouter {
         );
 
       case AppRoutes.sharedDesignDetailsView:
-        final designId = settings.arguments as String? ?? '';
+        final exploreDesign = settings.arguments as ExploreDesignModel;
         return MaterialPageRoute(
           builder: (context) {
-            return SharedDesignDetailsView(designId: designId);
+            return SharedDesignDetailsView(exploreDesign: exploreDesign);
           },
         );
 
