@@ -78,13 +78,15 @@ class DesignDetailsModel {
 }
 
 class DesignCreatorModel {
+  final String userId;
   final String name;
   final String avatar;
 
-  DesignCreatorModel({required this.name, required this.avatar});
+  DesignCreatorModel({required this.userId, required this.name, required this.avatar});
 
   factory DesignCreatorModel.fromJson(Map<String, dynamic> json) {
     return DesignCreatorModel(
+      userId: json['userId'] ?? json['userId'] ?? '',
       name: json['name'] ?? '',
       avatar: json['avatar'] ?? '',
     );

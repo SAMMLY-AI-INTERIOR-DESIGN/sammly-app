@@ -15,6 +15,7 @@ import 'package:sammly/features/profile/data/models/shared_images_model.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/posts_data_section.dart';
 import 'package:sammly/generated/l10n.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/shared_image_card.dart';
+import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
 
 class UserProfileView extends StatefulWidget {
   final String userId;
@@ -167,68 +168,71 @@ class _UserProfileViewState extends State<UserProfileView> {
                                     style: AppTextStyles.title20Bold,
                                   ),
                                   SizedBox(height: 14.h),
-                                  BlocConsumer<FollowingCubit, FollowingState>(
-                                    listener: (context, state) {
-                                      if (state is FollowSuccess &&
-                                          state.userId == widget.userId) {
-                                        setState(() {
-                                          isFollowing = true;
-                                        });
-                                        showCustomSnackBar(
-                                          context: context,
-                                          message: state.message,
-                                        );
-                                      } else if (state is FollowFailure &&
-                                          state.userId == widget.userId) {
-                                        showCustomSnackBar(
-                                          context: context,
-                                          message: state.error,
-                                          isError: true,
-                                        );
-                                      } else if (state is UnfollowSuccess &&
-                                          state.userId == widget.userId) {
-                                        setState(() {
-                                          isFollowing = false;
-                                        });
-                                        showCustomSnackBar(
-                                          context: context,
-                                          message: state.message,
-                                        );
-                                      } else if (state is UnfollowFailure &&
-                                          state.userId == widget.userId) {
-                                        showCustomSnackBar(
-                                          context: context,
-                                          message: state.error,
-                                          isError: true,
-                                        );
-                                      }
-                                    },
-                                    builder: (context, state) {
-                                      final isLoading =
-                                          (state is FollowLoading &&
-                                              state.userId == widget.userId) ||
-                                          (state is UnfollowLoading &&
-                                              state.userId == widget.userId);
+                                  if (context.read<ProfileCubit>().currentProfile?.name != widget.userName)
+                                    BlocConsumer<FollowingCubit, FollowingState>(
+                                      listener: (context, state) {
+                                        if (state is FollowSuccess &&
+                                            state.userId == widget.userId) {
+                                          setState(() {
+                                            isFollowing = true;
+                                          });
+                                          showCustomSnackBar(
+                                            context: context,
+                                            message: state.message,
+                                          );
+                                        } else if (state is FollowFailure &&
+                                            state.userId == widget.userId) {
+                                          showCustomSnackBar(
+                                            context: context,
+                                            message: state.error,
+                                            isError: true,
+                                          );
+                                        } else if (state is UnfollowSuccess &&
+                                            state.userId == widget.userId) {
+                                          setState(() {
+                                            isFollowing = false;
+                                          });
+                                          showCustomSnackBar(
+                                            context: context,
+                                            message: state.message,
+                                          );
+                                        } else if (state is UnfollowFailure &&
+                                            state.userId == widget.userId) {
+                                          showCustomSnackBar(
+                                            context: context,
+                                            message: state.error,
+                                            isError: true,
+                                          );
+                                        }
+                                      },
+                                      builder: (context, state) {
+                                        final isLoading =
+                                            (state is FollowLoading &&
+                                                state.userId == widget.userId) ||
+                                            (state is UnfollowLoading &&
+                                                state.userId == widget.userId);
 
-                                      if (isLoading) {
-                                        return const CircularProgressIndicator();
-                                      }
+                                        if (isLoading) {
+                                          return const CircularProgressIndicator();
+                                        }
 
-                                      return GradientFollowButton(
-                                        isFollowing: isFollowing,
-                                        onFollow: () {
-                                          context
-                                              .read<FollowingCubit>()
-                                              .followUser(widget.userId);
-                                        },
-                                        onUnfollow: () {
-                                          context
-                                              .read<FollowingCubit>()
-                                              .unfollowUser(widget.userId);
-                                        },
-                                      );
-                                    },
-                                  ),
+                                        return GradientFollowButton(
+                                          isFollowing: isFollowing,
+                                          onFollow: () {
+                                            context
+                                                .read<FollowingCubit>()
+                                                .followUser(widget.userId);
+                                          },
+                                          onUnfollow: () {
+                                            context
+                                                .read<FollowingCubit>()
+                                                .unfollowUser(widget.userId);
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  if (context.read<ProfileCubit>().currentProfile?.name == widget.userName)
+                                    SizedBox(height: 48.h), // Optional: Add some spacing instead of the button
                                 ],
                               ),
                             ),

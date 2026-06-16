@@ -262,6 +262,7 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                         context,
                         AppRoutes.userProfileView,
                         arguments: {
+                          'userId': creator.userId,
                           'userName': creator.name,
                           'userAvatar': creator.avatar,
                         },
