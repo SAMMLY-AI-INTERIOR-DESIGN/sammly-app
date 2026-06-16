@@ -42,13 +42,27 @@ class DesignDetailsCubit extends Cubit<DesignDetailsState> {
   }
 
   /// Fetch design details by ID.
-  Future<void> fetchDesignDetails(String designId) async {
+  Future<void> fetchDesignDetails(
+    String designId, {
+    String? overrideId,
+    bool? overrideIsLiked,
+    bool? overrideIsFavorited,
+    int? overrideLikesCount,
+  }) async {
     emit(DesignDetailsLoading());
 
     final result = await _repository.getDesignDetails(designId);
 
     result.fold((error) => emit(DesignDetailsError(error)), (response) {
       _currentDesign = response.design;
+      if (overrideId != null) {
+        _currentDesign = _currentDesign!.copyWith(
+          id: overrideId,
+          isLiked: overrideIsLiked ?? _currentDesign!.isLiked,
+          isFavorited: overrideIsFavorited ?? _currentDesign!.isFavorited,
+          likesCount: overrideLikesCount ?? _currentDesign!.likesCount,
+        );
+      }
       _currentCreator = response.creator;
       if (_currentDesign!.isShared) {
         _saveSharedDesignId(_currentDesign!.id);

@@ -54,13 +54,14 @@ class DesignDetailsModel {
   }
 
   DesignDetailsModel copyWith({
+    String? id,
     int? likesCount,
     bool? isLiked,
     bool? isFavorited,
     String? sharedAt,
   }) {
     return DesignDetailsModel(
-      id: id,
+      id: id ?? this.id,
       prompt: prompt,
       imageUrl: imageUrl,
       room: room,
@@ -77,13 +78,15 @@ class DesignDetailsModel {
 }
 
 class DesignCreatorModel {
+  final String userId;
   final String name;
   final String avatar;
 
-  DesignCreatorModel({required this.name, required this.avatar});
+  DesignCreatorModel({required this.userId, required this.name, required this.avatar});
 
   factory DesignCreatorModel.fromJson(Map<String, dynamic> json) {
     return DesignCreatorModel(
+      userId: json['userId'] ?? json['userId'] ?? '',
       name: json['name'] ?? '',
       avatar: json['avatar'] ?? '',
     );
