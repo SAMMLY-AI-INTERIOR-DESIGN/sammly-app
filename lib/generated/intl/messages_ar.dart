@@ -60,7 +60,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "appdesc": MessageLookupByLibrary.simpleMessage(
       "تصميم داخلي بالذكاء الاصطناعي",
     ),
-    "appname": MessageLookupByLibrary.simpleMessage("سملي"),
+    "appname": MessageLookupByLibrary.simpleMessage("صمملي"),
     "back": MessageLookupByLibrary.simpleMessage("رجوع"),
     "backToLogin": MessageLookupByLibrary.simpleMessage("العودة لتسجيل الدخول"),
     "bathroom": MessageLookupByLibrary.simpleMessage("حمام"),
