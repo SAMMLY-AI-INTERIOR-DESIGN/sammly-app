@@ -54,13 +54,14 @@ class DesignDetailsModel {
   }
 
   DesignDetailsModel copyWith({
+    String? id,
     int? likesCount,
     bool? isLiked,
     bool? isFavorited,
     String? sharedAt,
   }) {
     return DesignDetailsModel(
-      id: id,
+      id: id ?? this.id,
       prompt: prompt,
       imageUrl: imageUrl,
       room: room,

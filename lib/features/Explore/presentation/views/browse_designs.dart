@@ -6,7 +6,7 @@ import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/generated/l10n.dart';
 import 'package:sammly/features/Explore/cubit/static_designs_cubit.dart';
 import 'package:sammly/features/Explore/cubit/static_designs_states.dart';
-import 'package:sammly/features/explore/presentation/widgets/design_grid_item.dart';
+import 'package:sammly/features/Explore/presentation/widgets/design_grid_item.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/theme/text_styles.dart';
@@ -281,16 +281,13 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
                       },
                       child: BlocBuilder<FavoriteCubit, FavoriteState>(
                         builder: (context, favState) {
-                          final isFav = context
-                              .read<FavoriteCubit>()
-                              .isFavorite(design.id);
                           return DesignGridItem(
                             imageUrl: design.imageUrl,
-                            initialIsLiked: isFav,
-                            onFavoriteToggled: (isLiked) {
+                            initialIsFavorited: design.isFavorited,
+                            onFavoriteToggled: (isFavorited) {
                               context.read<FavoriteCubit>().toggleFavorite(
                                 design.id,
-                                !isLiked,
+                                !isFavorited,
                               );
                               context
                                   .read<StaticDesignsCubit>()

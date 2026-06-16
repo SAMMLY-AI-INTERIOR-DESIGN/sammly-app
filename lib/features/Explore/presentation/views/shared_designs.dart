@@ -379,7 +379,7 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
                         await Navigator.pushNamed(
                           context,
                           AppRoutes.sharedDesignDetailsView,
-                          arguments: design.id,
+                          arguments: design,
                         );
                         if (!context.mounted) return;
                         context.read<ExploreCubit>().fetchExplore(
@@ -390,17 +390,18 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
                         height: itemHeight,
                         child: BlocBuilder<FavoriteCubit, FavoriteState>(
                           builder: (context, favState) {
-                            final isFav = context
-                                .read<FavoriteCubit>()
-                                .isFavorite(design.id);
+                         
                             return DesignGridItem(
                               imageUrl: design.imageUrl,
-                              initialIsLiked: isFav,
-                              onFavoriteToggled: (isLiked) {
+                              initialIsFavorited: design.isFavorited,
+                              onFavoriteToggled: (isFavorited) {
                                 context.read<FavoriteCubit>().toggleFavorite(
                                   design.id,
-                                  !isLiked,
+                                  !isFavorited,
                                 );
+                                context
+                                    .read<ExploreCubit>()
+                                    .toggleFavoriteLocal(design.id);
                               },
                             );
                           },
