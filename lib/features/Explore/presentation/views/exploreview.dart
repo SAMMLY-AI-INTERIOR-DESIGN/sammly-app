@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/core/routing/routes.dart';
@@ -138,12 +139,17 @@ class ExploreView extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: 12.w),
-                  Icon(
-                    Directionality.of(context) == TextDirection.rtl
-                        ? Icons.arrow_circle_left_outlined
-                        : Icons.arrow_circle_right_outlined,
-                    color: const Color(0xFF196868),
-                    size: 28.sp,
+                  ShaderMask(
+                    shaderCallback: (bounds) =>
+                        AppColors.primaryGradient.createShader(bounds),
+                    blendMode: BlendMode.srcATop,
+                    child: Icon(
+                      Directionality.of(context) == TextDirection.rtl
+                          ? Icons.arrow_circle_left_outlined
+                          : Icons.arrow_circle_right_outlined,
+                      color: const Color(0xFF196868),
+                      size: 28.sp,
+                    ),
                   ),
                 ],
               ),
