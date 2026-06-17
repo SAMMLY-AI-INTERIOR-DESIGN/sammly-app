@@ -22,25 +22,44 @@ class RoomFilterWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isAllSelected = selectedRooms.length == allRooms.length;
 
-    return Wrap(
-      alignment: WrapAlignment.center,
-      spacing: 6.w,
-      runSpacing: 7.h,
-      children: [
-        _buildChip(
-          text: S.of(context).all,
-          isActive: isAllSelected,
-          onTap: onAllToggled,
+    List<Widget> chips = [
+      _buildChip(
+        text: S.of(context).all,
+        isActive: isAllSelected,
+        onTap: onAllToggled,
+      ),
+      ...allRooms.map((room) {
+        bool isActive = selectedRooms.contains(room);
+        return _buildChip(
+          text: room,
+          isActive: isActive,
+          onTap: () => onRoomToggled(room),
+        );
+      }),
+    ];
+
+    List<Widget> rows = [];
+    for (int i = 0; i < chips.length; i += 3) {
+      rows.add(
+        Padding(
+          padding: EdgeInsets.only(bottom: i + 3 < chips.length ? 7.h : 0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: chips
+                .skip(i)
+                .take(3)
+                .map((chip) => Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 3.w),
+                      child: chip,
+                    ))
+                .toList(),
+          ),
         ),
-        ...allRooms.map((room) {
-          bool isActive = selectedRooms.contains(room);
-          return _buildChip(
-            text: room,
-            isActive: isActive,
-            onTap: () => onRoomToggled(room),
-          );
-        }),
-      ],
+      );
+    }
+
+    return Column(
+      children: rows,
     );
   }
 

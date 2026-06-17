@@ -197,24 +197,22 @@ class _Step2MaskState extends State<Step2Mask> {
     }
   }
 
-  Widget _buildActionButton(IconData icon, VoidCallback onTap, {Color? color}) {
+  Widget _buildActionButton(IconData icon, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(8.w),
         decoration: BoxDecoration(
-          color: Colors.white,
+          gradient: AppColors.scafoldBgGradient,
           borderRadius: BorderRadius.circular(8.r),
-          border: Border.all(color: Colors.blue.withValues(alpha: 0.3)),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 2,
-              offset: Offset(0, 1),
-            ),
-          ],
         ),
-        child: Icon(icon, color: color ?? Colors.blue, size: 20.sp),
+        child: ShaderMask(
+          shaderCallback: (Rect bounds) {
+            return AppColors.primaryGradient3.createShader(bounds);
+          },
+          blendMode: BlendMode.srcIn,
+          child: Icon(icon, color: Colors.white, size: 24.sp),
+        ),
       ),
     );
   }
@@ -234,16 +232,18 @@ class _Step2MaskState extends State<Step2Mask> {
           ),
         ),
 
-        Expanded(
+        Center(
           child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+            margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+            padding: EdgeInsets.all(6.w),
             decoration: BoxDecoration(
+              gradient: AppColors.scafoldBgGradient,
               borderRadius: BorderRadius.circular(16.r),
-              border: Border.all(color: AppColors.bg1Color, width: 2),
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(14.r),
-              child: Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 16.h),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(14.r),
                 child: RepaintBoundary(
                   key: _boundaryKey,
                   child: MaskPainterWidget(
@@ -256,22 +256,15 @@ class _Step2MaskState extends State<Step2Mask> {
             ),
           ),
         ),
-
+        Spacer(),
         // Toolbar Card for Brush Slider
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.w),
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12.r),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 4,
-                  offset: Offset(0, 2),
-                ),
-              ],
+              gradient: AppColors.scafoldBgGradient,
+              borderRadius: BorderRadius.circular(16.r),
             ),
             child: Row(
               children: [
@@ -281,8 +274,8 @@ class _Step2MaskState extends State<Step2Mask> {
                     value: _brushSize,
                     min: 5.0,
                     max: 50.0,
-                    activeColor: Colors.blue,
-                    inactiveColor: Colors.blue.withValues(alpha: 0.3),
+                    activeColor: AppColors.primaryColor,
+                    inactiveColor: AppColors.primaryColor.withValues(alpha: 0.2),
                     onChanged: (val) {
                       setState(() {
                         _brushSize = val;
@@ -296,7 +289,7 @@ class _Step2MaskState extends State<Step2Mask> {
                   height: 28.w,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.grey.shade300),
+                    border: Border.all(color: AppColors.primaryColor, width: 2),
                   ),
                   child: Center(
                     child: Container(
@@ -304,7 +297,7 @@ class _Step2MaskState extends State<Step2Mask> {
                       height: (_brushSize / 50) * 16.w + 4.w,
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.blue,
+                        color: AppColors.primaryColor,
                       ),
                     ),
                   ),

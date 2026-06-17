@@ -5,9 +5,9 @@ import 'package:sammly/core/shared_pref/shared_pref.dart';
 import 'package:sammly/features/Explore/cubit/design_details_cubit.dart';
 import 'package:sammly/features/Explore/cubit/design_details_repo.dart';
 import 'package:sammly/features/Explore/cubit/design_details_states.dart';
+import 'package:sammly/features/History/presentation/views/historydetails.dart';
 import 'package:sammly/features/profile/data/models/shared_images_model.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/shared_image_card.dart';
-import 'package:sammly/features/History/presentation/views/historydetails.dart';
 
 class SharedImagesListView extends StatefulWidget {
   final Function(int postsCount, int likesCount)? onDataCalculated;
@@ -92,7 +92,10 @@ class _SharedImagesListViewState extends State<SharedImagesListView> {
                       ),
                     );
                   },
-                  child: SharedImageCard(item: item),
+                  child: SharedImageCard(
+                    item: item,
+                    readOnly: true,
+                  ),
                 );
               } else if (state is DesignDetailsError) {
                 return const SizedBox.shrink();
