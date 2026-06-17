@@ -181,7 +181,7 @@ class _TextToImageStep3DescribeState extends State<TextToImageStep3Describe> {
                                       ),
                                       SizedBox(height: 8.h),
                                       Text(
-                                        S.of(context).addReferenceImage,
+                                        S.of(context).addImageOptional,
                                         style: AppTextStyles.body16Medium
                                             .copyWith(
                                               color: Colors.grey.shade500,

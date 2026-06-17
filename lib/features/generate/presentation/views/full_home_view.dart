@@ -113,7 +113,7 @@ class _FullHomeViewState extends State<FullHomeView> {
   Widget _buildUploadStep() {
     return Step1Upload(
       title: S.of(context).uploadReferenceImage,
-      subtitle: S.of(context).addReferenceImage,
+      subtitle: S.of(context).addReferenceImageOptional,
       titleIcon: AppImages.aiPoweredIcon,
       isButtonInsideCard: true,
       initialImage: _selectedImage,

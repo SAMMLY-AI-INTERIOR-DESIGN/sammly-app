@@ -136,7 +136,7 @@ abstract class AppStrings {
   static const String selectStyle = "Select Style";
   static const String visualizeYourSpace = "Visualize your Space";
   static const String describeDreamRoomHint = "Describe your dream room.......";
-  static const String addReferenceImage = "Add Reference Image(Optional)";
+  static const String addImageOptional = "Add Image(Optional)";
   static const String generateDesign = "Generate Design";
 
   static const String traditional = "Traditional";
@@ -155,8 +155,10 @@ abstract class AppStrings {
   static const String restyleYourSpace = "Restyle your Space";
   static const String upload = "Upload";
   static const String addReferenceImageOnly = "Add Reference Image";
+  static const String addReferenceImageOptional = "Add Reference Image(Optional)";
   static const String uploadYourImage = "Upload Your image";
   static const String addYourImage = "Add Your image";
+  static const String uploadRoomImage = "Upload Room Image";
 
   static const String next = "Next";
   static const String pleaseSelectARoom = "Please select a Room";
