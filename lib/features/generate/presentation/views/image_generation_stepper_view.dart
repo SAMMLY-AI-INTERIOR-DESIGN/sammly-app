@@ -183,7 +183,7 @@ class _ImageGenerationStepperViewState
           onPressed: _previousStep,
         ),
         title: Text(
-          S.of(context).describeYourChanges,
+          S.of(context).replaceObject,
           style: TextStyle(
             color: AppColors.blackColor,
             fontSize: 20.sp,

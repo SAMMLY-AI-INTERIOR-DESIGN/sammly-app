@@ -41,9 +41,7 @@ class _RemoveViewState extends State<RemoveView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppbar(
-        title: _currentStep == 0
-            ? S.of(context).uploadRoom
-            : S.of(context).removeObject,
+        title: S.of(context).removeObject,
         onBack: _previousStep,
       ),
       body: Column(
@@ -59,8 +57,8 @@ class _RemoveViewState extends State<RemoveView> {
           Expanded(
             child: _currentStep == 0
                 ? Step1Upload(
-                    title: S.of(context).uploadReferenceImage,
-                    subtitle: S.of(context).addReferenceImageOnly,
+                    title: S.of(context).uploadYourImage,
+                    subtitle: S.of(context).addYourImage,
                     initialImage: _selectedImage,
                     onImageSelected: (image) {
                       setState(() {
