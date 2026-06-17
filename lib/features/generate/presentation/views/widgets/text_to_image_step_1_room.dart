@@ -22,14 +22,14 @@ class TextToImageStep1Room extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Map<String, String>> rooms = [
-      {'name': S.of(context).bathroom, 'image': AppImages.roomBathroom},
       {'name': S.of(context).bedroom, 'image': AppImages.roomBedroom},
       {'name': S.of(context).diningRoom, 'image': AppImages.roomDining},
-      {'name': S.of(context).kitchen, 'image': AppImages.roomKitchen},
       {
         'name': S.of(context).livingRoom,
         'image': AppImages.roomLivingBohoTraditional,
       },
+      {'name': S.of(context).kitchen, 'image': AppImages.roomKitchen},
+      {'name': S.of(context).bathroom, 'image': AppImages.roomBathroom},
     ];
 
     return Padding(

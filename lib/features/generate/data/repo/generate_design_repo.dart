@@ -23,12 +23,12 @@ class GenerateDesignRepo {
 
       final Map<String, dynamic> requestData = {
         'style': style,
-        'room': room,
+        'room_type': room,
         'prompt': prompt,
       };
 
       if (imageUrl != null && imageUrl.isNotEmpty) {
-        requestData['imageUrl'] = imageUrl;
+        requestData['image_url'] = imageUrl;
       }
 
       final response = await DioHelper.postData(
@@ -116,7 +116,7 @@ class GenerateDesignRepo {
 
       final Map<String, dynamic> requestData = {
         'style': style,
-        'imageUrl': imageUrl,
+        'image_url': imageUrl,
       };
 
       final response = await DioHelper.postData(

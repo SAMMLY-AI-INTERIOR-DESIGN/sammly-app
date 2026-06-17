@@ -2336,6 +2336,16 @@ class S {
   String get tokens {
     return Intl.message('Tokens', name: 'tokens', desc: '', args: []);
   }
+
+  /// `Search designs...`
+  String get searchDesigns {
+    return Intl.message(
+      'Search designs...',
+      name: 'searchDesigns',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

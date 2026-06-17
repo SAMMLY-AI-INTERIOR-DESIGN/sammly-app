@@ -27,11 +27,11 @@ class BrowseDesigns extends StatefulWidget {
 class _BrowseDesignsState extends State<BrowseDesigns> {
   final List<String> _filters = [
     'All',
-    'Mid-century modern',
-    'Bohemian',
+    'Traditional',
     'Rustic',
     'Coastal',
-    'Traditional',
+    'Mid-century modern',
+    'Bohemian',
   ];
   String _selectedFilter = 'All';
 

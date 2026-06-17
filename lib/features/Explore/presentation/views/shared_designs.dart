@@ -153,7 +153,7 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
             _gridAnimController.forward();
           },
           decoration: InputDecoration(
-            hintText: 'Search designs...',
+            hintText: S.of(context).searchDesigns,
             hintStyle: TextStyle(
               color: AppColors.greyColor.withValues(alpha: 0.6),
               fontSize: 14.sp,
