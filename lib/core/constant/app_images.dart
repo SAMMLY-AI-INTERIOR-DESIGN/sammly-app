@@ -90,9 +90,11 @@ class AppImages {
   static const String roomLivingBohoTraditional =
       "assets/images/living_room_boho_traditional.png";
 
+  static const String styleTraditional = "assets/images/traditional.png";
   static const String styleCoastal = "assets/images/coastal.png";
   static const String styleRustic = "assets/images/rustic.png";
   static const String styleMidCentury = "assets/images/mid_century_modern.png";
+  static const String styleBoho = "assets/images/boho.png";
   static const String arrowRight = "assets/images/arrow_right.svg";
   static const String smartLensIcon = "assets/images/smart_lens_icon.svg";
   static const String starIcon = "assets/images/star.svg";

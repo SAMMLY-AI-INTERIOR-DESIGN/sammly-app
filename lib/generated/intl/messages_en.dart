@@ -444,6 +444,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "savingImage": MessageLookupByLibrary.simpleMessage(
       "Saving image to gallery...",
     ),
+    "searchDesigns": MessageLookupByLibrary.simpleMessage("Search designs..."),
     "searchHint": MessageLookupByLibrary.simpleMessage("Search for......"),
     "security": MessageLookupByLibrary.simpleMessage("Security"),
     "select": MessageLookupByLibrary.simpleMessage("Select"),

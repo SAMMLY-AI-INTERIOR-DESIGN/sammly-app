@@ -42,10 +42,11 @@ class GenerateResultView extends StatefulWidget {
 
 class _GenerateResultViewState extends State<GenerateResultView> {
   final List<String> _fallbackImages = [
-    AppImages.roomLivingBohoTraditional,
+    AppImages.styleTraditional,
     AppImages.styleRustic,
     AppImages.styleCoastal,
     AppImages.styleMidCentury,
+    AppImages.styleBoho,
   ];
 
   late final SearchCubit _searchCubit;

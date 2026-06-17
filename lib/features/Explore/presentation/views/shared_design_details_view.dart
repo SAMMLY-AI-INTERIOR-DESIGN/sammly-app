@@ -97,8 +97,10 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
             _showSnackbar(state.message);
           } else if (state is DesignLikeSuccess) {
             _showSnackbar(state.message);
+            context.read<ExploreCubit>().toggleLikeLocal(widget.exploreDesign.id);
           } else if (state is DesignUnlikeSuccess) {
             _showSnackbar(state.message);
+            context.read<ExploreCubit>().toggleLikeLocal(widget.exploreDesign.id);
           } else if (state is DesignActionError) {
             _showSnackbar(state.message, isError: true);
           }
@@ -501,14 +503,22 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                         Container(
                           padding: EdgeInsets.all(6.w),
                           decoration: BoxDecoration(
-                            color: AppColors.primaryColor.withValues(alpha: 0.1),
+                            color: design.isLiked
+                                ? AppColors.primaryColor.withValues(alpha: 0.1)
+                                : Colors.transparent,
                             shape: BoxShape.circle,
                           ),
-                          child: SvgPicture.asset(
-                            design.isLiked
-                                ? AppImages.heartFilled
-                                : AppImages.heartOutline,
-                            width: 16.w,
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 300),
+                            transitionBuilder: (child, animation) =>
+                                ScaleTransition(scale: animation, child: child),
+                            child: SvgPicture.asset(
+                              design.isLiked
+                                  ? AppImages.heartFilled
+                                  : AppImages.heartOutline,
+                              key: ValueKey<bool>(design.isLiked),
+                              width: 16.w,
+                            ),
                           ),
                         ),
                         SizedBox(width: 8.w),

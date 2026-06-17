@@ -14,8 +14,8 @@ class SecurityView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final profile = context.read<ProfileCubit>().currentProfile;
-    final email = profile?.email ?? 'No email found';
+    final cubit = context.read<ProfileCubit>();
+    final email = cubit.currentSettingInfo?.email ?? cubit.currentProfile?.email ?? 'No email found';
 
     return Scaffold(
       backgroundColor: AppColors.whiteColor,

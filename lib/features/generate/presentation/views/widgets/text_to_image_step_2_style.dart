@@ -30,17 +30,17 @@ class TextToImageStep2Style extends StatelessWidget {
     final List<Map<String, String>> styles = [
       {
         'name': S.of(context).traditional,
-        'image': AppImages.roomLivingBohoTraditional,
+        'image': AppImages.styleTraditional,
       },
-      {'name': S.of(context).coastal, 'image': AppImages.styleCoastal},
       {'name': S.of(context).rustic, 'image': AppImages.styleRustic},
+      {'name': S.of(context).coastal, 'image': AppImages.styleCoastal},
       {
         'name': S.of(context).midCenturyModern,
         'image': AppImages.styleMidCentury,
       },
       {
         'name': S.of(context).boho,
-        'image': AppImages.roomLivingBohoTraditional,
+        'image': AppImages.styleBoho,
       },
     ];
 

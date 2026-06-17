@@ -18,11 +18,11 @@ class FilterBar extends StatelessWidget {
         final currentFilter = context.read<FavoriteCubit>().selectedRoom;
         final List<Map<String, String>> filters = [
           {'key': 'all', 'label': S.of(context).all},
-          {'key': 'bathroom', 'label': S.of(context).bathroom},
           {'key': 'bedroom', 'label': S.of(context).bedroom},
           {'key': 'dining room', 'label': S.of(context).diningRoom},
-          {'key': 'kitchen', 'label': S.of(context).kitchen},
           {'key': 'living room', 'label': S.of(context).livingRoom},
+          {'key': 'kitchen', 'label': S.of(context).kitchen},
+          {'key': 'bathroom', 'label': S.of(context).bathroom},
         ];
 
         return SingleChildScrollView(

@@ -442,6 +442,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "savingImage": MessageLookupByLibrary.simpleMessage(
       "جاري حفظ الصورة في المعرض...",
     ),
+    "searchDesigns": MessageLookupByLibrary.simpleMessage(
+      "البحث في التصميمات...",
+    ),
     "searchHint": MessageLookupByLibrary.simpleMessage("ابحث عن......"),
     "security": MessageLookupByLibrary.simpleMessage("الأمان"),
     "select": MessageLookupByLibrary.simpleMessage("اختيار"),
