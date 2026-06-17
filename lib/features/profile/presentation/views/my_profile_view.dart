@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_colors.dart';
-import 'package:sammly/features/profile/presentation/views/widgets/profile_appbar.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/posts_data_section.dart';
+import 'package:sammly/features/profile/presentation/views/widgets/profile_appbar.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/profile_image_name_widget.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/shared_images_list_view.dart';
 
