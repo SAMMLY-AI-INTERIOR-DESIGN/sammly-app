@@ -8,7 +8,15 @@ import 'package:sammly/features/profile/data/models/shared_images_model.dart';
 
 class SharedImageCard extends StatefulWidget {
   final SharedImageModel item;
-  const SharedImageCard({super.key, required this.item});
+  final Function(bool)? onLikeChanged;
+  final bool readOnly;
+
+  const SharedImageCard({
+    super.key,
+    required this.item,
+    this.onLikeChanged,
+    this.readOnly = false,
+  });
 
   @override
   State<SharedImageCard> createState() => _SharedImageCardState();
@@ -21,7 +29,19 @@ class _SharedImageCardState extends State<SharedImageCard> {
   @override
   void initState() {
     super.initState();
+    _isLiked = widget.item.isLiked;
     _likesCount = widget.item.likes;
+  }
+
+  @override
+  void didUpdateWidget(SharedImageCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.item.isLiked != widget.item.isLiked) {
+      _isLiked = widget.item.isLiked;
+    }
+    if (oldWidget.item.likes != widget.item.likes) {
+      _likesCount = widget.item.likes;
+    }
   }
 
   @override
@@ -134,12 +154,17 @@ class _SharedImageCardState extends State<SharedImageCard> {
                       Row(
                         children: [
                           GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _isLiked = !_isLiked;
-                                _isLiked ? _likesCount++ : _likesCount--;
-                              });
-                            },
+                            onTap: widget.readOnly
+                                ? null
+                                : () {
+                                    setState(() {
+                                      _isLiked = !_isLiked;
+                                      _isLiked ? _likesCount++ : _likesCount--;
+                                    });
+                                    if (widget.onLikeChanged != null) {
+                                      widget.onLikeChanged!(_isLiked);
+                                    }
+                                  },
                             child: Container(
                               padding: EdgeInsets.all(6.w),
                               decoration: BoxDecoration(
@@ -147,7 +172,7 @@ class _SharedImageCardState extends State<SharedImageCard> {
                                 borderRadius: BorderRadius.circular(20.r),
                               ),
                               child: SvgPicture.asset(
-                                _isLiked
+                                (widget.readOnly || _isLiked)
                                     ? AppImages.heartFilled
                                     : AppImages.heartOutline,
                                 width: 12.w,

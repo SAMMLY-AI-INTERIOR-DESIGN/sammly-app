@@ -15,6 +15,7 @@ abstract class ApiConstants {
 
   // Profile / Support endpoints
   static const String getProfile = '/api/profile';
+  static String publicProfile(String userId) => '/api/profile/$userId';
   static const String editProfile = '/api/profile/edit';
   static const String support = '/api/support';
 
