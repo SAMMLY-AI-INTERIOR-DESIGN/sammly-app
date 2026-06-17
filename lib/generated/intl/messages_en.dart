@@ -29,11 +29,14 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-    "addReferenceImage": MessageLookupByLibrary.simpleMessage(
-      "Add Reference Image(Optional)",
+    "addImageOptional": MessageLookupByLibrary.simpleMessage(
+      "Add Image(Optional)",
     ),
     "addReferenceImageOnly": MessageLookupByLibrary.simpleMessage(
       "Add Reference Image",
+    ),
+    "addReferenceImageOptional": MessageLookupByLibrary.simpleMessage(
+      "Add Reference Image(Optional)",
     ),
     "addYourImage": MessageLookupByLibrary.simpleMessage("Add Your image"),
     "addingDetails": MessageLookupByLibrary.simpleMessage(
@@ -524,6 +527,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Upload reference image",
     ),
     "uploadRoom": MessageLookupByLibrary.simpleMessage("Upload Room"),
+    "uploadRoomImage": MessageLookupByLibrary.simpleMessage(
+      "Upload Room Image",
+    ),
     "uploadYourImage": MessageLookupByLibrary.simpleMessage(
       "Upload Your image",
     ),

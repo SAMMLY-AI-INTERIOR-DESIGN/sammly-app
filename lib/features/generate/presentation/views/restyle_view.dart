@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,10 +7,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
+import 'package:sammly/core/functions.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/custom_stepper.dart';
-import 'package:sammly/core/functions.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/step_1_upload.dart';
 import 'package:sammly/features/generate/presentation/views/widgets/text_to_image_step_2_style.dart';
 import 'package:sammly/generated/l10n.dart';
@@ -122,8 +123,8 @@ class _RestyleViewState extends State<RestyleView> {
                 Expanded(
                   child: _currentStep == 0
                       ? Step1Upload(
-                          title: S.of(context).uploadReferenceImage,
-                          subtitle: S.of(context).addReferenceImageOnly,
+                          title: S.of(context).uploadRoomImage,
+                          subtitle: S.of(context).uploadRoomImage,
                           initialImage: _selectedImage,
                           onImageSelected: (image) {
                             setState(() {
