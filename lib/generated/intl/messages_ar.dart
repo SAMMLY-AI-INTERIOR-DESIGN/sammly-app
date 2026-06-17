@@ -29,11 +29,14 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-    "addReferenceImage": MessageLookupByLibrary.simpleMessage(
-      "إضافة صورة مرجعية (اختياري)",
+    "addImageOptional": MessageLookupByLibrary.simpleMessage(
+      "إضافة صورة (اختياري)",
     ),
     "addReferenceImageOnly": MessageLookupByLibrary.simpleMessage(
       "إضافة صورة مرجعية",
+    ),
+    "addReferenceImageOptional": MessageLookupByLibrary.simpleMessage(
+      "إضافة صورة مرجعية (اختياري)",
     ),
     "addYourImage": MessageLookupByLibrary.simpleMessage("إضافة صورتك"),
     "addingDetails": MessageLookupByLibrary.simpleMessage(
@@ -520,6 +523,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "رفع صورة مرجعية",
     ),
     "uploadRoom": MessageLookupByLibrary.simpleMessage("رفع غرفة"),
+    "uploadRoomImage": MessageLookupByLibrary.simpleMessage("رفع صورة الغرفه"),
     "uploadYourImage": MessageLookupByLibrary.simpleMessage("رفع صورتك"),
     "userName": MessageLookupByLibrary.simpleMessage("اسم المستخدم"),
     "verification": MessageLookupByLibrary.simpleMessage("التحقق"),

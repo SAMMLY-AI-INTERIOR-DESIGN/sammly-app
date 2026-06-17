@@ -884,11 +884,21 @@ class S {
     );
   }
 
-  /// `Add Reference Image(Optional)`
-  String get addReferenceImage {
+  /// `Add Image(Optional)`
+  String get addImageOptional {
     return Intl.message(
-      'Add Reference Image(Optional)',
-      name: 'addReferenceImage',
+      'Add Image(Optional)',
+      name: 'addImageOptional',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload Room Image`
+  String get uploadRoomImage {
+    return Intl.message(
+      'Upload Room Image',
+      name: 'uploadRoomImage',
       desc: '',
       args: [],
     );
@@ -989,6 +999,16 @@ class S {
     return Intl.message(
       'Add Reference Image',
       name: 'addReferenceImageOnly',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add Reference Image(Optional)`
+  String get addReferenceImageOptional {
+    return Intl.message(
+      'Add Reference Image(Optional)',
+      name: 'addReferenceImageOptional',
       desc: '',
       args: [],
     );
