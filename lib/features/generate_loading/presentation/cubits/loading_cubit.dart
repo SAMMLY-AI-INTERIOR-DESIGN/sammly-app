@@ -10,6 +10,13 @@ class GenerationCubit extends Cubit<GenerationState> {
   Timer? _timer;
   int _currentStep = 0;
 
+  @override
+  void emit(GenerationState state) {
+    if (!isClosed) {
+      super.emit(state);
+    }
+  }
+
   void startLoadingWithApi({
     required String uiStyle,
     required String uiRoom,

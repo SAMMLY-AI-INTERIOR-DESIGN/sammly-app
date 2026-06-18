@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter/services.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/networking/dio_helper.dart';
 import 'package:sammly/core/routing/app_router.dart';
@@ -107,6 +108,11 @@ class SammlyApp extends StatelessWidget {
                     elevation: 0,
                     scrolledUnderElevation: 0,
                     backgroundColor: AppColors.whiteColor,
+                    systemOverlayStyle: SystemUiOverlayStyle(
+                      statusBarColor: Colors.transparent,
+                      statusBarIconBrightness: Brightness.dark,
+                      statusBarBrightness: Brightness.light,
+                    ),
                   ),
                 ),
               );

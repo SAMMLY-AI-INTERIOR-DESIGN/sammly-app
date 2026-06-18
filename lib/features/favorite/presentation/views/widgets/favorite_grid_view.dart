@@ -73,8 +73,10 @@ class _FavoriteGridViewState extends State<FavoriteGridView> {
                 children: [
                   Text(state.message),
                   TextButton(
-                    onPressed: () =>
-                        context.read<FavoriteCubit>().fetchFavorites(),
+                    onPressed: () {
+                      final currentRoom = context.read<FavoriteCubit>().selectedRoom;
+                      context.read<FavoriteCubit>().fetchFavorites(room: currentRoom);
+                    },
                     child: Text(S.of(context).retry),
                   ),
                 ],

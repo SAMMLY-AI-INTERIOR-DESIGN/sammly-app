@@ -414,6 +414,16 @@ class S {
     return Intl.message('Log Out', name: 'logOut', desc: '', args: []);
   }
 
+  /// `Reward Tokens`
+  String get rewardTokens {
+    return Intl.message(
+      'Reward Tokens',
+      name: 'rewardTokens',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Upgrade PRO`
   String get upgradePro {
     return Intl.message('Upgrade PRO', name: 'upgradePro', desc: '', args: []);
@@ -939,9 +949,9 @@ class S {
     );
   }
 
-  /// `Boho`
+  /// `Bohemian`
   String get boho {
-    return Intl.message('Boho', name: 'boho', desc: '', args: []);
+    return Intl.message('Bohemian', name: 'boho', desc: '', args: []);
   }
 
   /// `Type`

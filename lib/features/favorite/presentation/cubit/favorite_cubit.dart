@@ -56,10 +56,8 @@ class FavoriteCubit extends Cubit<FavoriteState> {
     emit(FavoriteInitial());
   }
 
-  Future<void> fetchFavorites({int limit = 20, String? room}) async {
-    if (room != null) {
-      _selectedRoom = room.toLowerCase();
-    }
+  Future<void> fetchFavorites({int limit = 20, String room = 'all'}) async {
+    _selectedRoom = room.toLowerCase();
 
     _allDesigns.clear();
     _currentPage = 1;
