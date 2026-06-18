@@ -63,7 +63,12 @@ class CustomButton extends StatelessWidget {
 
             if (suffixIcon != null) ...[
               SizedBox(width: 12.w),
-              SvgPicture.asset(suffixIcon!, width: 10.w, height: 12.h),
+              SvgPicture.asset(
+                suffixIcon!,
+                width: 10.w,
+                height: 12.h,
+                matchTextDirection: true,
+              ),
             ],
           ],
         ),

@@ -414,10 +414,10 @@ class S {
     return Intl.message('Log Out', name: 'logOut', desc: '', args: []);
   }
 
-  /// `Reward Tokens`
+  /// `Earn Tokens`
   String get rewardTokens {
     return Intl.message(
-      'Reward Tokens',
+      'Earn Tokens',
       name: 'rewardTokens',
       desc: '',
       args: [],

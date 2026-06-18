@@ -3,6 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sammly/core/shared_pref/shared_pref.dart';
 
 class LocaleCubit extends Cubit<Locale> {
+
+  @override
+  void emit(Locale state) {
+    if (!isClosed) {
+      super.emit(state);
+    }
+  }
+
   LocaleCubit() : super(const Locale('en')) {
     _loadLocale();
   }

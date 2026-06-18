@@ -4,6 +4,14 @@ import 'package:sammly/features/Explore/cubit/static_designs_repo.dart';
 import 'package:sammly/features/Explore/data/static_design_model.dart';
 
 class StaticDesignsCubit extends Cubit<StaticDesignsState> {
+
+  @override
+  void emit(StaticDesignsState state) {
+    if (!isClosed) {
+      super.emit(state);
+    }
+  }
+
   final StaticDesignsRepo _repository;
 
   StaticDesignsCubit(this._repository) : super(StaticDesignsInitial());

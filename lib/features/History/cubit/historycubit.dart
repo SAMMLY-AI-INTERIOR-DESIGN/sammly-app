@@ -4,6 +4,14 @@ import 'package:sammly/features/History/data/history_repo.dart';
 import 'package:sammly/features/History/data/historymodel.dart';
 
 class HistoryCubit extends Cubit<HistoryState> {
+
+  @override
+  void emit(HistoryState state) {
+    if (!isClosed) {
+      super.emit(state);
+    }
+  }
+
   final HistoryRepo _repository;
 
   HistoryCubit(this._repository) : super(HistoryInitial());

@@ -9,6 +9,7 @@ class EarnView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
       appBar: AppBar(
@@ -20,7 +21,7 @@ class EarnView extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          "Reward Tokens",
+          isArabic ? "اربح توكنز" : "Earn Tokens",
           style: TextStyle(
             fontSize: 20.sp,
             fontWeight: FontWeight.w700,
@@ -53,7 +54,7 @@ class EarnView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Free Tokens",
+                          isArabic ? "توكنز مجانية" : "Free Tokens",
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w500,
@@ -81,7 +82,7 @@ class EarnView extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.only(bottom: 4.h),
                               child: Text(
-                                "Tokens",
+                                isArabic ? "توكن" : "Tokens",
                                 style: TextStyle(
                                   fontSize: 16.sp,
                                   fontWeight: FontWeight.w600,
@@ -94,7 +95,9 @@ class EarnView extends StatelessWidget {
                         ),
                         SizedBox(height: 12.h),
                         Text(
-                          "Keep earning rewards to create\nmore beautiful designs.",
+                          isArabic
+                              ? "احصل على 15 توكن مجاني كل شهر عند فتح حسابك!"
+                              : "Get 15 free tokens every month when you open your account!",
                           style: TextStyle(
                             fontSize: 13.sp,
                             color: Colors.white.withOpacity(0.9),
@@ -152,7 +155,7 @@ class EarnView extends StatelessWidget {
             SizedBox(height: 24.h),
             
             Text(
-              "Ways to earn tokens",
+              isArabic ? "طرق كسب التوكنز" : "Ways to earn tokens",
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.w700,
@@ -163,55 +166,63 @@ class EarnView extends StatelessWidget {
             SizedBox(height: 16.h),
             
             // Item 1
-            const WayToEarnCard(
-              title: "Share your designs",
+            WayToEarnCard(
+              title: isArabic ? "شارك تصميماتك" : "Share your designs",
               iconPath: AppImages.sharetoearn, 
               tokensAmount: "1",
-              tokensLabel: "Token",
-              description: "Share your designs to get 1\ntoken each time",
-              rightMainText: "Free",
-              rightSubText: "/post",
-              primaryColor: Color(0xFF3C60B6),
-              bgColor: Color(0xFFF1F4FA),
+              tokensLabel: isArabic ? "توكن" : "Token",
+              description: isArabic 
+                  ? "شارك تصميماتك للحصول على 1\nتوكن في كل مرة" 
+                  : "Share your designs to get 1\ntoken each time",
+              rightMainText: isArabic ? "مجاني" : "Free",
+              rightSubText: isArabic ? "/منشور" : "/post",
+              primaryColor: const Color(0xFF3C60B6),
+              bgColor: const Color(0xFFF1F4FA),
             ),
             
             // Item 2
-            const WayToEarnCard(
-              title: "Receive Likes",
+            WayToEarnCard(
+              title: isArabic ? "تلقّي الإعجابات" : "Receive Likes",
               iconPath: AppImages.totallikes,
               tokensAmount: "15",
-              tokensLabel: "Tokens",
-              description: "If your post gets 20 likes, you'll\nget 15 tokens.",
-              rightMainText: "Likes 20",
-              rightSubText: "/post",
-              primaryColor: Color(0xFF23B5A0),
-              bgColor: Color(0xFFEAFAF7),
+              tokensLabel: isArabic ? "توكن" : "Tokens",
+              description: isArabic 
+                  ? "إذا حصل منشورك على 20 إعجاباً،\nستحصل على 15 توكن." 
+                  : "If your post gets 20 likes, you'll\nget 15 tokens.",
+              rightMainText: isArabic ? "إعجاب 20" : "Likes 20",
+              rightSubText: isArabic ? "/منشور" : "/post",
+              primaryColor: const Color(0xFF23B5A0),
+              bgColor: const Color(0xFFEAFAF7),
             ),
             
             // Item 3
-            const WayToEarnCard(
-              title: "Receive Likes",
+            WayToEarnCard(
+              title: isArabic ? "تلقّي الإعجابات" : "Receive Likes",
               iconPath: AppImages.totallikes,
               tokensAmount: "25",
-              tokensLabel: "Tokens",
-              description: "If your post gets 50 likes, you'll\nget 25 tokens.",
-              rightMainText: "Likes 50",
-              rightSubText: "/post",
-              primaryColor: Color(0xFF8B5CF6),
-              bgColor: Color(0xFFF5F0FF),
+              tokensLabel: isArabic ? "توكن" : "Tokens",
+              description: isArabic 
+                  ? "إذا حصل منشورك على 50 إعجاباً،\nستحصل على 25 توكن." 
+                  : "If your post gets 50 likes, you'll\nget 25 tokens.",
+              rightMainText: isArabic ? "إعجاب 50" : "Likes 50",
+              rightSubText: isArabic ? "/منشور" : "/post",
+              primaryColor: const Color(0xFF8B5CF6),
+              bgColor: const Color(0xFFF5F0FF),
             ),
 
             // Item 4
-            const WayToEarnCard(
-              title: "Receive Likes",
+            WayToEarnCard(
+              title: isArabic ? "تلقّي الإعجابات" : "Receive Likes",
               iconPath: AppImages.totallikes,
               tokensAmount: "45",
-              tokensLabel: "Tokens",
-              description: "If your post gets 100 likes,\nyou'll get 45 tokens.",
-              rightMainText: "Likes 100",
-              rightSubText: "/post",
-              primaryColor: Color(0xFFD97706),
-              bgColor: Color(0xFFFFFBEB),
+              tokensLabel: isArabic ? "توكن" : "Tokens",
+              description: isArabic 
+                  ? "إذا حصل منشورك على 100 إعجاب،\nستحصل على 45 توكن." 
+                  : "If your post gets 100 likes,\nyou'll get 45 tokens.",
+              rightMainText: isArabic ? "إعجاب 100" : "Likes 100",
+              rightSubText: isArabic ? "/منشور" : "/post",
+              primaryColor: const Color(0xFFD97706),
+              bgColor: const Color(0xFFFFFBEB),
             ),
           ],
         ),

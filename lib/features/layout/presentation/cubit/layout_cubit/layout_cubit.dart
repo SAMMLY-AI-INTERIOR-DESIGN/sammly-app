@@ -7,6 +7,14 @@ import 'package:sammly/features/layout/presentation/cubit/layout_cubit/layout_st
 import 'package:sammly/features/profile/presentation/views/profile_view.dart';
 
 class LayoutCubit extends Cubit<LayoutState> {
+
+  @override
+  void emit(LayoutState state) {
+    if (!isClosed) {
+      super.emit(state);
+    }
+  }
+
   LayoutCubit() : super(InitialLayoutNavBarState());
 
   int currentIndex = 0;

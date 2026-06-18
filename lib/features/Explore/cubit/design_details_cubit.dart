@@ -5,6 +5,14 @@ import 'package:sammly/features/Explore/cubit/design_details_repo.dart';
 import 'package:sammly/features/Explore/data/design_details_model.dart';
 
 class DesignDetailsCubit extends Cubit<DesignDetailsState> {
+
+  @override
+  void emit(DesignDetailsState state) {
+    if (!isClosed) {
+      super.emit(state);
+    }
+  }
+
   final DesignDetailsRepo _repository;
 
   DesignDetailsCubit(this._repository) : super(DesignDetailsInitial()) {
