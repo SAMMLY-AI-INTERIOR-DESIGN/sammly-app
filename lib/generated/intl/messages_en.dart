@@ -67,7 +67,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "bathroom": MessageLookupByLibrary.simpleMessage("Bathroom"),
     "bedroom": MessageLookupByLibrary.simpleMessage("Bedroom"),
     "bohemian": MessageLookupByLibrary.simpleMessage("Bohemian"),
-    "boho": MessageLookupByLibrary.simpleMessage("Boho"),
+    "boho": MessageLookupByLibrary.simpleMessage("Bohemian"),
     "browseCategories": MessageLookupByLibrary.simpleMessage(
       "Browse Categories",
     ),
@@ -437,6 +437,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Restyle your Space",
     ),
     "retry": MessageLookupByLibrary.simpleMessage("Retry"),
+    "rewardTokens": MessageLookupByLibrary.simpleMessage("Reward Tokens"),
     "roomRedesign": MessageLookupByLibrary.simpleMessage("Room Redesign"),
     "roomRedesignDesc": MessageLookupByLibrary.simpleMessage(
       "Transform your existing room into a completely new style while keeping the same layout.",

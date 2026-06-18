@@ -101,6 +101,12 @@ class AppImages {
   static const String crownIcon = "assets/images/crown.svg";
   static const String diamondIcon = "assets/images/diamond.svg";
   static const String giftIcon = "assets/images/gift.svg";
+  static const String earnIcon = "assets/images/earnbox.svg";
+  static const String tinystar = "assets/images/tinystar.svg";
+  static const String tinystar2 = "assets/images/tinystar2.svg";
+  static const String tinystar3 = "assets/images/tinystar3.svg";
+  static const String sharetoearn = "assets/images/sharetoearn.svg";
+  static const String totallikes = "assets/images/totallikes.svg";
   static const String withsaving = "assets/images/withs.svg";
   static const String withoutsaving = "assets/images/withouts.svg";
   static const String favoriteprofileicon = "assets/images/withouts.svg";

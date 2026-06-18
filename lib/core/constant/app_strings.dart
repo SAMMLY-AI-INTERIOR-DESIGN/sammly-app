@@ -143,7 +143,7 @@ abstract class AppStrings {
   static const String coastal = "Coastal";
   static const String rustic = "Rustic";
   static const String midCenturyModern = "Mid-century modern";
-  static const String boho = "Boho";
+  static const String boho = "Bohemian";
 
   static const String type = "Type";
   static const String style = "Style";

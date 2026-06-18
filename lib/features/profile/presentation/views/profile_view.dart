@@ -273,16 +273,11 @@ class _ProfileViewState extends State<ProfileView> {
                   ProfileMenuGroup(
                     children: [
                       ProfileMenuItem(
-                        title: S.of(context).freeGenerations,
+                        title: S.of(context).rewardTokens,
                         svgIcon: AppImages.aiPoweredIcon,
-                        trailing: Padding(
-                          padding: EdgeInsetsDirectional.only(end: 8.w),
-                          child: Text(
-                            "5",
-                            style: AppTextStyles.badge14SemiBold,
-                          ),
-                        ),
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushNamed(context, AppRoutes.earnView);
+                        },
                       ),
                       ProfileMenuItem(
                         title: S.of(context).manageSubscription,

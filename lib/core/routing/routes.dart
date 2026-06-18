@@ -31,4 +31,5 @@ abstract class AppRoutes {
   static const String removeView = '/removeview';
   static const String imageGenerationStepperView =
       '/imageGenerationStepperView';
+  static const String earnView = '/earnview';
 }
