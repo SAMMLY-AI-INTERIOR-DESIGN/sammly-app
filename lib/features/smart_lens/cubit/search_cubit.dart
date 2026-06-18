@@ -3,6 +3,14 @@ import 'package:sammly/features/smart_lens/cubit/search_state.dart';
 import 'package:sammly/features/smart_lens/data/repo/search_repo.dart';
 
 class SearchCubit extends Cubit<SearchState> {
+
+  @override
+  void emit(SearchState state) {
+    if (!isClosed) {
+      super.emit(state);
+    }
+  }
+
   final SearchRepo _repo;
 
   SearchCubit(this._repo) : super(SearchInitial());

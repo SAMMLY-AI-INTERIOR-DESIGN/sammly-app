@@ -232,7 +232,7 @@ class _Step2MaskState extends State<Step2Mask> {
           ),
         ),
 
-        Center(
+        Expanded(
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
             padding: EdgeInsets.all(6.w),
@@ -256,7 +256,6 @@ class _Step2MaskState extends State<Step2Mask> {
             ),
           ),
         ),
-        Spacer(),
         // Toolbar Card for Brush Slider
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.w),
@@ -275,7 +274,9 @@ class _Step2MaskState extends State<Step2Mask> {
                     min: 5.0,
                     max: 50.0,
                     activeColor: AppColors.primaryColor,
-                    inactiveColor: AppColors.primaryColor.withValues(alpha: 0.2),
+                    inactiveColor: AppColors.primaryColor.withValues(
+                      alpha: 0.2,
+                    ),
                     onChanged: (val) {
                       setState(() {
                         _brushSize = val;

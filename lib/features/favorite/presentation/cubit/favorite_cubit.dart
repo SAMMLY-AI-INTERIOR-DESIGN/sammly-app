@@ -4,6 +4,14 @@ import 'package:sammly/features/favorite/presentation/cubit/favorite_state.dart'
 import 'package:sammly/features/favorite/data/models/favorite_item_model.dart';
 
 class FavoriteCubit extends Cubit<FavoriteState> {
+
+  @override
+  void emit(FavoriteState state) {
+    if (!isClosed) {
+      super.emit(state);
+    }
+  }
+
   final FavoriteRepo _repository;
 
   FavoriteCubit(this._repository) : super(FavoriteInitial());

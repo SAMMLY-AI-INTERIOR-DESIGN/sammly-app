@@ -437,7 +437,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Restyle your Space",
     ),
     "retry": MessageLookupByLibrary.simpleMessage("Retry"),
-    "rewardTokens": MessageLookupByLibrary.simpleMessage("Reward Tokens"),
+    "rewardTokens": MessageLookupByLibrary.simpleMessage("Earn Tokens"),
     "roomRedesign": MessageLookupByLibrary.simpleMessage("Room Redesign"),
     "roomRedesignDesc": MessageLookupByLibrary.simpleMessage(
       "Transform your existing room into a completely new style while keeping the same layout.",

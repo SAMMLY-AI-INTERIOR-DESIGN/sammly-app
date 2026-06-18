@@ -4,6 +4,14 @@ import 'package:sammly/features/following/cubit/following_states.dart';
 import 'package:sammly/features/following/data/model/following_model.dart';
 
 class FollowingCubit extends Cubit<FollowingState> {
+
+  @override
+  void emit(FollowingState state) {
+    if (!isClosed) {
+      super.emit(state);
+    }
+  }
+
   final FollowingRepo _repo;
   FollowingCubit(this._repo) : super(FollowingInitial());
 

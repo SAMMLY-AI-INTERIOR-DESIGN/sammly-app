@@ -4,6 +4,14 @@ import 'package:sammly/features/Explore/cubit/explorerepo.dart';
 import 'package:sammly/features/Explore/data/exploremodel.dart';
 
 class ExploreCubit extends Cubit<ExploreState> {
+
+  @override
+  void emit(ExploreState state) {
+    if (!isClosed) {
+      super.emit(state);
+    }
+  }
+
   final ExploreRepo _repository;
 
   ExploreCubit(this._repository) : super(ExploreInitial());

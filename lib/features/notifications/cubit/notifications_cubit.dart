@@ -4,6 +4,14 @@ import 'package:sammly/features/notifications/cubit/notifications_states.dart';
 import 'package:sammly/features/notifications/data/model/notifications_model.dart';
 
 class NotificationsCubit extends Cubit<NotificationsState> {
+
+  @override
+  void emit(NotificationsState state) {
+    if (!isClosed) {
+      super.emit(state);
+    }
+  }
+
   final NotificationsRepo _repo;
   NotificationsCubit(this._repo) : super(NotificationsInitial());
 

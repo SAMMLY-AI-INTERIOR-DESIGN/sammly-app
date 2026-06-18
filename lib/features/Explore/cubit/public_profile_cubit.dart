@@ -4,6 +4,14 @@ import 'package:sammly/features/Explore/data/public_profile_model.dart';
 import 'package:sammly/features/Explore/cubit/public_profile_repo.dart';
 
 class PublicProfileCubit extends Cubit<PublicProfileState> {
+
+  @override
+  void emit(PublicProfileState state) {
+    if (!isClosed) {
+      super.emit(state);
+    }
+  }
+
   final PublicProfileRepo publicProfileRepo;
   
   PublicProfileCubit(this.publicProfileRepo) : super(PublicProfileInitial());

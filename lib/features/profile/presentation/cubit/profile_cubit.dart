@@ -8,6 +8,14 @@ import 'package:sammly/features/profile/data/repo/profile_repo.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
+
+  @override
+  void emit(ProfileState state) {
+    if (!isClosed) {
+      super.emit(state);
+    }
+  }
+
   final ProfileRepo _repository;
   ProfileModel? currentProfile;
   SettingInfoModel? currentSettingInfo;

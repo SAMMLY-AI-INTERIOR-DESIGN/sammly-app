@@ -29,6 +29,7 @@ import 'package:sammly/features/profile/presentation/views/profile_view.dart';
 import 'package:sammly/features/profile/presentation/views/terms_conditions_view.dart';
 import 'package:sammly/features/splash/presentation/splash_view.dart';
 import 'package:sammly/features/subscrition/presentation/views/subscription_view.dart';
+import 'package:sammly/features/subscrition/presentation/views/earnview.dart';
 import 'package:sammly/features/support/presentation/views/support_view.dart';
 import 'package:sammly/features/profile/presentation/views/security_view.dart';
 import 'package:sammly/features/Auth/presentation/views/change_password_view.dart';
@@ -291,6 +292,13 @@ abstract class AppRouter {
         return MaterialPageRoute(
           builder: (context) {
             return const choose_room.ExploreView();
+          },
+        );
+
+      case AppRoutes.earnView:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const EarnView();
           },
         );
 

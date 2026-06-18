@@ -381,10 +381,6 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
                           AppRoutes.sharedDesignDetailsView,
                           arguments: design,
                         );
-                        if (!context.mounted) return;
-                        context.read<ExploreCubit>().fetchExplore(
-                          sort: _selectedSort,
-                        );
                       },
                       child: SizedBox(
                         height: itemHeight,

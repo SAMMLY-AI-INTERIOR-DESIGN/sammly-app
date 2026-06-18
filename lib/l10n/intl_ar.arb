@@ -48,7 +48,7 @@
   "privacyPolicy": "سياسة الخصوصية",
   "share": "مشاركة",
   "logOut": "تسجيل الخروج",
-  "rewardTokens": "عملات المكافأة",
+  "rewardTokens": "اربح توكنز",
   "upgradePro": "الترقية لـ Pro",
   "security": "الأمان",
   "email": "البريد الإلكتروني",
@@ -281,6 +281,6 @@
   "downloadBtn": "تنزيل",
   "sharedDesign": "تصميم مُشارَك",
   "shared": "تمت المشاركة",
-  "tokens": "نقطة",
+  "tokens": "توكن",
   "searchDesigns": "البحث في التصميمات..."
 }

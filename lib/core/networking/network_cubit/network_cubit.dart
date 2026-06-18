@@ -4,6 +4,14 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 import 'network_state.dart';
 
 class NetworkCubit extends Cubit<NetworkState> {
+
+  @override
+  void emit(NetworkState state) {
+    if (!isClosed) {
+      super.emit(state);
+    }
+  }
+
   final InternetConnection _internetConnection = InternetConnection();
   StreamSubscription? _internetSubscription;
 

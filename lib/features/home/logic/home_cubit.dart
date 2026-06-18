@@ -5,6 +5,14 @@ import 'package:sammly/features/home/data/repo/home_repo.dart';
 import 'package:sammly/features/home/logic/home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
+
+  @override
+  void emit(HomeState state) {
+    if (!isClosed) {
+      super.emit(state);
+    }
+  }
+
   final HomeRepo _repository;
   HomeModel? currentHome;
 
