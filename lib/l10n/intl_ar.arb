@@ -281,6 +281,9 @@
   "downloadBtn": "تنزيل",
   "sharedDesign": "تصميم مُشارَك",
   "shared": "تمت المشاركة",
-  "tokens": "توكن",
-  "searchDesigns": "البحث في التصميمات..."
+  "tokens": "نقطة",
+  "searchDesigns": "البحث في التصميمات...",
+  "replacementCompleted": "اكتمل الاستبدال",
+  "editCompleted": "اكتمل التعديل",
+  "objectRemoved": "تمت إزالة العنصر"
 }

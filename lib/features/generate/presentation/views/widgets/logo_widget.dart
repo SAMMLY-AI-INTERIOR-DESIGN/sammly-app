@@ -15,7 +15,6 @@ class LogoWidget extends StatelessWidget {
       children: [
         SvgPicture.asset(AppImages.splash, height: 140.h, width: 180.w),
         PositionedDirectional(
-          bottom: -5.h,
           child: Text(
             S.of(context).appdesc,
             style: AppTextStyles.title15extraBold,

@@ -30,6 +30,7 @@ class _ProfileViewState extends State<ProfileView> {
     super.initState();
     // Fetch settings data for profile header (avatar, name, username, joinedAt)
     context.read<ProfileCubit>().fetchSettingInfo();
+    context.read<ProfileCubit>().checkUnreadNotifications();
   }
 
   @override
@@ -75,22 +76,40 @@ class _ProfileViewState extends State<ProfileView> {
                       ),
                       GestureDetector(
                         onTap: () {
+                          context.read<ProfileCubit>().markNotificationsAsRead();
                           Navigator.pushNamed(
                             context,
                             AppRoutes.notificationsView,
                           );
                         },
-                        child: Container(
-                          padding: EdgeInsets.all(8.w),
-                          decoration: const BoxDecoration(
-                            gradient: AppColors.primaryGradient3,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.notifications,
-                            color: Colors.white,
-                            size: 20.sp,
-                          ),
+                        child: Stack(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(8.w),
+                              decoration: const BoxDecoration(
+                                gradient: AppColors.primaryGradient3,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.notifications,
+                                color: Colors.white,
+                                size: 20.sp,
+                              ),
+                            ),
+                            if (context.watch<ProfileCubit>().hasUnreadNotifications)
+                              Positioned(
+                                top: 8.h,
+                                right: 9.w,
+                                child: Container(
+                                  width: 8.w,
+                                  height: 8.w,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.red,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
                       ),
                     ],
@@ -313,6 +332,7 @@ class _ProfileViewState extends State<ProfileView> {
                       ),
                       ProfileMenuItem(
                         onTap: () {
+                          context.read<ProfileCubit>().markNotificationsAsRead();
                           Navigator.pushNamed(
                             context,
                             AppRoutes.notificationsView,
@@ -320,6 +340,26 @@ class _ProfileViewState extends State<ProfileView> {
                         },
                         title: S.of(context).notification,
                         svgIcon: AppImages.notifications,
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (context.watch<ProfileCubit>().hasUnreadNotifications)
+                              Container(
+                                width: 8.w,
+                                height: 8.w,
+                                margin: EdgeInsets.only(right: 8.w),
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              size: 20.sp,
+                              color: AppColors.blackColor2,
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),

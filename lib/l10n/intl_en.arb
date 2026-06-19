@@ -281,5 +281,8 @@
   "sharedDesign": "Shared Design",
   "shared": "Shared",
   "tokens": "Tokens",
-  "searchDesigns": "Search designs..."
+  "searchDesigns": "Search designs...",
+  "replacementCompleted": "Replacement Completed",
+  "editCompleted": "Edit Completed",
+  "objectRemoved": "Object Removed"
 }

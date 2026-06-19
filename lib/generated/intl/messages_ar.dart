@@ -127,6 +127,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "https://invite.Sammly.com/\nASDGFJKHHUHSULWDIH",
     ),
     "editBtn": MessageLookupByLibrary.simpleMessage("تعديل"),
+    "editCompleted": MessageLookupByLibrary.simpleMessage("اكتمل التعديل"),
     "editProfile": MessageLookupByLibrary.simpleMessage("تعديل الملف الشخصي"),
     "egp150": MessageLookupByLibrary.simpleMessage("150 ج.م"),
     "egp370": MessageLookupByLibrary.simpleMessage("370 ج.م"),
@@ -283,6 +284,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "لم يتم العثور على تصميمات مشاركة",
     ),
     "notification": MessageLookupByLibrary.simpleMessage("الإشعارات"),
+    "objectRemoved": MessageLookupByLibrary.simpleMessage("تمت إزالة العنصر"),
     "onboarding1Subtitle": MessageLookupByLibrary.simpleMessage(
       "قم بإنشاء تصميمات غرف جديدة من النصوص أو قم بتعديل الغرف الحالية باستخدام الصور المرفوعة.",
     ),
@@ -421,6 +423,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "removeObject": MessageLookupByLibrary.simpleMessage("إزالة كائن"),
     "replace": MessageLookupByLibrary.simpleMessage("استبدال"),
     "replaceObject": MessageLookupByLibrary.simpleMessage("استبدال كائن"),
+    "replacementCompleted": MessageLookupByLibrary.simpleMessage(
+      "اكتمل الاستبدال",
+    ),
     "resendCode": MessageLookupByLibrary.simpleMessage("إعادة إرسال الرمز"),
     "resetPassword": MessageLookupByLibrary.simpleMessage(
       "إعادة تعيين كلمة المرور",

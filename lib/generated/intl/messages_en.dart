@@ -129,6 +129,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "https://invite.Sammly.com/\nASDGFJKHHUHSULWDIH",
     ),
     "editBtn": MessageLookupByLibrary.simpleMessage("Edit"),
+    "editCompleted": MessageLookupByLibrary.simpleMessage("Edit Completed"),
     "editProfile": MessageLookupByLibrary.simpleMessage("Edit profile"),
     "egp150": MessageLookupByLibrary.simpleMessage("EGP 150"),
     "egp370": MessageLookupByLibrary.simpleMessage("EGP 370"),
@@ -289,6 +290,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "No shared designs found",
     ),
     "notification": MessageLookupByLibrary.simpleMessage("Notification"),
+    "objectRemoved": MessageLookupByLibrary.simpleMessage("Object Removed"),
     "onboarding1Subtitle": MessageLookupByLibrary.simpleMessage(
       "Generate new room designs from text prompts or edit existing rooms using uploaded images.",
     ),
@@ -427,6 +429,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "removeObject": MessageLookupByLibrary.simpleMessage("Remove Object"),
     "replace": MessageLookupByLibrary.simpleMessage("Replace"),
     "replaceObject": MessageLookupByLibrary.simpleMessage("Replace Object"),
+    "replacementCompleted": MessageLookupByLibrary.simpleMessage(
+      "Replacement Completed",
+    ),
     "resendCode": MessageLookupByLibrary.simpleMessage("Resend Code"),
     "resetPassword": MessageLookupByLibrary.simpleMessage("Reset Password"),
     "restyleRoomTag": MessageLookupByLibrary.simpleMessage("Restyle Room"),

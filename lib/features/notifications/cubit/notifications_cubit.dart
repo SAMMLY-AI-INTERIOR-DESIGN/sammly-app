@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sammly/features/notifications/data/repo/notifications_repo.dart';
 import 'package:sammly/features/notifications/cubit/notifications_states.dart';
+import 'package:sammly/core/shared_pref/shared_pref.dart';
 import 'package:sammly/features/notifications/data/model/notifications_model.dart';
 
 class NotificationsCubit extends Cubit<NotificationsState> {
@@ -37,6 +38,12 @@ class NotificationsCubit extends Cubit<NotificationsState> {
     result.fold((error) => emit(GetNotificationsFailure(error)), (response) {
       if (!loadMore) {
         notifications = response.notifications;
+        if (notifications.isNotEmpty) {
+          SharedPref.saveData(
+            key: 'last_seen_notification_id',
+            value: notifications.first.id,
+          );
+        }
       } else {
         notifications.addAll(response.notifications);
       }

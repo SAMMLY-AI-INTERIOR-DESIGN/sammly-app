@@ -52,7 +52,12 @@ class _Step1UploadState extends State<Step1Upload> {
 
   Future<void> _pickImage() async {
     try {
-      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 35,
+        maxWidth: 512,
+        maxHeight: 512,
+      );
       if (image != null) {
         setState(() {
           _selectedImage = image;

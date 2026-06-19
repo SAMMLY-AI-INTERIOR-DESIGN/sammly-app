@@ -1,3 +1,8 @@
+import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,6 +30,7 @@ class GenerateResultView extends StatefulWidget {
   final List<dynamic>? designs;
   final String? originalImageUrl;
   final bool isFromStepper;
+  final String? operationMode;
 
   const GenerateResultView({
     super.key,
@@ -34,6 +40,7 @@ class GenerateResultView extends StatefulWidget {
     this.designs,
     this.originalImageUrl,
     this.isFromStepper = false,
+    this.operationMode,
   });
 
   @override
@@ -114,6 +121,87 @@ class _GenerateResultViewState extends State<GenerateResultView> {
     }
   }
 
+  Future<void> _shareImage() async {
+    try {
+      if (!_isNetworkImage) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              content: Text(S.of(context).errorSavingImage('Cannot share local assets.')),
+              backgroundColor: AppColors.redColor,
+            ),
+          );
+        return;
+      }
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Text(S.of(context).downloadingImage),
+              ],
+            ),
+            duration: const Duration(seconds: 2),
+            backgroundColor: AppColors.primaryColor,
+          ),
+        );
+
+      final response = await http.get(Uri.parse(_selectedImage));
+      if (response.statusCode == 200) {
+        final tempDir = await getTemporaryDirectory();
+        final file = File('${tempDir.path}/shared_design.png');
+        await file.writeAsBytes(response.bodyBytes);
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        }
+
+        await Share.shareXFiles(
+          [XFile(file.path)],
+          text: 'Check out this amazing room design I generated with Sammly!',
+        );
+      } else {
+        throw Exception('Failed to download image.');
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              content: Text('Error sharing image: $e'),
+              backgroundColor: AppColors.redColor,
+            ),
+          );
+      }
+    }
+  }
+
+  String _getOperationModeTitle(BuildContext context, String mode) {
+    switch (mode) {
+      case 'replace':
+        return S.of(context).replacementCompleted;
+      case 'edit':
+        return S.of(context).editCompleted;
+      case 'remove':
+        return S.of(context).objectRemoved;
+      default:
+        return S.of(context).yourGeneratedDesign;
+    }
+  }
+
   @override
   void dispose() {
     _searchCubit.close();
@@ -156,10 +244,13 @@ class _GenerateResultViewState extends State<GenerateResultView> {
           return Scaffold(
             backgroundColor: AppColors.whiteColor,
             appBar: GenerateResultsAppBar(
-              title: widget.showListView
-                  ? S.of(context).yourGeneratedDesign
-                  : S.of(context).modernLivingRoom,
+              title: widget.isFromStepper && widget.operationMode != null
+                  ? _getOperationModeTitle(context, widget.operationMode!)
+                  : widget.showListView
+                      ? S.of(context).yourGeneratedDesign
+                      : S.of(context).modernLivingRoom,
               subtitle: S.of(context).generatedBySammly,
+              onShareAction: _shareImage,
               onBack: () {
                 Navigator.pushNamedAndRemoveUntil(
                   context,
