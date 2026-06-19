@@ -37,7 +37,12 @@ class _TextToImageStep3DescribeState extends State<TextToImageStep3Describe> {
 
   Future<void> _pickImage() async {
     try {
-      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 35,
+        maxWidth: 512,
+        maxHeight: 512,
+      );
       if (image != null) {
         widget.onImageSelected(image);
       }

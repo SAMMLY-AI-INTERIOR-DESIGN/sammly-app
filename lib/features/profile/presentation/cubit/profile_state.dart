@@ -3,6 +3,8 @@ import 'package:sammly/features/profile/data/models/setting_info_model.dart';
 
 abstract class ProfileState {}
 
+class ProfileUnreadNotificationsUpdated extends ProfileState {}
+
 class ProfileInitial extends ProfileState {}
 
 class ProfileLoading extends ProfileState {}
