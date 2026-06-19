@@ -28,6 +28,7 @@ class _RestyleViewState extends State<RestyleView> {
   String? _selectedStyle;
   XFile? _selectedImage;
   bool _isDownloadingImage = false;
+  bool _isOriginalImage = false;
 
   @override
   void initState() {
@@ -60,6 +61,7 @@ class _RestyleViewState extends State<RestyleView> {
         _selectedImage = XFile(file.path);
         _currentStep = 1; // Move directly to style step
         _isDownloadingImage = false;
+        _isOriginalImage = true;
       });
     } catch (e) {
       debugPrint("Failed to download image: $e");
@@ -129,11 +131,13 @@ class _RestyleViewState extends State<RestyleView> {
                           onImageSelected: (image) {
                             setState(() {
                               _selectedImage = image;
+                              _isOriginalImage = false;
                             });
                           },
                           onImageRemoved: () {
                             setState(() {
                               _selectedImage = null;
+                              _isOriginalImage = false;
                             });
                           },
                           onNext: _nextStep,
@@ -152,7 +156,7 @@ class _RestyleViewState extends State<RestyleView> {
                               arguments: {
                                 'isRestyle': true,
                                 'style': _selectedStyle ?? '',
-                                'imageUrl': _selectedImage?.path,
+                                'imageUrl': _isOriginalImage ? widget.initialImageUrl : _selectedImage?.path,
                                 'showListView': false,
                               },
                             );

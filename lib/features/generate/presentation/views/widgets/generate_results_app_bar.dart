@@ -10,12 +10,14 @@ class GenerateResultsAppBar extends StatelessWidget
   final String title;
   final String subtitle;
   final VoidCallback? onBack;
+  final VoidCallback? onShareAction;
 
   const GenerateResultsAppBar({
     super.key,
     required this.title,
     required this.subtitle,
     this.onBack,
+    this.onShareAction,
   });
 
   @override
@@ -32,6 +34,21 @@ class GenerateResultsAppBar extends StatelessWidget
         ),
         onPressed: onBack ?? () => Navigator.pop(context),
       ),
+      actions: [
+        if (onShareAction != null)
+          IconButton(
+            onPressed: onShareAction,
+            icon: SvgPicture.asset(
+              AppImages.resultsShareIcon,
+              width: 20.w,
+              height: 20.h,
+              colorFilter: const ColorFilter.mode(
+                AppColors.blackColor,
+                BlendMode.srcIn,
+              ),
+            ),
+          ),
+      ],
       title: Column(
         children: [
           Text(

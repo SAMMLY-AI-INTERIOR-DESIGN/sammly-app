@@ -25,23 +25,36 @@ class BrowseDesigns extends StatefulWidget {
 }
 
 class _BrowseDesignsState extends State<BrowseDesigns> {
-  final List<String> _filters = [
-    'All',
-    'Traditional',
-    'Rustic',
-    'Coastal',
-    'Mid-century modern',
-    'Bohemian',
+  final List<String> _filtersApi = [
+    'all',
+    'traditional',
+    'rustic',
+    'coastal',
+    'mid century modern',
+    'bohemian',
   ];
-  String _selectedFilter = 'All';
+  String _selectedFilter = 'all';
+
+  String _getFilterName(BuildContext context, String apiValue) {
+    switch (apiValue) {
+      case 'all':
+        return S.of(context).all;
+      case 'traditional':
+        return S.of(context).traditional;
+      case 'rustic':
+        return S.of(context).rustic;
+      case 'coastal':
+        return S.of(context).coastal;
+      case 'mid century modern':
+        return S.of(context).midCenturyModern;
+      case 'bohemian':
+        return S.of(context).boho;
+      default:
+        return '';
+    }
+  }
 
   final ScrollController _scrollController = ScrollController();
-
-  /// Map UI filter label to API style value.
-  String _styleApiValue(String uiLabel) {
-    if (uiLabel == 'All') return 'all';
-    return uiLabel.toLowerCase().replaceAll('-', ' ');
-  }
 
   @override
   void initState() {
@@ -53,7 +66,7 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
     if (cubit.currentDesigns.isEmpty || cubit.currentRoom != widget.room) {
       cubit.fetchStaticDesigns(
         room: widget.room,
-        style: _styleApiValue(_selectedFilter),
+        style: _selectedFilter,
       );
     } else {
       // Restore selected filter UI from cubit if possible
@@ -125,7 +138,7 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
       scrollDirection: Axis.horizontal,
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Row(
-        children: _filters.map((filter) {
+        children: _filtersApi.map((filter) {
           final isSelected = filter == _selectedFilter;
           return Padding(
             padding: EdgeInsetsDirectional.only(end: 8.w),
@@ -135,9 +148,7 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
                 setState(() {
                   _selectedFilter = filter;
                 });
-                context.read<StaticDesignsCubit>().changeStyle(
-                  _styleApiValue(filter),
-                );
+                context.read<StaticDesignsCubit>().changeStyle(filter);
               },
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
@@ -157,7 +168,7 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
                   color: isSelected ? null : const Color(0xFFEFF5F5),
                 ),
                 child: Text(
-                  filter,
+                  _getFilterName(context, filter),
                   style: TextStyle(
                     color: isSelected ? Colors.white : const Color(0xFF4A6565),
                     fontSize: 14.sp,
@@ -213,7 +224,7 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
                   onPressed: () =>
                       context.read<StaticDesignsCubit>().fetchStaticDesigns(
                         room: widget.room,
-                        style: _styleApiValue(_selectedFilter),
+                        style: _selectedFilter,
                       ),
                   child: Text(
                     'Retry',

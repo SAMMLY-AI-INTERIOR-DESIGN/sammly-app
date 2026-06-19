@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -9,6 +11,27 @@ import 'package:sammly/core/shared_pref/shared_pref.dart';
 import 'package:sammly/features/generate/data/model/generate_design_response_model.dart';
 
 class GenerateDesignRepo {
+  Future<String?> _prepareImageUrl(String? imageUrl) async {
+    if (imageUrl == null || imageUrl.isEmpty) return null;
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://') || imageUrl.startsWith('data:')) {
+      return imageUrl;
+    }
+    
+    try {
+      final file = File(imageUrl);
+      if (await file.exists()) {
+        final bytes = await file.readAsBytes();
+        final base64Image = base64Encode(bytes);
+        final ext = file.path.split('.').last.toLowerCase();
+        final mimeType = ext == 'png' ? 'image/png' : 'image/jpeg';
+        return 'data:$mimeType;base64,$base64Image';
+      }
+    } catch (e) {
+      log("Error converting image to base64: $e");
+    }
+    return imageUrl;
+  }
+
   /// POST /api/designs
   /// Returns [Right(GenerateDesignResponseModel)] on success,
   /// or [Left(errorMessage)] on failure.
@@ -27,8 +50,9 @@ class GenerateDesignRepo {
         'prompt': prompt,
       };
 
-      if (imageUrl != null && imageUrl.isNotEmpty) {
-        requestData['image_url'] = imageUrl;
+      final processedImageUrl = await _prepareImageUrl(imageUrl);
+      if (processedImageUrl != null && processedImageUrl.isNotEmpty) {
+        requestData['image_url'] = processedImageUrl;
       }
 
       final response = await DioHelper.postData(
@@ -114,9 +138,12 @@ class GenerateDesignRepo {
     try {
       final token = SharedPref.getData(key: 'jwt');
 
+      final processedImageUrl = await _prepareImageUrl(imageUrl);
+
       final Map<String, dynamic> requestData = {
         'style': style,
-        'image_url': imageUrl,
+        'image_url': processedImageUrl,
+        'imageUrl': processedImageUrl,
       };
 
       final response = await DioHelper.postData(
@@ -182,8 +209,10 @@ class GenerateDesignRepo {
         'room_types': roomTypes,
       };
 
-      if (styleImageUrl != null && styleImageUrl.isNotEmpty) {
-        requestData['style_image_url'] = styleImageUrl;
+      final processedImageUrl = await _prepareImageUrl(styleImageUrl);
+      if (processedImageUrl != null && processedImageUrl.isNotEmpty) {
+        requestData['style_image_url'] = processedImageUrl;
+        requestData['styleImageUrl'] = processedImageUrl;
       }
 
       final response = await DioHelper.postData(
@@ -237,10 +266,16 @@ class GenerateDesignRepo {
     try {
       final token = SharedPref.getData(key: 'jwt');
 
+      final processedImageUrl = await _prepareImageUrl(imageUrl);
+      final processedMaskUrl = await _prepareImageUrl(maskUrl);
+
       final Map<String, dynamic> requestData = {
-        'image_url': imageUrl,
-        'mask_url': maskUrl,
+        'image_url': processedImageUrl,
+        'mask_url': processedMaskUrl,
         'operation_mode': operationMode,
+        'imageUrl': processedImageUrl,
+        'maskUrl': processedMaskUrl,
+        'operationMode': operationMode,
       };
 
       if (prompt != null && prompt.isNotEmpty) {

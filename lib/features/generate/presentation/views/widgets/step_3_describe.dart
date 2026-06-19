@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sammly/core/constant/app_colors.dart';
+import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/custombutton.dart';
 import 'package:sammly/generated/l10n.dart';
@@ -24,11 +26,7 @@ class Step3Describe extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(
-                Icons.auto_awesome,
-                color: Colors.grey.shade600,
-                size: 24.sp,
-              ),
+              SvgPicture.asset(AppImages.aiPoweredIcon, width: 24.w, height: 24.h),
               SizedBox(width: 8.w),
               Text(
                 S.of(context).describeYourChanges,
