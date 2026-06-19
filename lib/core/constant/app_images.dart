@@ -122,4 +122,5 @@ class AppImages {
   static const String subscriptionBgPlaceholder =
       "assets/images/subscription_bg_placeholder.png";
   static const String switchImageIcon = "assets/images/switch_image_icon.svg";
+  static const String resultsShareIcon = "assets/images/share_icon.svg";
 }

@@ -91,18 +91,19 @@ class GenerationLoadingWrapper extends StatelessWidget {
                       arguments?['showListView'] as bool? ?? false;
                   final bool isFromStepper = arguments?['isMask'] == true;
 
-                  Navigator.pushReplacementNamed(
-                    context,
-                    AppRoutes.generateResultView,
-                    arguments: {
-                      'showListView': showListView,
-                      'imageUrl': state.imageUrl,
-                      'designId': state.designId,
-                      'designs': state.designs,
-                      'originalImageUrl': arguments?['imageUrl'],
-                      'isFromStepper': isFromStepper,
-                    },
-                  );
+                    Navigator.pushReplacementNamed(
+                      context,
+                      AppRoutes.generateResultView,
+                      arguments: {
+                        'showListView': showListView,
+                        'imageUrl': state.imageUrl,
+                        'designId': state.designId,
+                        'designs': state.designs,
+                        'originalImageUrl': arguments?['imageUrl'],
+                        'isFromStepper': isFromStepper,
+                        'operationMode': arguments?['operationMode'],
+                      },
+                    );
                 } else if (state is GenerationFailed) {
                   showCustomSnackBar(
                     context: context,

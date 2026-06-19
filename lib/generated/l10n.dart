@@ -2376,6 +2376,36 @@ class S {
       args: [],
     );
   }
+
+  /// `Replacement Completed`
+  String get replacementCompleted {
+    return Intl.message(
+      'Replacement Completed',
+      name: 'replacementCompleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit Completed`
+  String get editCompleted {
+    return Intl.message(
+      'Edit Completed',
+      name: 'editCompleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Object Removed`
+  String get objectRemoved {
+    return Intl.message(
+      'Object Removed',
+      name: 'objectRemoved',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
