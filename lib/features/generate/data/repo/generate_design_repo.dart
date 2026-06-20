@@ -147,7 +147,7 @@ class GenerateDesignRepo {
       final Map<String, dynamic> requestData = {
         'style': style,
         'image_url': processedImageUrl,
-        'imageUrl': processedImageUrl,
+        // 'imageUrl': processedImageUrl,
       };
 
       final response = await DioHelper.postData(
