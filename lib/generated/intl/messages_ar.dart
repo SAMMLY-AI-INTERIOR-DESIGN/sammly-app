@@ -517,7 +517,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "termsConditionsText": MessageLookupByLibrary.simpleMessage(
       "من خلال الوصول إلى هذا التطبيق واستخدامه، فإنك توافق على الالتزام بالشروط والأحكام الموضحة أدناه.\n\nالمستخدمون مسؤولون عن المحتوى الذي يقومون بإنشائه أو مشاركته داخل التطبيق.\n\nيُحظر تماماً أي استخدام ضار أو غير قانوني أو غير لائق للتطبيق.\n\nالتطبيق مخصص للاستخدام الشخصي وغير التجاري فقط.\n\nنحتفظ بالحق في تحديث أو تعديل هذه الشروط في أي وقت دون إشعار مسبق.\n\nالاستمرار في استخدام التطبيق يعني قبولك لأي تغييرات تطرأ على هذه الشروط.",
     ),
-    "tokens": MessageLookupByLibrary.simpleMessage("توكن"),
+    "tokens": MessageLookupByLibrary.simpleMessage("نقطة"),
     "traditional": MessageLookupByLibrary.simpleMessage("تقليدي"),
     "type": MessageLookupByLibrary.simpleMessage("النوع"),
     "unfollow": MessageLookupByLibrary.simpleMessage("إلغاء المتابعة"),

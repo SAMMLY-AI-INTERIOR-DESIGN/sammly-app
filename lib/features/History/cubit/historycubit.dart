@@ -17,6 +17,7 @@ class HistoryCubit extends Cubit<HistoryState> {
   HistoryCubit(this._repository) : super(HistoryInitial());
 
   final List<HistoryDesignModel> _allDesigns = [];
+  final Map<String, List<HistoryDesignModel>> _groupedDesigns = {};
   int _currentPage = 1;
   bool _hasMore = true;
   int _totalDesigns = 0;
@@ -25,19 +26,36 @@ class HistoryCubit extends Cubit<HistoryState> {
   bool get hasMore => _hasMore;
   int get totalDesigns => _totalDesigns;
   List<HistoryDesignModel> get currentDesigns => List.unmodifiable(_allDesigns);
+  Map<String, List<HistoryDesignModel>> get groupedDesigns => _groupedDesigns;
 
   /// Resets all in-memory history state (used on logout).
   void reset() {
     _allDesigns.clear();
+    _groupedDesigns.clear();
     _currentPage = 1;
     _hasMore = true;
     _totalDesigns = 0;
     emit(HistoryInitial());
   }
 
+  void _processIncomingDesigns(List<HistoryDesignModel> newDesigns) {
+    for (var design in newDesigns) {
+      if (design.generationType == 'full_home' && design.groupId != null) {
+        if (!_groupedDesigns.containsKey(design.groupId)) {
+          _groupedDesigns[design.groupId!] = [];
+          _allDesigns.add(design);
+        }
+        _groupedDesigns[design.groupId!]!.add(design);
+      } else {
+        _allDesigns.add(design);
+      }
+    }
+  }
+
   /// Fetch the first page.
   Future<void> fetchHistory({int limit = 20}) async {
     _allDesigns.clear();
+    _groupedDesigns.clear();
     _currentPage = 1;
     _hasMore = true;
 
@@ -49,7 +67,7 @@ class HistoryCubit extends Cubit<HistoryState> {
     );
 
     result.fold((error) => emit(HistoryError(error)), (response) {
-      _allDesigns.addAll(response.designs);
+      _processIncomingDesigns(response.designs);
       _currentPage = response.page;
       _totalDesigns = response.totalDesigns;
       _hasMore = response.hasMore;
@@ -76,7 +94,7 @@ class HistoryCubit extends Cubit<HistoryState> {
     final result = await _repository.getHistory(page: nextPage, limit: limit);
 
     result.fold((error) => emit(HistoryError(error)), (response) {
-      _allDesigns.addAll(response.designs);
+      _processIncomingDesigns(response.designs);
       _currentPage = response.page;
       _totalDesigns = response.totalDesigns;
       _hasMore = response.hasMore;

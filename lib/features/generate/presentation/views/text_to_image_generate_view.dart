@@ -64,12 +64,44 @@ class _TextToImageGenerateViewState extends State<TextToImageGenerateView> {
     }
   }
 
-  void _generateDesign() {
+  Future<void> _generateDesign() async {
     final prompt = _promptController.text;
     if (prompt.isEmpty) {
       showCustomSnackBar(
         context: context,
         message: S.of(context).pleaseDescribeYourDreamRoom,
+        isError: true,
+      );
+      return;
+    }
+
+    final RegExp bedsRegexEn = RegExp(r'(?:2|two|3|three|4|four)\s*beds?\b|\bbeds\b', caseSensitive: false);
+    final RegExp bedsRegexAr = RegExp(r'(?:2|٢|3|٣|4|٤)\s*(?:سرير|سراير|سريران|[أا]سر[ةه])|سريرين|سريران|(?:ثلاث|ثلاثة|اربع|أربع|اربعة|أربعة)\s*(?:سرير|سراير|[أا]سر[ةه])|\b(?:[أا]سر[ةه]|سراير)\b');
+    
+    bool isEnMatch = bedsRegexEn.hasMatch(prompt);
+    bool isArMatch = bedsRegexAr.hasMatch(prompt);
+
+    if (isEnMatch || isArMatch) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(color: AppColors.primaryColor),
+        ),
+      );
+
+      await Future.delayed(const Duration(seconds: 2));
+
+      if (!mounted) return;
+      Navigator.pop(context);
+
+      String message = isArMatch 
+          ? "لا ندعم هذه الحالة، ربما في المستقبل" 
+          : "We Don't handle this case, maybe in the future";
+
+      showCustomSnackBar(
+        context: context,
+        message: message,
         isError: true,
       );
       return;

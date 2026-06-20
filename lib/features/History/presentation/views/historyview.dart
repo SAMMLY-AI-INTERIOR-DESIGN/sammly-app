@@ -139,19 +139,53 @@ class _HistoryViewState extends State<HistoryView> {
                   }
 
                   final item = displayDesigns[index];
+
+                  String formatGenerationType(String? type) {
+                    if (type == null) return 'Design';
+                    switch (type) {
+                      case 'generate_design':
+                        return 'Generate Design';
+                      case 'restyle_design':
+                        return 'Restyle Design';
+                      case 'full_home':
+                        return 'Full Home';
+                      case 'mask_edit':
+                        return 'Mask Edit';
+                      case 'mask_replace':
+                        return 'Mask Replace';
+                      case 'mask_remove':
+                        return 'Mask Remove';
+                      default:
+                        return type.replaceAll('_', ' ').replaceFirst(
+                              type[0],
+                              type[0].toUpperCase(),
+                            );
+                    }
+                  }
+
+                  final title = formatGenerationType(item.generationType);
+
                   return CustomHistoryContainer(
                     imageUrl: item.imageUrl,
-                    title: item.prompt,
-                    description: item.prompt,
+                    title: title,
+                    description: item.prompt ?? title,
                     date: item.createdAt,
                     onTap: () {
+                      final groupedDesigns = item.generationType == 'full_home' &&
+                              item.groupId != null
+                          ? context.read<HistoryCubit>().groupedDesigns[item.groupId]
+                          : null;
+
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => HistoryDetailsView(
-                            title: item.prompt,
+                            title: title,
                             imageUrl: item.imageUrl,
                             designId: item.id,
+                            prompt: item.prompt,
+                            generationType: item.generationType,
+                            groupedDesigns: groupedDesigns,
                           ),
                         ),
                       );

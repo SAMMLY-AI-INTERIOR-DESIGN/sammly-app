@@ -103,13 +103,24 @@ abstract class DioHelper {
     required String endPoint,
     Map<String, dynamic>? queryParameters,
     String? token,
+    Duration? receiveTimeout,
+    bool retry = true,
   }) async {
     dio.options.headers['Authorization'] = token != null ? 'Bearer $token' : '';
 
-    int retries = 2; // Check again and again (retry twice)
+    Options? options;
+    if (receiveTimeout != null) {
+      options = Options(receiveTimeout: receiveTimeout);
+    }
+
+    int retries = retry ? 2 : 0; // Check again and again if retry is true
     while (true) {
       try {
-        return await dio.get(endPoint, queryParameters: queryParameters);
+        return await dio.get(
+          endPoint,
+          queryParameters: queryParameters,
+          options: options,
+        );
       } catch (e) {
         if (retries == 0) rethrow;
         if (e is DioException && _shouldRetry(e)) {

@@ -18,12 +18,16 @@ class GenerateDesignRepo {
     }
     
     try {
-      final file = File(imageUrl);
+      String cleanPath = imageUrl;
+      if (cleanPath.startsWith('file://')) {
+        cleanPath = Uri.parse(cleanPath).toFilePath();
+      }
+      final file = File(cleanPath);
       if (await file.exists()) {
         final bytes = await file.readAsBytes();
         final base64Image = base64Encode(bytes);
         final ext = file.path.split('.').last.toLowerCase();
-        final mimeType = ext == 'png' ? 'image/png' : 'image/jpeg';
+        final mimeType = (ext == 'jpg' || ext == 'jpeg') ? 'image/jpeg' : 'image/png';
         return 'data:$mimeType;base64,$base64Image';
       }
     } catch (e) {

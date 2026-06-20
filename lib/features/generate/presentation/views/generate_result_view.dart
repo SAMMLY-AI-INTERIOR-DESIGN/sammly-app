@@ -268,7 +268,7 @@ class _GenerateResultViewState extends State<GenerateResultView> {
                       imagePath: _selectedImage,
                       isNetworkImage: _isNetworkImage,
                       onSmartLensTap: () => _openSmartLens(context),
-                      originalImagePath: widget.originalImageUrl,
+                      originalImagePath: widget.isFromStepper ? null : widget.originalImageUrl,
                     ),
                     SizedBox(height: 16.h),
                     if (widget.showListView) ...[

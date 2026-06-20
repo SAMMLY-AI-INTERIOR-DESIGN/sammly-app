@@ -17,7 +17,11 @@ class EarnView extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new, color: AppColors.blackColor2, size: 20.sp),
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            color: AppColors.blackColor2,
+            size: 20.sp,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -66,7 +70,11 @@ class EarnView extends StatelessWidget {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Icon(Icons.star, color: const Color(0xFFFFD700), size: 36.sp),
+                            Icon(
+                              Icons.star,
+                              color: const Color(0xFFFFD700),
+                              size: 36.sp,
+                            ),
                             SizedBox(width: 8.w),
                             Text(
                               "15",
@@ -96,7 +104,7 @@ class EarnView extends StatelessWidget {
                         SizedBox(height: 12.h),
                         Text(
                           isArabic
-                              ? "احصل على 15 توكن مجاني كل شهر عند فتح حسابك!"
+                              ? "احصل على 15 توكن مجاني كل شهر\n عند فتح حسابك!"
                               : "Get 15 free tokens every month when you open your account!",
                           style: TextStyle(
                             fontSize: 13.sp,
@@ -109,41 +117,86 @@ class EarnView extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    width: 100.w,
-                    height: 100.h,
+                    width: 95.w,
+                    height: 95.h,
                     child: Stack(
                       alignment: Alignment.center,
-                      clipBehavior: Clip.none,
+                      clipBehavior:
+                          Clip.none, // مهم جداً عشان النجوم البعيدة متتقصش
                       children: [
-                        Positioned(
-                          top: 5.h,
-                          right: -5.w,
-                          child: SvgPicture.asset(AppImages.tinystar3, width: 14.w),
-                        ),
-                        Positioned(
-                          top: 15.h,
-                          left: 10.w,
-                          child: SvgPicture.asset(AppImages.tinystar2, width: 6.w),
-                        ),
-                        Positioned(
-                          bottom: 35.h,
-                          left: -5.w,
-                          child: SvgPicture.asset(AppImages.tinystar3, width: 12.w),
-                        ),
-                        Positioned(
-                          bottom: 15.h,
-                          left: 15.w,
-                          child: SvgPicture.asset(AppImages.tinystar, width: 6.w),
-                        ),
-                        Positioned(
-                          bottom: 5.h,
-                          right: 15.w,
-                          child: SvgPicture.asset(AppImages.tinystar, width: 5.w),
-                        ),
+                        // 1. أيقونة الهدية الأساسية بالنجوم الصفراء
                         SvgPicture.asset(
                           AppImages.earnIcon,
-                          width: 80.w,
-                          height: 80.h,
+                          width: 95.w,
+                          height: 95.h,
+                        ),
+
+                        // --- اللمعات المفرغة (tinystar3) ---
+                        // اللمعة اللي فوق خالص على اليمين (طائرة قريبة من الحافة)
+                        Positioned(
+                          top: -27.h,
+                          right: -5.w,
+                          child: SvgPicture.asset(
+                            AppImages.tinystar3,
+                            width: 22.w,
+                          ),
+                        ),
+
+                        // اللمعة الإضافية (tinystar3) صغيرة جداً أعلى اليسار
+                        Positioned(
+                          top: -5.h,
+                          left: 10.w,
+                          child: SvgPicture.asset(
+                            AppImages.tinystar3,
+                            width: 11.w,
+                          ),
+                        ),
+
+                        // --- النجوم البيضاء المسمطة الصغيرة (tinystar) ---
+                        // النجمة اللي فوق على الشمال (جنب الفيونكة)
+                        Positioned(
+                          top: 10.h,
+                          left: -10.w,
+                          child: SvgPicture.asset(
+                            AppImages.tinystar,
+                            width: 5.w,
+                          ),
+                        ),
+                        // النجمة اللي فوق على اليمين (فوق غطاء الهدية)
+                        Positioned(
+                          top: -5.h,
+                          right: 22.w,
+                          child: SvgPicture.asset(
+                            AppImages.tinystar,
+                            width: 5.w,
+                          ),
+                        ),
+                        // النجمة اللي في الشمال تحت اللمعة المفرغة
+                        Positioned(
+                          top: 60.h,
+                          left: -15.w,
+                          child: SvgPicture.asset(
+                            AppImages.tinystar,
+                            width: 5.w,
+                          ),
+                        ),
+                        // النجمة اللي تحت خالص ناحية الشمال
+                        Positioned(
+                          bottom: -15.h,
+                          left: -2.w,
+                          child: SvgPicture.asset(
+                            AppImages.tinystar2,
+                            width: 6.w,
+                          ),
+                        ),
+                        // النجمة اللي تحت خالص ناحية اليمين
+                        Positioned(
+                          bottom: -20.h,
+                          right: 28.w,
+                          child: SvgPicture.asset(
+                            AppImages.tinystar,
+                            width: 6.w,
+                          ),
                         ),
                       ],
                     ),
@@ -151,9 +204,9 @@ class EarnView extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             SizedBox(height: 24.h),
-            
+
             Text(
               isArabic ? "طرق كسب التوكنز" : "Ways to earn tokens",
               style: TextStyle(
@@ -164,45 +217,45 @@ class EarnView extends StatelessWidget {
               ),
             ),
             SizedBox(height: 16.h),
-            
+
             // Item 1
             WayToEarnCard(
               title: isArabic ? "شارك تصميماتك" : "Share your designs",
-              iconPath: AppImages.sharetoearn, 
+              iconPath: AppImages.sharetoearn,
               tokensAmount: "1",
               tokensLabel: isArabic ? "توكن" : "Token",
-              description: isArabic 
-                  ? "شارك تصميماتك للحصول على 1\nتوكن في كل مرة" 
+              description: isArabic
+                  ? "شارك تصميماتك للحصول على 1\nتوكن في كل مرة"
                   : "Share your designs to get 1\ntoken each time",
               rightMainText: isArabic ? "مجاني" : "Free",
               rightSubText: isArabic ? "/منشور" : "/post",
               primaryColor: const Color(0xFF3C60B6),
               bgColor: const Color(0xFFF1F4FA),
             ),
-            
+
             // Item 2
             WayToEarnCard(
               title: isArabic ? "تلقّي الإعجابات" : "Receive Likes",
               iconPath: AppImages.totallikes,
               tokensAmount: "15",
               tokensLabel: isArabic ? "توكن" : "Tokens",
-              description: isArabic 
-                  ? "إذا حصل منشورك على 20 إعجاباً،\nستحصل على 15 توكن." 
+              description: isArabic
+                  ? "إذا حصل منشورك على 20 إعجاباً،\nستحصل على 15 توكن."
                   : "If your post gets 20 likes, you'll\nget 15 tokens.",
               rightMainText: isArabic ? "إعجاب 20" : "Likes 20",
               rightSubText: isArabic ? "/منشور" : "/post",
               primaryColor: const Color(0xFF23B5A0),
               bgColor: const Color(0xFFEAFAF7),
             ),
-            
+
             // Item 3
             WayToEarnCard(
               title: isArabic ? "تلقّي الإعجابات" : "Receive Likes",
               iconPath: AppImages.totallikes,
               tokensAmount: "25",
               tokensLabel: isArabic ? "توكن" : "Tokens",
-              description: isArabic 
-                  ? "إذا حصل منشورك على 50 إعجاباً،\nستحصل على 25 توكن." 
+              description: isArabic
+                  ? "إذا حصل منشورك على 50 إعجاباً،\nستحصل على 25 توكن."
                   : "If your post gets 50 likes, you'll\nget 25 tokens.",
               rightMainText: isArabic ? "إعجاب 50" : "Likes 50",
               rightSubText: isArabic ? "/منشور" : "/post",
@@ -216,8 +269,8 @@ class EarnView extends StatelessWidget {
               iconPath: AppImages.totallikes,
               tokensAmount: "45",
               tokensLabel: isArabic ? "توكن" : "Tokens",
-              description: isArabic 
-                  ? "إذا حصل منشورك على 100 إعجاب،\nستحصل على 45 توكن." 
+              description: isArabic
+                  ? "إذا حصل منشورك على 100 إعجاب،\nستحصل على 45 توكن."
                   : "If your post gets 100 likes,\nyou'll get 45 tokens.",
               rightMainText: isArabic ? "إعجاب 100" : "Likes 100",
               rightSubText: isArabic ? "/منشور" : "/post",
@@ -281,7 +334,10 @@ class WayToEarnCard extends StatelessWidget {
                   iconPath,
                   width: 14.sp,
                   height: 14.sp,
-                  colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                  colorFilter: const ColorFilter.mode(
+                    Colors.white,
+                    BlendMode.srcIn,
+                  ),
                 ),
                 SizedBox(width: 6.w),
                 Text(
