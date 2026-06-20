@@ -24,6 +24,7 @@ class RoomFilterWidget extends StatelessWidget {
 
     List<Widget> chips = [
       _buildChip(
+        context,
         text: S.of(context).all,
         isActive: isAllSelected,
         onTap: onAllToggled,
@@ -31,6 +32,7 @@ class RoomFilterWidget extends StatelessWidget {
       ...allRooms.map((room) {
         bool isActive = selectedRooms.contains(room);
         return _buildChip(
+          context,
           text: room,
           isActive: isActive,
           onTap: () => onRoomToggled(room),
@@ -48,30 +50,36 @@ class RoomFilterWidget extends StatelessWidget {
             children: chips
                 .skip(i)
                 .take(3)
-                .map((chip) => Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 3.w),
-                      child: chip,
-                    ))
+                .map(
+                  (chip) => Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 3.w),
+                    child: chip,
+                  ),
+                )
                 .toList(),
           ),
         ),
       );
     }
 
-    return Column(
-      children: rows,
-    );
+    return Column(children: rows);
   }
 
-  Widget _buildChip({
+  Widget _buildChip(
+    BuildContext context, {
     required String text,
     required bool isActive,
     required VoidCallback onTap,
   }) {
+    final isEnglish = Localizations.localeOf(context).languageCode == 'en';
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+        padding: EdgeInsets.symmetric(
+          horizontal: isEnglish ? 14.w : 20.w,
+          vertical: 12.h,
+        ),
         decoration: BoxDecoration(
           color: isActive ? null : AppColors.bg2Color,
           gradient: isActive ? AppColors.primaryGradient3 : null,
@@ -81,6 +89,7 @@ class RoomFilterWidget extends StatelessWidget {
           text,
           style: AppTextStyles.body16Regular.copyWith(
             color: isActive ? Colors.white : AppColors.blackColor,
+            fontSize: isEnglish ? 15.5.sp : 16.sp,
           ),
         ),
       ),

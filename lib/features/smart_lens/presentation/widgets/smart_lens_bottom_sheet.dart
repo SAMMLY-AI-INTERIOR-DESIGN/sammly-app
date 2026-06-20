@@ -258,7 +258,7 @@ class _SmartLensBottomSheetState extends State<SmartLensBottomSheet> {
                 padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
               ),
               child: Text(
-                'Retry',
+                'Wait More',
                 style: AppTextStyles.body16Medium.copyWith(color: Colors.white),
               ),
             ),

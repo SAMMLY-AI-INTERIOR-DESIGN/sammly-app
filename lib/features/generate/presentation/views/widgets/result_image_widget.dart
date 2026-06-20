@@ -54,10 +54,16 @@ class _ResultImageWidgetState extends State<ResultImageWidget> {
                       AnimatedOpacity(
                         opacity: _showOriginal ? 1.0 : 0.0,
                         duration: const Duration(milliseconds: 300),
-                        child: Image.file(
-                          File(widget.originalImagePath!),
-                          fit: BoxFit.fill,
-                        ),
+                        child: (widget.originalImagePath!.startsWith('http://') ||
+                                widget.originalImagePath!.startsWith('https://'))
+                            ? Image.network(
+                                widget.originalImagePath!,
+                                fit: BoxFit.fill,
+                              )
+                            : Image.file(
+                                File(widget.originalImagePath!),
+                                fit: BoxFit.fill,
+                              ),
                       ),
                     ],
                   )
@@ -163,11 +169,13 @@ class _ResultImageWidgetState extends State<ResultImageWidget> {
                 ),
               ),
             ),
+          // Maximize button removed as requested
         ],
       ),
     );
   }
 }
+
 
 
 // import 'dart:io';

@@ -17,6 +17,8 @@ class SearchRepo {
       final response = await DioHelper.getData(
         endPoint: ApiConstants.searchDesign(designId),
         token: token,
+        receiveTimeout: const Duration(minutes: 4),
+        retry: false,
       );
 
       if (response.statusCode == 200 && response.data['status'] == 'success') {

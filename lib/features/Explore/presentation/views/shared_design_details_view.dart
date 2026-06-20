@@ -35,12 +35,12 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
   void initState() {
     super.initState();
     context.read<DesignDetailsCubit>().fetchDesignDetails(
-          widget.exploreDesign.id,
-          overrideId: widget.exploreDesign.id,
-          overrideIsLiked: widget.exploreDesign.isLiked,
-          overrideIsFavorited: widget.exploreDesign.isFavorited,
-          overrideLikesCount: widget.exploreDesign.likesCount,
-        );
+      widget.exploreDesign.id,
+      overrideId: widget.exploreDesign.id,
+      overrideIsLiked: widget.exploreDesign.isLiked,
+      overrideIsFavorited: widget.exploreDesign.isFavorited,
+      overrideLikesCount: widget.exploreDesign.likesCount,
+    );
   }
 
   void _toggleMaximize() {
@@ -97,10 +97,14 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
             _showSnackbar(state.message);
           } else if (state is DesignLikeSuccess) {
             _showSnackbar(state.message);
-            context.read<ExploreCubit>().toggleLikeLocal(widget.exploreDesign.id);
+            context.read<ExploreCubit>().toggleLikeLocal(
+              widget.exploreDesign.id,
+            );
           } else if (state is DesignUnlikeSuccess) {
             _showSnackbar(state.message);
-            context.read<ExploreCubit>().toggleLikeLocal(widget.exploreDesign.id);
+            context.read<ExploreCubit>().toggleLikeLocal(
+              widget.exploreDesign.id,
+            );
           } else if (state is DesignActionError) {
             _showSnackbar(state.message, isError: true);
           }
@@ -150,13 +154,13 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                     ),
                     SizedBox(height: 12.h),
                     TextButton(
-                      onPressed: () => context
-                          .read<DesignDetailsCubit>()
-                          .fetchDesignDetails(
+                      onPressed: () =>
+                          context.read<DesignDetailsCubit>().fetchDesignDetails(
                             widget.exploreDesign.id,
                             overrideId: widget.exploreDesign.id,
                             overrideIsLiked: widget.exploreDesign.isLiked,
-                            overrideIsFavorited: widget.exploreDesign.isFavorited,
+                            overrideIsFavorited:
+                                widget.exploreDesign.isFavorited,
                             overrideLikesCount: widget.exploreDesign.likesCount,
                           ),
                       child: Text(
@@ -415,11 +419,19 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                                     .updateFavoriteStatus(!isFav);
                                 context
                                     .read<ExploreCubit>()
-                                    .toggleFavoriteLocal(widget.exploreDesign.id);
+                                    .toggleFavoriteLocal(
+                                      widget.exploreDesign.id,
+                                    );
                               },
                               child: isFav
-                                  ? SvgPicture.asset(AppImages.withsaving, width: 24.w).withAppGradient()
-                                  : SvgPicture.asset(AppImages.withoutsaving, width: 24.w),
+                                  ? SvgPicture.asset(
+                                      AppImages.withsaving,
+                                      width: 24.w,
+                                    ).withAppGradient()
+                                  : SvgPicture.asset(
+                                      AppImages.withoutsaving,
+                                      width: 24.w,
+                                    ),
                             );
                           },
                         ),
@@ -441,7 +453,9 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                           child: Container(
                             padding: EdgeInsets.all(8.w),
                             decoration: BoxDecoration(
-                              color: AppColors.whiteColor.withValues(alpha: 0.85),
+                              color: AppColors.whiteColor.withValues(
+                                alpha: 0.85,
+                              ),
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
@@ -468,7 +482,9 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                           child: Container(
                             padding: EdgeInsets.all(8.w),
                             decoration: BoxDecoration(
-                              color: AppColors.whiteColor.withValues(alpha: 0.85),
+                              color: AppColors.whiteColor.withValues(
+                                alpha: 0.85,
+                              ),
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(

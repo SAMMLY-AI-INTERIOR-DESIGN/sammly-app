@@ -12,7 +12,7 @@ class HistoryMainImageSection extends StatelessWidget {
   final bool isMaximized;
   final VoidCallback onToggleMaximize;
   final VoidCallback? onSmartLensTap;
-  final bool isSaved;
+  final bool? isSaved;
   final VoidCallback? onSaveTap;
 
   const HistoryMainImageSection({
@@ -21,7 +21,7 @@ class HistoryMainImageSection extends StatelessWidget {
     required this.isMaximized,
     required this.onToggleMaximize,
     this.onSmartLensTap,
-    this.isSaved = false,
+    this.isSaved,
     this.onSaveTap,
   });
 
@@ -103,13 +103,22 @@ class HistoryMainImageSection extends StatelessWidget {
             PositionedDirectional(
               top: 12.h,
               end: 12.w,
-              child: GestureDetector(
-                onTap: onSaveTap,
-                child: SvgPicture.asset(
-                  isSaved ? AppImages.withsaving : AppImages.withoutsaving,
-                  width: 24.w,
-                ),
-              ),
+              child: isSaved == null
+                  ? SizedBox(
+                      width: 24.w,
+                      height: 24.w,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppColors.primaryColor,
+                      ),
+                    )
+                  : GestureDetector(
+                      onTap: onSaveTap,
+                      child: SvgPicture.asset(
+                        isSaved! ? AppImages.withsaving : AppImages.withoutsaving,
+                        width: 24.w,
+                      ),
+                    ),
             ),
 
           // زرار التحكم (تعديل الـ Padding عشان وقت اللاندسكيب ميزنوقش في الحافة)

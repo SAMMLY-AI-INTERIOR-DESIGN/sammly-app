@@ -45,6 +45,36 @@ class HistoryRepo {
     }
   }
 
+  Future<Either<String, HistoryDesignDetails>> getDesignDetails(
+      String designId) async {
+    try {
+      final token = SharedPref.getData(key: 'jwt');
+      if (token == null) {
+        return left('Unauthorized: No token found.');
+      }
+
+      final response = await DioHelper.getData(
+        endPoint: ApiConstants.designDetails(designId),
+        token: token,
+      );
+
+      if (response.statusCode == 200 && response.data['status'] == 'success') {
+        final data = response.data['data'] as Map<String, dynamic>;
+        return right(HistoryDesignDetails.fromJson(data));
+      } else {
+        log(response.data.toString());
+        return left(
+          response.data['message'] ?? 'Failed to load design details.',
+        );
+      }
+    } on DioException catch (e) {
+      return left(_handleDioError(e));
+    } catch (e) {
+      log('History details error: $e');
+      return left('An unexpected error occurred.');
+    }
+  }
+
   String _handleDioError(DioException e) {
     if (e.response != null && e.response?.data != null) {
       try {
