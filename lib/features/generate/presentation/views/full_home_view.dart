@@ -184,7 +184,7 @@ class _FullHomeViewState extends State<FullHomeView> {
                     'isFullHome': true,
                     'style': _selectedStyle ?? '',
                     'roomTypes': _selectedRooms,
-                    'imageUrl': _selectedImage?.path,
+                    'style_image_url': _selectedImage?.path,
                   },
                 );
               }
