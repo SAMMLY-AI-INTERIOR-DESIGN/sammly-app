@@ -128,6 +128,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "editBtn": MessageLookupByLibrary.simpleMessage("تعديل"),
     "editCompleted": MessageLookupByLibrary.simpleMessage("اكتمل التعديل"),
+    "editImage": MessageLookupByLibrary.simpleMessage("تعديل الصورة"),
     "editProfile": MessageLookupByLibrary.simpleMessage("تعديل الملف الشخصي"),
     "egp150": MessageLookupByLibrary.simpleMessage("150 ج.م"),
     "egp370": MessageLookupByLibrary.simpleMessage("370 ج.م"),

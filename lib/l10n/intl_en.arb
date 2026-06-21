@@ -284,5 +284,6 @@
   "searchDesigns": "Search designs...",
   "replacementCompleted": "Replacement Completed",
   "editCompleted": "Edit Completed",
-  "objectRemoved": "Object Removed"
+  "objectRemoved": "Object Removed",
+  "editImage": "Edit image"
 }

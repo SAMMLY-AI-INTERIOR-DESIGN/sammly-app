@@ -94,6 +94,7 @@ class _ImageGenerationStepperViewState
   }
 
   void _nextStep() {
+    FocusScope.of(context).unfocus();
     if (_currentStep < 2) {
       setState(() {
         _currentStep++;
@@ -107,6 +108,7 @@ class _ImageGenerationStepperViewState
   }
 
   void _previousStep() {
+    FocusScope.of(context).unfocus();
     if (_currentStep > 0) {
       setState(() {
         _currentStep--;
@@ -204,6 +206,7 @@ class _ImageGenerationStepperViewState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: _currentStep == 2,
       backgroundColor: AppColors.whiteColor,
       appBar: AppBar(
         backgroundColor: AppColors.whiteColor,
@@ -217,7 +220,9 @@ class _ImageGenerationStepperViewState
           onPressed: _previousStep,
         ),
         title: Text(
-          S.of(context).replaceObject,
+          widget.isEditMode 
+              ? S.of(context).editImage 
+              : S.of(context).replaceObject,
           style: TextStyle(
             color: AppColors.blackColor,
             fontSize: 20.sp,
