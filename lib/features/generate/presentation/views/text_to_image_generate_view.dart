@@ -37,6 +37,7 @@ class _TextToImageGenerateViewState extends State<TextToImageGenerateView> {
   }
 
   void _nextStep() {
+    FocusScope.of(context).unfocus();
     if (_currentStep < 2) {
       setState(() {
         _currentStep++;
@@ -50,6 +51,7 @@ class _TextToImageGenerateViewState extends State<TextToImageGenerateView> {
   }
 
   void _previousStep() {
+    FocusScope.of(context).unfocus();
     if (_currentStep > 0) {
       setState(() {
         _currentStep--;

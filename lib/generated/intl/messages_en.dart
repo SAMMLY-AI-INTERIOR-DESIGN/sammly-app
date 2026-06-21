@@ -130,6 +130,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "editBtn": MessageLookupByLibrary.simpleMessage("Edit"),
     "editCompleted": MessageLookupByLibrary.simpleMessage("Edit Completed"),
+    "editImage": MessageLookupByLibrary.simpleMessage("Edit image"),
     "editProfile": MessageLookupByLibrary.simpleMessage("Edit profile"),
     "egp150": MessageLookupByLibrary.simpleMessage("EGP 150"),
     "egp370": MessageLookupByLibrary.simpleMessage("EGP 370"),

@@ -285,5 +285,6 @@
   "searchDesigns": "البحث في التصميمات...",
   "replacementCompleted": "اكتمل الاستبدال",
   "editCompleted": "اكتمل التعديل",
-  "objectRemoved": "تمت إزالة العنصر"
+  "objectRemoved": "تمت إزالة العنصر",
+  "editImage": "تعديل الصورة"
 }
