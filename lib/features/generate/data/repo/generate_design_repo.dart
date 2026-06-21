@@ -9,14 +9,17 @@ import 'package:sammly/core/networking/api_constants.dart';
 import 'package:sammly/core/networking/dio_helper.dart';
 import 'package:sammly/core/shared_pref/shared_pref.dart';
 import 'package:sammly/features/generate/data/model/generate_design_response_model.dart';
+import 'package:sammly/core/networking/cloudinary_service.dart';
 
 class GenerateDesignRepo {
   Future<String?> _prepareImageUrl(String? imageUrl) async {
     if (imageUrl == null || imageUrl.isEmpty) return null;
-    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://') || imageUrl.startsWith('data:')) {
+    if (imageUrl.startsWith('http://') ||
+        imageUrl.startsWith('https://') ||
+        imageUrl.startsWith('data:')) {
       return imageUrl;
     }
-    
+
     try {
       String cleanPath = imageUrl;
       if (cleanPath.startsWith('file://')) {
@@ -24,14 +27,23 @@ class GenerateDesignRepo {
       }
       final file = File(cleanPath);
       if (await file.exists()) {
+        final cloudinaryUrl = await CloudinaryService.uploadImage(file);
+        if (cloudinaryUrl != null) {
+          return cloudinaryUrl;
+        }
+        
+        // Fallback to base64 if Cloudinary upload fails, though ideally
+        // we should probably just throw an error here.
         final bytes = await file.readAsBytes();
         final base64Image = base64Encode(bytes);
         final ext = file.path.split('.').last.toLowerCase();
-        final mimeType = (ext == 'jpg' || ext == 'jpeg') ? 'image/jpeg' : 'image/png';
+        final mimeType = (ext == 'jpg' || ext == 'jpeg')
+            ? 'image/jpeg'
+            : 'image/png';
         return 'data:$mimeType;base64,$base64Image';
       }
     } catch (e) {
-      log("Error converting image to base64: $e");
+      log("Error processing image: $e");
     }
     return imageUrl;
   }

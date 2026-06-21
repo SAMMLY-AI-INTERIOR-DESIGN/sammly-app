@@ -56,6 +56,7 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
   late int _selectedIndex;
   String? _currentDesignId;
   List<HistoryDesignModel> _listImages = [];
+  bool _showOriginal = false;
 
   @override
   void initState() {
@@ -346,6 +347,7 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
                 return HistoryMainImageSection(
                   imageUrl: _selectedImage,
                   isMaximized: false,
+                  originalImagePath: _listImages.isNotEmpty ? _listImages[_selectedIndex].parentDesignUrl : null,
                   onToggleMaximize: _toggleMaximize,
                   onSmartLensTap: () => _openSmartLens(context),
                   isSaved: isSaved,
@@ -459,10 +461,15 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
 
   /// وضع التكبير
   Widget _buildMaximizedView(double screenHeight, double screenWidth) {
+    final originalImagePath = _listImages.isNotEmpty ? _listImages[_selectedIndex].parentDesignUrl : null;
+    final displayUrl = _showOriginal && originalImagePath != null && originalImagePath.isNotEmpty
+        ? originalImagePath
+        : _selectedImage;
+
     return Stack(
       children: [
         Positioned.fill(
-          child: _selectedImage.isEmpty
+          child: displayUrl.isEmpty
               ? Container(
                   color: Colors.grey[200],
                   child: const Center(
@@ -470,7 +477,7 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
                   ),
                 )
               : Image.network(
-                  _selectedImage,
+                  displayUrl,
                   fit: BoxFit.contain,
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
@@ -532,6 +539,23 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
             ),
           ),
         ),
+        
+        // Switch image button
+        if (originalImagePath != null && originalImagePath.isNotEmpty)
+          PositionedDirectional(
+            bottom: 24.h,
+            end: 64.w,
+            child: GestureDetector(
+              onTapDown: (_) => setState(() => _showOriginal = true),
+              onTapUp: (_) => setState(() => _showOriginal = false),
+              onTapCancel: () => setState(() => _showOriginal = false),
+              child: SvgPicture.asset(
+                AppImages.switchImageIcon,
+                width: 28.w,
+                height: 28.h,
+              ),
+            ),
+          ),
       ],
     );
   }

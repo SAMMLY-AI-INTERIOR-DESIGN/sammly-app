@@ -6,6 +6,7 @@ import 'package:flutter_mask_painter/flutter_mask_painter.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:image_picker/image_picker.dart'; // لاستخدام XFile
+import 'package:image/image.dart' as img;
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/generated/l10n.dart';
 import 'package:sammly/core/widgets/custombutton.dart';
@@ -63,6 +64,22 @@ class _MaskInpaintingViewState extends State<MaskInpaintingView> {
       final XFile? maskFile = await _controller.saveMask();
 
       if (maskFile != null) {
+        // Threshold the mask to ensure pure white (value 255) for the AI backend
+        final bytes = await maskFile.readAsBytes();
+        final image = img.decodeImage(bytes);
+        if (image != null) {
+          for (final p in image) {
+            if (p.r > 5 || p.g > 5 || p.b > 5) {
+              p.setRgba(255, 255, 255, 255);
+            } else {
+              p.setRgba(0, 0, 0, 255);
+            }
+          }
+          final processedBytes = img.encodePng(image);
+          final file = File(maskFile.path);
+          await file.writeAsBytes(processedBytes);
+        }
+
         // هنا بتجهز الريكويست بتاعك للـ API بـ Dio
         // MultipartFile.fromFileSync(maskFile.path)
 

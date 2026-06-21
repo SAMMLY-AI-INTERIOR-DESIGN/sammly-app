@@ -60,6 +60,7 @@ dependencies:
   flutter_localizations: 
     sdk: flutter
   share_plus: ^13.1.0
+  crypto: ^3.0.7
 
 dev_dependencies:
   flutter_test:

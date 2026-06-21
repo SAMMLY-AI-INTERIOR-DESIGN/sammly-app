@@ -7,13 +7,14 @@ import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/generated/l10n.dart';
 
-class HistoryMainImageSection extends StatelessWidget {
+class HistoryMainImageSection extends StatefulWidget {
   final String imageUrl;
   final bool isMaximized;
   final VoidCallback onToggleMaximize;
   final VoidCallback? onSmartLensTap;
   final bool? isSaved;
   final VoidCallback? onSaveTap;
+  final String? originalImagePath;
 
   const HistoryMainImageSection({
     super.key,
@@ -23,21 +24,34 @@ class HistoryMainImageSection extends StatelessWidget {
     this.onSmartLensTap,
     this.isSaved,
     this.onSaveTap,
+    this.originalImagePath,
   });
 
   @override
+  State<HistoryMainImageSection> createState() =>
+      _HistoryMainImageSectionState();
+}
+
+class _HistoryMainImageSectionState extends State<HistoryMainImageSection> {
+  bool _showOriginal = false;
+
+  @override
   Widget build(BuildContext context) {
+    final displayUrl = _showOriginal && widget.originalImagePath != null
+        ? widget.originalImagePath!
+        : widget.imageUrl;
+
     return ClipRRect(
-      borderRadius: BorderRadius.circular(isMaximized ? 0 : 16.r),
+      borderRadius: BorderRadius.circular(widget.isMaximized ? 0 : 16.r),
       child: Stack(
         children: [
           // Smart Lens Badge (Top Left)
-          if (!isMaximized)
+          if (!widget.isMaximized)
             PositionedDirectional(
               top: 12.h,
               start: 12.w,
               child: GestureDetector(
-                onTap: onSmartLensTap,
+                onTap: widget.onSmartLensTap,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20.r),
                   child: BackdropFilter(
@@ -77,7 +91,7 @@ class HistoryMainImageSection extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             height: double.infinity,
-            child: imageUrl.isEmpty
+            child: displayUrl.isEmpty
                 ? Container(
                     color: Colors.grey[200],
                     child: const Center(
@@ -85,8 +99,8 @@ class HistoryMainImageSection extends StatelessWidget {
                     ),
                   )
                 : Image.network(
-                    imageUrl,
-                    fit: isMaximized ? BoxFit.contain : BoxFit.cover,
+                    displayUrl,
+                    fit: widget.isMaximized ? BoxFit.contain : BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
                         color: Colors.grey[200],
@@ -99,11 +113,11 @@ class HistoryMainImageSection extends StatelessWidget {
           ),
 
           // Bookmark Save Icon (Top Right)
-          if (!isMaximized)
+          if (!widget.isMaximized)
             PositionedDirectional(
               top: 12.h,
               end: 12.w,
-              child: isSaved == null
+              child: widget.isSaved == null
                   ? SizedBox(
                       width: 24.w,
                       height: 24.w,
@@ -113,9 +127,9 @@ class HistoryMainImageSection extends StatelessWidget {
                       ),
                     )
                   : GestureDetector(
-                      onTap: onSaveTap,
+                      onTap: widget.onSaveTap,
                       child: SvgPicture.asset(
-                        isSaved! ? AppImages.withsaving : AppImages.withoutsaving,
+                        widget.isSaved! ? AppImages.withsaving : AppImages.withoutsaving,
                         width: 24.w,
                       ),
                     ),
@@ -123,10 +137,10 @@ class HistoryMainImageSection extends StatelessWidget {
 
           // زرار التحكم (تعديل الـ Padding عشان وقت اللاندسكيب ميزنوقش في الحافة)
           PositionedDirectional(
-            bottom: isMaximized ? 24.h : 12.h,
-            end: isMaximized ? 24.w : 12.w,
+            bottom: widget.isMaximized ? 24.h : 12.h,
+            end: widget.isMaximized ? 24.w : 12.w,
             child: GestureDetector(
-              onTap: onToggleMaximize,
+              onTap: widget.onToggleMaximize,
               child: Container(
                 padding: EdgeInsets.all(8.w),
                 decoration: BoxDecoration(
@@ -144,7 +158,7 @@ class HistoryMainImageSection extends StatelessWidget {
                   ],
                 ),
                 child: SvgPicture.asset(
-                  isMaximized
+                  widget.isMaximized
                       ? AppImages.minimizeimage
                       : AppImages.maximizeimage,
                   width: 20.w,
@@ -152,6 +166,23 @@ class HistoryMainImageSection extends StatelessWidget {
               ),
             ),
           ),
+          
+          // Switch image button (bottom-end, to the left of the maximize button)
+          if (widget.originalImagePath != null && widget.originalImagePath!.isNotEmpty)
+            PositionedDirectional(
+              bottom: widget.isMaximized ? 24.h : 12.h,
+              end: widget.isMaximized ? 64.w : 52.w,
+              child: GestureDetector(
+                onTapDown: (_) => setState(() => _showOriginal = true),
+                onTapUp: (_) => setState(() => _showOriginal = false),
+                onTapCancel: () => setState(() => _showOriginal = false),
+                child: SvgPicture.asset(
+                  AppImages.switchImageIcon,
+                  width: 28.w,
+                  height: 28.h,
+                ),
+              ),
+            ),
         ],
       ),
     );

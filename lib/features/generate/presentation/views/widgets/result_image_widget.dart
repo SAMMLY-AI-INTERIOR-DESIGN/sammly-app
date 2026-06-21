@@ -15,6 +15,7 @@ class ResultImageWidget extends StatefulWidget {
   final bool isNetworkImage;
   final VoidCallback? onSmartLensTap;
   final String? originalImagePath;
+  final bool showSammlyBadge;
 
   const ResultImageWidget({
     super.key,
@@ -22,6 +23,7 @@ class ResultImageWidget extends StatefulWidget {
     this.isNetworkImage = false,
     this.onSmartLensTap,
     this.originalImagePath,
+    this.showSammlyBadge = true,
   });
 
   @override
@@ -37,142 +39,194 @@ class _ResultImageWidgetState extends State<ResultImageWidget> {
         ? NetworkImage(widget.imagePath) as ImageProvider
         : AssetImage(widget.imagePath);
 
-    return Container(
-      width: double.infinity,
-      height: 400.h,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(16.r)),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(16.r),
-            child: widget.originalImagePath != null
-                ? Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Image(image: imageProvider, fit: BoxFit.fill),
-                      AnimatedOpacity(
-                        opacity: _showOriginal ? 1.0 : 0.0,
-                        duration: const Duration(milliseconds: 300),
-                        child: (widget.originalImagePath!.startsWith('http://') ||
-                                widget.originalImagePath!.startsWith('https://'))
-                            ? Image.network(
-                                widget.originalImagePath!,
-                                fit: BoxFit.fill,
-                              )
-                            : Image.file(
-                                File(widget.originalImagePath!),
-                                fit: BoxFit.fill,
-                              ),
-                      ),
-                    ],
-                  )
-                : Image(image: imageProvider, fit: BoxFit.fill),
-          ),
-          PositionedDirectional(
-            top: 16.h,
-            start: 16.w,
-            child: GestureDetector(
-              onTap: widget.onSmartLensTap,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20.r),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 12.w,
-                      vertical: 6.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(20.r),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.3),
-                        width: 1.5,
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(AppImages.smartLensIcon),
-                        SizedBox(width: 8.w),
-                        Text(
-                          S.of(context).smartLens,
-                          style: AppTextStyles.badge14SemiBold.copyWith(
-                            color: Colors.white,
-                            fontSize: 16.sp,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+    // Restyle/Mask mode: expand to original image's natural aspect ratio
+    final bool isExpandedMode = widget.originalImagePath != null;
+
+    if (isExpandedMode) {
+      return _buildExpandedImage(imageProvider);
+    } else {
+      return _buildLandscapeImage(imageProvider);
+    }
+  }
+
+  /// Landscape fixed-ratio layout for generate / full-home
+  Widget _buildLandscapeImage(ImageProvider imageProvider) {
+    return AspectRatio(
+      aspectRatio: 1216 / 832,
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(16.r)),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(16.r),
+              child: Image(image: imageProvider, fit: BoxFit.cover),
             ),
-          ),
-          PositionedDirectional(
-            bottom: 16.h,
-            start: 16.w,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20.r),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 12.w,
-                    vertical: 6.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.3),
-                      width: 1.5,
-                    ),
-                    borderRadius: BorderRadius.circular(20.r),
-                  ),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(
-                        AppImages.aiPoweredIcon,
-                        width: 16.w,
-                        height: 16.h,
-                        colorFilter: const ColorFilter.mode(
-                          AppColors.whiteColor,
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                      SizedBox(width: 4.w),
-                      Text(
-                        S.of(context).generatedBySammly,
-                        style: AppTextStyles.body16Medium.copyWith(
-                          color: AppColors.whiteColor,
-                          fontSize: 14.sp,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          if (widget.originalImagePath != null)
-            PositionedDirectional(
-              bottom: 16.h,
-              end: 16.w,
-              child: GestureDetector(
-                onTapDown: (_) => setState(() => _showOriginal = true),
-                onTapUp: (_) => setState(() => _showOriginal = false),
-                onTapCancel: () => setState(() => _showOriginal = false),
-                child: SvgPicture.asset(
-                  AppImages.switchImageIcon,
-                  width: 28.w,
-                  height: 28.h,
-                ),
-              ),
-            ),
-          // Maximize button removed as requested
-        ],
+            ..._buildOverlayWidgets(),
+          ],
+        ),
       ),
     );
+  }
+
+  /// Expanded layout for restyle / mask — shows image at its natural aspect ratio but reserves space
+  Widget _buildExpandedImage(ImageProvider imageProvider) {
+    return AspectRatio(
+      aspectRatio: 1216 / 832,
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(16.r)),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(16.r),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image(
+                    image: imageProvider,
+                    fit: BoxFit.contain,
+                  ),
+                  Positioned.fill(
+                    child: AnimatedOpacity(
+                      opacity: _showOriginal ? 1.0 : 0.0,
+                      duration: const Duration(milliseconds: 300),
+                      child: (widget.originalImagePath!.startsWith('http://') ||
+                              widget.originalImagePath!.startsWith('https://'))
+                          ? Image.network(
+                              widget.originalImagePath!,
+                              fit: BoxFit.contain,
+                            )
+                          : Image.file(
+                              File(widget.originalImagePath!),
+                              fit: BoxFit.contain,
+                            ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ..._buildOverlayWidgets(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Shared overlay widgets (Smart Lens, Generated by Sammly, switch button)
+  List<Widget> _buildOverlayWidgets() {
+    return [
+      // Smart Lens button (top-start)
+      PositionedDirectional(
+        top: 16.h,
+        start: 16.w,
+        child: GestureDetector(
+          onTap: widget.onSmartLensTap,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20.r),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 10.w,
+                  vertical: 4.h,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(20.r),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.3),
+                    width: 1.5,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    SvgPicture.asset(
+                      AppImages.smartLensIcon,
+                      width: 14.w,
+                      height: 14.h,
+                    ),
+                    SizedBox(width: 6.w),
+                    Text(
+                      S.of(context).smartLens,
+                      style: AppTextStyles.badge14SemiBold.copyWith(
+                        color: Colors.white,
+                        fontSize: 14.sp,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      // "Generated by Sammly" badge (bottom-start)
+      if (widget.showSammlyBadge)
+        PositionedDirectional(
+          bottom: 16.h,
+          start: 16.w,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20.r),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 10.w,
+                vertical: 4.h,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.2),
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: 0.3),
+                  width: 1.5,
+                ),
+                borderRadius: BorderRadius.circular(20.r),
+              ),
+              child: Row(
+                children: [
+                  SvgPicture.asset(
+                    AppImages.aiPoweredIcon,
+                    width: 14.w,
+                    height: 14.h,
+                    colorFilter: const ColorFilter.mode(
+                      AppColors.whiteColor,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                  SizedBox(width: 4.w),
+                  Text(
+                    S.of(context).generatedBySammly,
+                    style: AppTextStyles.body16Medium.copyWith(
+                      color: AppColors.whiteColor,
+                      fontSize: 12.sp,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+      // Switch image button (bottom-end) — only when original image exists
+      if (widget.originalImagePath != null)
+        PositionedDirectional(
+          bottom: 16.h,
+          end: 16.w,
+          child: GestureDetector(
+            onTapDown: (_) => setState(() => _showOriginal = true),
+            onTapUp: (_) => setState(() => _showOriginal = false),
+            onTapCancel: () => setState(() => _showOriginal = false),
+            child: SvgPicture.asset(
+              AppImages.switchImageIcon,
+              width: 28.w,
+              height: 28.h,
+            ),
+          ),
+        ),
+    ];
   }
 }
 

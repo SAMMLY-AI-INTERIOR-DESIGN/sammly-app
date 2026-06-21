@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_mask_painter/flutter_mask_painter.dart';
 import 'package:flutter_mask_painter/mask_painter_controller.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image/image.dart' as img;
 import 'package:sammly/core/utils/image_download_helper.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/generated/l10n.dart';
@@ -174,6 +176,22 @@ class _Step2MaskState extends State<Step2Mask> {
     try {
       final XFile? maskFile = await _controller.saveMask();
       if (maskFile != null) {
+        // Threshold the mask to ensure pure white (value 255) for the AI backend
+        final bytes = await maskFile.readAsBytes();
+        final image = img.decodeImage(bytes);
+        if (image != null) {
+          for (final p in image) {
+            if (p.r > 5 || p.g > 5 || p.b > 5) {
+              p.setRgba(255, 255, 255, 255);
+            } else {
+              p.setRgba(0, 0, 0, 255);
+            }
+          }
+          final processedBytes = img.encodePng(image);
+          final file = File(maskFile.path);
+          await file.writeAsBytes(processedBytes);
+        }
+        
         widget.onNext(maskFile);
       } else {
         if (!mounted) return;

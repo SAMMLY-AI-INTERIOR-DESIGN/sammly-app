@@ -156,7 +156,7 @@ class _RestyleViewState extends State<RestyleView> {
                               arguments: {
                                 'isRestyle': true,
                                 'style': _selectedStyle ?? '',
-                                'image_url': _isOriginalImage ? widget.initialImageUrl : _selectedImage?.path,
+                                'imageUrl': _isOriginalImage ? widget.initialImageUrl : _selectedImage?.path,
                                 'showListView': false,
                               },
                             );
