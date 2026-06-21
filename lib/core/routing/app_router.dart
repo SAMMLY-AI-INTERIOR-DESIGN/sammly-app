@@ -269,6 +269,8 @@ abstract class AppRouter {
             args?['originalImageUrl'] as String?; // Add this
         final isFromStepper = args?['isFromStepper'] as bool? ?? false;
         final operationMode = args?['operationMode'] as String?; // Add this
+        final style = args?['style'] as String?;
+        final room = args?['room'] as String?;
         return MaterialPageRoute(
           builder: (context) {
             return GenerateResultView(
@@ -279,6 +281,8 @@ abstract class AppRouter {
               originalImageUrl: originalImageUrl, // Add this
               isFromStepper: isFromStepper,
               operationMode: operationMode, // Pass this
+              style: style,
+              room: room,
             );
           },
         );

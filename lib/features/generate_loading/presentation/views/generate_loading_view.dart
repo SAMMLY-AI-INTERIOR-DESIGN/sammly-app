@@ -102,6 +102,8 @@ class GenerationLoadingWrapper extends StatelessWidget {
                         'originalImageUrl': arguments?['imageUrl'],
                         'isFromStepper': isFromStepper,
                         'operationMode': arguments?['operationMode'],
+                        'style': arguments?['style'],
+                        'room': arguments?['room'],
                       },
                     );
                 } else if (state is GenerationFailed) {

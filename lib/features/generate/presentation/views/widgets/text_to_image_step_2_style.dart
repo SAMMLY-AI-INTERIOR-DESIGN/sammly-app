@@ -29,14 +29,14 @@ class TextToImageStep2Style extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<Map<String, String>> styles = [
       {
-        'name': S.of(context).traditional,
-        'image': AppImages.styleTraditional,
+        'name': S.of(context).midCenturyModern,
+        'image': AppImages.styleMidCentury,
       },
       {'name': S.of(context).rustic, 'image': AppImages.styleRustic},
       {'name': S.of(context).coastal, 'image': AppImages.styleCoastal},
       {
-        'name': S.of(context).midCenturyModern,
-        'image': AppImages.styleMidCentury,
+        'name': S.of(context).traditional,
+        'image': AppImages.styleTraditional,
       },
       {
         'name': S.of(context).boho,

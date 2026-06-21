@@ -21,6 +21,7 @@ import 'package:sammly/features/smart_lens/data/repo/search_repo.dart';
 import 'package:sammly/features/smart_lens/presentation/widgets/smart_lens_bottom_sheet.dart';
 import 'package:sammly/features/Explore/cubit/design_details_cubit.dart';
 import 'package:sammly/features/Explore/cubit/design_details_states.dart';
+import 'package:sammly/features/generate/data/model/generate_mappers.dart';
 import 'package:sammly/generated/l10n.dart';
 
 class GenerateResultView extends StatefulWidget {
@@ -31,6 +32,8 @@ class GenerateResultView extends StatefulWidget {
   final String? originalImageUrl;
   final bool isFromStepper;
   final String? operationMode;
+  final String? style;
+  final String? room;
 
   const GenerateResultView({
     super.key,
@@ -41,6 +44,8 @@ class GenerateResultView extends StatefulWidget {
     this.originalImageUrl,
     this.isFromStepper = false,
     this.operationMode,
+    this.style,
+    this.room,
   });
 
   @override
@@ -202,6 +207,27 @@ class _GenerateResultViewState extends State<GenerateResultView> {
     }
   }
 
+  String _buildAppBarTitle(BuildContext context) {
+    if (widget.isFromStepper && widget.operationMode != null) {
+      return _getOperationModeTitle(context, widget.operationMode!);
+    }
+    if (widget.style != null &&
+        widget.style!.isNotEmpty &&
+        widget.room != null &&
+        widget.room!.isNotEmpty) {
+      final styleText = GenerateMappers.styleToUi(widget.style!);
+      final roomText = GenerateMappers.roomToUi(widget.room!);
+      
+      // Try to construct a nice title, e.g., "Bohemian Bedroom"
+      // You might need to handle RTL languages differently if necessary
+      return '$styleText $roomText';
+    }
+    if (widget.showListView) {
+      return S.of(context).yourGeneratedDesign;
+    }
+    return S.of(context).modernLivingRoom;
+  }
+
   @override
   void dispose() {
     _searchCubit.close();
@@ -244,11 +270,7 @@ class _GenerateResultViewState extends State<GenerateResultView> {
           return Scaffold(
             backgroundColor: AppColors.whiteColor,
             appBar: GenerateResultsAppBar(
-              title: widget.isFromStepper && widget.operationMode != null
-                  ? _getOperationModeTitle(context, widget.operationMode!)
-                  : widget.showListView
-                      ? S.of(context).yourGeneratedDesign
-                      : S.of(context).modernLivingRoom,
+              title: _buildAppBarTitle(context),
               subtitle: S.of(context).generatedBySammly,
               onShareAction: _shareImage,
               onBack: () {
@@ -268,7 +290,8 @@ class _GenerateResultViewState extends State<GenerateResultView> {
                       imagePath: _selectedImage,
                       isNetworkImage: _isNetworkImage,
                       onSmartLensTap: () => _openSmartLens(context),
-                      originalImagePath: widget.isFromStepper ? null : widget.originalImageUrl,
+                      originalImagePath: widget.originalImageUrl,
+                      showSammlyBadge: !widget.isFromStepper,
                     ),
                     SizedBox(height: 16.h),
                     if (widget.showListView) ...[
