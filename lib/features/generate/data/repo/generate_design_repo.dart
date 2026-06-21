@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-
 import 'package:sammly/core/networking/api_constants.dart';
 import 'package:sammly/core/networking/dio_helper.dart';
 import 'package:sammly/core/shared_pref/shared_pref.dart';
@@ -159,7 +158,6 @@ class GenerateDesignRepo {
       final Map<String, dynamic> requestData = {
         'style': style,
         'image_url': processedImageUrl,
-        // 'imageUrl': processedImageUrl,
       };
 
       final response = await DioHelper.postData(
