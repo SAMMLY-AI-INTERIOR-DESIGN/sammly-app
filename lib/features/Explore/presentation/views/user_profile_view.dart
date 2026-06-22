@@ -136,8 +136,11 @@ class _UserProfileViewState extends State<UserProfileView> {
                                           itemCount: userDesigns.length,
                                           itemBuilder: (context, index) {
                                             final design = userDesigns[index];
+                                            final styleText = design.style;
+                                            final roomText = design.room;
+                                            final combinedTitle = '$styleText $roomText'.trim();
                                             final item = SharedImageModel(
-                                              title: S.of(context).sharedDesign,
+                                              title: combinedTitle.isEmpty ? S.of(context).sharedDesign : combinedTitle,
                                               description: design.prompt,
                                               imageUrl: design.imageUrl,
                                               likes: design.likesCount,
