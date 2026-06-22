@@ -34,6 +34,8 @@ class ExploreDesignModel {
   final String sharedAt;
   final bool isLiked;
   final bool isFavorited;
+  final String? style;
+  final String? room;
 
   ExploreDesignModel({
     required this.id,
@@ -45,6 +47,8 @@ class ExploreDesignModel {
     required this.sharedAt,
     required this.isLiked,
     required this.isFavorited,
+    this.style,
+    this.room,
   });
 
   factory ExploreDesignModel.fromJson(Map<String, dynamic> json) {
@@ -58,6 +62,8 @@ class ExploreDesignModel {
       sharedAt: json['sharedAt'] ?? '',
       isLiked: json['isLiked'] ?? false,
       isFavorited: json['isFavorited'] ?? false,
+      style: json['style']?.toString(),
+      room: json['room']?.toString(),
     );
   }
 
@@ -73,6 +79,8 @@ class ExploreDesignModel {
       sharedAt: sharedAt,
       isLiked: isLiked ?? this.isLiked,
       isFavorited: isFavorited ?? this.isFavorited,
+      style: style ?? this.style,
+      room: room ?? this.room,
     );
   }
 }
