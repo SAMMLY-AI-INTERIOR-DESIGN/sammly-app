@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -11,6 +12,7 @@ import 'package:sammly/features/profile/presentation/views/widgets/invite_friend
 import 'package:sammly/features/profile/presentation/views/widgets/logout_bottom_sheet.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/profile_menu_group.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/profile_menu_item.dart';
+import 'package:sammly/core/shared_pref/shared_pref.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_state.dart';
@@ -144,7 +146,12 @@ class _ProfileViewState extends State<ProfileView> {
                               onTap: () {
                                 Navigator.pushNamed(
                                   context,
-                                  AppRoutes.myProfileView,
+                                  AppRoutes.userProfileView,
+                                  arguments: {
+                                    'userName': displayName ?? 'User',
+                                    'userAvatar': displayAvatar,
+                                    'userId': profile?.id ?? SharedPref.getData(key: 'userId') ?? _getUserIdFromJwt() ?? '',
+                                  },
                                 );
                               },
                               child: Row(
@@ -270,7 +277,24 @@ class _ProfileViewState extends State<ProfileView> {
                         title: S.of(context).viewMyPosts,
                         svgIcon: AppImages.profileIcon,
                         onTap: () {
-                          Navigator.pushNamed(context, AppRoutes.myProfileView);
+                          final cubit = context.read<ProfileCubit>();
+                          final settingInfo = cubit.currentSettingInfo;
+                          final profile = cubit.currentProfile;
+                          final displayName =
+                              settingInfo?.name ?? profile?.name ?? 'User';
+                          final displayAvatar =
+                              settingInfo?.avatar ?? profile?.avatar;
+                          final userId = profile?.id ?? SharedPref.getData(key: 'userId') ?? _getUserIdFromJwt() ?? '';
+
+                          Navigator.pushNamed(
+                            context,
+                            AppRoutes.userProfileView,
+                            arguments: {
+                              'userName': displayName,
+                              'userAvatar': displayAvatar,
+                              'userId': userId,
+                            },
+                          );
                         },
                       ),
                       ProfileMenuItem(
@@ -438,4 +462,20 @@ class _ProfileViewState extends State<ProfileView> {
       ),
     );
   }
+}
+
+String? _getUserIdFromJwt() {
+  try {
+    final token = SharedPref.getData(key: 'jwt');
+    if (token != null) {
+      final parts = token.split('.');
+      if (parts.length == 3) {
+        final payloadStr = utf8.decode(base64Url.decode(base64Url.normalize(parts[1])));
+        final payload = jsonDecode(payloadStr);
+        final id = payload['id']?.toString() ?? payload['userId']?.toString() ?? payload['_id']?.toString();
+        if (id != null && id.isNotEmpty) return id;
+      }
+    }
+  } catch (_) {}
+  return null;
 }
