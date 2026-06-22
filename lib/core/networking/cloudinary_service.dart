@@ -4,10 +4,12 @@ import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class CloudinaryService {
-  static const String cloudName = '***REMOVED***';
-  static const String apiKey = '***REMOVED***';
-  static const String apiSecret = '***REMOVED***';
+  static String get cloudName => dotenv.env['CLOUDINARY_CLOUD_NAME'] ?? '***REMOVED***';
+  static String get apiKey => dotenv.env['CLOUDINARY_API_KEY'] ?? '***REMOVED***';
+  static String get apiSecret => dotenv.env['CLOUDINARY_API_SECRET'] ?? '***REMOVED***';
 
   /// Uploads an image file directly to Cloudinary using a signed request
   /// and returns the secure URL of the uploaded image.
