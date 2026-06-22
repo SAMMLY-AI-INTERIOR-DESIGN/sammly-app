@@ -156,18 +156,21 @@ class _SignUpVerificationViewState extends State<SignUpVerificationView> {
                 SizedBox(height: 40.h),
 
                 // 4. حقول إدخال الكود باستخدام Pinput
-                Pinput(
-                  length: 6,
-                  controller: _pinController,
-                  defaultPinTheme: defaultPinTheme,
-                  focusedPinTheme:
-                      activePinTheme, // الإطار بيزرق وإنت واقف عليه
-                  submittedPinTheme:
-                      activePinTheme, // الإطار بيفضل أزرق بعد ما تكتب الرقم (زي صورة فيجما بالظبط)
-                  keyboardType: TextInputType.number,
-                  onCompleted: (pin) {
-                    debugPrint("OTP Entered: $pin");
-                  },
+                Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: Pinput(
+                    length: 6,
+                    controller: _pinController,
+                    defaultPinTheme: defaultPinTheme,
+                    focusedPinTheme:
+                        activePinTheme, // الإطار بيزرق وإنت واقف عليه
+                    submittedPinTheme:
+                        activePinTheme, // الإطار بيفضل أزرق بعد ما تكتب الرقم (زي صورة فيجما بالظبط)
+                    keyboardType: TextInputType.number,
+                    onCompleted: (pin) {
+                      debugPrint("OTP Entered: $pin");
+                    },
+                  ),
                 ),
                 SizedBox(height: 40.h),
 

@@ -346,6 +346,7 @@ class _SharedDesignsViewState extends State<SharedDesignsView>
 
           return CustomScrollView(
             controller: _scrollController,
+            cacheExtent: 9999,
             physics: const BouncingScrollPhysics(),
             slivers: [
               SliverPadding(

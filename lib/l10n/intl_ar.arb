@@ -286,5 +286,12 @@
   "replacementCompleted": "اكتمل الاستبدال",
   "editCompleted": "اكتمل التعديل",
   "objectRemoved": "تمت إزالة العنصر",
-  "editImage": "تعديل الصورة"
+  "editImage": "تعديل الصورة",
+  "historyTypeGenerateDesign": "توليد تصميم",
+  "historyTypeRestyleDesign": "تعديل نمط التصميم",
+  "historyTypeFullHome": "منزل كامل",
+  "historyTypeMaskEdit": "تعديل الجزء",
+  "historyTypeMaskReplace": "استبدال الجزء",
+  "historyTypeMaskRemove": "إزالة الجزء",
+  "historyTypeDefault": "تصميم"
 }

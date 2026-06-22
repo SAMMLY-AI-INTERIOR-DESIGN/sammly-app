@@ -216,6 +216,21 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "greetingPrefix": MessageLookupByLibrary.simpleMessage("Welcome,"),
     "history": MessageLookupByLibrary.simpleMessage("History"),
+    "historyTypeDefault": MessageLookupByLibrary.simpleMessage("Design"),
+    "historyTypeFullHome": MessageLookupByLibrary.simpleMessage("Full Home"),
+    "historyTypeGenerateDesign": MessageLookupByLibrary.simpleMessage(
+      "Generate Design",
+    ),
+    "historyTypeMaskEdit": MessageLookupByLibrary.simpleMessage("Mask Edit"),
+    "historyTypeMaskRemove": MessageLookupByLibrary.simpleMessage(
+      "Mask Remove",
+    ),
+    "historyTypeMaskReplace": MessageLookupByLibrary.simpleMessage(
+      "Mask Replace",
+    ),
+    "historyTypeRestyleDesign": MessageLookupByLibrary.simpleMessage(
+      "Restyle Design",
+    ),
     "home": MessageLookupByLibrary.simpleMessage("Home"),
     "iAgreeToAll": MessageLookupByLibrary.simpleMessage("I agree to all the "),
     "imageSavedSuccess": MessageLookupByLibrary.simpleMessage(

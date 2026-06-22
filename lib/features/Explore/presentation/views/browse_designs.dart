@@ -269,6 +269,7 @@ class _BrowseDesignsState extends State<BrowseDesigns> {
 
           return CustomScrollView(
             controller: _scrollController,
+            cacheExtent: 9999,
             physics: const BouncingScrollPhysics(),
             slivers: [
               SliverPadding(

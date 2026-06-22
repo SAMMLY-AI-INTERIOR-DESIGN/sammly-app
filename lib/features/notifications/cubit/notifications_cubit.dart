@@ -21,19 +21,33 @@ class NotificationsCubit extends Cubit<NotificationsState> {
   List<NotificationItemModel> notifications = [];
   int _currentPage = 1;
   bool _hasMore = true;
+  bool _isLoading = false;
+
+  /// Resets all in-memory notification state (used on logout).
+  void reset() {
+    notifications.clear();
+    _currentPage = 1;
+    _hasMore = true;
+    _isLoading = false;
+    emit(NotificationsInitial());
+  }
 
   Future<void> getNotifications({bool loadMore = false}) async {
+    if (_isLoading) return;
     if (!loadMore) {
       if (isClosed) return;
+      _isLoading = true;
       emit(GetNotificationsLoading());
       _currentPage = 1;
       notifications.clear();
       _hasMore = true;
     } else {
       if (!_hasMore) return;
+      _isLoading = true;
     }
 
     final result = await _repo.getNotifications(page: _currentPage);
+    _isLoading = false;
     if (isClosed) return;
     result.fold((error) => emit(GetNotificationsFailure(error)), (response) {
       if (!loadMore) {

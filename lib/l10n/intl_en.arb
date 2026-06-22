@@ -285,5 +285,12 @@
   "replacementCompleted": "Replacement Completed",
   "editCompleted": "Edit Completed",
   "objectRemoved": "Object Removed",
-  "editImage": "Edit image"
+  "editImage": "Edit image",
+  "historyTypeGenerateDesign": "Generate Design",
+  "historyTypeRestyleDesign": "Restyle Design",
+  "historyTypeFullHome": "Full Home",
+  "historyTypeMaskEdit": "Mask Edit",
+  "historyTypeMaskReplace": "Mask Replace",
+  "historyTypeMaskRemove": "Mask Remove",
+  "historyTypeDefault": "Design"
 }
