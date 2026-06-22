@@ -97,6 +97,7 @@ class _FavoriteGridViewState extends State<FavoriteGridView> {
 
           return MasonryGridView.builder(
             controller: _scrollController,
+            cacheExtent: 9999,
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
             gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,

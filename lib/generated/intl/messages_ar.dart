@@ -206,6 +206,21 @@ class MessageLookup extends MessageLookupByLibrary {
     "greatForStarters": MessageLookupByLibrary.simpleMessage("رائع للبدايات"),
     "greetingPrefix": MessageLookupByLibrary.simpleMessage("مرحباً،"),
     "history": MessageLookupByLibrary.simpleMessage("السجل"),
+    "historyTypeDefault": MessageLookupByLibrary.simpleMessage("تصميم"),
+    "historyTypeFullHome": MessageLookupByLibrary.simpleMessage("منزل كامل"),
+    "historyTypeGenerateDesign": MessageLookupByLibrary.simpleMessage(
+      "توليد تصميم",
+    ),
+    "historyTypeMaskEdit": MessageLookupByLibrary.simpleMessage("تعديل الجزء"),
+    "historyTypeMaskRemove": MessageLookupByLibrary.simpleMessage(
+      "إزالة الجزء",
+    ),
+    "historyTypeMaskReplace": MessageLookupByLibrary.simpleMessage(
+      "استبدال الجزء",
+    ),
+    "historyTypeRestyleDesign": MessageLookupByLibrary.simpleMessage(
+      "تعديل نمط التصميم",
+    ),
     "home": MessageLookupByLibrary.simpleMessage("الرئيسية"),
     "iAgreeToAll": MessageLookupByLibrary.simpleMessage("أوافق على جميع "),
     "imageSavedSuccess": MessageLookupByLibrary.simpleMessage(

@@ -2411,6 +2411,76 @@ class S {
   String get editImage {
     return Intl.message('Edit image', name: 'editImage', desc: '', args: []);
   }
+
+  /// `Generate Design`
+  String get historyTypeGenerateDesign {
+    return Intl.message(
+      'Generate Design',
+      name: 'historyTypeGenerateDesign',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Restyle Design`
+  String get historyTypeRestyleDesign {
+    return Intl.message(
+      'Restyle Design',
+      name: 'historyTypeRestyleDesign',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Full Home`
+  String get historyTypeFullHome {
+    return Intl.message(
+      'Full Home',
+      name: 'historyTypeFullHome',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mask Edit`
+  String get historyTypeMaskEdit {
+    return Intl.message(
+      'Mask Edit',
+      name: 'historyTypeMaskEdit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mask Replace`
+  String get historyTypeMaskReplace {
+    return Intl.message(
+      'Mask Replace',
+      name: 'historyTypeMaskReplace',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mask Remove`
+  String get historyTypeMaskRemove {
+    return Intl.message(
+      'Mask Remove',
+      name: 'historyTypeMaskRemove',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Design`
+  String get historyTypeDefault {
+    return Intl.message(
+      'Design',
+      name: 'historyTypeDefault',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

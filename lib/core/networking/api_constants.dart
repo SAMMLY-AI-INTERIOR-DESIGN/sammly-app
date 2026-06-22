@@ -64,4 +64,8 @@ abstract class ApiConstants {
   // Smart Lens search endpoint
   static String searchDesign(String designId) =>
       '/api/designs/search/$designId';
+
+  // Payment / Subscription endpoints
+  static const String claimPackage = '/api/payment/under-updating';
+  static const String getPackages = '/api/payment/packages';
 }

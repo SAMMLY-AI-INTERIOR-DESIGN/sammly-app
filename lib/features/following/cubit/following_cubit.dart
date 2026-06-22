@@ -20,19 +20,33 @@ class FollowingCubit extends Cubit<FollowingState> {
   List<FollowingModel> followings = [];
   int _currentPage = 1;
   bool _hasMore = true;
+  bool _isLoading = false;
+
+  /// Resets all in-memory following state (used on logout).
+  void reset() {
+    followings.clear();
+    _currentPage = 1;
+    _hasMore = true;
+    _isLoading = false;
+    emit(FollowingInitial());
+  }
 
   Future<void> getFollowings({bool loadMore = false}) async {
+    if (_isLoading) return;
     if (!loadMore) {
       if (isClosed) return;
+      _isLoading = true;
       emit(GetFollowingsLoading());
       _currentPage = 1;
       followings.clear();
       _hasMore = true;
     } else {
       if (!_hasMore) return;
+      _isLoading = true;
     }
 
     final result = await _repo.getFollowings(page: _currentPage);
+    _isLoading = false;
     if (isClosed) return;
     result.fold((error) => emit(GetFollowingsFailure(error)), (response) {
       if (!loadMore) {

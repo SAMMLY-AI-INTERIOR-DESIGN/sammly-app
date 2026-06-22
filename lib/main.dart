@@ -82,6 +82,17 @@ class SammlyApp extends StatelessWidget {
                 initialRoute: AppRoutes.splashView,
                 onGenerateRoute: AppRouter.generateRoute,
                 debugShowCheckedModeBanner: false,
+                builder: (context, child) {
+                  final mediaQueryData = MediaQuery.of(context);
+                  return MediaQuery(
+                    data: mediaQueryData.copyWith(
+                      textScaler: mediaQueryData.textScaler.clamp(
+                        maxScaleFactor: 1.2,
+                      ),
+                    ),
+                    child: child!,
+                  );
+                },
                 onGenerateTitle: (context) => S.of(context).appname,
                 localizationsDelegates: const [
                   S.delegate,

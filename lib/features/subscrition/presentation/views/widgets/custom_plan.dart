@@ -16,6 +16,7 @@ class CustomPlan extends StatelessWidget {
   final Color? borderColor;
   final bool isFree;
   final bool isSelected;
+  final bool isLoading;
   final VoidCallback? onTap;
 
   const CustomPlan({
@@ -32,6 +33,7 @@ class CustomPlan extends StatelessWidget {
     this.borderColor,
     this.isFree = false,
     this.isSelected = false,
+    this.isLoading = false,
     this.onTap,
   });
 
@@ -182,18 +184,30 @@ class CustomPlan extends StatelessWidget {
 
                 // بوكس السعر أو كلمة Free (الجانب الأيمن)
                 if (isFree)
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12.w),
-                    child: Text(
-                      price,
-                      style: TextStyle(
-                        color: primaryColor,
-                        fontSize: 22.sp,
-                        fontFamily: 'Manrope',
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  )
+                  isLoading
+                      ? Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12.w),
+                          child: SizedBox(
+                            width: 24.w,
+                            height: 24.w,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.5,
+                              color: primaryColor,
+                            ),
+                          ),
+                        )
+                      : Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12.w),
+                          child: Text(
+                            price,
+                            style: TextStyle(
+                              color: primaryColor,
+                              fontSize: 22.sp,
+                              fontFamily: 'Manrope',
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        )
                 else
                   Container(
                     padding: EdgeInsets.symmetric(

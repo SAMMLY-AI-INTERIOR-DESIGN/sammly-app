@@ -141,20 +141,20 @@ class _HistoryViewState extends State<HistoryView> {
                   final item = displayDesigns[index];
 
                   String formatGenerationType(String? type) {
-                    if (type == null) return 'Design';
+                    if (type == null || type.isEmpty) return S.of(context).historyTypeDefault;
                     switch (type) {
                       case 'generate_design':
-                        return 'Generate Design';
+                        return S.of(context).historyTypeGenerateDesign;
                       case 'restyle_design':
-                        return 'Restyle Design';
+                        return S.of(context).historyTypeRestyleDesign;
                       case 'full_home':
-                        return 'Full Home';
+                        return S.of(context).historyTypeFullHome;
                       case 'mask_edit':
-                        return 'Mask Edit';
+                        return S.of(context).historyTypeMaskEdit;
                       case 'mask_replace':
-                        return 'Mask Replace';
+                        return S.of(context).historyTypeMaskReplace;
                       case 'mask_remove':
-                        return 'Mask Remove';
+                        return S.of(context).historyTypeMaskRemove;
                       default:
                         return type.replaceAll('_', ' ').replaceFirst(
                               type[0],

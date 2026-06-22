@@ -101,6 +101,7 @@ abstract class DioHelper {
 
   static Future<Response> getData({
     required String endPoint,
+    dynamic data,
     Map<String, dynamic>? queryParameters,
     String? token,
     Duration? receiveTimeout,
@@ -118,6 +119,7 @@ abstract class DioHelper {
       try {
         return await dio.get(
           endPoint,
+          data: data,
           queryParameters: queryParameters,
           options: options,
         );
