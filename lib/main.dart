@@ -27,12 +27,14 @@ import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart'
 import 'package:sammly/features/favorite/data/repo/favorite_repo.dart';
 import 'package:sammly/core/localization/locale_cubit.dart';
 import 'package:sammly/generated/l10n.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   // WidgetsFlutterBinding.ensureInitialized();
   // Initialize networking and local storage
+  await dotenv.load(fileName: ".env");
   DioHelper.init();
   await SharedPref.init();
 

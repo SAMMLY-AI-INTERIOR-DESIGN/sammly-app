@@ -470,7 +470,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "sharedImages": MessageLookupByLibrary.simpleMessage("الصور المُشارَكة"),
     "signUp": MessageLookupByLibrary.simpleMessage("إنشاء حساب"),
     "signUpTitle": MessageLookupByLibrary.simpleMessage("إنشاء حساب"),
-    "similarItems": MessageLookupByLibrary.simpleMessage("عناصر مشابهة"),
+    "similarItems": MessageLookupByLibrary.simpleMessage("العناصر المتشابهة"),
     "skip": MessageLookupByLibrary.simpleMessage("تخطي"),
     "smartLens": MessageLookupByLibrary.simpleMessage("العدسة الذكية"),
     "startGenerateBtn": MessageLookupByLibrary.simpleMessage("بدء الإنشاء"),
