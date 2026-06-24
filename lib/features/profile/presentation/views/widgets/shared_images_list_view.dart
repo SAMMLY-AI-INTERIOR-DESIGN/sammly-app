@@ -5,8 +5,10 @@ import 'package:sammly/core/shared_pref/shared_pref.dart';
 import 'package:sammly/features/Explore/cubit/design_details_cubit.dart';
 import 'package:sammly/features/Explore/cubit/design_details_repo.dart';
 import 'package:sammly/features/Explore/cubit/design_details_states.dart';
-import 'package:sammly/features/History/presentation/views/historydetails.dart';
+import 'package:sammly/features/Explore/data/exploremodel.dart';
+import 'package:sammly/features/Explore/presentation/views/shared_design_details_view.dart';
 import 'package:sammly/features/profile/data/models/shared_images_model.dart';
+import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/shared_image_card.dart';
 
 class SharedImagesListView extends StatefulWidget {
@@ -81,13 +83,24 @@ class _SharedImagesListViewState extends State<SharedImagesListView> {
 
                 return GestureDetector(
                   onTap: () {
+                    final profile = context.read<ProfileCubit>().currentProfile;
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => HistoryDetailsView(
-                          title: item.title,
-                          imageUrl: item.imageUrl,
-                          designId: design.id,
+                        builder: (context) => SharedDesignDetailsView(
+                          exploreDesign: ExploreDesignModel(
+                            id: design.id,
+                            name: profile?.name ?? '',
+                            avatar: profile?.avatar ?? '',
+                            likesCount: design.likesCount,
+                            prompt: design.prompt,
+                            imageUrl: design.imageUrl,
+                            sharedAt: design.sharedAt ?? '',
+                            isLiked: design.isLiked,
+                            isFavorited: design.isFavorited,
+                            style: design.style,
+                            room: design.room,
+                          ),
                         ),
                       ),
                     );

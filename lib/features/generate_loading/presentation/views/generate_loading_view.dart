@@ -12,6 +12,8 @@ import 'package:sammly/features/generate_loading/presentation/cubits/loading_cub
 import 'package:sammly/features/generate_loading/presentation/cubits/loading_states.dart';
 import 'package:sammly/features/home/logic/home_cubit.dart';
 import 'package:sammly/generated/l10n.dart';
+import 'package:sammly/core/widgets/not_enough_tokens_dialog.dart';
+import 'package:sammly/main.dart';
 
 class GenerationLoadingWrapper extends StatelessWidget {
   final Map<String, dynamic>? arguments;
@@ -107,12 +109,26 @@ class GenerationLoadingWrapper extends StatelessWidget {
                       },
                     );
                 } else if (state is GenerationFailed) {
-                  showCustomSnackBar(
-                    context: context,
-                    message: state.errorMsg,
-                    isError: true,
-                  );
-                  Navigator.pop(context);
+                  Navigator.pop(context); // Pop the loading screen
+                  
+                  // If it's a token error, show the dialog instead of snackbar
+                  if (state.errorMsg == 'Not enough tokens' || 
+                      state.errorMsg == 'لا تملك رصيد كافٍ من التوكنز') {
+                    final currentContext = navigatorKey.currentContext;
+                    if (currentContext != null) {
+                      showDialog(
+                        context: currentContext,
+                        builder: (_) => const NotEnoughTokensDialog(),
+                      );
+                    }
+                  } else {
+                    // Normal error snackbar
+                    showCustomSnackBar(
+                      context: context,
+                      message: state.errorMsg,
+                      isError: true,
+                    );
+                  }
                 }
               },
               builder: (context, state) {

@@ -209,7 +209,7 @@ class AppImages {
       switch (styleKey) {
         case 'boho': return styleBoho;
         case 'coastal': return styleCoastal;
-        case 'modern': return styleMidCentury;
+        case 'modern': return modern_bedroom;
         case 'rustic': return styleRustic;
         case 'trad': return styleTraditional;
         default: return styleBoho;

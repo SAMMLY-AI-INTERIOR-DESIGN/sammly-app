@@ -538,11 +538,18 @@ class MessageLookup extends MessageLookupByLibrary {
       "By accessing and using this application, you agree to follow the terms and conditions outlined below\n\nUsers are responsible for the content they create or share within the app.\n\nAny harmful, illegal, or inappropriate use of the application is strictly prohibited.\n\nThe app is intended for personal and non-commercial use only.\n\nWe reserve the right to update or modify these terms at any time without prior notice.\n\nContinued use of the application means that you accept any changes made to these terms.",
     ),
     "tokens": MessageLookupByLibrary.simpleMessage("Tokens"),
+    "tokensAreNotEnough": MessageLookupByLibrary.simpleMessage(
+      "Tokens are Not Enough",
+    ),
     "traditional": MessageLookupByLibrary.simpleMessage("Traditional"),
     "type": MessageLookupByLibrary.simpleMessage("Type"),
     "unfollow": MessageLookupByLibrary.simpleMessage("Unfollow"),
     "update": MessageLookupByLibrary.simpleMessage("Update"),
+    "upgrade": MessageLookupByLibrary.simpleMessage("Upgrade"),
     "upgradePro": MessageLookupByLibrary.simpleMessage("Upgrade PRO"),
+    "upgradeToContinue": MessageLookupByLibrary.simpleMessage(
+      ".Upgrade to continue creating more designs.",
+    ),
     "upload": MessageLookupByLibrary.simpleMessage("Upload"),
     "uploadImage": MessageLookupByLibrary.simpleMessage("Upload Image"),
     "uploadReferenceImage": MessageLookupByLibrary.simpleMessage(

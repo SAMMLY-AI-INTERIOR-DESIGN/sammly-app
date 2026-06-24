@@ -8,7 +8,8 @@ import 'package:sammly/core/widgets/avatar_widget.dart';
 import 'package:sammly/features/Explore/cubit/public_profile_cubit.dart';
 import 'package:sammly/features/Explore/cubit/public_profile_state.dart';
 import 'package:sammly/features/Explore/cubit/public_profile_repo.dart';
-import 'package:sammly/features/History/presentation/views/historydetails.dart';
+import 'package:sammly/features/Explore/data/exploremodel.dart';
+import 'package:sammly/features/Explore/presentation/views/shared_design_details_view.dart';
 import 'package:sammly/features/following/cubit/following_cubit.dart';
 import 'package:sammly/features/following/cubit/following_states.dart';
 import 'package:sammly/features/following/data/repo/following_repo.dart';
@@ -153,10 +154,20 @@ class _UserProfileViewState extends State<UserProfileView> {
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) =>
-                                                        HistoryDetailsView(
-                                                      title: item.title,
-                                                      imageUrl: item.imageUrl,
-                                                      designId: design.id,
+                                                        SharedDesignDetailsView(
+                                                      exploreDesign: ExploreDesignModel(
+                                                        id: design.id,
+                                                        name: profileData.profile.name,
+                                                        avatar: profileData.profile.avatar,
+                                                        likesCount: design.likesCount,
+                                                        prompt: design.prompt,
+                                                        imageUrl: design.imageUrl,
+                                                        sharedAt: design.sharedAt ?? '',
+                                                        isLiked: design.isLiked,
+                                                        isFavorited: design.isFavorited,
+                                                        style: design.style,
+                                                        room: design.room,
+                                                      ),
                                                     ),
                                                   ),
                                                 );

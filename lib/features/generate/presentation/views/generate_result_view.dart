@@ -140,38 +140,13 @@ class _GenerateResultViewState extends State<GenerateResultView> {
         return;
       }
 
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Text(S.of(context).downloadingImage),
-              ],
-            ),
-            duration: const Duration(seconds: 2),
-            backgroundColor: AppColors.primaryColor,
-          ),
-        );
+      // Start sharing the image
 
       final response = await http.get(Uri.parse(_selectedImage));
       if (response.statusCode == 200) {
         final tempDir = await getTemporaryDirectory();
         final file = File('${tempDir.path}/shared_design.png');
         await file.writeAsBytes(response.bodyBytes);
-
-        if (mounted) {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        }
 
         await Share.shareXFiles(
           [XFile(file.path)],

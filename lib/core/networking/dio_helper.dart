@@ -32,18 +32,38 @@ abstract class DioHelper {
               e.type == DioExceptionType.sendTimeout ||
               e.type == DioExceptionType.receiveTimeout ||
               e.type == DioExceptionType.connectionError) {
-            // Double check internet access
-            bool hasInternet = await InternetConnection().hasInternetAccess;
+            
+            // Prevent multiple concurrent checks from pushing multiple screens
+            if (!NoInternetView.isShowing) {
+              NoInternetView.isShowing = true; // Acquire lock immediately
 
-            if (!hasInternet) {
-              final BuildContext? context = navigatorKey.currentContext;
-              if (context != null && context.mounted) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const NoInternetView(),
-                  ),
-                );
+              // Double check internet access
+              bool hasInternet = await InternetConnection().hasInternetAccess;
+
+              if (!hasInternet) {
+                final BuildContext? context = navigatorKey.currentContext;
+                if (context != null && context.mounted) {
+                  // Check if it's an Auth API request
+                  final isAuthRequest = e.requestOptions.path.contains('/api/auth/');
+
+                  if (isAuthRequest) {
+                    // Do nothing here for Auth requests. Let the Cubit show its default "Server failed connection" snackbar.
+                    NoInternetView.isShowing = false;
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const NoInternetView(),
+                      ),
+                    ).then((_) {
+                      NoInternetView.isShowing = false;
+                    });
+                  }
+                } else {
+                  NoInternetView.isShowing = false;
+                }
+              } else {
+                NoInternetView.isShowing = false;
               }
             }
           }

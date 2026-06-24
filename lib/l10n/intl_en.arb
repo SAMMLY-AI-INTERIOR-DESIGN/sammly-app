@@ -292,5 +292,8 @@
   "historyTypeMaskEdit": "Mask Edit",
   "historyTypeMaskReplace": "Mask Replace",
   "historyTypeMaskRemove": "Mask Remove",
-  "historyTypeDefault": "Design"
+  "historyTypeDefault": "Design",
+  "tokensAreNotEnough": "Tokens are Not Enough",
+  "upgradeToContinue": ".Upgrade to continue creating more designs.",
+  "upgrade": "Upgrade"
 }

@@ -15,6 +15,7 @@ import 'package:sammly/features/Explore/data/design_details_model.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_state.dart';
 import 'package:sammly/features/Explore/cubit/static_designs_cubit.dart';
+import 'package:sammly/features/generate/data/model/generate_mappers.dart';
 
 class BrowseDesignDetailsView extends StatefulWidget {
   final String designId;
@@ -445,7 +446,10 @@ class _BrowseDesignDetailsViewState extends State<BrowseDesignDetailsView> {
                 Navigator.pushNamed(
                   context,
                   AppRoutes.restyleView,
-                  arguments: {'initialImageUrl': design.imageUrl},
+                  arguments: {
+                    'initialImageUrl': design.imageUrl,
+                    'initialStyle': GenerateMappers.styleToUi(design.style),
+                  },
                 );
               }
             },
