@@ -6,10 +6,13 @@ import 'package:dio/dio.dart';
 import 'package:sammly/core/networking/api_constants.dart';
 import 'package:sammly/core/networking/dio_helper.dart';
 import 'package:sammly/core/shared_pref/shared_pref.dart';
+import 'package:sammly/core/utils/backend_message_translator.dart';
 import 'package:sammly/features/profile/data/models/profile_model.dart';
 import 'package:sammly/features/profile/data/models/setting_info_model.dart';
 
 class ProfileRepo {
+  static String _t(String msg) => BackendMessageTranslator.translate(msg);
+
   // static const String _profileCacheKey = 'cached_profile_data';
 
   Future<Either<String, ProfileModel>> getProfile({
@@ -19,7 +22,7 @@ class ProfileRepo {
       // 1. نجيب التوكن الأول عشان لو مش موجود نخرج بدري
       final token = SharedPref.getData(key: 'jwt');
       if (token == null) {
-        return left('Unauthorized: No token found.');
+        return left(_t('Unauthorized: No token found.'));
       }
 
       // 2. نجيب الـ userId بتاع اليوزر الحالي (لازم تكون مسيفه وقت الـ Login)
@@ -71,12 +74,12 @@ class ProfileRepo {
         return right(ProfileModel.fromJson(userMap));
       } else {
         // log(response.data.toString());
-        return left(response.data['message'] ?? 'Failed to get profile data.');
+        return left(_t(response.data['message'] ?? 'Failed to get profile data.'));
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
     } catch (e) {
-      return left('An unexpected error occurred.');
+      return left(_t('An unexpected error occurred.'));
     }
   }
 
@@ -87,7 +90,7 @@ class ProfileRepo {
     try {
       final token = SharedPref.getData(key: 'jwt');
       if (token == null) {
-        return left('Unauthorized: No token found.');
+        return left(_t('Unauthorized: No token found.'));
       }
 
       // لو اليوزر اختار صورة، نحولها لـ base64 ونضيفها كـ string في الـ JSON
@@ -126,13 +129,13 @@ class ProfileRepo {
         log(response.data['data']['profile']['avatar'].toString());
         return right(ProfileModel.fromJson(userMap));
       } else {
-        return left(response.data['message'] ?? 'Failed to update profile.');
+        return left(_t(response.data['message'] ?? 'Failed to update profile.'));
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
     } catch (e) {
       log('Edit profile error: $e');
-      return left('An unexpected error occurred.');
+      return left(_t('An unexpected error occurred.'));
     }
   }
 
@@ -140,7 +143,7 @@ class ProfileRepo {
     try {
       final token = SharedPref.getData(key: 'jwt');
       if (token == null) {
-        return left('Unauthorized: No token found.');
+        return left(_t('Unauthorized: No token found.'));
       }
 
       final response = await DioHelper.getData(
@@ -152,12 +155,12 @@ class ProfileRepo {
         final dataMap = response.data['data'] as Map<String, dynamic>;
         return right(SettingInfoModel.fromJson(dataMap));
       } else {
-        return left(response.data['message'] ?? 'Failed to get settings data.');
+        return left(_t(response.data['message'] ?? 'Failed to get settings data.'));
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
     } catch (e) {
-      return left('An unexpected error occurred.');
+      return left(_t('An unexpected error occurred.'));
     }
   }
 
@@ -178,7 +181,7 @@ class ProfileRepo {
               (data['data'] is Map
                   ? (data['data']['msg'] ?? data['data']['message'])
                   : null);
-          if (msg != null) return msg.toString();
+          if (msg != null) return _t(msg.toString());
         }
       } catch (_) {}
     }
@@ -188,9 +191,9 @@ class ProfileRepo {
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
       case DioExceptionType.connectionError:
-        return 'Server Failed Connection , Try again';
+        return _t('Server Failed Connection , Try again');
       default:
-        return 'Network error occurred';
+        return _t('Network error occurred');
     }
   }
 }

@@ -5,9 +5,12 @@ import 'package:dio/dio.dart';
 import 'package:sammly/core/networking/api_constants.dart';
 import 'package:sammly/core/networking/dio_helper.dart';
 import 'package:sammly/core/shared_pref/shared_pref.dart';
+import 'package:sammly/core/utils/backend_message_translator.dart';
 import 'package:sammly/features/favorite/data/models/favorite_item_model.dart';
 
 class FavoriteRepo {
+  static String _t(String msg) => BackendMessageTranslator.translate(msg);
+
   Future<Either<String, FavoriteResponse>> getFavorites({
     int page = 1,
     int limit = 20,
@@ -16,7 +19,7 @@ class FavoriteRepo {
     try {
       final token = SharedPref.getData(key: 'jwt');
       if (token == null) {
-        return left('Unauthorized: No token found.');
+        return left(_t('Unauthorized: No token found.'));
       }
 
       // Clamp pagination values
@@ -43,14 +46,14 @@ class FavoriteRepo {
         log(response.data.toString());
         final backendError = _extractErrorMessage(response.data);
         return left(
-          backendError.isNotEmpty ? backendError : 'Failed to load favorites.',
+          _t(backendError.isNotEmpty ? backendError : 'Failed to load favorites.'),
         );
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
     } catch (e) {
       log('Favorites error: $e');
-      return left('An unexpected error occurred.');
+      return left(_t('An unexpected error occurred.'));
     }
   }
 
@@ -58,7 +61,7 @@ class FavoriteRepo {
     try {
       final token = SharedPref.getData(key: 'jwt');
       if (token == null) {
-        return left('Unauthorized: No token found.');
+        return left(_t('Unauthorized: No token found.'));
       }
 
       // Add to favorites: POST, returns 201
@@ -84,21 +87,21 @@ class FavoriteRepo {
             response.data['data']?['message'] ??
             response.data['message'] ??
             'Added to favorites.';
-        return right(msg);
+        return right(_t(msg));
       } else {
         // Handle 404 (Design not found) and 409 (Already in favorites)
         final backendError = _extractErrorMessage(response.data);
         return left(
-          backendError.isNotEmpty
+          _t(backendError.isNotEmpty
               ? backendError
-              : 'Failed to add to favorites.',
+              : 'Failed to add to favorites.'),
         );
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
     } catch (e) {
       log('Add favorite error: $e');
-      return left('An unexpected error occurred.');
+      return left(_t('An unexpected error occurred.'));
     }
   }
 
@@ -106,7 +109,7 @@ class FavoriteRepo {
     try {
       final token = SharedPref.getData(key: 'jwt');
       if (token == null) {
-        return left('Unauthorized: No token found.');
+        return left(_t('Unauthorized: No token found.'));
       }
 
       // API spec: remove from favorites uses DELETE method, returns 200
@@ -127,20 +130,20 @@ class FavoriteRepo {
             response.data['data']?['message'] ??
             response.data['message'] ??
             'Removed from favorites.';
-        return right(msg);
+        return right(_t(msg));
       } else {
         final backendError = _extractErrorMessage(response.data);
         return left(
-          backendError.isNotEmpty
+          _t(backendError.isNotEmpty
               ? backendError
-              : 'Failed to remove from favorites.',
+              : 'Failed to remove from favorites.'),
         );
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
     } catch (e) {
       log('Remove favorite error: $e');
-      return left('An unexpected error occurred.');
+      return left(_t('An unexpected error occurred.'));
     }
   }
 
@@ -174,7 +177,7 @@ class FavoriteRepo {
   String _handleDioError(DioException e) {
     if (e.response != null && e.response?.data != null) {
       final msg = _extractErrorMessage(e.response!.data);
-      if (msg.isNotEmpty) return msg;
+      if (msg.isNotEmpty) return _t(msg);
     }
 
     switch (e.type) {
@@ -182,11 +185,11 @@ class FavoriteRepo {
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
       case DioExceptionType.connectionError:
-        return 'Server Failed Connection , Try again';
+        return _t('Server Failed Connection , Try again');
       case DioExceptionType.badResponse:
-        return 'Bad response: ${e.response?.statusCode} - ${e.response?.statusMessage ?? 'Error'}';
+        return _t('Bad response: ${e.response?.statusCode} - ${e.response?.statusMessage ?? 'Error'}');
       default:
-        return 'Network error occurred';
+        return _t('Network error occurred');
     }
   }
 }

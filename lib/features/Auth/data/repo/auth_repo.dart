@@ -4,8 +4,11 @@ import 'package:dio/dio.dart';
 import 'package:sammly/core/networking/api_constants.dart';
 import 'package:sammly/core/networking/dio_helper.dart';
 import 'package:sammly/core/shared_pref/shared_pref.dart';
+import 'package:sammly/core/utils/backend_message_translator.dart';
 
 class AuthRepo {
+  static String _t(String msg) => BackendMessageTranslator.translate(msg);
+
   /// Register a new user account.
   /// POST /api/auth/register
   Future<Either<String, String>> register({
@@ -38,7 +41,7 @@ class AuthRepo {
                 ? (response.data['data']['msg'] ??
                       response.data['data']['message'])
                 : null);
-        return right(successMsg?.toString() ?? 'Account created successfully.');
+        return right(_t(successMsg?.toString() ?? 'Account created successfully.'));
       } else {
         final msg =
             response.data['message']?.toString() ??
@@ -47,7 +50,7 @@ class AuthRepo {
         if (_isVerificationError(msg)) {
           return left('EMAIL_NOT_VERIFIED');
         }
-        return left(msg.isNotEmpty ? msg : 'Registration failed.');
+        return left(msg.isNotEmpty ? _t(msg) : _t('Registration failed.'));
       }
     } on DioException catch (e) {
       final statusCode = e.response?.statusCode;
@@ -57,28 +60,28 @@ class AuthRepo {
       );
       if (statusCode == 409) {
         if (_isVerificationError(msg)) {
-          return left('EMAIL_NOT_VERIFIED:$msg');
+          return left('EMAIL_NOT_VERIFIED:${_t(msg)}');
         } else {
-          return left(msg.isNotEmpty ? msg : 'Email already exists.');
+          return left(msg.isNotEmpty ? _t(msg) : _t('Email already exists.'));
         }
       } else if (statusCode == 403) {
         return left(
-          msg.isNotEmpty ? msg : 'Your account has been deactivated.',
+          msg.isNotEmpty ? _t(msg) : _t('Your account has been deactivated.'),
         );
       } else if (statusCode == 429) {
         // Always route to verification screen on 429, but pass the wait message
         return left(
-          'EMAIL_NOT_VERIFIED:${msg.isNotEmpty ? msg : 'Too many requests. Please wait.'}',
+          'EMAIL_NOT_VERIFIED:${msg.isNotEmpty ? _t(msg) : _t('Too many requests. Please wait.')}',
         );
       }
 
       if (_isVerificationError(msg)) {
-        return left('EMAIL_NOT_VERIFIED:$msg');
+        return left('EMAIL_NOT_VERIFIED:${_t(msg)}');
       }
 
-      return left(msg.isNotEmpty ? msg : _handleDioError(e));
+      return left(msg.isNotEmpty ? _t(msg) : _handleDioError(e));
     } catch (e) {
-      return left('An unexpected error occurred.');
+      return left(_t('An unexpected error occurred.'));
     }
   }
 
@@ -109,14 +112,14 @@ class AuthRepo {
                 ? (response.data['data']['msg'] ??
                       response.data['data']['message'])
                 : null);
-        return right(successMsg?.toString() ?? 'Email verified.');
+        return right(_t(successMsg?.toString() ?? 'Email verified.'));
       } else {
-        return left('Verification failed.');
+        return left(_t('Verification failed.'));
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
     } catch (e) {
-      return left('An unexpected error occurred.');
+      return left(_t('An unexpected error occurred.'));
     }
   }
 
@@ -143,15 +146,15 @@ class AuthRepo {
                       response.data['data']['message'])
                 : null);
         return right(
-          successMsg?.toString() ?? 'Verification code resent successfully.',
+          _t(successMsg?.toString() ?? 'Verification code resent successfully.'),
         );
       } else {
-        return left('Failed to resend verification code.');
+        return left(_t('Failed to resend verification code.'));
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
     } catch (e) {
-      return left('An unexpected error occurred.');
+      return left(_t('An unexpected error occurred.'));
     }
   }
 
@@ -197,7 +200,7 @@ class AuthRepo {
                 ? (response.data['data']['msg'] ??
                       response.data['data']['message'])
                 : null);
-        return right(successMsg?.toString() ?? 'Logged in.');
+        return right(_t(successMsg?.toString() ?? 'Logged in.'));
       } else {
         final msg =
             response.data['message']?.toString() ??
@@ -206,7 +209,7 @@ class AuthRepo {
         if (_isVerificationError(msg)) {
           return left('EMAIL_NOT_VERIFIED');
         }
-        return left(msg.isNotEmpty ? msg : 'Login failed.');
+        return left(msg.isNotEmpty ? _t(msg) : _t('Login failed.'));
       }
     } on DioException catch (e) {
       final statusCode = e.response?.statusCode;
@@ -216,32 +219,32 @@ class AuthRepo {
       );
       if (statusCode == 409) {
         if (_isVerificationError(msg)) {
-          return left('EMAIL_NOT_VERIFIED:$msg');
+          return left('EMAIL_NOT_VERIFIED:${_t(msg)}');
         } else {
-          return left(msg.isNotEmpty ? msg : 'Conflict error.');
+          return left(msg.isNotEmpty ? _t(msg) : _t('Conflict error.'));
         }
       } else if (statusCode == 403) {
         if (_isVerificationError(msg)) {
-          return left('EMAIL_NOT_VERIFIED:$msg');
+          return left('EMAIL_NOT_VERIFIED:${_t(msg)}');
         } else {
           return left(
-            msg.isNotEmpty ? msg : 'Your account has been deactivated.',
+            msg.isNotEmpty ? _t(msg) : _t('Your account has been deactivated.'),
           );
         }
       } else if (statusCode == 429) {
         // Always route to verification screen on 429, but pass the wait message
         return left(
-          'EMAIL_NOT_VERIFIED:${msg.isNotEmpty ? msg : 'Too many requests. Please wait.'}',
+          'EMAIL_NOT_VERIFIED:${msg.isNotEmpty ? _t(msg) : _t('Too many requests. Please wait.')}',
         );
       }
 
       if (_isVerificationError(msg)) {
-        return left('EMAIL_NOT_VERIFIED:$msg');
+        return left('EMAIL_NOT_VERIFIED:${_t(msg)}');
       }
 
-      return left(msg.isNotEmpty ? msg : _handleDioError(e));
+      return left(msg.isNotEmpty ? _t(msg) : _handleDioError(e));
     } catch (e) {
-      return left('An unexpected error occurred.');
+      return left(_t('An unexpected error occurred.'));
     }
   }
 
@@ -267,14 +270,14 @@ class AuthRepo {
                 ? (response.data['data']['msg'] ??
                       response.data['data']['message'])
                 : null);
-        return right(successMsg?.toString() ?? 'Reset code sent.');
+        return right(_t(successMsg?.toString() ?? 'Reset code sent.'));
       } else {
-        return left('Failed to send reset code.');
+        return left(_t('Failed to send reset code.'));
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
     } catch (e) {
-      return left('An unexpected error occurred.');
+      return left(_t('An unexpected error occurred.'));
     }
   }
 
@@ -301,15 +304,15 @@ class AuthRepo {
                       response.data['data']['message'])
                 : null);
         return right(
-          successMsg?.toString() ?? 'Reset code resent successfully.',
+          _t(successMsg?.toString() ?? 'Reset code resent successfully.'),
         );
       } else {
-        return left('Failed to resend reset code.');
+        return left(_t('Failed to resend reset code.'));
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
     } catch (e) {
-      return left('An unexpected error occurred.');
+      return left(_t('An unexpected error occurred.'));
     }
   }
 
@@ -336,14 +339,14 @@ class AuthRepo {
                 ? (response.data['data']['msg'] ??
                       response.data['data']['message'])
                 : null);
-        return right(successMsg?.toString() ?? 'Code verified.');
+        return right(_t(successMsg?.toString() ?? 'Code verified.'));
       } else {
-        return left('Invalid or expired code.');
+        return left(_t('Invalid or expired code.'));
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
     } catch (e) {
-      return left('An unexpected error occurred.');
+      return left(_t('An unexpected error occurred.'));
     }
   }
 
@@ -370,14 +373,14 @@ class AuthRepo {
                 ? (response.data['data']['msg'] ??
                       response.data['data']['message'])
                 : null);
-        return right(successMsg?.toString() ?? 'Password reset successfully.');
+        return right(_t(successMsg?.toString() ?? 'Password reset successfully.'));
       } else {
-        return left('Failed to reset password.');
+        return left(_t('Failed to reset password.'));
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
     } catch (e) {
-      return left('An unexpected error occurred.');
+      return left(_t('An unexpected error occurred.'));
     }
   }
 
@@ -411,14 +414,14 @@ class AuthRepo {
                 ? (response.data['data']['msg'] ??
                       response.data['data']['message'])
                 : null);
-        return right(successMsg?.toString() ?? 'Password changed.');
+        return right(_t(successMsg?.toString() ?? 'Password changed.'));
       } else {
-        return left('Failed to change password.');
+        return left(_t('Failed to change password.'));
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
     } catch (e) {
-      return left('An unexpected error occurred.');
+      return left(_t('An unexpected error occurred.'));
     }
   }
 
@@ -434,7 +437,7 @@ class AuthRepo {
               (data['data'] is Map
                   ? (data['data']['msg'] ?? data['data']['message'])
                   : null);
-          if (msg != null) return msg.toString();
+          if (msg != null) return _t(msg.toString());
         }
       } catch (_) {}
     }
@@ -444,11 +447,11 @@ class AuthRepo {
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
       case DioExceptionType.connectionError:
-        return 'Server Failed Connection , Try again';
+        return _t('Server Failed Connection , Try again');
       case DioExceptionType.badResponse:
-        return 'Bad response: ${e.response?.statusCode} - ${e.message}';
+        return _t('Bad response: ${e.response?.statusCode} - ${e.message}');
       default:
-        return 'Error: ${e.message ?? e.error ?? 'Something went wrong.'}';
+        return _t('Error: ${e.message ?? e.error ?? 'Something went wrong.'}');
     }
   }
 

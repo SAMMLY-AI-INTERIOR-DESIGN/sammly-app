@@ -4,14 +4,17 @@ import 'package:dio/dio.dart';
 import 'package:sammly/core/networking/api_constants.dart';
 import 'package:sammly/core/networking/dio_helper.dart';
 import 'package:sammly/core/shared_pref/shared_pref.dart';
+import 'package:sammly/core/utils/backend_message_translator.dart';
 
 class SubscriptionRepo {
+  static String _t(String msg) => BackendMessageTranslator.translate(msg);
+
   /// Fetches all available packages from the API.
   Future<Either<String, List<PackageModel>>> getPackages() async {
     try {
       final token = SharedPref.getData(key: 'jwt');
       if (token == null) {
-        return left('Unauthorized: No token found.');
+        return left(_t('Unauthorized: No token found.'));
       }
 
       final response = await DioHelper.getData(
@@ -26,13 +29,13 @@ class SubscriptionRepo {
             packagesJson.map((e) => PackageModel.fromJson(e)).toList();
         return right(packages);
       } else {
-        return left(response.data['message'] ?? 'Failed to load packages.');
+        return left(_t(response.data['message'] ?? 'Failed to load packages.'));
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
     } catch (e) {
       log('Get packages error: $e');
-      return left('An unexpected error occurred.');
+      return left(_t('An unexpected error occurred.'));
     }
   }
 
@@ -41,7 +44,7 @@ class SubscriptionRepo {
     try {
       final token = SharedPref.getData(key: 'jwt');
       if (token == null) {
-        return left('Unauthorized: No token found.');
+        return left(_t('Unauthorized: No token found.'));
       }
 
       final response = await DioHelper.getData(
@@ -54,15 +57,15 @@ class SubscriptionRepo {
         final message = response.data['message'] ?? '';
         final data = response.data['data'];
         final tokens = data != null ? data['tokens'] : null;
-        return right(ClaimResult(message: message, tokens: tokens));
+        return right(ClaimResult(message: _t(message), tokens: tokens));
       } else {
-        return left(response.data['message'] ?? 'Failed to claim package.');
+        return left(_t(response.data['message'] ?? 'Failed to claim package.'));
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
     } catch (e) {
       log('Claim package error: $e');
-      return left('An unexpected error occurred.');
+      return left(_t('An unexpected error occurred.'));
     }
   }
 
@@ -72,11 +75,11 @@ class SubscriptionRepo {
         final data = e.response!.data;
         if (data is Map) {
           final msg = data['message'] ?? data['error'];
-          if (msg != null) return msg.toString();
+          if (msg != null) return _t(msg.toString());
         }
       } catch (_) {}
     }
-    return 'Network error occurred';
+    return _t('Network error occurred');
   }
 }
 

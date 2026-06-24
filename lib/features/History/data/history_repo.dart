@@ -4,9 +4,12 @@ import 'package:dio/dio.dart';
 import 'package:sammly/core/networking/api_constants.dart';
 import 'package:sammly/core/networking/dio_helper.dart';
 import 'package:sammly/core/shared_pref/shared_pref.dart';
+import 'package:sammly/core/utils/backend_message_translator.dart';
 import 'package:sammly/features/History/data/historymodel.dart';
 
 class HistoryRepo {
+  static String _t(String msg) => BackendMessageTranslator.translate(msg);
+
   Future<Either<String, HistoryResponse>> getHistory({
     int page = 1,
     int limit = 20,
@@ -14,7 +17,7 @@ class HistoryRepo {
     try {
       final token = SharedPref.getData(key: 'jwt');
       if (token == null) {
-        return left('Unauthorized: No token found.');
+        return left(_t('Unauthorized: No token found.'));
       }
 
       // Clamp pagination values
@@ -34,14 +37,14 @@ class HistoryRepo {
       } else {
         log(response.data.toString());
         return left(
-          response.data['message'] ?? 'Failed to load design history.',
+          _t(response.data['message'] ?? 'Failed to load design history.'),
         );
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
     } catch (e) {
       log('History error: $e');
-      return left('An unexpected error occurred.');
+      return left(_t('An unexpected error occurred.'));
     }
   }
 
@@ -50,7 +53,7 @@ class HistoryRepo {
     try {
       final token = SharedPref.getData(key: 'jwt');
       if (token == null) {
-        return left('Unauthorized: No token found.');
+        return left(_t('Unauthorized: No token found.'));
       }
 
       final response = await DioHelper.getData(
@@ -64,14 +67,14 @@ class HistoryRepo {
       } else {
         log(response.data.toString());
         return left(
-          response.data['message'] ?? 'Failed to load design details.',
+          _t(response.data['message'] ?? 'Failed to load design details.'),
         );
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
     } catch (e) {
       log('History details error: $e');
-      return left('An unexpected error occurred.');
+      return left(_t('An unexpected error occurred.'));
     }
   }
 
@@ -88,7 +91,7 @@ class HistoryRepo {
               (data['errors'] is List
                   ? (data['errors'] as List).join(', ')
                   : null);
-          if (msg != null) return msg.toString();
+          if (msg != null) return _t(msg.toString());
         }
       } catch (_) {}
     }
@@ -98,9 +101,9 @@ class HistoryRepo {
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
       case DioExceptionType.connectionError:
-        return 'Server Failed Connection , Try again';
+        return _t('Server Failed Connection , Try again');
       default:
-        return 'Network error occurred';
+        return _t('Network error occurred');
     }
   }
 }

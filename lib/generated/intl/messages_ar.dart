@@ -124,7 +124,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "drawMaskTitle": MessageLookupByLibrary.simpleMessage("تحديد الجزء"),
     "dummyInviteLink": MessageLookupByLibrary.simpleMessage(
-      "https://invite.Sammly.com/\nASDGFJKHHUHSULWDIH",
+      "https://drive.google.com/drive/folders/1J-vtrMlETkIt9Yk0VGE2CcPrc8ttdvoG?usp=sharing",
     ),
     "editBtn": MessageLookupByLibrary.simpleMessage("تعديل"),
     "editCompleted": MessageLookupByLibrary.simpleMessage("اكتمل التعديل"),

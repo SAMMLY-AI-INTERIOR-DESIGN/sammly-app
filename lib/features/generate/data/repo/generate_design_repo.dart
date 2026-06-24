@@ -7,10 +7,13 @@ import 'package:dio/dio.dart';
 import 'package:sammly/core/networking/api_constants.dart';
 import 'package:sammly/core/networking/dio_helper.dart';
 import 'package:sammly/core/shared_pref/shared_pref.dart';
+import 'package:sammly/core/utils/backend_message_translator.dart';
 import 'package:sammly/features/generate/data/model/generate_design_response_model.dart';
 import 'package:sammly/core/networking/cloudinary_service.dart';
 
 class GenerateDesignRepo {
+  static String _t(String msg) => BackendMessageTranslator.translate(msg);
+
   Future<String?> _prepareImageUrl(String? imageUrl) async {
     if (imageUrl == null || imageUrl.isEmpty) return null;
     if (imageUrl.startsWith('http://') ||
@@ -109,16 +112,16 @@ class GenerateDesignRepo {
           final model = GenerateDesignResponseModel.fromJson(designJson);
           return right(model);
         }
-        return left('Unexpected response format.');
+        return left(_t('Unexpected response format.'));
       } else {
         final msg =
             response.data['message']?.toString() ?? 'Generation failed.';
-        return left(msg);
+        return left(_t(msg));
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
     } catch (e) {
-      return left('An unexpected error occurred.');
+      return left(_t('An unexpected error occurred.'));
     }
   }
 
@@ -128,7 +131,7 @@ class GenerateDesignRepo {
         final data = e.response!.data;
         if (data is Map) {
           final msg = data['message'] ?? data['msg'];
-          if (msg != null) return msg.toString();
+          if (msg != null) return _t(msg.toString());
         }
       } catch (_) {}
     }
@@ -138,11 +141,11 @@ class GenerateDesignRepo {
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
       case DioExceptionType.connectionError:
-        return 'Server Failed Connection, Try again';
+        return _t('Server Failed Connection, Try again');
       case DioExceptionType.badResponse:
-        return 'Bad response: ${e.response?.statusCode} - ${e.message}';
+        return _t('Bad response: ${e.response?.statusCode} - ${e.message}');
       default:
-        return 'Error: ${e.message ?? e.error ?? 'Something went wrong.'}';
+        return _t('Error: ${e.message ?? e.error ?? 'Something went wrong.'}');
     }
   }
 
@@ -197,15 +200,15 @@ class GenerateDesignRepo {
           final model = GenerateDesignResponseModel.fromJson(designJson);
           return right(model);
         }
-        return left('Unexpected response format.');
+        return left(_t('Unexpected response format.'));
       } else {
         final msg = response.data['message']?.toString() ?? 'Restyle failed.';
-        return left(msg);
+        return left(_t(msg));
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
     } catch (e) {
-      return left('An unexpected error occurred.');
+      return left(_t('An unexpected error occurred.'));
     }
   }
 
@@ -257,17 +260,17 @@ class GenerateDesignRepo {
           }
           return right(models);
         }
-        return left('Unexpected response format.');
+        return left(_t('Unexpected response format.'));
       } else {
         final msg =
             response.data['message']?.toString() ??
             'Full home generation failed.';
-        return left(msg);
+        return left(_t(msg));
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
     } catch (e) {
-      return left('An unexpected error occurred.');
+      return left(_t('An unexpected error occurred.'));
     }
   }
 
@@ -319,16 +322,16 @@ class GenerateDesignRepo {
           final model = GenerateDesignResponseModel.fromJson(designJson);
           return right(model);
         }
-        return left('Unexpected response format.');
+        return left(_t('Unexpected response format.'));
       } else {
         final msg =
             response.data['message']?.toString() ?? 'Mask design failed.';
-        return left(msg);
+        return left(_t(msg));
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
     } catch (e) {
-      return left('An unexpected error occurred.');
+      return left(_t('An unexpected error occurred.'));
     }
   }
 }

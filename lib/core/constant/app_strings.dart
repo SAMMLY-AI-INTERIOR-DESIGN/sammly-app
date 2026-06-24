@@ -93,7 +93,7 @@ abstract class AppStrings {
   static const String linkCopied = "Link Copied!";
   static const String orShareOn = "Or share on....";
   static const String dummyInviteLink =
-      "https://invite.Sammly.com/\nASDGFJKHHUHSULWDIH";
+      "https://drive.google.com/drive/folders/1J-vtrMlETkIt9Yk0VGE2CcPrc8ttdvoG?usp=sharing";
 
   // log out bottom sheet
   static const String logoutConfirmMsg = "Are you sure you want to log out?";

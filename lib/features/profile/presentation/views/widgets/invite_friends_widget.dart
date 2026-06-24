@@ -8,6 +8,7 @@ import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/share_link_text_field.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/social_icon_widget.dart';
 import 'package:sammly/generated/l10n.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class InviteFriendsDialog extends StatefulWidget {
   const InviteFriendsDialog({super.key});
@@ -37,6 +38,43 @@ class _InviteFriendsDialogState extends State<InviteFriendsDialog> {
   void dispose() {
     linkController.dispose();
     super.dispose();
+  }
+
+  String _getCleanLink() {
+    return linkController.text.replaceAll('\n', '');
+  }
+
+  Future<void> _launchSocialShare(String url) async {
+    final uri = Uri.parse(url);
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      debugPrint('Could not launch $uri: $e');
+    }
+  }
+
+  void _shareOnWhatsApp() {
+    final link = _getCleanLink();
+    final encodedText = Uri.encodeComponent(
+      'Check out SAMMLY - AI Interior Design! $link',
+    );
+    _launchSocialShare('https://wa.me/?text=$encodedText');
+  }
+
+  void _shareOnFacebook() {
+    final link = _getCleanLink();
+    final encodedLink = Uri.encodeComponent(link);
+    _launchSocialShare(
+      'https://www.facebook.com/sharer/sharer.php?u=$encodedLink',
+    );
+  }
+
+  void _shareOnX() {
+    final link = _getCleanLink();
+    final encodedText = Uri.encodeComponent(
+      'Check out SAMMLY - AI Interior Design! $link',
+    );
+    _launchSocialShare('https://twitter.com/intent/tweet?text=$encodedText');
   }
 
   @override
@@ -96,7 +134,7 @@ class _InviteFriendsDialogState extends State<InviteFriendsDialog> {
             ShareLinkTextField(
               controller: linkController,
               onCopyTap: () {
-                Clipboard.setData(ClipboardData(text: linkController.text));
+                Clipboard.setData(ClipboardData(text: _getCleanLink()));
                 showCustomSnackBar(
                   context: context,
                   message: S.of(context).linkCopied,
@@ -121,14 +159,20 @@ class _InviteFriendsDialogState extends State<InviteFriendsDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SocialIconWidget(iconPath: AppImages.whatsapp, onTap: () {}),
+                SocialIconWidget(
+                  iconPath: AppImages.whatsapp,
+                  onTap: _shareOnWhatsApp,
+                ),
                 SizedBox(width: 24.w),
                 SocialIconWidget(
                   iconPath: AppImages.facebookicon,
-                  onTap: () {},
+                  onTap: _shareOnFacebook,
                 ),
                 SizedBox(width: 24.w),
-                SocialIconWidget(iconPath: AppImages.xTwitter, onTap: () {}),
+                SocialIconWidget(
+                  iconPath: AppImages.xTwitter,
+                  onTap: _shareOnX,
+                ),
               ],
             ),
           ],
