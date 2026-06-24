@@ -123,4 +123,98 @@ class AppImages {
       "assets/images/subscription_bg_placeholder.png";
   static const String switchImageIcon = "assets/images/switch_image_icon.svg";
   static const String resultsShareIcon = "assets/images/share_icon.svg";
+
+  // ── Room × Style images ────────────────────────────────────────────────
+  // Boho
+  static const String boho_bedroom = "assets/images/room_style/boho/bedroom.png";
+  static const String boho_bathroom = "assets/images/room_style/boho/bathroom (2).png";
+  static const String boho_kitchen = "assets/images/room_style/boho/kitcehn.png";
+  static const String boho_livingroom = "assets/images/room_style/boho/livingboh.png";
+  static const String boho_diningroom = "assets/images/room_style/boho/diingroom.png";
+
+  // Coastal
+  static const String coastal_bedroom = "assets/images/room_style/coastal/bbed.png";
+  static const String coastal_bathroom = "assets/images/room_style/coastal/bathroom (3).png";
+  static const String coastal_kitchen = "assets/images/room_style/coastal/kitchen.png";
+  static const String coastal_livingroom = "assets/images/room_style/coastal/living.png";
+  static const String coastal_diningroom = "assets/images/room_style/coastal/dinn.png";
+
+  // Mid-Century Modern
+  static const String modern_bedroom = "assets/images/room_style/modern/bedroom.png";
+  static const String modern_bathroom = "assets/images/room_style/modern/bathroom.png";
+  static const String modern_kitchen = "assets/images/room_style/modern/kit.png";
+  static const String modern_livingroom = "assets/images/room_style/modern/living.png";
+  static const String modern_diningroom = "assets/images/room_style/modern/moderndining.png";
+
+  // Rustic
+  static const String rustic_bedroom = "assets/images/room_style/rustic/bedrrom.png";
+  static const String rustic_bathroom = "assets/images/room_style/rustic/bathroom.png";
+  static const String rustic_kitchen = "assets/images/room_style/rustic/kitchen.png";
+  static const String rustic_livingroom = "assets/images/room_style/rustic/living.png";
+  static const String rustic_diningroom = "assets/images/room_style/rustic/dining.png";
+
+  // Traditional
+  static const String trad_bedroom = "assets/images/room_style/trad/bedroom.jpg";
+  static const String trad_bathroom = "assets/images/room_style/trad/bath.jpg";
+  static const String trad_kitchen = "assets/images/room_style/trad/ki.jpg";
+  static const String trad_livingroom = "assets/images/room_style/trad/liv.jpg";
+  static const String trad_diningroom = "assets/images/room_style/trad/din.jpg";
+
+  /// Returns the room-specific style image path.
+  /// [styleKey] is one of: 'boho', 'coastal', 'modern', 'rustic', 'trad'
+  /// [roomKey] is one of: 'bedroom', 'bathroom', 'kitchen', 'livingroom', 'diningroom'
+  static final Map<String, Map<String, String>> _roomStyleImages = {
+    'boho': {
+      'bedroom': boho_bedroom,
+      'bathroom': boho_bathroom,
+      'kitchen': boho_kitchen,
+      'livingroom': boho_livingroom,
+      'diningroom': boho_diningroom,
+    },
+    'coastal': {
+      'bedroom': coastal_bedroom,
+      'bathroom': coastal_bathroom,
+      'kitchen': coastal_kitchen,
+      'livingroom': coastal_livingroom,
+      'diningroom': coastal_diningroom,
+    },
+    'modern': {
+      'bedroom': modern_bedroom,
+      'bathroom': modern_bathroom,
+      'kitchen': modern_kitchen,
+      'livingroom': modern_livingroom,
+      'diningroom': modern_diningroom,
+    },
+    'rustic': {
+      'bedroom': rustic_bedroom,
+      'bathroom': rustic_bathroom,
+      'kitchen': rustic_kitchen,
+      'livingroom': rustic_livingroom,
+      'diningroom': rustic_diningroom,
+    },
+    'trad': {
+      'bedroom': trad_bedroom,
+      'bathroom': trad_bathroom,
+      'kitchen': trad_kitchen,
+      'livingroom': trad_livingroom,
+      'diningroom': trad_diningroom,
+    },
+  };
+
+  /// Gets the image path for a specific style + room combination.
+  /// Returns the generic style image if no room match is found.
+  static String getRoomStyleImage(String styleKey, String? roomKey) {
+    if (roomKey == null || roomKey.isEmpty) {
+      // Fallback to generic style images
+      switch (styleKey) {
+        case 'boho': return styleBoho;
+        case 'coastal': return styleCoastal;
+        case 'modern': return styleMidCentury;
+        case 'rustic': return styleRustic;
+        case 'trad': return styleTraditional;
+        default: return styleBoho;
+      }
+    }
+    return _roomStyleImages[styleKey]?[roomKey] ?? styleBoho;
+  }
 }

@@ -184,6 +184,7 @@ class _TextToImageGenerateViewState extends State<TextToImageGenerateView> {
                         ),
                         TextToImageStep2Style(
                           selectedStyle: _selectedStyle,
+                          selectedRoom: _selectedRoom,
                           onStyleSelected: (style) {
                             setState(() {
                               _selectedStyle = style;

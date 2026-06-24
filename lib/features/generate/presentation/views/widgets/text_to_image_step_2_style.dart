@@ -15,6 +15,10 @@ class TextToImageStep2Style extends StatelessWidget {
   final String? buttonPrefixIcon;
   final String? buttonSuffixIcon;
 
+  /// Optional: the room selected in Step 1.
+  /// When provided, style cards show room-specific preview images.
+  final String? selectedRoom;
+
   const TextToImageStep2Style({
     super.key,
     required this.selectedStyle,
@@ -23,24 +27,46 @@ class TextToImageStep2Style extends StatelessWidget {
     this.buttonText,
     this.buttonPrefixIcon,
     this.buttonSuffixIcon,
+    this.selectedRoom,
   });
+
+  /// Converts a localized room display name to the API room key
+  /// used by AppImages.getRoomStyleImage().
+  String? _roomNameToKey(BuildContext context) {
+    if (selectedRoom == null) return null;
+    final room = selectedRoom!;
+    if (room == S.of(context).bedroom) return 'bedroom';
+    if (room == S.of(context).bathroom) return 'bathroom';
+    if (room == S.of(context).kitchen) return 'kitchen';
+    if (room == S.of(context).livingRoom) return 'livingroom';
+    if (room == S.of(context).diningRoom) return 'diningroom';
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final String? roomKey = _roomNameToKey(context);
+
     final List<Map<String, String>> styles = [
       {
         'name': S.of(context).midCenturyModern,
-        'image': AppImages.styleMidCentury,
+        'image': AppImages.getRoomStyleImage('modern', roomKey),
       },
-      {'name': S.of(context).rustic, 'image': AppImages.styleRustic},
-      {'name': S.of(context).coastal, 'image': AppImages.styleCoastal},
+      {
+        'name': S.of(context).rustic,
+        'image': AppImages.getRoomStyleImage('rustic', roomKey),
+      },
+      {
+        'name': S.of(context).coastal,
+        'image': AppImages.getRoomStyleImage('coastal', roomKey),
+      },
       {
         'name': S.of(context).traditional,
-        'image': AppImages.styleTraditional,
+        'image': AppImages.getRoomStyleImage('trad', roomKey),
       },
       {
         'name': S.of(context).boho,
-        'image': AppImages.styleBoho,
+        'image': AppImages.getRoomStyleImage('boho', roomKey),
       },
     ];
 
