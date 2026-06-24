@@ -296,5 +296,6 @@
   "historyTypeDefault": "تصميم",
   "tokensAreNotEnough": "الرصيد غير كافٍ",
   "upgradeToContinue": ".قم بالترقية للاستمرار في إنشاء المزيد من التصميمات.",
-  "upgrade": "ترقية"
+  "upgrade": "ترقية",
+  "getBtn": "الحصول"
 }

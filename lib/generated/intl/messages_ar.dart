@@ -203,6 +203,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "generations100": MessageLookupByLibrary.simpleMessage("100 إنشاء مميز"),
     "generations30": MessageLookupByLibrary.simpleMessage("30 إنشاء مميز"),
     "generations5": MessageLookupByLibrary.simpleMessage("3 إنشاءات مميزة"),
+    "getBtn": MessageLookupByLibrary.simpleMessage("الحصول"),
     "greatForStarters": MessageLookupByLibrary.simpleMessage("رائع للبدايات"),
     "greetingPrefix": MessageLookupByLibrary.simpleMessage("مرحباً،"),
     "history": MessageLookupByLibrary.simpleMessage("السجل"),

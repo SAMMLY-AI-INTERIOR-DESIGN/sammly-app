@@ -211,6 +211,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "generations5": MessageLookupByLibrary.simpleMessage(
       "5 premium generations",
     ),
+    "getBtn": MessageLookupByLibrary.simpleMessage("Get"),
     "greatForStarters": MessageLookupByLibrary.simpleMessage(
       "Great for starters",
     ),

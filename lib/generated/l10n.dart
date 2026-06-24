@@ -2506,6 +2506,11 @@ class S {
   String get upgrade {
     return Intl.message('Upgrade', name: 'upgrade', desc: '', args: []);
   }
+
+  /// `Get`
+  String get getBtn {
+    return Intl.message('Get', name: 'getBtn', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

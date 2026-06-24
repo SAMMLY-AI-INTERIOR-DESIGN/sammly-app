@@ -56,13 +56,14 @@ dependencies:
   internet_connection_checker_plus: ^3.0.0
   flutter_mask_painter: ^1.0.2
   image_gallery_saver_plus: ^5.0.0
-  url_launcher: ^6.3.1
+  url_launcher: ^6.3.2
   flutter_localizations: 
     sdk: flutter
   share_plus: ^13.1.0
   crypto: ^3.0.7
   flutter_dotenv: ^6.0.1
   image: ^4.8.0
+  package_info_plus: ^10.1.0
 
 dev_dependencies:
   flutter_test:
