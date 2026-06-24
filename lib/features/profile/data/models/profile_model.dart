@@ -37,7 +37,9 @@ class ProfileModel {
       username: json['username']?.toString() ?? user?['username']?.toString(),
       email: json['email']?.toString() ?? user?['email']?.toString(),
       avatar: json['avatar']?.toString() ?? user?['avatar']?.toString(),
-      country: json['country']?.toString(),
+      country:
+          json['country']?.toString() ??
+          user?['country']?.toString(),
       gender: json['gender']?.toString(),
       dateOfBirth: json['dateOfBirth']?.toString(),
       verified: json['verified'] as bool? ?? user?['verified'] as bool?,

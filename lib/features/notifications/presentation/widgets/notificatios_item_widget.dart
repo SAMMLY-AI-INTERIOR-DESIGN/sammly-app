@@ -62,7 +62,13 @@ class NotificationItemWidget extends StatelessWidget {
         }
       }
 
-      if (parsedDate == null) return dateStr;
+      if (parsedDate == null) {
+        if (RegExp(r'\d{1,2}:\d{2}').hasMatch(cleaned) &&
+            !cleaned.toUpperCase().contains('UTC')) {
+          return "$dateStr UTC";
+        }
+        return dateStr;
+      }
 
       final localDate = isEgypt
           ? parsedDate.toUtc().add(const Duration(hours: 3))

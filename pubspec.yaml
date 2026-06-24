@@ -44,7 +44,6 @@ dependencies:
   hive_flutter: ^1.1.0
   shared_preferences: ^2.5.4
   image_picker: ^1.0.7
-  image_cropper: ^9.1.0
   dotted_border: ^2.1.0
   flutter_staggered_grid_view: ^0.7.0
   flutter_native_splash: ^2.4.0
@@ -64,6 +63,7 @@ dependencies:
   flutter_dotenv: ^6.0.1
   image: ^4.8.0
   package_info_plus: ^10.1.0
+  crop_your_image: ^2.0.0
 
 dev_dependencies:
   flutter_test:
