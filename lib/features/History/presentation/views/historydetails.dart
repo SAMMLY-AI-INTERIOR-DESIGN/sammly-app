@@ -139,36 +139,11 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
         _isShareLoading = true;
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  color: AppColors.whiteColor,
-                  strokeWidth: 2,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Text(S.of(context).downloadingImage),
-            ],
-          ),
-          duration: const Duration(seconds: 2),
-          backgroundColor: AppColors.primaryColor,
-        ),
-      );
-
       final response = await http.get(Uri.parse(_selectedImage));
       if (response.statusCode == 200) {
         final tempDir = await getTemporaryDirectory();
         final file = File('${tempDir.path}/shared_design.png');
         await file.writeAsBytes(response.bodyBytes);
-
-        if (mounted) {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        }
 
         await Share.shareXFiles(
           [XFile(file.path)],

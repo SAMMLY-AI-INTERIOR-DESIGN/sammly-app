@@ -2481,6 +2481,31 @@ class S {
       args: [],
     );
   }
+
+  /// `Tokens are Not Enough`
+  String get tokensAreNotEnough {
+    return Intl.message(
+      'Tokens are Not Enough',
+      name: 'tokensAreNotEnough',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `.Upgrade to continue creating more designs.`
+  String get upgradeToContinue {
+    return Intl.message(
+      '.Upgrade to continue creating more designs.',
+      name: 'upgradeToContinue',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upgrade`
+  String get upgrade {
+    return Intl.message('Upgrade', name: 'upgrade', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

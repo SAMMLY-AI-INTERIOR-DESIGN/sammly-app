@@ -293,5 +293,8 @@
   "historyTypeMaskEdit": "تعديل الجزء",
   "historyTypeMaskReplace": "استبدال الجزء",
   "historyTypeMaskRemove": "إزالة الجزء",
-  "historyTypeDefault": "تصميم"
+  "historyTypeDefault": "تصميم",
+  "tokensAreNotEnough": "الرصيد غير كافٍ",
+  "upgradeToContinue": ".قم بالترقية للاستمرار في إنشاء المزيد من التصميمات.",
+  "upgrade": "ترقية"
 }

@@ -17,6 +17,7 @@ import 'package:sammly/features/Explore/data/design_details_model.dart';
 import 'package:sammly/features/Explore/data/exploremodel.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_state.dart';
+import 'package:sammly/features/generate/data/model/generate_mappers.dart';
 
 class SharedDesignDetailsView extends StatefulWidget {
   final ExploreDesignModel exploreDesign;
@@ -574,7 +575,10 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                 Navigator.pushNamed(
                   context,
                   AppRoutes.restyleView,
-                  arguments: {'initialImageUrl': design.imageUrl},
+                  arguments: {
+                    'initialImageUrl': design.imageUrl,
+                    'initialStyle': GenerateMappers.styleToUi(design.style),
+                  },
                 );
               }
             },

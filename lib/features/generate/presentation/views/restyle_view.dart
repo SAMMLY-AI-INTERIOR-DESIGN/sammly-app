@@ -17,7 +17,8 @@ import 'package:sammly/generated/l10n.dart';
 
 class RestyleView extends StatefulWidget {
   final String? initialImageUrl;
-  const RestyleView({super.key, this.initialImageUrl});
+  final String? initialStyle;
+  const RestyleView({super.key, this.initialImageUrl, this.initialStyle});
 
   @override
   State<RestyleView> createState() => _RestyleViewState();
@@ -33,6 +34,9 @@ class _RestyleViewState extends State<RestyleView> {
   @override
   void initState() {
     super.initState();
+    if (widget.initialStyle != null && widget.initialStyle!.isNotEmpty) {
+      _selectedStyle = widget.initialStyle;
+    }
     if (widget.initialImageUrl != null && widget.initialImageUrl!.isNotEmpty) {
       _downloadInitialImage(widget.initialImageUrl!);
     }
