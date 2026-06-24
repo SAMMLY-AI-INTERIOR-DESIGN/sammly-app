@@ -153,10 +153,14 @@ class _SharedImageCardState extends State<SharedImageCard> {
                     children: [
                       Row(
                         children: [
-                          GestureDetector(
-                            onTap: widget.readOnly
-                                ? null
-                                : () {
+                          widget.readOnly
+                              ? SvgPicture.asset(
+                                  AppImages.heartFilled,
+                                  width: 14.w,
+                                  height: 14.h,
+                                )
+                              : GestureDetector(
+                                  onTap: () {
                                     setState(() {
                                       _isLiked = !_isLiked;
                                       _isLiked ? _likesCount++ : _likesCount--;
@@ -165,21 +169,21 @@ class _SharedImageCardState extends State<SharedImageCard> {
                                       widget.onLikeChanged!(_isLiked);
                                     }
                                   },
-                            child: Container(
-                              padding: EdgeInsets.all(6.w),
-                              decoration: BoxDecoration(
-                                color: AppColors.bg2Color,
-                                borderRadius: BorderRadius.circular(20.r),
-                              ),
-                              child: SvgPicture.asset(
-                                (widget.readOnly || _isLiked)
-                                    ? AppImages.heartFilled
-                                    : AppImages.heartOutline,
-                                width: 12.w,
-                                height: 12.h,
-                              ),
-                            ),
-                          ),
+                                  child: Container(
+                                    padding: EdgeInsets.all(6.w),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.bg2Color,
+                                      borderRadius: BorderRadius.circular(20.r),
+                                    ),
+                                    child: SvgPicture.asset(
+                                      _isLiked
+                                          ? AppImages.heartFilled
+                                          : AppImages.heartOutline,
+                                      width: 12.w,
+                                      height: 12.h,
+                                    ),
+                                  ),
+                                ),
                           Text(
                             " $_likesCount",
                             style: AppTextStyles.body16Medium,

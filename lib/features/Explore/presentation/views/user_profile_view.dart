@@ -5,10 +5,13 @@ import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/functions.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/avatar_widget.dart';
+import 'package:sammly/features/Explore/cubit/explorecubit.dart';
 import 'package:sammly/features/Explore/cubit/public_profile_cubit.dart';
 import 'package:sammly/features/Explore/cubit/public_profile_state.dart';
 import 'package:sammly/features/Explore/cubit/public_profile_repo.dart';
 import 'package:sammly/features/Explore/data/exploremodel.dart';
+import 'package:sammly/features/Explore/cubit/design_details_cubit.dart';
+import 'package:sammly/features/Explore/cubit/design_details_repo.dart';
 import 'package:sammly/features/Explore/presentation/views/shared_design_details_view.dart';
 import 'package:sammly/features/following/cubit/following_cubit.dart';
 import 'package:sammly/features/following/cubit/following_states.dart';
@@ -51,7 +54,31 @@ class _UserProfileViewState extends State<UserProfileView> {
       ],
       child: Scaffold(
         backgroundColor: AppColors.whiteColor,
-        body: BlocBuilder<PublicProfileCubit, PublicProfileState>(
+        body: BlocConsumer<PublicProfileCubit, PublicProfileState>(
+          listener: (context, state) {
+            if (state is PublicProfileLikeError) {
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text(state.error),
+                    backgroundColor: Colors.red,
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+            } else if (state is PublicProfileLikeSuccess) {
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                    backgroundColor: AppColors.primaryColor,
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              context.read<ExploreCubit>().toggleLikeLocal(state.designId);
+            }
+          },
           builder: (context, state) {
             if (state is PublicProfileLoading || state is PublicProfileInitial) {
               return const Center(
@@ -154,23 +181,32 @@ class _UserProfileViewState extends State<UserProfileView> {
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) =>
-                                                        SharedDesignDetailsView(
-                                                      exploreDesign: ExploreDesignModel(
-                                                        id: design.id,
-                                                        name: profileData.profile.name,
-                                                        avatar: profileData.profile.avatar,
-                                                        likesCount: design.likesCount,
-                                                        prompt: design.prompt,
-                                                        imageUrl: design.imageUrl,
-                                                        sharedAt: design.sharedAt ?? '',
-                                                        isLiked: design.isLiked,
-                                                        isFavorited: design.isFavorited,
-                                                        style: design.style,
-                                                        room: design.room,
+                                                        BlocProvider(
+                                                      create: (context) => DesignDetailsCubit(DesignDetailsRepo()),
+                                                      child: SharedDesignDetailsView(
+                                                        exploreDesign: ExploreDesignModel(
+                                                          id: design.id,
+                                                          name: profileData.profile.name,
+                                                          avatar: profileData.profile.avatar,
+                                                          likesCount: design.likesCount,
+                                                          prompt: design.prompt,
+                                                          imageUrl: design.imageUrl,
+                                                          sharedAt: design.sharedAt ?? '',
+                                                          isLiked: design.isLiked,
+                                                          isFavorited: design.isFavorited,
+                                                          style: design.style,
+                                                          room: design.room,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                );
+                                                ).then((_) {
+                                                  if (context.mounted) {
+                                                    context
+                                                        .read<PublicProfileCubit>()
+                                                        .getPublicProfile(userId: widget.userId);
+                                                  }
+                                                });
                                               },
                                               child: SharedImageCard(
                                                 item: item,

@@ -19,7 +19,9 @@ void showCustomSnackBar({
           fontWeight: FontWeight.w500,
         ),
       ),
-      backgroundColor: isError ? Colors.red.shade400 : AppColors.secondaryColor,
+      backgroundColor: (message == 'Under maintenance' || message == 'تحت الصيانة')
+          ? AppColors.primaryColor
+          : (isError ? Colors.red.shade400 : AppColors.secondaryColor),
 
       behavior: SnackBarBehavior.floating,
 

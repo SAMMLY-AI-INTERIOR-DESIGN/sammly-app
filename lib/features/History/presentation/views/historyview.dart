@@ -7,6 +7,8 @@ import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/core/widgets/custom_appbar.dart';
 import 'package:sammly/features/History/cubit/historycubit.dart';
 import 'package:sammly/features/History/cubit/history_state.dart';
+import 'package:sammly/features/Explore/cubit/design_details_cubit.dart';
+import 'package:sammly/features/Explore/cubit/design_details_repo.dart';
 import 'package:sammly/features/History/presentation/widgets/customhistory.dart';
 import 'package:sammly/features/History/presentation/views/historydetails.dart';
 import 'package:sammly/features/layout/presentation/cubit/layout_cubit/layout_cubit.dart';
@@ -179,13 +181,16 @@ class _HistoryViewState extends State<HistoryView> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => HistoryDetailsView(
-                            title: title,
-                            imageUrl: item.imageUrl,
-                            designId: item.id,
-                            prompt: item.prompt,
-                            generationType: item.generationType,
-                            groupedDesigns: groupedDesigns,
+                          builder: (context) => BlocProvider(
+                            create: (context) => DesignDetailsCubit(DesignDetailsRepo()),
+                            child: HistoryDetailsView(
+                              title: title,
+                              imageUrl: item.imageUrl,
+                              designId: item.id,
+                              prompt: item.prompt,
+                              generationType: item.generationType,
+                              groupedDesigns: groupedDesigns,
+                            ),
                           ),
                         ),
                       );

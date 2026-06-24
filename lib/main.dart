@@ -21,8 +21,6 @@ import 'package:sammly/features/Explore/cubit/explorecubit.dart';
 import 'package:sammly/features/Explore/cubit/explorerepo.dart';
 import 'package:sammly/features/Explore/cubit/static_designs_cubit.dart';
 import 'package:sammly/features/Explore/cubit/static_designs_repo.dart';
-import 'package:sammly/features/Explore/cubit/design_details_cubit.dart';
-import 'package:sammly/features/Explore/cubit/design_details_repo.dart';
 import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
 import 'package:sammly/features/favorite/data/repo/favorite_repo.dart';
 import 'package:sammly/core/localization/locale_cubit.dart';
@@ -51,21 +49,16 @@ class SammlyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          lazy: false,
           create: (context) => ProfileCubit(ProfileRepo())..fetchProfile(),
         ),
         BlocProvider(create: (context) => SupportCubit(SupportRepo())),
         BlocProvider(
-          lazy: false,
           create: (context) => HomeCubit(HomeRepo())..fetchHomeData(),
         ),
         BlocProvider(create: (context) => HistoryCubit(HistoryRepo())),
         BlocProvider(create: (context) => ExploreCubit(ExploreRepo())),
         BlocProvider(
           create: (context) => StaticDesignsCubit(StaticDesignsRepo()),
-        ),
-        BlocProvider(
-          create: (context) => DesignDetailsCubit(DesignDetailsRepo()),
         ),
         BlocProvider(create: (context) => FavoriteCubit(FavoriteRepo())),
         BlocProvider(create: (context) => LocaleCubit()),

@@ -51,29 +51,16 @@ class ProfileCubit extends Cubit<ProfileState> {
 
     result.fold((error) => emit(SettingInfoError(error)), (settingInfo) {
       currentSettingInfo = settingInfo;
+      hasUnreadNotifications = settingInfo.hasUnreadNotifications ?? false;
       emit(SettingInfoLoaded(settingInfo));
+      emit(ProfileUnreadNotificationsUpdated());
     });
   }
 
   bool hasUnreadNotifications = false;
 
   Future<void> checkUnreadNotifications() async {
-    final notificationsRepo = NotificationsRepo();
-    final result = await notificationsRepo.getNotifications(page: 1, limit: 1);
-    
-    result.fold(
-      (error) => null,
-      (response) {
-        if (response.notifications.isNotEmpty) {
-          final latestId = response.notifications.first.id;
-          final lastSeenId = SharedPref.getData(key: 'last_seen_notification_id');
-          if (latestId != lastSeenId) {
-            hasUnreadNotifications = true;
-            emit(ProfileUnreadNotificationsUpdated());
-          }
-        }
-      },
-    );
+    // Check is now handled via fetchSettingInfo
   }
 
   void markNotificationsAsRead() {

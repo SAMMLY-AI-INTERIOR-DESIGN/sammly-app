@@ -11,6 +11,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
     this.backgroundColor = Colors.transparent,
     this.onBack,
     this.showLeading = true,
+    this.maxLines,
   });
 
   final String title;
@@ -18,6 +19,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   final Color backgroundColor;
   final VoidCallback? onBack;
   final bool showLeading;
+  final int? maxLines;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +40,12 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
               onPressed: onBack ?? () => Navigator.pop(context),
             )
           : null,
-      title: Text(title, style: AppTextStyles.title20Bold),
+      title: Text(
+        title, 
+        style: AppTextStyles.title20Bold,
+        maxLines: maxLines,
+        overflow: maxLines != null ? TextOverflow.ellipsis : null,
+      ),
       actions: actions,
     );
   }
