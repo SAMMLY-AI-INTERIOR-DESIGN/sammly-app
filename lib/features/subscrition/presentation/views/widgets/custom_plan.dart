@@ -7,7 +7,6 @@ class CustomPlan extends StatelessWidget {
   final String iconPath;
   final String title;
   final String tokensAmount;
-  final String generationsText;
   final String description;
   final String price;
   final String? priceSub;
@@ -24,7 +23,6 @@ class CustomPlan extends StatelessWidget {
     required this.iconPath,
     required this.title,
     required this.tokensAmount,
-    required this.generationsText,
     required this.description,
     required this.price,
     this.priceSub,
@@ -46,7 +44,7 @@ class CustomPlan extends StatelessWidget {
       child: Container(
         width: double.infinity,
         margin: EdgeInsetsDirectional.only(bottom: 8.h),
-        padding: EdgeInsets.all(14.w), // زيادة مسافة الأمان الداخلية للكارد
+        padding: EdgeInsets.all(12.w), // Reduced padding
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.circular(14.r), // حواف ناعمة ومتناسقة
@@ -104,7 +102,7 @@ class CustomPlan extends StatelessWidget {
               ),
             ),
 
-            SizedBox(height: 16.h),
+            SizedBox(height: 12.h),
 
             // 2. صف محتويات الباقة الأساسي
             Row(
@@ -158,22 +156,12 @@ class CustomPlan extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        generationsText,
-                        style: TextStyle(
-                          color: const Color(0xFF2E2E2E),
-                          fontSize: 14.sp,
-                          fontFamily: 'Manrope',
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      Text(
                         description,
                         style: TextStyle(
-                          color: const Color(0xFF5B5B5B),
-                          fontSize: 12.sp,
+                          color: const Color(0xFF2E2E2E),
+                          fontSize: 13.sp,
                           fontFamily: 'Manrope',
-                          fontWeight: FontWeight.w400,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ],

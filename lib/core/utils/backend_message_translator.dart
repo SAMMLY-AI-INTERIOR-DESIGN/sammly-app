@@ -8,6 +8,11 @@ import 'package:sammly/core/shared_pref/shared_pref.dart';
 class BackendMessageTranslator {
   /// Translates the given backend message to Arabic if the app locale is Arabic.
   static String translate(String message) {
+    if (message == 'Source is not available' || message == 'soon') {
+      final locale = SharedPref.getData(key: 'language_code') ?? 'en';
+      return locale == 'ar' ? 'قريباً' : 'Soon';
+    }
+
     final locale = SharedPref.getData(key: 'language_code') ?? 'en';
     if (locale != 'ar') return message;
 

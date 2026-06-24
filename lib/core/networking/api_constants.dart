@@ -68,4 +68,7 @@ abstract class ApiConstants {
   // Payment / Subscription endpoints
   static const String claimPackage = '/api/payment/under-updating';
   static const String getPackages = '/api/payment/packages';
+
+  // App version endpoint
+  static const String appVersion = '/api/app-version';
 }

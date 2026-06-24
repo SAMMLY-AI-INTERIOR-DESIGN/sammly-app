@@ -233,7 +233,6 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                                                 iconPath: AppImages.giftIcon,
                                                 title: S.of(context).freeGenerations,
                                                 tokensAmount: freePkg.tokens.toString(),
-                                                generationsText: S.of(context).generations5,
                                                 description: S.of(context).planDesc1,
                                                 price: S.of(context).free,
                                                 primaryColor: const Color(0xFFD97706),
@@ -249,7 +248,6 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                                                 iconPath: AppImages.starIcon,
                                                 title: S.of(context).planStarter,
                                                 tokensAmount: starterPkg.tokens.toString(),
-                                                generationsText: S.of(context).generations10,
                                                 description: S.of(context).planDesc2,
                                                 price: currencyText(starterPkg.price),
                                                 priceSub: S.of(context).perPack,
@@ -266,7 +264,6 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                                                 iconPath: AppImages.crownIcon,
                                                 title: S.of(context).planPro,
                                                 tokensAmount: proPkg.tokens.toString(),
-                                                generationsText: S.of(context).generations30,
                                                 description: S.of(context).planDesc3,
                                                 price: currencyText(proPkg.price),
                                                 priceSub: S.of(context).perPack,
@@ -282,7 +279,6 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                                                 iconPath: AppImages.diamondIcon,
                                                 title: S.of(context).planPremium,
                                                 tokensAmount: premiumPkg.tokens.toString(),
-                                                generationsText: S.of(context).generations100,
                                                 description: S.of(context).planDesc4,
                                                 price: currencyText(premiumPkg.price),
                                                 priceSub: S.of(context).perPack,
@@ -346,7 +342,9 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                               ),
                             )
                           : Text(
-                              S.of(context).subscribe,
+                              _selectedPlanIndex == 0 
+                                  ? S.of(context).getBtn 
+                                  : S.of(context).subscribe,
                               style: AppTextStyles.title20Bold.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600,

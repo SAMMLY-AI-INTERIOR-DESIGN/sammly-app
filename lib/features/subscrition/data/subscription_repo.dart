@@ -70,6 +70,9 @@ class SubscriptionRepo {
   }
 
   String _handleDioError(DioException e) {
+    if (e.response?.statusCode == 404) {
+      return _t('soon');
+    }
     if (e.response != null && e.response?.data != null) {
       try {
         final data = e.response!.data;

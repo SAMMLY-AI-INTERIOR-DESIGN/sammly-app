@@ -295,5 +295,6 @@
   "historyTypeDefault": "Design",
   "tokensAreNotEnough": "Tokens are Not Enough",
   "upgradeToContinue": ".Upgrade to continue creating more designs.",
-  "upgrade": "Upgrade"
+  "upgrade": "Upgrade",
+  "getBtn": "Get"
 }

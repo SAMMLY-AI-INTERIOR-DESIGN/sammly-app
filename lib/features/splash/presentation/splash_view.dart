@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/shared_pref/shared_pref.dart';
+import 'package:sammly/core/utils/app_version_checker.dart';
 
 // ─── Crop ratios from actual SVG clipPath bounds (all on 1500×1500 canvas) ────
 //  logo_roof.svg   : y 477.98→1021.73  contentRatio = 543.75/1500 = 0.3625
@@ -101,6 +102,13 @@ class _SplashScreenState extends State<SplashScreen>
     // Hold phase: all elements static
     await Future.delayed(const Duration(milliseconds: 1500));
     if (!mounted) return;
+
+    final isForced = await AppVersionChecker.checkVersion(context);
+    if (!mounted) return;
+    if (isForced) {
+      // Stay on splash screen forever if update is forced
+      return;
+    }
 
     final token = SharedPref.getData(key: 'jwt');
     if (token != null && token.isNotEmpty) {
