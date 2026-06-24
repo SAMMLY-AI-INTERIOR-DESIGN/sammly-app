@@ -5,11 +5,11 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/core/theme/text_styles.dart';
+import 'package:sammly/core/widgets/crop_image_screen.dart';
 import 'package:sammly/generated/l10n.dart';
 
 class EditImageSection extends StatefulWidget {
@@ -39,38 +39,20 @@ class _EditImageSectionState extends State<EditImageSection> {
     );
 
     if (pickedFile != null) {
-      final CroppedFile? croppedFile = await _cropImage(pickedFile.path);
+      final croppedFile = await _cropImage(pickedFile.path);
       if (croppedFile != null) {
         setState(() {
-          _selectedImage = File(croppedFile.path);
+          _selectedImage = croppedFile;
         });
         widget.onImagePicked(_selectedImage);
       }
     }
   }
 
-  Future<CroppedFile?> _cropImage(String path) async {
-    return await ImageCropper().cropImage(
-      sourcePath: path,
-      uiSettings: [
-        AndroidUiSettings(
-          toolbarTitle: 'Crop Image',
-          toolbarColor: AppColors.primaryColor,
-          toolbarWidgetColor: Colors.white,
-          initAspectRatio: CropAspectRatioPreset.square,
-          lockAspectRatio: true,
-          activeControlsWidgetColor: AppColors.secondaryColor,
-          cropStyle: CropStyle.circle,
-          aspectRatioPresets: [CropAspectRatioPreset.square],
-        ),
-        IOSUiSettings(
-          title: S.of(context).cropImage,
-          aspectRatioLockEnabled: true,
-          resetAspectRatioEnabled: false,
-          cropStyle: CropStyle.circle,
-          aspectRatioPresets: [CropAspectRatioPreset.square],
-        ),
-      ],
+  Future<File?> _cropImage(String path) async {
+    return await Navigator.push<File?>(
+      context,
+      MaterialPageRoute(builder: (_) => CropImageScreen(imagePath: path)),
     );
   }
 
