@@ -32,7 +32,7 @@ class ShareLinkTextField extends StatelessWidget {
           readOnly: true,
           keyboardType: TextInputType.url,
           minLines: 1,
-          maxLines: 2,
+          maxLines: 3,
           style: AppTextStyles.body14Regular.copyWith(
             color: Colors.grey.shade700,
             height: 1.4,

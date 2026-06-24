@@ -4,9 +4,12 @@ import 'package:dio/dio.dart';
 import 'package:sammly/core/networking/api_constants.dart';
 import 'package:sammly/core/networking/dio_helper.dart';
 import 'package:sammly/core/shared_pref/shared_pref.dart';
+import 'package:sammly/core/utils/backend_message_translator.dart';
 import 'package:sammly/features/Explore/data/exploremodel.dart';
 
 class ExploreRepo {
+  static String _t(String msg) => BackendMessageTranslator.translate(msg);
+
   Future<Either<String, ExploreResponse>> getSharedDesigns({
     int page = 1,
     int limit = 20,
@@ -16,7 +19,7 @@ class ExploreRepo {
     try {
       final token = SharedPref.getData(key: 'jwt');
       if (token == null) {
-        return left('Unauthorized: No token found.');
+        return left(_t('Unauthorized: No token found.'));
       }
 
       // Clamp pagination values
@@ -46,14 +49,14 @@ class ExploreRepo {
       } else {
         log(response.data.toString());
         return left(
-          response.data['message'] ?? 'Failed to load shared designs.',
+          _t(response.data['message'] ?? 'Failed to load shared designs.'),
         );
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
     } catch (e) {
       log('Explore error: $e');
-      return left('An unexpected error occurred.');
+      return left(_t('An unexpected error occurred.'));
     }
   }
 
@@ -70,7 +73,7 @@ class ExploreRepo {
               (data['errors'] is List
                   ? (data['errors'] as List).join(', ')
                   : null);
-          if (msg != null) return msg.toString();
+          if (msg != null) return _t(msg.toString());
         }
       } catch (_) {}
     }
@@ -80,9 +83,9 @@ class ExploreRepo {
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
       case DioExceptionType.connectionError:
-        return 'Server Failed Connection , Try again';
+        return _t('Server Failed Connection , Try again');
       default:
-        return 'Network error occurred';
+        return _t('Network error occurred');
     }
   }
 }

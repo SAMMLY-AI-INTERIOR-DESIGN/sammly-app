@@ -108,7 +108,7 @@ class EarnView extends StatelessWidget {
                               : "Get 15 free tokens every month when you open your account!",
                           style: TextStyle(
                             fontSize: 13.sp,
-                            color: Colors.white.withOpacity(0.9),
+                            color: Colors.white.withValues(alpha: 0.9),
                             height: 1.4,
                             fontFamily: 'Manrope',
                           ),
@@ -227,8 +227,8 @@ class EarnView extends StatelessWidget {
               description: isArabic
                   ? "شارك تصميماتك للحصول على 1\nتوكن في كل مرة"
                   : "Share your designs to get 1\ntoken each time",
-              rightMainText: isArabic ? "مجاني" : "Free",
-              rightSubText: isArabic ? "/منشور" : "/post",
+              rightMainText: isArabic ? "على كل" : "Every",
+              rightSubText: isArabic ? "مُشاركة" : "share",
               primaryColor: const Color(0xFF3C60B6),
               bgColor: const Color(0xFFF1F4FA),
             ),

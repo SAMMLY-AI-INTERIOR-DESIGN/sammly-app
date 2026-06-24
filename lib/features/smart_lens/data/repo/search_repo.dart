@@ -4,14 +4,17 @@ import 'package:dio/dio.dart';
 import 'package:sammly/core/networking/api_constants.dart';
 import 'package:sammly/core/networking/dio_helper.dart';
 import 'package:sammly/core/shared_pref/shared_pref.dart';
+import 'package:sammly/core/utils/backend_message_translator.dart';
 import 'package:sammly/features/smart_lens/data/models/search_response.dart';
 
 class SearchRepo {
+  static String _t(String msg) => BackendMessageTranslator.translate(msg);
+
   Future<Either<String, SearchResponse>> searchDesign(String designId) async {
     try {
       final token = SharedPref.getData(key: 'jwt');
       if (token == null) {
-        return left('Unauthorized: No token found.');
+        return left(_t('Unauthorized: No token found.'));
       }
 
       final response = await DioHelper.getData(
@@ -25,13 +28,13 @@ class SearchRepo {
         return right(SearchResponse.fromJson(response.data));
       } else {
         log('Search API error: ${response.data}');
-        return left(response.data['message'] ?? 'Failed to search design.');
+        return left(_t(response.data['message'] ?? 'Failed to search design.'));
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
     } catch (e) {
       log('Search error: $e');
-      return left('Error: ${e.toString()}');
+      return left(_t('Error: ${e.toString()}'));
     }
   }
 
@@ -43,10 +46,10 @@ class SearchRepo {
         log('Search API Error [$statusCode]: $data');
 
         if (statusCode == 400) {
-          return data['message'] ?? 'Invalid design ID.';
+          return _t(data['message'] ?? 'Invalid design ID.');
         }
         if (statusCode == 404) {
-          return data['message'] ?? 'Design not found.';
+          return _t(data['message'] ?? 'Design not found.');
         }
 
         if (data is Map) {
@@ -57,7 +60,7 @@ class SearchRepo {
               (data['errors'] is List
                   ? (data['errors'] as List).join(', ')
                   : null);
-          if (msg != null) return msg.toString();
+          if (msg != null) return _t(msg.toString());
         }
       } catch (_) {}
     }
@@ -67,9 +70,9 @@ class SearchRepo {
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
       case DioExceptionType.connectionError:
-        return 'Server Failed Connection, Try again';
+        return _t('Server Failed Connection, Try again');
       default:
-        return 'Network error occurred';
+        return _t('Network error occurred');
     }
   }
 }

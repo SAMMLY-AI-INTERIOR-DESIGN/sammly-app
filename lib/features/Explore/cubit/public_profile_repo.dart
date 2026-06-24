@@ -4,9 +4,12 @@ import 'package:dio/dio.dart';
 import 'package:sammly/core/networking/api_constants.dart';
 import 'package:sammly/core/networking/dio_helper.dart';
 import 'package:sammly/core/shared_pref/shared_pref.dart';
+import 'package:sammly/core/utils/backend_message_translator.dart';
 import 'package:sammly/features/Explore/data/public_profile_model.dart';
 
 class PublicProfileRepo {
+  static String _t(String msg) => BackendMessageTranslator.translate(msg);
+
   Future<Either<String, PublicProfileModel>> getPublicProfile({
     required String userId,
     int page = 1,
@@ -15,7 +18,7 @@ class PublicProfileRepo {
     try {
       final token = SharedPref.getData(key: 'jwt');
       if (token == null) {
-        return Left('Unauthorized: No token found.');
+        return Left(_t('Unauthorized: No token found.'));
       }
 
       final response = await DioHelper.getData(
@@ -32,13 +35,13 @@ class PublicProfileRepo {
         return Right(model);
       } else {
         log(response.data.toString());
-        return Left(response.data['message'] ?? 'Unknown error');
+        return Left(_t(response.data['message'] ?? 'Unknown error'));
       }
     } on DioException catch (e) {
       return Left(_handleDioError(e));
     } catch (e) {
       log('Public profile error: $e');
-      return Left('An unexpected error occurred.');
+      return Left(_t('An unexpected error occurred.'));
     }
   }
 
@@ -54,7 +57,7 @@ class PublicProfileRepo {
               (data['errors'] is List
                   ? (data['errors'] as List).join(', ')
                   : null);
-          if (msg != null) return msg.toString();
+          if (msg != null) return _t(msg.toString());
         }
       } catch (_) {}
     }
@@ -64,9 +67,9 @@ class PublicProfileRepo {
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
       case DioExceptionType.connectionError:
-        return 'Server Failed Connection , Try again';
+        return _t('Server Failed Connection , Try again');
       default:
-        return 'Network error occurred';
+        return _t('Network error occurred');
     }
   }
 }

@@ -624,10 +624,10 @@ class S {
     );
   }
 
-  /// `https://invite.Sammly.com/\nASDGFJKHHUHSULWDIH`
+  /// `https://drive.google.com/drive/folders/1J-vtrMlETkIt9Yk0VGE2CcPrc8ttdvoG?usp=sharing`
   String get dummyInviteLink {
     return Intl.message(
-      'https://invite.Sammly.com/\nASDGFJKHHUHSULWDIH',
+      'https://drive.google.com/drive/folders/1J-vtrMlETkIt9Yk0VGE2CcPrc8ttdvoG?usp=sharing',
       name: 'dummyInviteLink',
       desc: '',
       args: [],

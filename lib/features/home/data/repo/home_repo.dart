@@ -6,14 +6,17 @@ import 'package:dio/dio.dart';
 import 'package:sammly/core/networking/api_constants.dart';
 import 'package:sammly/core/networking/dio_helper.dart';
 import 'package:sammly/core/shared_pref/shared_pref.dart';
+import 'package:sammly/core/utils/backend_message_translator.dart';
 import 'package:sammly/features/home/data/models/home_model.dart';
 
 class HomeRepo {
+  static String _t(String msg) => BackendMessageTranslator.translate(msg);
+
   Future<Either<String, HomeModel>> getHomeData() async {
     try {
       final token = SharedPref.getData(key: 'jwt');
       if (token == null) {
-        return left('Unauthorized: No token found.');
+        return left(_t('Unauthorized: No token found.'));
       }
 
       final response = await DioHelper.getData(
@@ -27,13 +30,13 @@ class HomeRepo {
         return right(HomeModel.fromJson(dataMap));
       } else {
         log(response.data.toString());
-        return left(response.data['message'] ?? 'Failed to get home data.');
+        return left(_t(response.data['message'] ?? 'Failed to get home data.'));
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
     } catch (e) {
       log('Home repo error: $e');
-      return left('An unexpected error occurred.');
+      return left(_t('An unexpected error occurred.'));
     }
   }
 
@@ -53,7 +56,7 @@ class HomeRepo {
               (data['data'] is Map
                   ? (data['data']['msg'] ?? data['data']['message'])
                   : null);
-          if (msg != null) return msg.toString();
+          if (msg != null) return _t(msg.toString());
         }
       } catch (_) {}
     }
@@ -63,9 +66,9 @@ class HomeRepo {
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
       case DioExceptionType.connectionError:
-        return 'Server Failed Connection, Try again';
+        return _t('Server Failed Connection, Try again');
       default:
-        return 'Network error occurred';
+        return _t('Network error occurred');
     }
   }
 }
