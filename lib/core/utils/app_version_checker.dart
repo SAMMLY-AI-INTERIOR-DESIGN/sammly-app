@@ -168,8 +168,10 @@ class AppVersionChecker {
                           child: ElevatedButton(
                             onPressed: () async {
                               final uri = Uri.parse(downloadUrl);
-                              if (await canLaunchUrl(uri)) {
+                              try {
                                 await launchUrl(uri, mode: LaunchMode.externalApplication);
+                              } catch (e) {
+                                log('Could not launch update URL: $e');
                               }
                             },
                             style: ElevatedButton.styleFrom(

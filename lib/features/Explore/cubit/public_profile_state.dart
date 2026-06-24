@@ -28,3 +28,16 @@ class PublicProfilePaginationFailure extends PublicProfileSuccess {
 
   PublicProfilePaginationFailure(super.profileData, this.errorMsg);
 }
+
+class PublicProfileLikeSuccess extends PublicProfileSuccess {
+  final String designId;
+  final String message;
+
+  PublicProfileLikeSuccess(super.profileData, this.designId, this.message);
+}
+
+class PublicProfileLikeError extends PublicProfileSuccess {
+  final String error;
+
+  PublicProfileLikeError(super.profileData, this.error);
+}

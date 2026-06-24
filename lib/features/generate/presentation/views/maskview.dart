@@ -176,8 +176,7 @@ class _MaskInpaintingViewState extends State<MaskInpaintingView> {
                       child: MaskPainterWidget(
                         backgroundImage: _backgroundImage!,
                         controller: _controller,
-                        // تقدر تستخدم دي لو عاوز تستقبل الملف أوتوماتيك أول ما يترسم
-                        // onMaskSaved: (maskFile) {},
+                        maskColor: Colors.white,
                       ),
                     ),
                   ),

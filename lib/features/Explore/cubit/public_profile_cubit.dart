@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sammly/features/Explore/cubit/public_profile_state.dart';
 import 'package:sammly/features/Explore/data/public_profile_model.dart';
 import 'package:sammly/features/Explore/cubit/public_profile_repo.dart';
+import 'package:sammly/features/Explore/cubit/design_details_repo.dart';
 
 class PublicProfileCubit extends Cubit<PublicProfileState> {
 
@@ -74,8 +75,9 @@ class PublicProfileCubit extends Cubit<PublicProfileState> {
     }
   }
 
-  void toggleLike(String designId, bool isLiked) {
+  Future<void> toggleLike(String designId, bool isLiked) async {
     if (currentData != null) {
+      final originalData = currentData!;
       int totalLikesDiff = isLiked ? 1 : -1;
       
       final updatedDesigns = currentData!.designs.map((d) {
@@ -102,6 +104,21 @@ class PublicProfileCubit extends Cubit<PublicProfileState> {
       );
 
       emit(PublicProfileSuccess(currentData!));
+
+      final repo = DesignDetailsRepo();
+      final result = isLiked
+          ? await repo.likeDesign(designId)
+          : await repo.unlikeDesign(designId);
+
+      result.fold(
+        (failure) {
+          currentData = originalData;
+          emit(PublicProfileLikeError(currentData!, failure));
+        },
+        (message) {
+          emit(PublicProfileLikeSuccess(currentData!, designId, message));
+        },
+      );
     }
   }
 }

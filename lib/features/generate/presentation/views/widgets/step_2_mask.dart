@@ -268,6 +268,7 @@ class _Step2MaskState extends State<Step2Mask> {
                     backgroundImage: widget.uploadedImage,
                     controller: _controller,
                     showControls: false,
+                    maskColor: Colors.white,
                   ),
                 ),
               ),

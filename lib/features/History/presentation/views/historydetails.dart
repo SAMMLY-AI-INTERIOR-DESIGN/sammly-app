@@ -172,6 +172,23 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
     }
   }
 
+  String _buildAppBarTitle(bool isMaskOrReplace) {
+    if (isMaskOrReplace) {
+      return widget.title;
+    }
+    
+    final state = context.read<DesignDetailsCubit>().state;
+    if (state is DesignDetailsLoaded) {
+      final style = state.design.style;
+      final room = state.design.room;
+      if (style.isNotEmpty || room.isNotEmpty) {
+        return '$style $room'.trim();
+      }
+    }
+    
+    return widget.title;
+  }
+
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
@@ -257,7 +274,8 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
               appBar: _isMaximized
                   ? null
                   : CustomAppbar(
-                      title: widget.title,
+                      title: _buildAppBarTitle(isMaskOrReplace),
+                      maxLines: 1,
                       onBack: _handleBack,
                       actions: [
                         _isShareLoading

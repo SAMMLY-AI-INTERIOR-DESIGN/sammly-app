@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sammly/core/constant/app_colors.dart';
 import 'package:sammly/core/shared_pref/shared_pref.dart';
 import 'package:sammly/features/Explore/cubit/design_details_cubit.dart';
 import 'package:sammly/features/Explore/cubit/design_details_repo.dart';
 import 'package:sammly/features/Explore/cubit/design_details_states.dart';
+import 'package:sammly/features/Explore/cubit/explorecubit.dart';
 import 'package:sammly/features/Explore/data/exploremodel.dart';
 import 'package:sammly/features/Explore/presentation/views/shared_design_details_view.dart';
 import 'package:sammly/features/profile/data/models/shared_images_model.dart';
@@ -66,10 +68,71 @@ class _SharedImagesListViewState extends State<SharedImagesListView> {
           create: (context) =>
               DesignDetailsCubit(DesignDetailsRepo())
                 ..fetchDesignDetails(designId),
-          child: BlocBuilder<DesignDetailsCubit, DesignDetailsState>(
+          child: BlocConsumer<DesignDetailsCubit, DesignDetailsState>(
+            listener: (context, state) {
+              if (state is DesignLikeSuccess) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(
+                      content: Text(state.message),
+                      backgroundColor: AppColors.primaryColor,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                context.read<ExploreCubit>().toggleLikeLocal(designId);
+              } else if (state is DesignUnlikeSuccess) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(
+                      content: Text(state.message),
+                      backgroundColor: AppColors.primaryColor,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                context.read<ExploreCubit>().toggleLikeLocal(designId);
+              } else if (state is DesignActionError) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(
+                      content: Text(state.message),
+                      backgroundColor: Colors.red,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+              }
+            },
             builder: (context, state) {
-              if (state is DesignDetailsLoaded) {
-                final design = state.design;
+              final cubit = context.read<DesignDetailsCubit>();
+              final design = cubit.currentDesign;
+
+              if (state is DesignDetailsLoading && design == null) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20.h),
+                  child: const Center(child: CircularProgressIndicator()),
+                );
+              }
+
+              if (state is DesignDetailsLoading && design != null) {
+                return Container(
+                  width: 366.w,
+                  height: 135.h,
+                  margin: EdgeInsetsDirectional.only(bottom: 12.h),
+                  decoration: BoxDecoration(
+                    color: AppColors.bg2Color,
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: const Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+                );
+              }
+
+              if (design != null) {
                 final title = '${design.style} design'.trim();
 
                 _updateLikes(design.id, design.likesCount);
@@ -79,44 +142,52 @@ class _SharedImagesListViewState extends State<SharedImagesListView> {
                   description: design.prompt,
                   imageUrl: design.imageUrl,
                   likes: design.likesCount,
+                  isLiked: design.isLiked,
                 );
 
                 return GestureDetector(
                   onTap: () {
                     final profile = context.read<ProfileCubit>().currentProfile;
+                    final existingCubit = context.read<DesignDetailsCubit>();
+                    
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SharedDesignDetailsView(
-                          exploreDesign: ExploreDesignModel(
-                            id: design.id,
-                            name: profile?.name ?? '',
-                            avatar: profile?.avatar ?? '',
-                            likesCount: design.likesCount,
-                            prompt: design.prompt,
-                            imageUrl: design.imageUrl,
-                            sharedAt: design.sharedAt ?? '',
-                            isLiked: design.isLiked,
-                            isFavorited: design.isFavorited,
-                            style: design.style,
-                            room: design.room,
+                        builder: (context) => BlocProvider.value(
+                          value: existingCubit,
+                          child: SharedDesignDetailsView(
+                            exploreDesign: ExploreDesignModel(
+                              id: design.id,
+                              name: profile?.name ?? '',
+                              avatar: profile?.avatar ?? '',
+                              likesCount: design.likesCount,
+                              prompt: design.prompt,
+                              imageUrl: design.imageUrl,
+                              sharedAt: design.sharedAt ?? '',
+                              isLiked: design.isLiked,
+                              isFavorited: design.isFavorited,
+                              style: design.style,
+                              room: design.room,
+                            ),
                           ),
                         ),
                       ),
-                    );
+                    ).then((_) {
+                      if (context.mounted) {
+                        existingCubit.fetchDesignDetails(design.id);
+                      }
+                    });
                   },
                   child: SharedImageCard(
                     item: item,
-                    readOnly: true,
+                    readOnly: false,
+                    onLikeChanged: (isLiked) {
+                      cubit.toggleLike(design.id);
+                    },
                   ),
                 );
-              } else if (state is DesignDetailsError) {
-                return const SizedBox.shrink();
               } else {
-                return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 250.h),
-                  child: Center(child: CircularProgressIndicator()),
-                );
+                return const SizedBox.shrink();
               }
             },
           ),

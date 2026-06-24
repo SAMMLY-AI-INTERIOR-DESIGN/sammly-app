@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sammly/core/constant/app_colors.dart';
-import 'package:sammly/features/profile/presentation/views/widgets/posts_data_section.dart';
+import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/profile_appbar.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/profile_image_name_widget.dart';
 import 'package:sammly/features/profile/presentation/views/widgets/shared_images_list_view.dart';
+import 'package:sammly/generated/l10n.dart';
 
 class MyProfileView extends StatefulWidget {
   const MyProfileView({super.key});
@@ -59,9 +60,9 @@ class _MyProfileViewState extends State<MyProfileView> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SizedBox(height: 80.h),
-                                PostsDataSection(
-                                  postsCount: _postsCount.toString(),
-                                  likesCount: _likesCount.toString(),
+                                Text(
+                                  S.of(context).sharedImages,
+                                  style: AppTextStyles.title18SemiBold,
                                 ),
                                 SizedBox(height: 16.h),
 
@@ -80,7 +81,10 @@ class _MyProfileViewState extends State<MyProfileView> {
                             ),
                           ),
 
-                          const ProfileImageNameWidget(),
+                          ProfileImageNameWidget(
+                            postsCount: _postsCount.toString(),
+                            likesCount: _likesCount.toString(),
+                          ),
                         ],
                       ),
                     ],

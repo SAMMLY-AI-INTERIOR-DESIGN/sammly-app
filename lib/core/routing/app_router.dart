@@ -6,7 +6,11 @@ import 'package:sammly/features/Auth/data/repo/auth_repo.dart';
 import 'package:sammly/features/Auth/presentation/views/login_view.dart';
 import 'package:sammly/features/Auth/presentation/views/signup_view.dart';
 import 'package:sammly/features/Auth/presentation/views/verfictionofsign.dart';
+import 'package:sammly/features/Explore/cubit/design_details_cubit.dart';
+import 'package:sammly/features/Explore/cubit/design_details_repo.dart';
 import 'package:sammly/features/Explore/presentation/views/user_profile_view.dart';
+import 'package:sammly/features/favorite/data/repo/favorite_repo.dart';
+import 'package:sammly/features/favorite/presentation/cubit/favorite_cubit.dart';
 import 'package:sammly/features/favorite/presentation/views/favorite_view.dart';
 import 'package:sammly/features/generate/data/repo/generate_design_repo.dart';
 import 'package:sammly/features/generate/presentation/cubits/generate_design_cubit.dart';
@@ -93,7 +97,10 @@ abstract class AppRouter {
       case AppRoutes.favoriteView:
         return MaterialPageRoute(
           builder: (context) {
-            return const FavoriteView();
+            return BlocProvider(
+              create: (context) => FavoriteCubit(FavoriteRepo()),
+              child: const FavoriteView(),
+            );
           },
         );
 
@@ -122,7 +129,10 @@ abstract class AppRouter {
         final designId = settings.arguments as String? ?? '';
         return MaterialPageRoute(
           builder: (context) {
-            return BrowseDesignDetailsView(designId: designId);
+            return BlocProvider(
+              create: (context) => DesignDetailsCubit(DesignDetailsRepo()),
+              child: BrowseDesignDetailsView(designId: designId),
+            );
           },
         );
 
@@ -130,7 +140,10 @@ abstract class AppRouter {
         final exploreDesign = settings.arguments as ExploreDesignModel;
         return MaterialPageRoute(
           builder: (context) {
-            return SharedDesignDetailsView(exploreDesign: exploreDesign);
+            return BlocProvider(
+              create: (context) => DesignDetailsCubit(DesignDetailsRepo()),
+              child: SharedDesignDetailsView(exploreDesign: exploreDesign),
+            );
           },
         );
 
@@ -277,16 +290,19 @@ abstract class AppRouter {
         final room = args?['room'] as String?;
         return MaterialPageRoute(
           builder: (context) {
-            return GenerateResultView(
-              showListView: showListView,
-              networkImageUrl: imageUrl,
-              designId: designId,
-              designs: designs, // Pass to view
-              originalImageUrl: originalImageUrl, // Add this
-              isFromStepper: isFromStepper,
-              operationMode: operationMode, // Pass this
-              style: style,
-              room: room,
+            return BlocProvider(
+              create: (context) => DesignDetailsCubit(DesignDetailsRepo()),
+              child: GenerateResultView(
+                showListView: showListView,
+                networkImageUrl: imageUrl,
+                designId: designId,
+                designs: designs, // Pass to view
+                originalImageUrl: originalImageUrl, // Add this
+                isFromStepper: isFromStepper,
+                operationMode: operationMode, // Pass this
+                style: style,
+                room: room,
+              ),
             );
           },
         );

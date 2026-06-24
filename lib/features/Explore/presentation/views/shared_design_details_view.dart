@@ -38,9 +38,6 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
     context.read<DesignDetailsCubit>().fetchDesignDetails(
       widget.exploreDesign.id,
       overrideId: widget.exploreDesign.id,
-      overrideIsLiked: widget.exploreDesign.isLiked,
-      overrideIsFavorited: widget.exploreDesign.isFavorited,
-      overrideLikesCount: widget.exploreDesign.likesCount,
     );
   }
 
@@ -159,10 +156,6 @@ class _SharedDesignDetailsViewState extends State<SharedDesignDetailsView> {
                           context.read<DesignDetailsCubit>().fetchDesignDetails(
                             widget.exploreDesign.id,
                             overrideId: widget.exploreDesign.id,
-                            overrideIsLiked: widget.exploreDesign.isLiked,
-                            overrideIsFavorited:
-                                widget.exploreDesign.isFavorited,
-                            overrideLikesCount: widget.exploreDesign.likesCount,
                           ),
                       child: Text(
                         'Retry',

@@ -9,6 +9,7 @@ import 'package:sammly/features/subscrition/cubit/subscription_states.dart';
 import 'package:sammly/features/subscrition/data/subscription_repo.dart';
 import 'package:sammly/features/subscrition/presentation/views/widgets/custom_plan.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sammly/core/functions.dart';
 import 'package:sammly/generated/l10n.dart';
 
 class SubscriptionView extends StatefulWidget {
@@ -46,29 +47,19 @@ class _SubscriptionViewState extends State<SubscriptionView> {
           if (state is ClaimSuccess) {
             final result = state.result;
             // Show success message
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                SnackBar(
-                  content: Text(
-                    result.tokens != null
-                        ? '${result.message} (${S.of(context).tokens}: ${result.tokens})'
-                        : result.message,
-                  ),
-                  backgroundColor: AppColors.primaryColor,
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
+            showCustomSnackBar(
+              context: context,
+              message: result.tokens != null
+                  ? '${result.message} (${S.of(context).tokens}: ${result.tokens})'
+                  : result.message,
+              isError: false,
+            );
           } else if (state is ClaimFailure) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                SnackBar(
-                  content: Text(state.error),
-                  backgroundColor: Colors.red,
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
+            showCustomSnackBar(
+              context: context,
+              message: state.error,
+              isError: true,
+            );
           }
         },
         builder: (context, state) {
