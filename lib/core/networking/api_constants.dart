@@ -1,7 +1,7 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 abstract class ApiConstants {
-  static String get baseUrl => dotenv.env['BASE_URL'] ?? '***REMOVED***';
+  static String get baseUrl => dotenv.env['BASE_URL']!;
 
   // Auth endpoints
   static const String register = '/api/auth/register';
