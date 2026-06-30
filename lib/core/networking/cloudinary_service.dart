@@ -7,9 +7,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class CloudinaryService {
-  static String get cloudName => dotenv.env['CLOUDINARY_CLOUD_NAME'] ?? 'dhcotgwe4';
-  static String get apiKey => dotenv.env['CLOUDINARY_API_KEY'] ?? '746352968428994';
-  static String get apiSecret => dotenv.env['CLOUDINARY_API_SECRET'] ?? '51GGGPDMduqk9B1nMjN5MXgXagI';
+  static String get cloudName => dotenv.env['CLOUDINARY_CLOUD_NAME']!;
+  static String get apiKey => dotenv.env['CLOUDINARY_API_KEY']!;
+  static String get apiSecret => dotenv.env['CLOUDINARY_API_SECRET']!;
 
   /// Uploads an image file directly to Cloudinary using a signed request
   /// and returns the secure URL of the uploaded image.
