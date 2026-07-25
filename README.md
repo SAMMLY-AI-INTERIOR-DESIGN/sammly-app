@@ -1,4 +1,5 @@
-# <img width="267" height="150" alt="logo" src="https://github.com/user-attachments/assets/c1ee865b-4fc5-490a-a43a-53163007e7f2" /> SAMMLY — AI Interior Design
+# <img width="124" height="86" alt="Untitled design-cropped" src="https://github.com/user-attachments/assets/ce5c863b-3416-4c85-b3ae-2c03c6d27f6c" /> SAMMLY — AI Interior Design
+
 
 [![Flutter Version](https://img.shields.io/badge/Flutter-%E2%89%A5%203.22-02569B?style=for-the-badge&logo=flutter)](https://flutter.dev)
 [![Dart Version](https://img.shields.io/badge/Dart-%E2%89%A5%203.9-0175C2?style=for-the-badge&logo=dart)](https://dart.dev)
