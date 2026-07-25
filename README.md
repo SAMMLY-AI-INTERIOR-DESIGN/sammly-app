@@ -1,4 +1,4 @@
-# 🎨 Sammly — AI Interior Design
+# <img width="267" height="150" alt="logo" src="https://github.com/user-attachments/assets/c1ee865b-4fc5-490a-a43a-53163007e7f2" /> SAMMLY — AI Interior Design
 
 [![Flutter Version](https://img.shields.io/badge/Flutter-%E2%89%A5%203.22-02569B?style=for-the-badge&logo=flutter)](https://flutter.dev)
 [![Dart Version](https://img.shields.io/badge/Dart-%E2%89%A5%203.9-0175C2?style=for-the-badge&logo=dart)](https://dart.dev)
@@ -9,7 +9,7 @@
 
 ## 📱 Description
 
-**Sammly** is an AI-powered mobile application built with Flutter that democratizes professional interior design. Using state-of-the-art Generative AI and Computer Vision, the app enables users to visualize, transform, and execute their living space ideas — all from their phone.
+**SAMMLY** is an AI-powered mobile application built with Flutter that democratizes professional interior design. Using state-of-the-art Generative AI and Computer Vision, the app enables users to visualize, transform, and execute their living space ideas — all from their phone.
 
 Sammly offers **Text-to-Image** generation from scratch, **Image-to-Image** room restyling, **Inpainting** for intelligent object removal, and **Smart Lens** for identifying real-world furniture from generated designs. The app also features a community-driven **Explore** section for sharing inspiration and a token-based reward system.
 
@@ -361,4 +361,5 @@ For issues, questions, or suggestions:
 ✅ Responsive Material Design 3 interface
 ✅ Cloudinary-powered image uploads
 ✅ Offline-capable local storage with Hive
+
 
