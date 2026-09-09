@@ -86,7 +86,7 @@ class _GenerateResultViewState extends State<GenerateResultView> {
       builder: (context) {
         return BlocProvider.value(
           value: _searchCubit,
-          child: SmartLensBottomSheet(designId: _currentDesignId!),
+          child: SmartLensBottomSheet(imageUrl: _currentDesignId!),
         );
       },
     );

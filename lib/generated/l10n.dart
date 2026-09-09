@@ -834,6 +834,36 @@ class S {
     );
   }
 
+  /// `Select Image Aspect Ratio`
+  String get selectImageAspectRatio {
+    return Intl.message(
+      'Select Image Aspect Ratio',
+      name: 'selectImageAspectRatio',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add Image`
+  String get addImage {
+    return Intl.message(
+      'Add Image',
+      name: 'addImage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Redesign Room`
+  String get redesignRoom {
+    return Intl.message(
+      'Redesign Room',
+      name: 'redesignRoom',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Adding details and finishing touches.`
   String get addingDetails {
     return Intl.message(

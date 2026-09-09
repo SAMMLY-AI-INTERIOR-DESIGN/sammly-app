@@ -304,5 +304,8 @@
   "tokensAreNotEnough": "الرصيد غير كافٍ",
   "upgradeToContinue": ".قم بالترقية للاستمرار في إنشاء المزيد من التصميمات.",
   "upgrade": "ترقية",
-  "getBtn": "الحصول"
+  "getBtn": "الحصول",
+  "selectImageAspectRatio": "اختر أبعاد الصورة",
+  "addImage": "إضافة صورة",
+  "redesignRoom": "إعادة تصميم الغرفة"
 }

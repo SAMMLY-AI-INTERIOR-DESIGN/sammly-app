@@ -65,7 +65,7 @@ class HomeView extends StatelessWidget {
                             ),
 
                             HomeCardWidget(
-                              title: S.of(context).roomRestyle,
+                              title: S.of(context).roomRedesign,
                               description: S.of(context).roomRedesignDesc,
                               imagePath: AppImages.redesignPlaceholder,
                               tagText: S.of(context).restyleRoomTag,

@@ -29,6 +29,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "addImage": MessageLookupByLibrary.simpleMessage("Add Image"),
     "addImageOptional": MessageLookupByLibrary.simpleMessage(
       "Add Image(Optional)",
     ),
@@ -438,6 +439,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Profile updated successfully!",
     ),
     "promptLabel": MessageLookupByLibrary.simpleMessage("Prompt : "),
+    "redesignRoom": MessageLookupByLibrary.simpleMessage("Redesign Room"),
     "registrationSuccessVerifyEmail": MessageLookupByLibrary.simpleMessage(
       "Registration successful! Please check your email to verify your account.",
     ),
@@ -479,6 +481,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "searchHint": MessageLookupByLibrary.simpleMessage("Search for......"),
     "security": MessageLookupByLibrary.simpleMessage("Security"),
     "select": MessageLookupByLibrary.simpleMessage("Select"),
+    "selectImageAspectRatio": MessageLookupByLibrary.simpleMessage(
+      "Select Image Aspect Ratio",
+    ),
     "selectRoom": MessageLookupByLibrary.simpleMessage("Select Room"),
     "selectStyle": MessageLookupByLibrary.simpleMessage("Select Style"),
     "selectSubject": MessageLookupByLibrary.simpleMessage("Select Subject"),

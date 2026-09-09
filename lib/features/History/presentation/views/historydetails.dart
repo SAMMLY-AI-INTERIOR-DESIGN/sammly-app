@@ -111,7 +111,7 @@ class _HistoryDetailsViewState extends State<HistoryDetailsView> {
       builder: (context) {
         return BlocProvider.value(
           value: _searchCubit,
-          child: SmartLensBottomSheet(designId: _currentDesignId!),
+          child: SmartLensBottomSheet(imageUrl: _currentDesignId!),
         );
       },
     );

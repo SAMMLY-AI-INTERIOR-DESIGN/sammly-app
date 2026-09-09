@@ -303,5 +303,8 @@
   "tokensAreNotEnough": "Credits are Not Enough",
   "upgradeToContinue": ".Upgrade to continue creating more designs.",
   "upgrade": "Upgrade",
-  "getBtn": "Get"
+  "getBtn": "Get",
+  "selectImageAspectRatio": "Select Image Aspect Ratio",
+  "addImage": "Add Image",
+  "redesignRoom": "Redesign Room"
 }

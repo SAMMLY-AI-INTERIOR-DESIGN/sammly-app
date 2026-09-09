@@ -29,6 +29,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "addImage": MessageLookupByLibrary.simpleMessage("إضافة صورة"),
     "addImageOptional": MessageLookupByLibrary.simpleMessage(
       "إضافة صورة (اختياري)",
     ),
@@ -428,6 +429,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "تم تحديث الملف الشخصي بنجاح!",
     ),
     "promptLabel": MessageLookupByLibrary.simpleMessage("الوصف : "),
+    "redesignRoom": MessageLookupByLibrary.simpleMessage("إعادة تصميم الغرفة"),
     "registrationSuccessVerifyEmail": MessageLookupByLibrary.simpleMessage(
       "تم التسجيل بنجاح! يرجى التحقق من بريدك الإلكتروني لتأكيد حسابك.",
     ),

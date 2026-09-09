@@ -17,6 +17,10 @@ class TextToImageStep3Describe extends StatefulWidget {
   final Function(XFile) onImageSelected;
   final VoidCallback onImageRemoved;
   final VoidCallback onGenerate;
+  final bool showAspectRatio;
+  final Function(String)? onAspectRatioSelected;
+  final String? buttonText;
+  final String? addImageText;
 
   const TextToImageStep3Describe({
     super.key,
@@ -25,6 +29,10 @@ class TextToImageStep3Describe extends StatefulWidget {
     required this.onImageSelected,
     required this.onImageRemoved,
     required this.onGenerate,
+    this.showAspectRatio = false,
+    this.onAspectRatioSelected,
+    this.buttonText,
+    this.addImageText,
   });
 
   @override
@@ -34,6 +42,7 @@ class TextToImageStep3Describe extends StatefulWidget {
 
 class _TextToImageStep3DescribeState extends State<TextToImageStep3Describe> {
   final ImagePicker _picker = ImagePicker();
+  String _selectedRatio = '1:1';
 
   Future<void> _pickImage() async {
     try {
@@ -186,7 +195,7 @@ class _TextToImageStep3DescribeState extends State<TextToImageStep3Describe> {
                                       ),
                                       SizedBox(height: 8.h),
                                       Text(
-                                        S.of(context).addImageOptional,
+                                        widget.addImageText ?? S.of(context).addImageOptional,
                                         style: AppTextStyles.body16Medium
                                             .copyWith(
                                               color: Colors.grey.shade500,
@@ -204,9 +213,67 @@ class _TextToImageStep3DescribeState extends State<TextToImageStep3Describe> {
             ),
           ),
 
-          SizedBox(height: 40.h),
+          if (widget.showAspectRatio) ...[
+            SizedBox(height: 20.h),
+            Text(
+              // 'Select Image Aspect Ratio',
+              S.of(context).selectImageAspectRatio,
+              style: AppTextStyles.body16SemiBold.copyWith(
+                color: AppColors.blackColor,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: ['1:1', '1:2', '3:4', '4:5'].map((ratio) {
+                bool isSelected = _selectedRatio == ratio;
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _selectedRatio = ratio;
+                    });
+                    if (widget.onAspectRatioSelected != null) {
+                      widget.onAspectRatioSelected!(ratio);
+                    }
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 8.h,
+                      horizontal: 16.w,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? null
+                          : AppColors.whiteColor,
+                      gradient: isSelected
+                          ? AppColors.primaryGradient3
+                          : null,
+                      borderRadius: BorderRadius.circular(12.r),
+                      border: Border.all(
+                        color: isSelected
+                            ? Colors.transparent
+                            : Colors.grey.shade300,
+                      ),
+                    ),
+                    child: Text(
+                      ratio,
+                      style: AppTextStyles.body16Medium.copyWith(
+                        color: isSelected
+                            ? AppColors.whiteColor
+                            : AppColors.blackColor2,
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+            SizedBox(height: 20.h),
+          ] else ...[
+            SizedBox(height: 40.h),
+          ],
+
           CustomButton(
-            text: S.of(context).generateDesign,
+            text: widget.buttonText ?? S.of(context).generateDesign,
             onPressed: widget.onGenerate,
             prefixIcon: AppImages.startGenerateIcon,
           ),
