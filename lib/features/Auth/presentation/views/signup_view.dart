@@ -20,6 +20,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sammly/core/constant/app_images.dart';
 import 'package:sammly/generated/l10n.dart';
 import 'package:sammly/core/localization/locale_cubit.dart';
+import 'package:sammly/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:sammly/features/home/logic/home_cubit.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -101,6 +103,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             );
           } else if (state is RegisterFailedState) {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text(state.errorMsg),
+                  backgroundColor: Colors.red,
+                ),
+              );
+          } else if (state is GoogleSignInSuccessState) {
+            context.read<ProfileCubit>().fetchProfile(forceRefresh: true);
+            context.read<ProfileCubit>().fetchSettingInfo();
+            context.read<HomeCubit>().fetchHomeData();
+            Navigator.pushReplacementNamed(context, AppRoutes.layoutView);
+          } else if (state is GoogleSignInFailedState) {
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
@@ -361,7 +377,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           SizedBox(height: 24.h),
 
                           Loginwith(
-                            onGoogleTap: () {},
+                            onGoogleTap: () {
+                              context.read<AuthCubit>().signInWithGoogle();
+                            },
                             onFacebookTap: () {},
                             onAppleTap: () {},
                           ),

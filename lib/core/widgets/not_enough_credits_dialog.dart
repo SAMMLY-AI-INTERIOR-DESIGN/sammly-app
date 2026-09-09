@@ -6,8 +6,8 @@ import 'package:sammly/core/routing/routes.dart';
 import 'package:sammly/core/theme/text_styles.dart';
 import 'package:sammly/generated/l10n.dart';
 
-class NotEnoughTokensDialog extends StatelessWidget {
-  const NotEnoughTokensDialog({super.key});
+class NotEnoughCreditsDialog extends StatelessWidget {
+  const NotEnoughCreditsDialog({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -209,20 +209,20 @@ class S {
     );
   }
 
-  /// `Share & earn tokens`
+  /// `Share & earn credits`
   String get onboarding3Title {
     return Intl.message(
-      'Share & earn tokens',
+      'Share & earn credits',
       name: 'onboarding3Title',
       desc: '',
       args: [],
     );
   }
 
-  /// `Explore community designs, share your creations, and earn free tokens as rewards.`
+  /// `Explore community designs, share your creations, and earn free credits as rewards.`
   String get onboarding3Subtitle {
     return Intl.message(
-      'Explore community designs, share your creations, and earn free tokens as rewards.',
+      'Explore community designs, share your creations, and earn free credits as rewards.',
       name: 'onboarding3Subtitle',
       desc: '',
       args: [],
@@ -414,10 +414,10 @@ class S {
     return Intl.message('Log Out', name: 'logOut', desc: '', args: []);
   }
 
-  /// `Earn Tokens`
+  /// `Earn Credits`
   String get rewardTokens {
     return Intl.message(
-      'Earn Tokens',
+      'Earn Credits',
       name: 'rewardTokens',
       desc: '',
       args: [],
@@ -729,6 +729,51 @@ class S {
     return Intl.message(
       'Room Restyle',
       name: 'roomRestyle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Smart Sammly Lens`
+  String get smartSammlyLens {
+    return Intl.message(
+      'Smart Sammly Lens',
+      name: 'smartSammlyLens',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload or scan any room photo to find matching furniture, decor, and products instantly.`
+  String get smartSammlyLensDesc {
+    return Intl.message(
+      'Upload or scan any room photo to find matching furniture, decor, and products instantly.',
+      name: 'smartSammlyLensDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Smart Lens`
+  String get smartLensTag {
+    return Intl.message('Smart Lens', name: 'smartLensTag', desc: '', args: []);
+  }
+
+  /// `Scan with Smart Lens`
+  String get scanWithSmartLens {
+    return Intl.message(
+      'Scan with Smart Lens',
+      name: 'scanWithSmartLens',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload room photo to search`
+  String get uploadRoomForSmartLens {
+    return Intl.message(
+      'Upload room photo to search',
+      name: 'uploadRoomForSmartLens',
       desc: '',
       args: [],
     );
@@ -1424,19 +1469,29 @@ class S {
     );
   }
 
-  /// `Starter`
+  /// `Homeowner Pack`
   String get planStarter {
-    return Intl.message('Starter', name: 'planStarter', desc: '', args: []);
+    return Intl.message(
+      'Homeowner Pack',
+      name: 'planStarter',
+      desc: '',
+      args: [],
+    );
   }
 
-  /// `Pro`
+  /// `Designer Pro`
   String get planPro {
-    return Intl.message('Pro', name: 'planPro', desc: '', args: []);
+    return Intl.message('Designer Pro', name: 'planPro', desc: '', args: []);
   }
 
-  /// `Premium`
+  /// `Studio / Agency`
   String get planPremium {
-    return Intl.message('Premium', name: 'planPremium', desc: '', args: []);
+    return Intl.message(
+      'Studio / Agency',
+      name: 'planPremium',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Great for starters`
@@ -1517,6 +1572,21 @@ class S {
   /// `/pack`
   String get perPack {
     return Intl.message('/pack', name: 'perPack', desc: '', args: []);
+  }
+
+  /// `/month`
+  String get perMonth {
+    return Intl.message('/month', name: 'perMonth', desc: '', args: []);
+  }
+
+  /// `One-time pack`
+  String get oneTimePack {
+    return Intl.message(
+      'One-time pack',
+      name: 'oneTimePack',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Free`
@@ -2207,20 +2277,20 @@ class S {
     );
   }
 
-  /// `Great for starters`
+  /// `Great for trying out`
   String get planDesc1 {
     return Intl.message(
-      'Great for starters',
+      'Great for trying out',
       name: 'planDesc1',
       desc: '',
       args: [],
     );
   }
 
-  /// `Most requested`
+  /// `Perfect for homeowners`
   String get planDesc2 {
     return Intl.message(
-      'Most requested',
+      'Perfect for homeowners',
       name: 'planDesc2',
       desc: '',
       args: [],
@@ -2237,10 +2307,10 @@ class S {
     );
   }
 
-  /// `For intensive and professional use`
+  /// `For studios and agencies`
   String get planDesc4 {
     return Intl.message(
-      'For intensive and professional use',
+      'For studios and agencies',
       name: 'planDesc4',
       desc: '',
       args: [],
@@ -2362,9 +2432,9 @@ class S {
     return Intl.message('Shared', name: 'shared', desc: '', args: []);
   }
 
-  /// `Tokens`
+  /// `Credits`
   String get tokens {
-    return Intl.message('Tokens', name: 'tokens', desc: '', args: []);
+    return Intl.message('Credits', name: 'tokens', desc: '', args: []);
   }
 
   /// `Search designs...`
@@ -2482,10 +2552,10 @@ class S {
     );
   }
 
-  /// `Tokens are Not Enough`
+  /// `Credits are Not Enough`
   String get tokensAreNotEnough {
     return Intl.message(
-      'Tokens are Not Enough',
+      'Credits are Not Enough',
       name: 'tokensAreNotEnough',
       desc: '',
       args: [],

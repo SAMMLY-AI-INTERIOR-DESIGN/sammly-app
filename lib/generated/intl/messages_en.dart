@@ -321,11 +321,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Find items in your design",
     ),
     "onboarding3Subtitle": MessageLookupByLibrary.simpleMessage(
-      "Explore community designs, share your creations, and earn free tokens as rewards.",
+      "Explore community designs, share your creations, and earn free credits as rewards.",
     ),
     "onboarding3Title": MessageLookupByLibrary.simpleMessage(
-      "Share & earn tokens",
+      "Share & earn credits",
     ),
+    "oneTimePack": MessageLookupByLibrary.simpleMessage("One-time pack"),
     "orLoginWith": MessageLookupByLibrary.simpleMessage("Or login with"),
     "orShareOn": MessageLookupByLibrary.simpleMessage("Or share on...."),
     "orSignupWith": MessageLookupByLibrary.simpleMessage("Or Signup with"),
@@ -344,6 +345,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "passwordsDoNotMatch": MessageLookupByLibrary.simpleMessage(
       "Passwords do not match",
     ),
+    "perMonth": MessageLookupByLibrary.simpleMessage("/month"),
     "perPack": MessageLookupByLibrary.simpleMessage("/pack"),
     "perfectWayToTry": MessageLookupByLibrary.simpleMessage(
       "Perfect way to try SAMMLY and\nexplore premium features",
@@ -352,17 +354,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "pickPerfectPlan": MessageLookupByLibrary.simpleMessage(
       "Pick the perfect plan to bring your\ndream spaces to life",
     ),
-    "planDesc1": MessageLookupByLibrary.simpleMessage("Great for starters"),
-    "planDesc2": MessageLookupByLibrary.simpleMessage("Most requested"),
+    "planDesc1": MessageLookupByLibrary.simpleMessage("Great for trying out"),
+    "planDesc2": MessageLookupByLibrary.simpleMessage("Perfect for homeowners"),
     "planDesc3": MessageLookupByLibrary.simpleMessage(
       "Best choice for designers",
     ),
     "planDesc4": MessageLookupByLibrary.simpleMessage(
-      "For intensive and professional use",
+      "For studios and agencies",
     ),
-    "planPremium": MessageLookupByLibrary.simpleMessage("Premium"),
-    "planPro": MessageLookupByLibrary.simpleMessage("Pro"),
-    "planStarter": MessageLookupByLibrary.simpleMessage("Starter"),
+    "planPremium": MessageLookupByLibrary.simpleMessage("Studio / Agency"),
+    "planPro": MessageLookupByLibrary.simpleMessage("Designer Pro"),
+    "planStarter": MessageLookupByLibrary.simpleMessage("Homeowner Pack"),
     "pleaseAcceptTerms": MessageLookupByLibrary.simpleMessage(
       "Please accept the Terms & Conditions",
     ),
@@ -459,7 +461,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Restyle your Space",
     ),
     "retry": MessageLookupByLibrary.simpleMessage("Retry"),
-    "rewardTokens": MessageLookupByLibrary.simpleMessage("Earn Tokens"),
+    "rewardTokens": MessageLookupByLibrary.simpleMessage("Earn Credits"),
     "roomRedesign": MessageLookupByLibrary.simpleMessage("Room Redesign"),
     "roomRedesignDesc": MessageLookupByLibrary.simpleMessage(
       "Transform your existing room into a completely new style while keeping the same layout.",
@@ -469,6 +471,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "sammlyPro": MessageLookupByLibrary.simpleMessage("SAMMLY Pro"),
     "savingImage": MessageLookupByLibrary.simpleMessage(
       "Saving image to gallery...",
+    ),
+    "scanWithSmartLens": MessageLookupByLibrary.simpleMessage(
+      "Scan with Smart Lens",
     ),
     "searchDesigns": MessageLookupByLibrary.simpleMessage("Search designs..."),
     "searchHint": MessageLookupByLibrary.simpleMessage("Search for......"),
@@ -491,6 +496,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "similarItems": MessageLookupByLibrary.simpleMessage("Similar items"),
     "skip": MessageLookupByLibrary.simpleMessage("Skip"),
     "smartLens": MessageLookupByLibrary.simpleMessage("Smart Lens"),
+    "smartLensTag": MessageLookupByLibrary.simpleMessage("Smart Lens"),
+    "smartSammlyLens": MessageLookupByLibrary.simpleMessage(
+      "Smart Sammly Lens",
+    ),
+    "smartSammlyLensDesc": MessageLookupByLibrary.simpleMessage(
+      "Upload or scan any room photo to find matching furniture, decor, and products instantly.",
+    ),
     "startGenerateBtn": MessageLookupByLibrary.simpleMessage("Start Generate"),
     "style": MessageLookupByLibrary.simpleMessage("Style"),
     "subject": MessageLookupByLibrary.simpleMessage("Subject"),
@@ -538,9 +550,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "termsConditionsText": MessageLookupByLibrary.simpleMessage(
       "By accessing and using this application, you agree to follow the terms and conditions outlined below\n\nUsers are responsible for the content they create or share within the app.\n\nAny harmful, illegal, or inappropriate use of the application is strictly prohibited.\n\nThe app is intended for personal and non-commercial use only.\n\nWe reserve the right to update or modify these terms at any time without prior notice.\n\nContinued use of the application means that you accept any changes made to these terms.",
     ),
-    "tokens": MessageLookupByLibrary.simpleMessage("Tokens"),
+    "tokens": MessageLookupByLibrary.simpleMessage("Credits"),
     "tokensAreNotEnough": MessageLookupByLibrary.simpleMessage(
-      "Tokens are Not Enough",
+      "Credits are Not Enough",
     ),
     "traditional": MessageLookupByLibrary.simpleMessage("Traditional"),
     "type": MessageLookupByLibrary.simpleMessage("Type"),
@@ -557,6 +569,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Upload reference image",
     ),
     "uploadRoom": MessageLookupByLibrary.simpleMessage("Upload Room"),
+    "uploadRoomForSmartLens": MessageLookupByLibrary.simpleMessage(
+      "Upload room photo to search",
+    ),
     "uploadRoomImage": MessageLookupByLibrary.simpleMessage(
       "Upload Room Image",
     ),

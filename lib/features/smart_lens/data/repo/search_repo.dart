@@ -10,25 +10,25 @@ import 'package:sammly/features/smart_lens/data/models/search_response.dart';
 class SearchRepo {
   static String _t(String msg) => BackendMessageTranslator.translate(msg);
 
-  Future<Either<String, SearchResponse>> searchDesign(String designId) async {
+  /// Sends imageUrl to POST /api/sourcing/search and returns parsed response.
+  Future<Either<String, SearchResponse>> searchByImage(String imageUrl) async {
     try {
       final token = SharedPref.getData(key: 'jwt');
       if (token == null) {
         return left(_t('Unauthorized: No token found.'));
       }
 
-      final response = await DioHelper.getData(
-        endPoint: ApiConstants.searchDesign(designId),
+      final response = await DioHelper.postData(
+        endPoint: ApiConstants.sourcingSearch,
+        data: {'imageUrl': imageUrl},
         token: token,
-        receiveTimeout: const Duration(minutes: 4),
-        retry: false,
       );
 
       if (response.statusCode == 200 && response.data['status'] == 'success') {
         return right(SearchResponse.fromJson(response.data));
       } else {
-        log('Search API error: ${response.data}');
-        return left(_t(response.data['message'] ?? 'Failed to search design.'));
+        log('Sourcing search API error: ${response.data}');
+        return left(_t(response.data['message'] ?? 'Failed to search.'));
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
@@ -43,13 +43,13 @@ class SearchRepo {
       try {
         final data = e.response!.data;
         final statusCode = e.response!.statusCode;
-        log('Search API Error [$statusCode]: $data');
+        log('Sourcing Search API Error [$statusCode]: $data');
 
         if (statusCode == 400) {
-          return _t(data['message'] ?? 'Invalid design ID.');
+          return _t(data['message'] ?? 'Invalid image URL.');
         }
         if (statusCode == 404) {
-          return _t(data['message'] ?? 'Design not found.');
+          return _t(data['message'] ?? 'Not found.');
         }
 
         if (data is Map) {

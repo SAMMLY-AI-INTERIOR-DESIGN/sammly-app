@@ -1,14 +1,90 @@
 import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sammly/core/networking/api_constants.dart';
 import 'package:sammly/core/networking/dio_helper.dart';
 import 'package:sammly/core/shared_pref/shared_pref.dart';
 import 'package:sammly/core/utils/backend_message_translator.dart';
 
+
 class AuthRepo {
   static String _t(String msg) => BackendMessageTranslator.translate(msg);
 
+  /// Sign in with Google.
+  /// Gets the Google idToken and sends it to POST /api/auth/google
+  Future<Either<String, String>> googleSignIn() async {
+    try {
+      final signIn = GoogleSignIn.instance;
+
+      // Initialize with serverClientId to get idToken
+      await signIn.initialize(
+        serverClientId:
+            '448399464725-1mm93gt53865cqiehagq4d1ommqf1tkd.apps.googleusercontent.com',
+      );
+
+      // Safely attempt sign out first to clear previous session if any
+      try {
+        await signIn.signOut();
+      } catch (_) {}
+
+      // Trigger the sign-in flow — returns GoogleSignInAccount directly
+      final GoogleSignInAccount account = await signIn.authenticate();
+
+      // Get the idToken
+      final String? idToken = account.authentication.idToken;
+
+      if (idToken == null) {
+        return left(_t('Failed to get Google ID token.'));
+      }
+
+      print('📋 Google idToken: $idToken');
+
+      // Send the idToken to the backend
+      final response = await DioHelper.postData(
+        endPoint: ApiConstants.googleAuth,
+        data: {'idToken': idToken},
+      );
+
+      if (response.data['success'] == true ||
+          response.data['status'] == 'success' ||
+          response.statusCode == 200 ||
+          response.statusCode == 201) {
+        final token = response.data['data']?['token'] ?? response.data['token'];
+        if (token != null) {
+          await SharedPref.saveData(key: 'jwt', value: token);
+        }
+        final successMsg =
+            response.data['message'] ??
+            response.data['msg'] ??
+            (response.data['data'] is Map
+                ? (response.data['data']['msg'] ??
+                      response.data['data']['message'])
+                : null);
+        return right(_t(successMsg?.toString() ?? 'Signed in with Google.'));
+      } else {
+        final msg =
+            response.data['message']?.toString() ??
+            response.data['msg']?.toString() ??
+            '';
+        return left(msg.isNotEmpty ? _t(msg) : _t('Google sign in failed.'));
+      }
+    } on GoogleSignInException catch (e) {
+      print('❌ Google Sign-In exception: code=${e.code}, description=${e.description}');
+      if (e.code == GoogleSignInExceptionCode.canceled ||
+          e.code == GoogleSignInExceptionCode.interrupted) {
+        return left(_t('Sign in cancelled.'));
+      }
+      return left(_t('Google sign in failed (${e.code.name}: ${e.description ?? ''})'));
+    } on DioException catch (e) {
+      final msg = _extractErrorMessage(e);
+      print('❌ Google Sign-In DioException: msg=$msg, data=${e.response?.data}');
+      return left(msg.isNotEmpty ? _t(msg) : _handleDioError(e));
+    } catch (e) {
+      print('❌ Google Sign-In error: $e');
+      return left(_t('An unexpected error occurred.'));
+    }
+  }
   /// Register a new user account.
   /// POST /api/auth/register
   Future<Either<String, String>> register({

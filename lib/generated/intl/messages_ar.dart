@@ -315,11 +315,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "ابحث عن عناصر في تصميمك",
     ),
     "onboarding3Subtitle": MessageLookupByLibrary.simpleMessage(
-      "استكشف تصميمات المجتمع، شارك إبداعاتك، واكسب عملات مجانية كمكافآت.",
+      "استكشف تصميمات المجتمع، شارك إبداعاتك، واكسب رصيد مجاني كمكافآت.",
     ),
-    "onboarding3Title": MessageLookupByLibrary.simpleMessage(
-      "شارك واكسب عملات",
-    ),
+    "onboarding3Title": MessageLookupByLibrary.simpleMessage("شارك واكسب رصيد"),
+    "oneTimePack": MessageLookupByLibrary.simpleMessage("باقة لمرة واحدة"),
     "orLoginWith": MessageLookupByLibrary.simpleMessage(
       "أو تسجيل الدخول باستخدام",
     ),
@@ -340,6 +339,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "passwordsDoNotMatch": MessageLookupByLibrary.simpleMessage(
       "كلمتا المرور غير متطابقتين",
     ),
+    "perMonth": MessageLookupByLibrary.simpleMessage("/شهر"),
     "perPack": MessageLookupByLibrary.simpleMessage("/باقة"),
     "perfectWayToTry": MessageLookupByLibrary.simpleMessage(
       "طريقة مثالية لتجربة SAMMLY\nواستكشاف الميزات المميزة",
@@ -348,15 +348,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "pickPerfectPlan": MessageLookupByLibrary.simpleMessage(
       "اختر الخطة المثالية لتحويل مساحات\nأحلامك إلى حقيقة",
     ),
-    "planDesc1": MessageLookupByLibrary.simpleMessage("رائع للبداية"),
-    "planDesc2": MessageLookupByLibrary.simpleMessage("الأكثر طلباً"),
+    "planDesc1": MessageLookupByLibrary.simpleMessage("رائع للتجربة"),
+    "planDesc2": MessageLookupByLibrary.simpleMessage("مثالي لأصحاب المنازل"),
     "planDesc3": MessageLookupByLibrary.simpleMessage("الخيار الأفضل للمصممين"),
-    "planDesc4": MessageLookupByLibrary.simpleMessage(
-      "للاستخدام المكثف والاحترافي",
-    ),
-    "planPremium": MessageLookupByLibrary.simpleMessage("مميز"),
-    "planPro": MessageLookupByLibrary.simpleMessage("احترافي"),
-    "planStarter": MessageLookupByLibrary.simpleMessage("البداية"),
+    "planDesc4": MessageLookupByLibrary.simpleMessage("للاستوديوهات والوكالات"),
+    "planPremium": MessageLookupByLibrary.simpleMessage("الاستوديو / الوكالة"),
+    "planPro": MessageLookupByLibrary.simpleMessage("المصمم المحترف"),
+    "planStarter": MessageLookupByLibrary.simpleMessage("باقة صاحب المنزل"),
     "pleaseAcceptTerms": MessageLookupByLibrary.simpleMessage(
       "يرجى الموافقة على الشروط والأحكام",
     ),
@@ -457,7 +455,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "إعادة تنسيق مساحتك",
     ),
     "retry": MessageLookupByLibrary.simpleMessage("إعادة المحاولة"),
-    "rewardTokens": MessageLookupByLibrary.simpleMessage("اربح توكنز"),
+    "rewardTokens": MessageLookupByLibrary.simpleMessage("اربح رصيد"),
     "roomRedesign": MessageLookupByLibrary.simpleMessage("إعادة تصميم الغرفة"),
     "roomRedesignDesc": MessageLookupByLibrary.simpleMessage(
       "حوّل غرفتك الحالية إلى نمط جديد تمامًا مع الحفاظ على نفس التصميم.",
@@ -467,6 +465,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "sammlyPro": MessageLookupByLibrary.simpleMessage("SAMMLY Pro"),
     "savingImage": MessageLookupByLibrary.simpleMessage(
       "جاري حفظ الصورة في المعرض...",
+    ),
+    "scanWithSmartLens": MessageLookupByLibrary.simpleMessage(
+      "مسح بواسطة العدسة الذكية",
     ),
     "searchDesigns": MessageLookupByLibrary.simpleMessage(
       "البحث في التصميمات...",
@@ -489,6 +490,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "similarItems": MessageLookupByLibrary.simpleMessage("العناصر المتشابهة"),
     "skip": MessageLookupByLibrary.simpleMessage("تخطي"),
     "smartLens": MessageLookupByLibrary.simpleMessage("العدسة الذكية"),
+    "smartLensTag": MessageLookupByLibrary.simpleMessage("عدسة ذكية"),
+    "smartSammlyLens": MessageLookupByLibrary.simpleMessage(
+      "عدسة ساملي الذكية",
+    ),
+    "smartSammlyLensDesc": MessageLookupByLibrary.simpleMessage(
+      "ارفع أو امسح أي صورة لغرفة لاكتشاف الأثاث والديكورات والمنتجات المطابقة فوراً.",
+    ),
     "startGenerateBtn": MessageLookupByLibrary.simpleMessage("بدء الإنشاء"),
     "style": MessageLookupByLibrary.simpleMessage("النمط"),
     "subject": MessageLookupByLibrary.simpleMessage("الموضوع"),
@@ -534,7 +542,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "termsConditionsText": MessageLookupByLibrary.simpleMessage(
       "من خلال الوصول إلى هذا التطبيق واستخدامه، فإنك توافق على الالتزام بالشروط والأحكام الموضحة أدناه.\n\nالمستخدمون مسؤولون عن المحتوى الذي يقومون بإنشائه أو مشاركته داخل التطبيق.\n\nيُحظر تماماً أي استخدام ضار أو غير قانوني أو غير لائق للتطبيق.\n\nالتطبيق مخصص للاستخدام الشخصي وغير التجاري فقط.\n\nنحتفظ بالحق في تحديث أو تعديل هذه الشروط في أي وقت دون إشعار مسبق.\n\nالاستمرار في استخدام التطبيق يعني قبولك لأي تغييرات تطرأ على هذه الشروط.",
     ),
-    "tokens": MessageLookupByLibrary.simpleMessage("نقطة"),
+    "tokens": MessageLookupByLibrary.simpleMessage("رصيد"),
     "tokensAreNotEnough": MessageLookupByLibrary.simpleMessage(
       "الرصيد غير كافٍ",
     ),
@@ -553,6 +561,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "رفع صورة مرجعية",
     ),
     "uploadRoom": MessageLookupByLibrary.simpleMessage("رفع غرفة"),
+    "uploadRoomForSmartLens": MessageLookupByLibrary.simpleMessage(
+      "ارفع صورة الغرفة للبحث",
+    ),
     "uploadRoomImage": MessageLookupByLibrary.simpleMessage("رفع صورة الغرفه"),
     "uploadYourImage": MessageLookupByLibrary.simpleMessage("رفع صورتك"),
     "userName": MessageLookupByLibrary.simpleMessage("اسم المستخدم"),

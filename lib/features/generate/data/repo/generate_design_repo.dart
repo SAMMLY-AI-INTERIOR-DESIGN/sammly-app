@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -15,39 +13,22 @@ class GenerateDesignRepo {
   static String _t(String msg) => BackendMessageTranslator.translate(msg);
 
   Future<String?> _prepareImageUrl(String? imageUrl) async {
-    if (imageUrl == null || imageUrl.isEmpty) return null;
-    if (imageUrl.startsWith('http://') ||
-        imageUrl.startsWith('https://') ||
-        imageUrl.startsWith('data:')) {
+    if (imageUrl == null || imageUrl.trim().isEmpty) return null;
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
       return imageUrl;
     }
 
     try {
-      String cleanPath = imageUrl;
-      if (cleanPath.startsWith('file://')) {
-        cleanPath = Uri.parse(cleanPath).toFilePath();
-      }
-      final file = File(cleanPath);
-      if (await file.exists()) {
-        final cloudinaryUrl = await CloudinaryService.uploadImage(file);
-        if (cloudinaryUrl != null) {
-          return cloudinaryUrl;
-        }
-        
-        // Fallback to base64 if Cloudinary upload fails, though ideally
-        // we should probably just throw an error here.
-        final bytes = await file.readAsBytes();
-        final base64Image = base64Encode(bytes);
-        final ext = file.path.split('.').last.toLowerCase();
-        final mimeType = (ext == 'jpg' || ext == 'jpeg')
-            ? 'image/jpeg'
-            : 'image/png';
-        return 'data:$mimeType;base64,$base64Image';
+      final cloudinaryUrl = await CloudinaryService.uploadImagePathOrData(imageUrl);
+      if (cloudinaryUrl != null && cloudinaryUrl.isNotEmpty) {
+        return cloudinaryUrl;
       }
     } catch (e) {
-      log("Error processing image: $e");
+      log("Error processing image for Cloudinary: $e");
     }
-    return imageUrl;
+
+    // Ignore base64 / data URI fallbacks completely — always expect a Cloudinary link
+    return null;
   }
 
   /// POST /api/designs
@@ -126,9 +107,6 @@ class GenerateDesignRepo {
   }
 
   String _handleDioError(DioException e) {
-    if (e.response?.statusCode == 404) {
-      return _t('soon');
-    }
     if (e.response != null && e.response?.data != null) {
       try {
         final data = e.response!.data;

@@ -13,6 +13,18 @@ class LoginFailedState extends AuthState {
   LoginFailedState({required this.errorMsg});
 }
 
+// ── Google Sign-In ──
+class GoogleSignInLoadingState extends AuthState {}
+
+class GoogleSignInSuccessState extends AuthState {}
+
+class GoogleSignInCancelledState extends AuthState {}
+
+class GoogleSignInFailedState extends AuthState {
+  final String errorMsg;
+  GoogleSignInFailedState({required this.errorMsg});
+}
+
 // ── Register ──
 class RegisterLoadingState extends AuthState {}
 

@@ -92,6 +92,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   backgroundColor: Colors.red,
                 ),
               );
+          } else if (state is GoogleSignInSuccessState) {
+            context.read<ProfileCubit>().fetchProfile(forceRefresh: true);
+            context.read<ProfileCubit>().fetchSettingInfo();
+            context.read<HomeCubit>().fetchHomeData();
+            Navigator.pushReplacementNamed(context, AppRoutes.layoutView);
+          } else if (state is GoogleSignInFailedState) {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text(state.errorMsg),
+                  backgroundColor: Colors.red,
+                ),
+              );
           }
         },
         child: PopScope(
@@ -306,7 +320,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             SizedBox(height: 24.h),
 
                             Loginwith(
-                              onGoogleTap: () {},
+                              onGoogleTap: () {
+                                context.read<AuthCubit>().signInWithGoogle();
+                              },
                               onFacebookTap: () {},
                               onAppleTap: () {},
                             ),

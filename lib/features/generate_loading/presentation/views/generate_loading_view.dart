@@ -12,7 +12,7 @@ import 'package:sammly/features/generate_loading/presentation/cubits/loading_cub
 import 'package:sammly/features/generate_loading/presentation/cubits/loading_states.dart';
 import 'package:sammly/features/home/logic/home_cubit.dart';
 import 'package:sammly/generated/l10n.dart';
-import 'package:sammly/core/widgets/not_enough_tokens_dialog.dart';
+import 'package:sammly/core/widgets/not_enough_credits_dialog.dart';
 import 'package:sammly/main.dart';
 
 class GenerationLoadingWrapper extends StatelessWidget {
@@ -118,7 +118,7 @@ class GenerationLoadingWrapper extends StatelessWidget {
                     if (currentContext != null) {
                       showDialog(
                         context: currentContext,
-                        builder: (_) => const NotEnoughTokensDialog(),
+                        builder: (_) => const NotEnoughCreditsDialog(),
                       );
                     }
                   } else {

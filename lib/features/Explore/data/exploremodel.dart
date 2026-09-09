@@ -79,8 +79,8 @@ class ExploreDesignModel {
       sharedAt: sharedAt,
       isLiked: isLiked ?? this.isLiked,
       isFavorited: isFavorited ?? this.isFavorited,
-      style: style ?? this.style,
-      room: room ?? this.room,
+      style: style ?? style,
+      room: room ?? room,
     );
   }
 }

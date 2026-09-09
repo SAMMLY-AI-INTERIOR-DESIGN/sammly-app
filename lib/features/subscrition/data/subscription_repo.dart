@@ -39,7 +39,8 @@ class SubscriptionRepo {
     }
   }
 
-  /// Claims a package (free gives tokens, others return "soon").
+  /// Subscribes to a package via the backend.
+  /// POST /api/payment/subscribe with { packageId: string }
   Future<Either<String, ClaimResult>> claimPackage(String packageId) async {
     try {
       final token = SharedPref.getData(key: 'jwt');
@@ -47,7 +48,7 @@ class SubscriptionRepo {
         return left(_t('Unauthorized: No token found.'));
       }
 
-      final response = await DioHelper.getData(
+      final response = await DioHelper.postData(
         endPoint: ApiConstants.claimPackage,
         data: {'packageId': packageId},
         token: token,
@@ -56,18 +57,19 @@ class SubscriptionRepo {
       if (response.statusCode == 200 && response.data['status'] == 'success') {
         final message = response.data['message'] ?? '';
         final data = response.data['data'];
-        final tokens = data != null ? data['tokens'] : null;
-        return right(ClaimResult(message: _t(message), tokens: tokens));
+        final credits = data != null ? (data['credits'] ?? data['tokens']) : null;
+        return right(ClaimResult(message: _t(message), credits: credits));
       } else {
-        return left(_t(response.data['message'] ?? 'Failed to claim package.'));
+        return left(_t(response.data['message'] ?? 'Failed to subscribe.'));
       }
     } on DioException catch (e) {
       return left(_handleDioError(e));
     } catch (e) {
-      log('Claim package error: $e');
+      log('Subscribe error: $e');
       return left(_t('An unexpected error occurred.'));
     }
   }
+
 
   String _handleDioError(DioException e) {
     if (e.response?.statusCode == 404) {
@@ -88,22 +90,29 @@ class SubscriptionRepo {
 
 class PackageModel {
   final String packageId;
-  final int tokens;
+  final int credits;
   final int price;
+  final String? type; // 'free', 'consumable', 'subscription'
+  final String? iapProductId; // Maps to store product ID
 
   PackageModel({
     required this.packageId,
-    required this.tokens,
+    required this.credits,
     required this.price,
+    this.type,
+    this.iapProductId,
   });
 
   factory PackageModel.fromJson(Map<String, dynamic> json) {
     return PackageModel(
       packageId: json['packageId'] ?? '',
-      tokens: json['tokens'] ?? 0,
+      // Backend may send 'tokens' or 'credits'
+      credits: json['credits'] ?? json['tokens'] ?? 0,
       price: (json['price'] ?? 0) is double
           ? (json['price'] as double).toInt()
           : json['price'] ?? 0,
+      type: json['type'],
+      iapProductId: json['iapProductId'],
     );
   }
 
@@ -112,7 +121,7 @@ class PackageModel {
 
 class ClaimResult {
   final String message;
-  final int? tokens;
+  final int? credits;
 
-  ClaimResult({required this.message, this.tokens});
+  ClaimResult({required this.message, this.credits});
 }

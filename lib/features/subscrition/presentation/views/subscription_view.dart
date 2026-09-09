@@ -20,23 +20,23 @@ class SubscriptionView extends StatefulWidget {
 }
 
 class _SubscriptionViewState extends State<SubscriptionView> {
-  int _selectedPlanIndex = 1;
+  int _selectedPlanIndex = 0;
 
   // Maps plan index to backend packageId
   String _getPackageId(int index) {
     switch (index) {
       case 0:
-        return 'free';
-      case 1:
         return 'starter';
-      case 2:
+      case 1:
         return 'pro';
-      case 3:
+      case 2:
         return 'premium';
       default:
         return 'starter';
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -49,12 +49,26 @@ class _SubscriptionViewState extends State<SubscriptionView> {
             // Show success message
             showCustomSnackBar(
               context: context,
-              message: result.tokens != null
-                  ? '${result.message} (${S.of(context).tokens}: ${result.tokens})'
+              message: result.credits != null
+                  ? '${result.message} (${S.of(context).tokens}: ${result.credits})'
                   : result.message,
               isError: false,
             );
           } else if (state is ClaimFailure) {
+            showCustomSnackBar(
+              context: context,
+              message: state.error,
+              isError: true,
+            );
+          } else if (state is PurchaseSuccess) {
+            showCustomSnackBar(
+              context: context,
+              message: state.credits != null
+                  ? '${state.message} (${S.of(context).tokens}: ${state.credits})'
+                  : state.message,
+              isError: false,
+            );
+          } else if (state is PurchaseFailure) {
             showCustomSnackBar(
               context: context,
               message: state.error,
@@ -209,7 +223,7 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                                           }
                                         }
 
-                                        final freePkg = getPackage('free');
+
                                         final starterPkg = getPackage('starter');
                                         final proPkg = getPackage('pro');
                                         final premiumPkg = getPackage('premium');
@@ -219,66 +233,52 @@ class _SubscriptionViewState extends State<SubscriptionView> {
 
                                         return Column(
                                           children: [
-                                            if (freePkg != null)
-                                              CustomPlan(
-                                                iconPath: AppImages.giftIcon,
-                                                title: S.of(context).freeGenerations,
-                                                tokensAmount: freePkg.tokens.toString(),
-                                                description: S.of(context).planDesc1,
-                                                price: S.of(context).free,
-                                                primaryColor: const Color(0xFFD97706),
-                                                bgColor: const Color(0xFFFFFBEB),
-                                                isFree: true,
-                                                isSelected: _selectedPlanIndex == 0,
-                                                onTap: () =>
-                                                    setState(() => _selectedPlanIndex = 0),
-                                              ),
-
                                             if (starterPkg != null)
                                               CustomPlan(
                                                 iconPath: AppImages.starIcon,
                                                 title: S.of(context).planStarter,
-                                                tokensAmount: starterPkg.tokens.toString(),
+                                                creditsAmount: starterPkg.credits.toString(),
                                                 description: S.of(context).planDesc2,
                                                 price: currencyText(starterPkg.price),
-                                                priceSub: S.of(context).perPack,
+                                                priceSub: S.of(context).oneTimePack,
                                                 primaryColor: const Color(0xFF3C60B6),
                                                 bgColor: const Color(0xFFF1F4FA),
                                                 borderColor: const Color(0xFFC0CBE7),
-                                                isSelected: _selectedPlanIndex == 1,
+                                                isSelected: _selectedPlanIndex == 0,
                                                 onTap: () =>
-                                                    setState(() => _selectedPlanIndex = 1),
+                                                    setState(() => _selectedPlanIndex = 0),
                                               ),
 
                                             if (proPkg != null)
                                               CustomPlan(
                                                 iconPath: AppImages.crownIcon,
                                                 title: S.of(context).planPro,
-                                                tokensAmount: proPkg.tokens.toString(),
+                                                creditsAmount: proPkg.credits.toString(),
                                                 description: S.of(context).planDesc3,
                                                 price: currencyText(proPkg.price),
-                                                priceSub: S.of(context).perPack,
+                                                priceSub: S.of(context).perMonth,
                                                 primaryColor: const Color(0xFF23B5A0),
                                                 bgColor: const Color(0xFFEAFAF7),
-                                                isSelected: _selectedPlanIndex == 2,
+                                                isSelected: _selectedPlanIndex == 1,
                                                 onTap: () =>
-                                                    setState(() => _selectedPlanIndex = 2),
+                                                    setState(() => _selectedPlanIndex = 1),
                                               ),
 
                                             if (premiumPkg != null)
                                               CustomPlan(
                                                 iconPath: AppImages.diamondIcon,
                                                 title: S.of(context).planPremium,
-                                                tokensAmount: premiumPkg.tokens.toString(),
+                                                creditsAmount: premiumPkg.credits.toString(),
                                                 description: S.of(context).planDesc4,
                                                 price: currencyText(premiumPkg.price),
-                                                priceSub: S.of(context).perPack,
+                                                priceSub: S.of(context).perMonth,
                                                 primaryColor: const Color(0xFF8B5CF6),
                                                 bgColor: const Color(0xFFF5F0FF),
-                                                isSelected: _selectedPlanIndex == 3,
+                                                isSelected: _selectedPlanIndex == 2,
                                                 onTap: () =>
-                                                    setState(() => _selectedPlanIndex = 3),
+                                                    setState(() => _selectedPlanIndex = 2),
                                               ),
+
                                           ],
                                         );
                                       }
@@ -333,15 +333,14 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                               ),
                             )
                           : Text(
-                              _selectedPlanIndex == 0 
-                                  ? S.of(context).getBtn 
-                                  : S.of(context).subscribe,
+                              S.of(context).subscribe,
                               style: AppTextStyles.title20Bold.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
                     ),
+
                   ),
                 ),
               ],

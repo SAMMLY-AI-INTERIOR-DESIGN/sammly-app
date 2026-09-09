@@ -32,4 +32,6 @@ abstract class AppRoutes {
   static const String imageGenerationStepperView =
       '/imageGenerationStepperView';
   static const String earnView = '/earnview';
+  static const String smartLensView = '/smartlensview';
 }
+

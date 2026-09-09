@@ -9,9 +9,9 @@ import 'package:sammly/features/smart_lens/cubit/search_state.dart';
 import 'package:sammly/features/smart_lens/data/models/search_response.dart';
 
 class SmartLensBottomSheet extends StatefulWidget {
-  final String designId;
+  final String imageUrl;
 
-  const SmartLensBottomSheet({super.key, required this.designId});
+  const SmartLensBottomSheet({super.key, required this.imageUrl});
 
   @override
   State<SmartLensBottomSheet> createState() => _SmartLensBottomSheetState();
@@ -23,7 +23,7 @@ class _SmartLensBottomSheetState extends State<SmartLensBottomSheet> {
     super.initState();
     final cubit = context.read<SearchCubit>();
     if (cubit.state is! SearchLoaded && cubit.state is! SearchLoading) {
-      cubit.searchDesign(widget.designId);
+      cubit.searchByImage(widget.imageUrl);
     }
   }
 
@@ -52,7 +52,7 @@ class _SmartLensBottomSheetState extends State<SmartLensBottomSheet> {
           ),
           child: Column(
             children: [
-              // الـ Notch أو خط السحب العلوي
+              // Drag handle
               SizedBox(height: 12.h),
               Container(
                 width: 48.w,
@@ -64,7 +64,7 @@ class _SmartLensBottomSheetState extends State<SmartLensBottomSheet> {
               ),
               SizedBox(height: 24.h),
 
-              // النصوص الرأسية الثابتة
+              // Header
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24.w),
                 child: Align(
@@ -84,13 +84,11 @@ class _SmartLensBottomSheetState extends State<SmartLensBottomSheet> {
                       BlocBuilder<SearchCubit, SearchState>(
                         builder: (context, state) {
                           if (state is SearchLoaded &&
-                              state.response.data.any(
-                                (r) => r.productMatches.isNotEmpty,
-                              )) {
+                              state.response.matches.isNotEmpty) {
                             return Padding(
                               padding: EdgeInsetsDirectional.only(top: 6.h),
                               child: Text(
-                                'We found similar items for your design.',
+                                'We found ${state.response.totalResults} similar items for your image.',
                                 style: TextStyle(
                                   color: const Color(0xFF5B5B5B),
                                   fontSize: 14.sp,
@@ -109,6 +107,35 @@ class _SmartLensBottomSheetState extends State<SmartLensBottomSheet> {
               ),
               SizedBox(height: 16.h),
 
+              // Credits info
+              BlocBuilder<SearchCubit, SearchState>(
+                builder: (context, state) {
+                  if (state is SearchLoaded) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 24.w),
+                      child: Row(
+                        children: [
+                          Icon(Icons.toll, size: 16.sp, color: AppColors.primaryColor),
+                          SizedBox(width: 6.w),
+                          Text(
+                            'Credits: ${state.response.remainingCredits} remaining',
+                            style: TextStyle(
+                              color: const Color(0xFF5B5B5B),
+                              fontSize: 12.sp,
+                              fontFamily: 'Manrope',
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
+
+              SizedBox(height: 8.h),
+
               // BlocBuilder for state management
               Expanded(
                 child: BlocBuilder<SearchCubit, SearchState>(
@@ -126,13 +153,13 @@ class _SmartLensBottomSheetState extends State<SmartLensBottomSheet> {
                     }
 
                     if (state is SearchLoaded) {
-                      final results = state.response.data;
+                      final response = state.response;
 
-                      if (results.isEmpty) {
-                        return _buildEmptyView();
+                      if (!response.matchFound || response.matches.isEmpty) {
+                        return _buildEmptyView(response);
                       }
 
-                      return _buildResultsView(results, scrollController);
+                      return _buildResultsView(response.matches, scrollController);
                     }
 
                     return const SizedBox.shrink();
@@ -146,84 +173,29 @@ class _SmartLensBottomSheetState extends State<SmartLensBottomSheet> {
     );
   }
 
-  /// Option C layout: FilterChips on top + GridView below
   Widget _buildResultsView(
-    List<SourcingResult> results,
+    List<SourcingMatch> matches,
     ScrollController scrollController,
   ) {
-    // Filter out results that have no products
-    final nonEmptyResults = results
-        .where((r) => r.productMatches.isNotEmpty)
-        .toList();
-
-    if (nonEmptyResults.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: EdgeInsets.all(24.w),
-          child: Text(
-            'No products found for this design.',
-            style: AppTextStyles.body14Regular.copyWith(
-              color: const Color(0xFF5B5B5B),
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ),
-      );
-    }
-
-    return ListView.builder(
+    return GridView.builder(
       controller: scrollController,
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
-      itemCount: nonEmptyResults.length,
+      itemCount: matches.length,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 16.w,
+        mainAxisSpacing: 16.h,
+        childAspectRatio: 0.76,
+      ),
       itemBuilder: (context, index) {
-        final result = nonEmptyResults[index];
-        // Use label if available, otherwise fallback to detected category
-        final title = result.label.isNotEmpty
-            ? result.label
-            : result.detectedCategory;
-
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Category Name
-            Text(
-              title,
-              style: AppTextStyles.body16Medium.copyWith(
-                color: const Color(0xFF2E2E2E),
-                fontWeight: FontWeight.w700,
-                fontSize: 18.sp,
-              ),
-            ),
-            SizedBox(height: 8.h),
-            const Divider(color: Color(0xFFC0C0C0), thickness: 1),
-            SizedBox(height: 16.h),
-
-            // Grid of products
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              padding: EdgeInsets.zero,
-              itemCount: result.productMatches.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 16.w,
-                mainAxisSpacing: 16.h,
-                childAspectRatio: 0.76,
-              ),
-              itemBuilder: (context, productIndex) {
-                final product = result.productMatches[productIndex];
-                return SimilarItemCard(
-                  item: SimilarItemModel(
-                    title: product.title,
-                    subtitle: product.price,
-                    imageUrl: product.thumbnail,
-                    productUrl: product.url,
-                  ),
-                );
-              },
-            ),
-            SizedBox(height: 32.h), // Spacing between categories
-          ],
+        final match = matches[index];
+        return SimilarItemCard(
+          item: SimilarItemModel(
+            title: match.title,
+            subtitle: match.price,
+            imageUrl: match.thumbnail,
+            productUrl: match.url,
+          ),
         );
       },
     );
@@ -248,7 +220,7 @@ class _SmartLensBottomSheetState extends State<SmartLensBottomSheet> {
             SizedBox(height: 16.h),
             ElevatedButton(
               onPressed: () {
-                context.read<SearchCubit>().searchDesign(widget.designId);
+                context.read<SearchCubit>().searchByImage(widget.imageUrl);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryColor,
@@ -258,7 +230,7 @@ class _SmartLensBottomSheetState extends State<SmartLensBottomSheet> {
                 padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
               ),
               child: Text(
-                'Wait More',
+                'Try Again',
                 style: AppTextStyles.body16Medium.copyWith(color: Colors.white),
               ),
             ),
@@ -268,7 +240,7 @@ class _SmartLensBottomSheetState extends State<SmartLensBottomSheet> {
     );
   }
 
-  Widget _buildEmptyView() {
+  Widget _buildEmptyView(SearchResponse response) {
     return Center(
       child: Padding(
         padding: EdgeInsets.all(24.w),
@@ -278,12 +250,24 @@ class _SmartLensBottomSheetState extends State<SmartLensBottomSheet> {
             Icon(Icons.search_off, size: 48.sp, color: AppColors.greyColor),
             SizedBox(height: 16.h),
             Text(
-              'No similar items found for this design.',
+              response.message ?? 'No similar items found for this image.',
               style: AppTextStyles.body14Regular.copyWith(
                 color: const Color(0xFF5B5B5B),
               ),
               textAlign: TextAlign.center,
             ),
+            if (response.detectedCategories.isNotEmpty) ...[
+              SizedBox(height: 12.h),
+              Text(
+                'Detected: ${response.detectedCategories.join(", ")}',
+                style: TextStyle(
+                  color: const Color(0xFF8B8B8B),
+                  fontSize: 12.sp,
+                  fontFamily: 'Manrope',
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ],
         ),
       ),

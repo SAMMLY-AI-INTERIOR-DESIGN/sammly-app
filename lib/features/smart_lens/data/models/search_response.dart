@@ -1,94 +1,98 @@
+/// Response model for POST /api/sourcing/search
 class SearchResponse {
   final String status;
-  final List<SourcingResult> data;
+  final bool isValid;
+  final bool matchFound;
+  final String quality;
+  final String? primaryCategory;
+  final List<String> detectedCategories;
+  final String visualDescription;
+  final List<String> detectedElements;
+  final List<SourcingMatch> matches;
+  final int totalResults;
+  final int spentCredits;
+  final int remainingCredits;
+  final String? message;
 
-  SearchResponse({required this.status, required this.data});
+  SearchResponse({
+    required this.status,
+    required this.isValid,
+    required this.matchFound,
+    required this.quality,
+    this.primaryCategory,
+    required this.detectedCategories,
+    required this.visualDescription,
+    required this.detectedElements,
+    required this.matches,
+    required this.totalResults,
+    required this.spentCredits,
+    required this.remainingCredits,
+    this.message,
+  });
 
   factory SearchResponse.fromJson(Map<String, dynamic> json) {
-    List<dynamic> sourcingList = [];
-
-    if (json['data'] is Map) {
-      final mapData = json['data'] as Map<String, dynamic>;
-      if (mapData['metadata'] is Map &&
-          mapData['metadata']['sourcing_results'] is List) {
-        sourcingList = mapData['metadata']['sourcing_results'] as List<dynamic>;
-      } else if (mapData['sourcing_results'] is List) {
-        sourcingList = mapData['sourcing_results'] as List<dynamic>;
-      } else if (mapData['data'] is List) {
-        sourcingList = mapData['data'] as List<dynamic>;
-      }
-    } else if (json['data'] is List) {
-      sourcingList = json['data'] as List<dynamic>;
-    }
+    final data = json['data'] as Map<String, dynamic>? ?? json;
 
     return SearchResponse(
       status: json['status']?.toString() ?? '',
-      data: sourcingList
-          .map((e) => SourcingResult.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      isValid: data['isValid'] == true,
+      matchFound: data['matchFound'] == true,
+      quality: data['quality']?.toString() ?? 'none',
+      primaryCategory: data['primaryCategory']?.toString(),
+      detectedCategories: _parseStringList(data['detectedCategories']),
+      visualDescription: data['visualDescription']?.toString() ?? '',
+      detectedElements: _parseStringList(data['detectedElements']),
+      matches: _parseMatches(data['matches']),
+      totalResults: data['totalResults'] as int? ?? 0,
+      spentCredits: data['spentCredits'] as int? ?? 0,
+      remainingCredits: data['remainingCredits'] as int? ?? 0,
+      message: data['message']?.toString(),
     );
   }
-}
 
-class SourcingResult {
-  final String detectedCategory;
-  final String label;
-  final String cropUrl;
-  final List<ProductMatch> productMatches;
-
-  SourcingResult({
-    required this.detectedCategory,
-    required this.label,
-    required this.cropUrl,
-    required this.productMatches,
-  });
-
-  factory SourcingResult.fromJson(Map<String, dynamic> json) {
-    // The JSON might wrap the actual item details in an 'item' object
-    final itemJson = json['item'] as Map<String, dynamic>? ?? json;
-
-    // Products might be in 'top_matches', 'final_matches', 'visual_matches', or 'product_matches'
-    List<dynamic> matchesList = [];
-    if (json['top_matches'] is List) {
-      matchesList = json['top_matches'] as List<dynamic>;
-    } else if (itemJson['final_matches'] is List) {
-      matchesList = itemJson['final_matches'] as List<dynamic>;
-    } else if (itemJson['visual_matches'] is List) {
-      matchesList = itemJson['visual_matches'] as List<dynamic>;
-    } else if (itemJson['product_matches'] is List) {
-      matchesList = itemJson['product_matches'] as List<dynamic>;
+  static List<String> _parseStringList(dynamic list) {
+    if (list is List) {
+      return list.map((e) => e.toString()).toList();
     }
+    return [];
+  }
 
-    return SourcingResult(
-      detectedCategory: itemJson['detected_category']?.toString() ?? '',
-      label: itemJson['label']?.toString() ?? '',
-      cropUrl: itemJson['crop_url']?.toString() ?? '',
-      productMatches: matchesList
-          .map((e) => ProductMatch.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
+  static List<SourcingMatch> _parseMatches(dynamic list) {
+    if (list is List) {
+      return list
+          .map((e) => SourcingMatch.fromJson(e as Map<String, dynamic>))
+          .toList();
+    }
+    return [];
   }
 }
 
-class ProductMatch {
+/// A single matched product from the sourcing search
+class SourcingMatch {
   final String title;
   final String price;
   final String url;
   final String thumbnail;
+  final String category;
+  final double similarity;
 
-  ProductMatch({
+  SourcingMatch({
     required this.title,
     required this.price,
     required this.url,
     required this.thumbnail,
+    required this.category,
+    required this.similarity,
   });
 
-  factory ProductMatch.fromJson(Map<String, dynamic> json) {
-    return ProductMatch(
+  factory SourcingMatch.fromJson(Map<String, dynamic> json) {
+    return SourcingMatch(
       title: json['title']?.toString() ?? '',
       price: json['price']?.toString() ?? '',
       url: json['url']?.toString() ?? '',
       thumbnail: json['thumbnail']?.toString() ?? '',
+      category: json['category']?.toString() ?? '',
+      similarity: (json['similarity'] as num?)?.toDouble() ?? 0.0,
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
@@ -33,11 +34,32 @@ class ResultImageWidget extends StatefulWidget {
 class _ResultImageWidgetState extends State<ResultImageWidget> {
   bool _showOriginal = false;
 
+  ImageProvider _getImageProvider(String path, bool isNetwork) {
+    if (path.startsWith('data:image')) {
+      try {
+        final base64Str = path.split(',').last;
+        return MemoryImage(base64Decode(base64Str));
+      } catch (_) {}
+    }
+    if (isNetwork) {
+      if (path.startsWith('http://') || path.startsWith('https://')) {
+        return NetworkImage(path);
+      } else if (path.startsWith('/') || path.startsWith('file://')) {
+        final clean = path.startsWith('file://') ? Uri.parse(path).toFilePath() : path;
+        return FileImage(File(clean));
+      }
+    }
+    if (path.startsWith('/') || path.startsWith('file://')) {
+      final clean = path.startsWith('file://') ? Uri.parse(path).toFilePath() : path;
+      return FileImage(File(clean));
+    }
+    return AssetImage(path);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final imageProvider = widget.isNetworkImage
-        ? NetworkImage(widget.imagePath) as ImageProvider
-        : AssetImage(widget.imagePath);
+    final imageProvider = _getImageProvider(widget.imagePath, widget.isNetworkImage);
+
 
     // Restyle/Mask mode: expand to original image's natural aspect ratio
     final bool isExpandedMode = widget.originalImagePath != null;

@@ -79,6 +79,20 @@ class HomeView extends StatelessWidget {
                             ),
 
                             HomeCardWidget(
+                              title: S.of(context).smartSammlyLens,
+                              description: S.of(context).smartSammlyLensDesc,
+                              imagePath: AppImages.smartLensImage,
+                              tagText: S.of(context).smartLensTag,
+                              tagIcon: AppImages.smartLensIcon,
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.smartLensView,
+                                );
+                              },
+                            ),
+
+                            HomeCardWidget(
                               title: S.of(context).replace,
                               description: S.of(context).maskInpaintingDesc,
                               imagePath: AppImages.replaceImage,

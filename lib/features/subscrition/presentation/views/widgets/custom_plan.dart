@@ -6,7 +6,7 @@ import 'package:sammly/generated/l10n.dart';
 class CustomPlan extends StatelessWidget {
   final String iconPath;
   final String title;
-  final String tokensAmount;
+  final String creditsAmount;
   final String description;
   final String price;
   final String? priceSub;
@@ -22,7 +22,7 @@ class CustomPlan extends StatelessWidget {
     super.key,
     required this.iconPath,
     required this.title,
-    required this.tokensAmount,
+    required this.creditsAmount,
     required this.description,
     required this.price,
     this.priceSub,
@@ -125,7 +125,7 @@ class CustomPlan extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        tokensAmount,
+                        creditsAmount,
                         style: TextStyle(
                           color: primaryColor,
                           fontSize: 22.sp,

@@ -29,3 +29,25 @@ class ClaimFailure extends SubscriptionState {
   final String error;
   ClaimFailure(this.error);
 }
+
+// IAP Purchase states
+class PurchaseInProgress extends SubscriptionState {
+  final String productId;
+  PurchaseInProgress(this.productId);
+}
+
+class PurchaseSuccess extends SubscriptionState {
+  final String message;
+  final int? credits;
+  PurchaseSuccess({required this.message, this.credits});
+}
+
+class PurchaseFailure extends SubscriptionState {
+  final String error;
+  PurchaseFailure(this.error);
+}
+
+class PurchaseRestored extends SubscriptionState {
+  final String message;
+  PurchaseRestored(this.message);
+}

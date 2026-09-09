@@ -14,6 +14,7 @@ abstract class ApiConstants {
   static const String resendVerificationCode =
       '/api/auth/email/resend-verification-code';
   static const String resendResetCode = '/api/auth/password/resend-reset-code';
+  static const String googleAuth = '/api/auth/google';
 
   // Profile / Support endpoints
   static const String getProfile = '/api/profile';
@@ -62,12 +63,12 @@ abstract class ApiConstants {
   static const String getNotifications = '/api/profile/notifications';
 
   // Smart Lens search endpoint
-  static String searchDesign(String designId) =>
-      '/api/designs/search/$designId';
+  static const String sourcingSearch = '/api/sourcing/search';
 
   // Payment / Subscription endpoints
-  static const String claimPackage = '/api/payment/under-updating';
+  static const String claimPackage = '/api/payment/subscribe';
   static const String getPackages = '/api/payment/packages';
+  static const String verifyPurchase = '/api/payment/verify-purchase';
 
   // App version endpoint
   static const String appVersion = '/api/app-version';

@@ -29,6 +29,19 @@ class AuthCubit extends Cubit<AuthState> {
     }, (success) => emit(LoginSuccessState()));
   }
 
+  // ── Google Sign-In ──
+  Future<void> signInWithGoogle() async {
+    emit(GoogleSignInLoadingState());
+    final result = await authRepo.googleSignIn();
+    result.fold((error) {
+      if (error.contains('cancelled') || error.contains('Cancelled')) {
+        emit(GoogleSignInCancelledState());
+      } else {
+        emit(GoogleSignInFailedState(errorMsg: error));
+      }
+    }, (success) => emit(GoogleSignInSuccessState()));
+  }
+
   // ── Register ──
   Future<void> register({
     required String name,

@@ -99,7 +99,7 @@ class HomeHeader extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        '${home?.tokens ?? 0}',
+                        '${home?.credits ?? 0}',
                         style: AppTextStyles.badge14SemiBold.copyWith(
                           color: AppColors.starColor,
                         ),

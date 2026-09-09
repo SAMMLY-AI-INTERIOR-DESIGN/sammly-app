@@ -15,11 +15,12 @@ class SearchCubit extends Cubit<SearchState> {
 
   SearchCubit(this._repo) : super(SearchInitial());
 
-  Future<void> searchDesign(String designId) async {
+  /// Calls POST /api/sourcing/search with the given imageUrl.
+  Future<void> searchByImage(String imageUrl) async {
     if (isClosed) return;
     emit(SearchLoading());
 
-    final result = await _repo.searchDesign(designId);
+    final result = await _repo.searchByImage(imageUrl);
 
     if (isClosed) return;
     result.fold(

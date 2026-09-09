@@ -42,6 +42,7 @@ import 'package:sammly/features/Explore/presentation/views/shared_design_details
 import 'package:sammly/features/Explore/presentation/views/choose_room.dart'
     as choose_room;
 import 'package:sammly/features/Explore/data/exploremodel.dart';
+import 'package:sammly/features/smart_lens/presentation/views/smart_lens_view.dart';
 
 abstract class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -325,6 +326,13 @@ abstract class AppRouter {
         return MaterialPageRoute(
           builder: (context) {
             return const EarnView();
+          },
+        );
+
+      case AppRoutes.smartLensView:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const SmartLensView();
           },
         );
 

@@ -5,8 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sammly/features/profile/data/models/profile_model.dart';
 import 'package:sammly/features/profile/data/models/setting_info_model.dart';
 import 'package:sammly/features/profile/data/repo/profile_repo.dart';
-import 'package:sammly/core/shared_pref/shared_pref.dart';
-import 'package:sammly/features/notifications/data/repo/notifications_repo.dart';
 import 'package:sammly/features/profile/presentation/cubit/profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {

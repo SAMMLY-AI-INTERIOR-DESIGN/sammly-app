@@ -7,6 +7,7 @@ import 'package:sammly/core/networking/api_constants.dart';
 import 'package:sammly/core/networking/dio_helper.dart';
 import 'package:sammly/core/shared_pref/shared_pref.dart';
 import 'package:sammly/core/utils/backend_message_translator.dart';
+import 'package:sammly/core/networking/cloudinary_service.dart';
 import 'package:sammly/features/profile/data/models/profile_model.dart';
 import 'package:sammly/features/profile/data/models/setting_info_model.dart';
 
@@ -93,15 +94,14 @@ class ProfileRepo {
         return left(_t('Unauthorized: No token found.'));
       }
 
-      // لو اليوزر اختار صورة، نحولها لـ base64 ونضيفها كـ string في الـ JSON
+      // لو اليوزر اختار صورة، نرفعها على Cloudinary ونحط اللينك في הـ JSON
       if (imageFile != null) {
-        final bytes = await imageFile.readAsBytes();
-        final base64Image = base64Encode(bytes);
-        // نحدد الـ extension عشان الـ data URI
-        final ext = imageFile.path.split('.').last.toLowerCase();
-        final mimeType = ext == 'png' ? 'image/png' : 'image/jpeg';
-        data['avatar'] = 'data:$mimeType;base64,$base64Image';
+        final cloudinaryUrl = await CloudinaryService.uploadImage(imageFile);
+        if (cloudinaryUrl != null) {
+          data['avatar'] = cloudinaryUrl;
+        }
       }
+
 
       final response = await DioHelper.patchData(
         endPoint: ApiConstants.editProfile,

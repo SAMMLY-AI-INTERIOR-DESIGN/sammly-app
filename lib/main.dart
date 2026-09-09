@@ -26,6 +26,7 @@ import 'package:sammly/features/favorite/data/repo/favorite_repo.dart';
 import 'package:sammly/core/localization/locale_cubit.dart';
 import 'package:sammly/generated/l10n.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:sammly/core/services/iap_service.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +36,9 @@ void main() async {
   await dotenv.load(fileName: ".env");
   DioHelper.init();
   await SharedPref.init();
+
+  // Initialize In-App Purchases
+  await IapService.instance.initialize();
 
   runApp(const SammlyApp());
 }

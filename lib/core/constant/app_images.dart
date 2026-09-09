@@ -117,6 +117,7 @@ class AppImages {
       "assets/images/replace_object_icon.svg";
   static const String replaceImage = "assets/images/replace_image.png";
   static const String removeImage = "assets/images/remove_image.png";
+  static const String smartLensImage = "assets/images/smartlensf.jpeg";
   static const String replaceRemoveIcon =
       "assets/images/replace_remove_icon.svg";
   static const String subscriptionBgPlaceholder =
